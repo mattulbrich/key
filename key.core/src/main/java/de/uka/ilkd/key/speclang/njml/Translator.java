@@ -42,6 +42,7 @@ import org.key_project.logic.Name;
 import org.key_project.logic.sort.Sort;
 import org.key_project.util.collection.ImmutableList;
 import org.key_project.util.collection.ImmutableSLList;
+import org.key_project.util.collection.Immutables;
 import org.key_project.util.collection.Pair;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -1027,17 +1028,39 @@ class Translator extends JmlParserBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitPrimaryDLCall(JmlParser.PrimaryDLCallContext ctx) {
+        String name = ctx.DL_ESCAPE().getText();
+        try {
+            return termFactory.dlKeyword(name, accept(ctx.expressionlist()));
+        } catch (Exception e) {
+            raiseError(ctx, e);
+            throw new Error("unreachable code");
+        }
+    }
+
+    @Override
+    public Object visitQuantifiedDLEscape(JmlParser.QuantifiedDLEscapeContext ctx) {
+        try {
+            String name = ctx.DL_ESCAPE().getText();
+
+            Pair<KeYJavaType, ImmutableList<LogicVariable>> decls = accept(ctx.quantifiedvardecls());
+            resolverManager.pushLocalVariablesNamespace();
+            assert decls != null;
+            resolverManager.putIntoTopLocalVariablesNamespace(decls.second, decls.first);
+            ImmutableList<SLExpression> exprs = ctx.expression().stream().map(this::<SLExpression>accept).collect(Immutables.listCollector());
+            resolverManager.popLocalVariablesNamespace();
+            return termFactory.dlKeyword(name, decls, exprs);
+        } catch (Exception e) {
+            raiseError(ctx, e);
+            throw new Error("unreachable code");
+        }
+    }
+
+    @Override
     public Object visitPrimarySuffixCall(JmlParser.PrimarySuffixCallContext ctx) {
         final SLExpression receiver = this.receiver;
         String lookupName = fullyQualifiedName;
 
-        if (fullyQualifiedName.startsWith("\\dl_")) {
-            try {
-                return termFactory.dlKeyword(fullyQualifiedName, accept(ctx.expressionlist()));
-            } catch (Exception e) {
-                raiseError(ctx, e);
-            }
-        }
         SLParameters params = visitParameters(ctx.expressionlist());
 
         lookupName = lookupName.substring(lookupName.lastIndexOf('.') + 1);

@@ -5,8 +5,9 @@ package org.key_project.util.collection;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * This class is a collection of methods that operate on immutable collections, in particular
@@ -200,5 +201,19 @@ public final class Immutables {
             ts = ts.tail();
         }
         return acc.reverse();
+    }
+
+    private static final class Cell<T> { T value; }
+
+    public static <T> Collector<T, Cell<ImmutableList<T>>, ImmutableList<T>> listCollector() {
+        Supplier<Cell<ImmutableList<T>>> sup =
+                () -> { Cell<ImmutableList<T>> x = new Cell<>(); x.value = ImmutableSLList.nil(); return x; };
+        BiConsumer<Cell<ImmutableList<T>>, T> accumulator =
+                (cell, x) -> { cell.value = cell.value.prepend(x); };
+        BinaryOperator<Cell<ImmutableList<T>>> combiner =
+                (cell1, cell2) -> { cell1.value = cell1.value.prepend(cell2.value); return cell1; };
+        Function<Cell<ImmutableList<T>>, ImmutableList<T>> finisher =
+                cell -> cell.value;
+        return Collector.of(sup, accumulator, combiner, finisher);
     }
 }

@@ -270,7 +270,7 @@ primaryexpr
   | array_initializer
   ;
 this_: THIS;
-ident: IDENT | JML_IDENT | SPECIAL_IDENT | THIS | SUPER;
+ident: IDENT | DL_ESCAPE | JML_IDENT | SPECIAL_IDENT | THIS | SUPER;
 inv:INV;
 inv_free:INV_FREE;
 true_:TRUE;
@@ -318,7 +318,8 @@ jmlprimary
   | PERMISSION LPAREN expression RPAREN                                               #primaryPermission
   | NONNULLELEMENTS LPAREN expression RPAREN                                          #primaryNNE
   | INFORMAL_DESCRIPTION                                                              #primaryInformalDesc
-  //| JML_IDENT (LPAREN (expressionlist)? RPAREN)                                       #primaryDLCall
+  | DL_ESCAPE (LPAREN (expressionlist)? RPAREN)                                       #primaryDLCall
+  | quantifiedDLEscape                                                                #pignore6
   | MAPEMPTY                                                                          #primaryMapEmpty
   | mapExpression LPAREN (expressionlist)? RPAREN                                     #primaryMapExpr
   | fpOperator LPAREN expression RPAREN                                               #primaryFloatingPoint
@@ -393,6 +394,7 @@ bigint_math_expression: (BIGINT_MATH LPAREN expression RPAREN);
 beforeexpression: (BEFORE LPAREN expression RPAREN);
 bsumterm: LPAREN BSUM quantifiedvardecls SEMI (expression SEMI expression SEMI expression) RPAREN;
 seqdefterm: LPAREN SEQDEF quantifiedvardecls SEMI (expression SEMI expression SEMI expression) RPAREN;
+quantifiedDLEscape: LPAREN DL_ESCAPE quantifiedvardecls (SEMI expression)+ RPAREN;
 quantifiedvardecls: typespec quantifiedvariabledeclarator (COMMA quantifiedvariabledeclarator)*;
 boundvarmodifiers: (NON_NULL | NULLABLE);
 typespec: type (dims)?;

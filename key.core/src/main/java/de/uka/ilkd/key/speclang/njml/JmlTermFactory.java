@@ -33,6 +33,7 @@ import org.key_project.logic.Name;
 import org.key_project.logic.Named;
 import org.key_project.logic.TermCreationException;
 import org.key_project.logic.sort.Sort;
+import org.key_project.util.collection.ImmutableArray;
 import org.key_project.util.collection.ImmutableList;
 import org.key_project.util.collection.ImmutableSLList;
 import org.key_project.util.collection.Pair;
@@ -501,7 +502,14 @@ public final class JmlTermFactory {
         if (name.startsWith("\\dl_")) {
             name = name.substring(4);
         }
-        return translateToJDLTerm(name, list);
+        return translateToJDLTerm(name, null, list);
+    }
+
+    public Object dlKeyword(String name, Pair<KeYJavaType, ImmutableList<LogicVariable>> decls, ImmutableList<SLExpression> list) {
+        if (name.startsWith("\\dl_")) {
+            name = name.substring(4);
+        }
+        return translateToJDLTerm(name, decls, list);
     }
 
     public SLExpression commentary(String desc, ProgramVariable selfVar, ProgramVariable resultVar,
@@ -1203,7 +1211,8 @@ public final class JmlTermFactory {
     // endregion
 
 
-    public SLExpression translateToJDLTerm(final String functName,
+    public SLExpression translateToJDLTerm(final String functName, Pair<KeYJavaType,
+            ImmutableList<LogicVariable>> boundVariableDecls,
             ImmutableList<SLExpression> list) {
         Namespace<JFunction> funcs = services.getNamespaces().functions();
         Named symbol = funcs.lookup(new Name(functName));
@@ -1253,8 +1262,13 @@ public final class JmlTermFactory {
                 args[i++] = expr.getTerm();
             }
 
+            ImmutableArray<QuantifiableVariable> boundVars = null;
+            if(boundVariableDecls != null) {
+                boundVars = new ImmutableArray<>(boundVariableDecls.second.toList());
+            }
+
             try {
-                Term resultTerm = tb.func(function, args, null);
+                Term resultTerm = tb.func(function, args, boundVars);
                 final KeYJavaType type =
                     services.getTypeConverter().getIntegerLDT().targetSort() == resultTerm.sort()
                             ? services.getJavaInfo().getKeYJavaType(PrimitiveType.JAVA_BIGINT)
@@ -1300,7 +1314,7 @@ public final class JmlTermFactory {
         if (functName == null) {
             throw exc.createException0("Unknown function: " + text);
         }
-        return translateToJDLTerm(functName, list);
+        return translateToJDLTerm(functName, null, list);
     }
 
     /**
