@@ -1517,12 +1517,11 @@ class Translator extends JmlParserBaseVisitor<Object> {
 
     @Override
     public Object visitPrimaryStoreRef(JmlParser.PrimaryStoreRefContext ctx) {
-        Term t = accept(ctx.storeRefUnion());
-        if(t == null) {
-            return termFactory.empty(javaInfo);
-        } else {
-            return new SLExpression(t, javaInfo.getPrimitiveKeYJavaType(PrimitiveType.JAVA_LOCSET));
+        if (ctx.storeRefUnion() == null) {
+            return new SLExpression(termFactory.createLocSet(ImmutableSLList.nil()));
         }
+        Term t = accept(ctx.storeRefUnion());
+        return new SLExpression(t, javaInfo.getPrimitiveKeYJavaType(PrimitiveType.JAVA_LOCSET));
     }
 
     @Override
