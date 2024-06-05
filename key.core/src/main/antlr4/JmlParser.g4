@@ -217,7 +217,8 @@ storeRefUnion: list = storeRefList;
 storeRefList: storeref (COMMA storeref)*;
 storeRefIntersect: storeRefList;
 storeref: (NOTHING | EVERYTHING | NOT_SPECIFIED |  STRICTLY_NOTHING | storeRefExpr);
-createLocset: (LOCSET | SINGLETON) LPAREN exprList? RPAREN;
+// unused
+// createLocset: (LOCSET | SINGLETON) LPAREN exprList? RPAREN;
 exprList: expression (COMMA expression)*;
 storeRefExpr: expression;
 predornot: (predicate |NOT_SPECIFIED | SAME);
@@ -347,7 +348,7 @@ jmlprimary
   | VALUES                                                                            #primaryValues
   | STRING_EQUAL LPAREN expression COMMA expression RPAREN                            #primaryStringEq
   | EMPTYSET                                                                          #primaryEmptySet
-  | (LOCSET|STOREREF) LPAREN storeRefUnion RPAREN                                     #primaryStoreRef
+  | (LOCSET|STOREREF) LPAREN storeRefUnion? RPAREN                                    #primaryStoreRef
   | SINGLETON LPAREN expression RPAREN                                                #primaryCreateLocsetSingleton
   | UNION LPAREN storeRefUnion RPAREN                                                 #primaryUnion
   | INTERSECT LPAREN storeRefIntersect RPAREN                                         #primaryIntersect

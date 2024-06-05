@@ -350,15 +350,16 @@ class Translator extends JmlParserBaseVisitor<Object> {
         }
     }
 
-    @Override
-    public Object visitCreateLocset(JmlParser.CreateLocsetContext ctx) {
-        JmlParser.ExprListContext exprList = ctx.exprList();
-        if (exprList == null) {
-            return termFactory.createLocSet(ImmutableSLList.nil());
-        } else {
-            return termFactory.createLocSet(requireNonNull(accept(exprList)));
-        }
-    }
+    // removed from grammar ...
+//    @Override
+//    public Object visitCreateLocset(JmlParser.CreateLocsetContext ctx) {
+//        JmlParser.ExprListContext exprList = ctx.exprList();
+//        if (exprList == null) {
+//            return termFactory.createLocSet(ImmutableSLList.nil());
+//        } else {
+//            return termFactory.createLocSet(requireNonNull(accept(exprList)));
+//        }
+//    }
 
 
     @Override
@@ -1517,8 +1518,11 @@ class Translator extends JmlParserBaseVisitor<Object> {
     @Override
     public Object visitPrimaryStoreRef(JmlParser.PrimaryStoreRefContext ctx) {
         Term t = accept(ctx.storeRefUnion());
-        assert t != null;
-        return new SLExpression(t, javaInfo.getPrimitiveKeYJavaType(PrimitiveType.JAVA_LOCSET));
+        if(t == null) {
+            return termFactory.empty(javaInfo);
+        } else {
+            return new SLExpression(t, javaInfo.getPrimitiveKeYJavaType(PrimitiveType.JAVA_LOCSET));
+        }
     }
 
     @Override
