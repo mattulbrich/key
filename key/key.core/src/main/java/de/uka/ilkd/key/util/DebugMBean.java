@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,9 +25,9 @@ package de.uka.ilkd.key.util;
 
 /**
  * This interface provides the class Debug with the possibility
- * to be administrated from within management tools such as 
+ * to be administrated from within management tools such as
  * "jconsole". Debugging can be switched on / off dynamically using
- * a mangement console. Also the set of traced classes can be 
+ * a mangement console. Also the set of traced classes can be
  * changed
  *
  * @author mulbrich
@@ -25,7 +35,7 @@ package de.uka.ilkd.key.util;
 public interface DebugMBean {
 
     /**
-     * set the current debug state. If set to true, debug messages 
+     * set the current debug state. If set to true, debug messages
      * are printed to stdout.
      *
      * @param debug the new debug state to set
@@ -41,7 +51,7 @@ public interface DebugMBean {
     public boolean getDebugState();
 
     /**
-     * get the list of prefixes for which messages are shown. 
+     * get the list of prefixes for which messages are shown.
      * Every message is prefixed with the class name that
      * triggered it. Only if the classname begins with one entry
      * of this list, the message will be displayed-
@@ -51,7 +61,7 @@ public interface DebugMBean {
     public String getShowOnlyPrefixes();
 
     /**
-     * set the list of prefixes for which messages are shown. 
+     * set the list of prefixes for which messages are shown.
      * Every message is prefixed with the class name that
      * triggered it. Only if the classname begins with one entry
      * of this list, the message will be displayed-

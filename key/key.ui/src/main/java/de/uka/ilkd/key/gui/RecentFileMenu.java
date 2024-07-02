@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,14 +23,6 @@
 
 package de.uka.ilkd.key.gui;
 
-import de.uka.ilkd.key.core.KeYMediator;
-import de.uka.ilkd.key.gui.fonticons.IconFactory;
-import de.uka.ilkd.key.settings.PathConfig;
-import de.uka.ilkd.key.util.Debug;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -29,6 +31,15 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Properties;
+import javax.swing.*;
+
+import de.uka.ilkd.key.core.KeYMediator;
+import de.uka.ilkd.key.gui.fonticons.IconFactory;
+import de.uka.ilkd.key.settings.PathConfig;
+import de.uka.ilkd.key.util.Debug;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class offers a mechanism to manage recent files; it adds the
@@ -74,15 +85,15 @@ public class RecentFileMenu {
     /**
      * Create a new RecentFiles list.
      *
-     * @param listener           the ActionListener that will be notified of the user
-     *                           clicked on a recent file menu entry. The selected filename can be
-     *                           determined with the ActionEvent's getSource() method, cast the Object
-     *                           into a JMenuItem and call the getLabel() method.
+     * @param listener the ActionListener that will be notified of the user
+     *        clicked on a recent file menu entry. The selected filename can be
+     *        determined with the ActionEvent's getSource() method, cast the Object
+     *        into a JMenuItem and call the getLabel() method.
      * @param maxNumberOfEntries the maximal number of items/entries in the
-     *                           recent file menu.
-     * @param p                  a Properties object containing information about the recent
-     *                           files to be displayed initially.
-     *                           Or <code>null</code> to use no initial information.
+     *        recent file menu.
+     * @param p a Properties object containing information about the recent
+     *        files to be displayed initially.
+     *        Or <code>null</code> to use no initial information.
      */
     public RecentFileMenu(final KeYMediator mediator) {
         this.menu = new JMenu("Recent Files");
@@ -130,7 +141,8 @@ public class RecentFileMenu {
      */
     private void addToModelAndView(final String name) {
         // do not add quick save location to recent files
-        if (de.uka.ilkd.key.gui.actions.QuickSaveAction.QUICK_SAVE_PATH.endsWith(name)) return;
+        if (de.uka.ilkd.key.gui.actions.QuickSaveAction.QUICK_SAVE_PATH.endsWith(name))
+            return;
 
         final RecentFileEntry entry = new RecentFileEntry(name);
         if (new File(entry.getAbsolutePath()).exists()) {
@@ -160,8 +172,8 @@ public class RecentFileMenu {
      * @param name the name of the file.
      */
     public void addRecentFile(final String name) {
-        //Add the name to the recentFileList:
-        //check whether this name is already there
+        // Add the name to the recentFileList:
+        // check whether this name is already there
         LOGGER.debug("recentfilemenu: add file: {}", name);
         LOGGER.debug("recentfilemenu: at menu count: {}", menu.getItemCount());
         int index = -1;
@@ -173,9 +185,8 @@ public class RecentFileMenu {
             LOGGER.debug("{}", i);
             LOGGER.debug("item is {}", menu.getItem(i));
             LOGGER.debug("name is {}", menu.getItem(i).getText());
-            if (recentFiles.
-                    get(menu.getItem(i)).getAbsolutePath().equals(name)) {
-                //this name has to be put at the first position
+            if (recentFiles.get(menu.getItem(i)).getAbsolutePath().equals(name)) {
+                // this name has to be put at the first position
                 item = menu.getItem(i);
                 index = i;
                 break;
@@ -183,13 +194,13 @@ public class RecentFileMenu {
         }
 
         if (index != -1) {
-            //move the name to the first position
+            // move the name to the first position
             removeFromModelAndView(item, index);
         }
         // if appropriate, remove the last entry.
         if (menu.getItemCount() == maxNumberOfEntries) {
             removeFromModelAndView(menu.getItem(menu.getItemCount() - 1),
-                    menu.getItemCount() - 1);
+                menu.getItemCount() - 1);
         }
         addToModelAndView(name);
         menu.setEnabled(menu.getItemCount() != 0);
@@ -227,21 +238,22 @@ public class RecentFileMenu {
         String s;
         do {
             s = p.getProperty("RecentFile" + i);
-            if (s != null) addRecentFile(s);
+            if (s != null)
+                addRecentFile(s);
             i--;
         } while (i >= 0);
     }
 
     /**
      * Put the names of the recent Files into the properties object.
-     * The property names are "RecentFile0"  "RecentFile1" ...
+     * The property names are "RecentFile0" "RecentFile1" ...
      * The values are fully qualified path names.
      */
     public void store(Properties p) {
-        //if there's nothing to store:
+        // if there's nothing to store:
         for (int i = 0; i < menu.getItemCount(); i++) {
             p.setProperty("RecentFile" + i,
-                    getAbsolutePath(menu.getItem(i)));
+                getAbsolutePath(menu.getItem(i)));
         }
     }
 
@@ -262,10 +274,10 @@ public class RecentFileMenu {
             }
         } catch (FileNotFoundException ex) {
             LOGGER.debug("Could not read RecentFileList. Did not find file {}",
-                    filename);
+                filename);
         } catch (IOException ioe) {
             LOGGER.debug("Could not read RecentFileList. Some IO Error occured ",
-                    ioe);
+                ioe);
         } finally {
             try {
                 if (propStream != null) {
@@ -292,7 +304,7 @@ public class RecentFileMenu {
 
         Properties p = new Properties();
         try (FileInputStream fin = new FileInputStream(localRecentFiles);
-             FileOutputStream fout = new FileOutputStream(localRecentFiles)) {
+                FileOutputStream fout = new FileOutputStream(localRecentFiles)) {
             // creates a new file if it does not exist yet
             localRecentFiles.createNewFile();
             p.load(fin);
@@ -313,8 +325,8 @@ public class RecentFileMenu {
             this.absolutePath = absolutePath;
             int lastIndex = absolutePath.lastIndexOf(File.separatorChar);
 
-            this.fileName = (lastIndex == -1 ? absolutePath :
-                    absolutePath.substring(lastIndex + 1));
+            this.fileName =
+                (lastIndex == -1 ? absolutePath : absolutePath.substring(lastIndex + 1));
         }
 
         public String getAbsolutePath() {

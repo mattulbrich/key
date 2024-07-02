@@ -1,14 +1,25 @@
-package de.uka.ilkd.key.proof.io;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.control.DefaultUserInterfaceControl;
-import de.uka.ilkd.key.control.KeYEnvironment;
-import org.junit.jupiter.api.Test;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.proof.io;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import de.uka.ilkd.key.control.DefaultUserInterfaceControl;
+import de.uka.ilkd.key.control.KeYEnvironment;
+
+import org.junit.jupiter.api.Test;
 
 public class TestZipProofSaving {
 
@@ -32,7 +43,8 @@ public class TestZipProofSaving {
             throws ProblemLoaderException, IOException {
         KeYEnvironment<DefaultUserInterfaceControl> env = KeYEnvironment.load(file.toFile());
         env.getProofControl().startAndWaitForAutoMode(env.getLoadedProof());
-        GZipProofSaver proofSaver = new GZipProofSaver(env.getLoadedProof(), fileTarget.toString(), "n/a");
+        GZipProofSaver proofSaver =
+            new GZipProofSaver(env.getLoadedProof(), fileTarget.toString(), "n/a");
         proofSaver.save();
     }
 
@@ -40,7 +52,7 @@ public class TestZipProofSaving {
         try {
             byte[] buffer = new byte[4096];
             int read = is.read(buffer);
-            while(read >= 0) {
+            while (read >= 0) {
                 os.write(buffer, 0, read);
                 read = is.read(buffer);
             }

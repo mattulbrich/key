@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -19,6 +29,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import de.uka.ilkd.key.java.recoderext.ProofJavaProgramFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import recoder.CrossReferenceServiceConfiguration;
@@ -31,15 +43,14 @@ import recoder.java.CompilationUnit;
 import recoder.java.ProgramElement;
 import recoder.java.reference.TypeReference;
 import recoder.service.SourceInfo;
-import de.uka.ilkd.key.java.recoderext.ProofJavaProgramFactory;
 
 /**
  * Find out for a collection of Java files which referenced types are not defined
  * within the source directory. Stubs using empty method or constructor bodies
  * are allowed.
- * 
+ *
  * @author MU
- * 
+ *
  */
 public class ReferenceLister {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReferenceLister.class);
@@ -94,8 +105,8 @@ public class ReferenceLister {
         ProgramFactory factory = sc.getProgramFactory();
         FileReader fileReader = new FileReader(file);
         final CompilationUnit cu;
-        try { 
-           cu = factory.parseCompilationUnit(fileReader);
+        try {
+            cu = factory.parseCompilationUnit(fileReader);
         } finally {
             fileReader.close();
         }
@@ -104,6 +115,7 @@ public class ReferenceLister {
     }
 
 }
+
 
 class RefSolverServiceConfiguration extends CrossReferenceServiceConfiguration {
     @Override

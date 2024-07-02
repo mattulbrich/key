@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,10 +23,10 @@
 
 package de.uka.ilkd.key.util.pp;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -63,7 +73,7 @@ public class TestLayouter {
     int markPtr;
 
     @BeforeEach
-	public void setUp() {
+    public void setUp() {
         narrowBack = new StringBackend(1);
         wideBack = new StringBackend(10000);
         sixBack = new StringBackend(6);
@@ -88,7 +98,7 @@ public class TestLayouter {
     }
 
     @Test
-	public void testNarrowConsistent()
+    public void testNarrowConsistent()
             throws UnbalancedBlocksException, IOException {
         narrow.beginC().print("A").beginC()
                 .print("B").brk(1, 2)
@@ -98,7 +108,7 @@ public class TestLayouter {
     }
 
     @Test
-	public void testWideConsistent()
+    public void testWideConsistent()
             throws UnbalancedBlocksException, IOException {
         wide.beginC().print("A").beginC()
                 .print("B").brk(1, 2)
@@ -108,7 +118,7 @@ public class TestLayouter {
     }
 
     @Test
-	public void testNarrowInconsistent()
+    public void testNarrowInconsistent()
             throws UnbalancedBlocksException, IOException {
         narrow.beginC().print("A").beginI()
                 .print("B").brk(1, 2)
@@ -117,7 +127,7 @@ public class TestLayouter {
         assertEquals("AB\n     C\n      DE", narrowBack.getString(), "break inconsistent");
     }
 
-	@Test
+    @Test
     public void testWideInconsistent()
             throws UnbalancedBlocksException, IOException {
         wide.beginC().print("A").beginI()
@@ -128,7 +138,7 @@ public class TestLayouter {
     }
 
     @Test
-	public void testSixInconsistent()
+    public void testSixInconsistent()
             throws UnbalancedBlocksException, IOException {
         six.beginC().print("A").beginI()
                 .print("B").brk(1, 2)
@@ -138,7 +148,7 @@ public class TestLayouter {
     }
 
     @Test
-	public void testNarrowPre()
+    public void testNarrowPre()
             throws UnbalancedBlocksException, IOException {
         narrow.beginC().print("[")
                 .pre("A\nB\nC").print("]").end().close();
@@ -147,7 +157,7 @@ public class TestLayouter {
     }
 
     @Test
-	public void testWidePre()
+    public void testWidePre()
             throws UnbalancedBlocksException, IOException {
         wide.beginC().print("[")
                 .pre("A\nB\nC").print("]").end().close();
@@ -156,7 +166,7 @@ public class TestLayouter {
     }
 
     @Test
-	public void testNarrowInd()
+    public void testNarrowInd()
             throws UnbalancedBlocksException, IOException {
         narrow.beginC().print("A").beginC()
                 .ind(1, 2).print("B").brk(1, 2)
@@ -166,7 +176,7 @@ public class TestLayouter {
     }
 
     @Test
-	public void testWideInd()
+    public void testWideInd()
             throws UnbalancedBlocksException, IOException {
         wide.beginC().print("A").beginC()
                 .ind(1, 2).print("B").brk(1, 2)
@@ -176,10 +186,9 @@ public class TestLayouter {
     }
 
     @Test
-	public void testMark()
+    public void testMark()
             throws UnbalancedBlocksException, IOException {
-        marking.
-                beginC().mark(null)
+        marking.beginC().mark(null)
                 .print("A").mark(null)
                 .beginC().mark(null)
                 .print("B").mark(null)

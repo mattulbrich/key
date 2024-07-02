@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,11 +24,11 @@
 package de.uka.ilkd.key.proof;
 
 
+import java.net.MalformedURLException;
+import javax.annotation.Nullable;
+
 import de.uka.ilkd.key.parser.Location;
 import de.uka.ilkd.key.util.parsing.HasLocation;
-
-import javax.annotation.Nullable;
-import java.net.MalformedURLException;
 
 /**
  * Represents an exception with position information. The row position is
@@ -26,59 +36,59 @@ import java.net.MalformedURLException;
  * position is relative to the text and does not describe the column of the
  * table. (has to be changed)
  */
-public abstract class SVInstantiationExceptionWithPosition 
-    extends SVInstantiationException implements HasLocation {
+public abstract class SVInstantiationExceptionWithPosition
+        extends SVInstantiationException implements HasLocation {
 
     private final int row;
     private final int column;
     private final boolean inIfSequent;
-         
-    public SVInstantiationExceptionWithPosition( String description, 
-						 int    row, 
-						 int    column,
-						 boolean inIfSequent ) {
-	super(description);
-	this.row    = row;
-	this.column = column;
-	this.inIfSequent = inIfSequent;
+
+    public SVInstantiationExceptionWithPosition(String description,
+            int row,
+            int column,
+            boolean inIfSequent) {
+        super(description);
+        this.row = row;
+        this.column = column;
+        this.inIfSequent = inIfSequent;
 
     }
-    
+
     public boolean inIfSequent() {
-	return inIfSequent;
+        return inIfSequent;
     }
 
     public int getRow() {
-	return row;
+        return row;
     }
 
     public int getColumn() {
-	return column;
+        return column;
     }
 
-    public String getMessage () {
-	String errmsg = super.getMessage() + ":";
-	if ( inIfSequent() ) {
-	    errmsg += row <= 0 ? "" : ("\nAssumption number:" + row);
-	} else {
-	    errmsg += row    <= 0 ? "" : ("\nRow: " + getRow());
-	    errmsg += column <= 0 ? "" : ("\nColumn: " + getColumn());	
-	}
-	return errmsg;
-    }    
+    public String getMessage() {
+        String errmsg = super.getMessage() + ":";
+        if (inIfSequent()) {
+            errmsg += row <= 0 ? "" : ("\nAssumption number:" + row);
+        } else {
+            errmsg += row <= 0 ? "" : ("\nRow: " + getRow());
+            errmsg += column <= 0 ? "" : ("\nColumn: " + getColumn());
+        }
+        return errmsg;
+    }
 
     /**
      * Returns a string representation of this exception.
      */
     public String toString() {
-	return getMessage();
+        return getMessage();
     }
 
-	@Nullable
-	@Override
-	public Location getLocation() throws MalformedURLException {
-		Location location;
-		location = new Location((String) null, getRow(), getColumn());
-		return location;
-	}
+    @Nullable
+    @Override
+    public Location getLocation() throws MalformedURLException {
+        Location location;
+        location = new Location((String) null, getRow(), getColumn());
+        return location;
+    }
 }

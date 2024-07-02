@@ -1,15 +1,23 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 // Copyright (C) 2001-2011 Universitaet Karlsruhe, Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 //
-// The KeY system is protected by the GNU General Public License. 
+// The KeY system is protected by the GNU General Public License.
 // See LICENSE.TXT for details.
 //
 //
 package de.uka.ilkd.key.strategy.feature;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.informationflow.rule.executor.InfFlowContractAppTacletExecutor;
 import de.uka.ilkd.key.logic.DefaultVisitor;
@@ -21,6 +29,8 @@ import de.uka.ilkd.key.rule.TacletApp;
 import de.uka.ilkd.key.strategy.NumberRuleAppCost;
 import de.uka.ilkd.key.strategy.RuleAppCost;
 import de.uka.ilkd.key.strategy.TopRuleAppCost;
+
+import org.key_project.util.collection.ImmutableList;
 
 
 /**
@@ -42,11 +52,11 @@ public class FocusIsSubFormulaOfInfFlowContractAppFeature implements Feature {
 
     @Override
     public RuleAppCost computeCost(RuleApp ruleApp,
-                               PosInOccurrence pos,
-                               Goal goal) {
+            PosInOccurrence pos,
+            Goal goal) {
         assert pos != null : "Feature is only applicable to rules with find.";
         assert ruleApp instanceof TacletApp : "Feature is only applicable " +
-                                              "to Taclets.";
+            "to Taclets.";
         TacletApp app = (TacletApp) ruleApp;
 
         if (!app.ifInstsComplete()) {
@@ -55,7 +65,7 @@ public class FocusIsSubFormulaOfInfFlowContractAppFeature implements Feature {
 
         final Term focusFor = pos.sequentFormula().formula();
         ImmutableList<Term> contractAppls =
-                goal.getStrategyInfo(InfFlowContractAppTacletExecutor.INF_FLOW_CONTRACT_APPL_PROPERTY);
+            goal.getStrategyInfo(InfFlowContractAppTacletExecutor.INF_FLOW_CONTRACT_APPL_PROPERTY);
         if (contractAppls == null) {
             return TopRuleAppCost.INSTANCE;
         }
@@ -71,7 +81,7 @@ public class FocusIsSubFormulaOfInfFlowContractAppFeature implements Feature {
 
 
     private boolean isSubFormula(Term f1,
-                                 Term f2) {
+            Term f2) {
         SubFormulaVisitor v = new SubFormulaVisitor(f1);
         f2.execPreOrder(v);
         return v.getIsSubFormula();

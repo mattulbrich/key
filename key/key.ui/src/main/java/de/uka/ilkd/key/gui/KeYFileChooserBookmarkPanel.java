@@ -1,19 +1,29 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui;
 
-import de.uka.ilkd.key.gui.actions.KeyAction;
-import de.uka.ilkd.key.gui.fonticons.IconFactory;
-import de.uka.ilkd.key.settings.ProofIndependentSettings;
-import de.uka.ilkd.key.settings.ViewSettings;
-import javax.annotation.Nonnull;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import javax.annotation.Nonnull;
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+
+import de.uka.ilkd.key.gui.actions.KeyAction;
+import de.uka.ilkd.key.gui.fonticons.IconFactory;
+import de.uka.ilkd.key.settings.ProofIndependentSettings;
+import de.uka.ilkd.key.settings.ViewSettings;
 
 /**
  * This is a Panel used as accessory for the JFileChooser.
@@ -33,7 +43,7 @@ public class KeYFileChooserBookmarkPanel extends JPanel {
     private final @Nonnull JFileChooser chooser;
 
     private final ViewSettings viewSettings =
-            ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings();
+        ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings();
 
     private final DefaultListModel<File> bookmarks = new DefaultListModel<>();
     private final JList<File> listBookmarks = new JList<>(bookmarks);
@@ -50,10 +60,10 @@ public class KeYFileChooserBookmarkPanel extends JPanel {
      */
     public KeYFileChooserBookmarkPanel(@Nonnull JFileChooser chooser) {
         this.chooser = chooser;
-        //register ad the given file chooser
+        // register ad the given file chooser
         chooser.setAccessory(this);
 
-        //listen for current directory of the file chooser
+        // listen for current directory of the file chooser
         chooser.addPropertyChangeListener(JFileChooser.DIRECTORY_CHANGED_PROPERTY, e -> {
             File selected = chooser.getCurrentDirectory();
             listBookmarks.setSelectedValue(selected, true);
@@ -102,8 +112,8 @@ public class KeYFileChooserBookmarkPanel extends JPanel {
 
     private void loadBookmarks() {
         viewSettings.getFolderBookmarks().forEach(it ->
-                //make absolute? .getAbsoluteFile())
-                bookmarks.addElement(new File(it)));
+        // make absolute? .getAbsoluteFile())
+        bookmarks.addElement(new File(it)));
     }
 
     private void saveBookmarks() {
@@ -140,8 +150,8 @@ public class KeYFileChooserBookmarkPanel extends JPanel {
 
         @Override
         public Component getListCellRendererComponent(JList<? extends File> list, File value,
-                                                      int index, boolean isSelected,
-                                                      boolean cellHasFocus) {
+                int index, boolean isSelected,
+                boolean cellHasFocus) {
             String val;
             if (value.getAbsolutePath().length() <= LIMIT) {
                 val = value.getAbsolutePath();
@@ -149,7 +159,7 @@ public class KeYFileChooserBookmarkPanel extends JPanel {
                 val = toString(value);
             }
             return renderer.getListCellRendererComponent(list, val, index,
-                    isSelected, cellHasFocus);
+                isSelected, cellHasFocus);
         }
     }
 

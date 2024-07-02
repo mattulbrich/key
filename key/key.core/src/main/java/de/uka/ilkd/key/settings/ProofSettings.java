@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,16 +23,17 @@
 
 package de.uka.ilkd.key.settings;
 
-import de.uka.ilkd.key.util.Debug;
-import de.uka.ilkd.key.util.KeYResourceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+
+import de.uka.ilkd.key.util.Debug;
+import de.uka.ilkd.key.util.KeYResourceManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is used to load and save settings for proofs such as which data
@@ -43,7 +54,8 @@ import java.util.Properties;
 public class ProofSettings {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProofSettings.class);
 
-    public static final File PROVER_CONFIG_FILE = new File(PathConfig.getKeyConfigDir(), "proof-settings.props");
+    public static final File PROVER_CONFIG_FILE =
+        new File(PathConfig.getKeyConfigDir(), "proof-settings.props");
     public static final URL PROVER_CONFIG_FILE_TEMPLATE = KeYResourceManager.getManager()
             .getResourceFile(ProofSettings.class, "default-proof-settings.props");
     public static final ProofSettings DEFAULT_SETTINGS = ProofSettings.loadedSettings();
@@ -79,7 +91,8 @@ public class ProofSettings {
     // private final static int VIEW_SETTINGS = 4;
     private final StrategySettings strategySettings = new StrategySettings();
     private final ChoiceSettings choiceSettings = new ChoiceSettings();
-    private final ProofDependentSMTSettings smtSettings = ProofDependentSMTSettings.getDefaultSettingsData();
+    private final ProofDependentSMTSettings smtSettings =
+        ProofDependentSMTSettings.getDefaultSettingsData();
     private final NewSMTTranslationSettings newSMTSettings = new NewSMTTranslationSettings();
     private Properties lastLoadedProperties = null;
     private final TermLabelSettings termLabelSettings = new TermLabelSettings();
@@ -254,7 +267,7 @@ public class ProofSettings {
      * Checks if the choice settings are initialized.
      *
      * @return {@code true} settings are initialized, {@code false} settings are
-     * not initialized.
+     *         not initialized.
      */
     public static boolean isChoiceSettingInitialised() {
         return !ProofSettings.DEFAULT_SETTINGS.getChoiceSettings().getChoices()

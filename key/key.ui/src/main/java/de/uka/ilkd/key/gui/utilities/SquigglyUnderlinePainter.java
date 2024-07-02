@@ -1,10 +1,20 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.utilities;
 
+import java.awt.*;
 import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
-import java.awt.*;
 
 /**
  * A highlight painter for drawing a squiggly line under the selection. Color and width of the line
@@ -26,8 +36,8 @@ public class SquigglyUnderlinePainter implements Highlighter.HighlightPainter {
      * Creates a new SquigglyUnderlinePainter.
      *
      * @param highlightColor the color of the line
-     * @param squiggleSize   the size (width) of a single arc of the painter
-     * @param lineWidth      the line width of the squiggle (1 works best)
+     * @param squiggleSize the size (width) of a single arc of the painter
+     * @param lineWidth the line width of the squiggle (1 works best)
      */
     public SquigglyUnderlinePainter(Color highlightColor, int squiggleSize, float lineWidth) {
         this.highlightColor = highlightColor;

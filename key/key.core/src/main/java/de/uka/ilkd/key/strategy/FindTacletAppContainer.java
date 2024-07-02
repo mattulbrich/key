@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.strategy;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.logic.FormulaChangeInfo;
 import de.uka.ilkd.key.logic.PIOPathIterator;
@@ -28,6 +36,8 @@ import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.rule.NoPosTacletApp;
 import de.uka.ilkd.key.util.Debug;
 
+import org.key_project.util.collection.ImmutableList;
+
 /**
  * Instances of this class are immutable
  */
@@ -40,11 +50,12 @@ public class FindTacletAppContainer extends TacletAppContainer {
      * <code>applicationPosition</code> is the original position for which the
      * rule app was created
      */
-    private final FormulaTag      positionTag;
+    private final FormulaTag positionTag;
     private final PosInOccurrence applicationPosition;
 
     /**
      * Creates a FindTacletAppContainer for applying a find taclet.
+     *
      * @param app the taclet application
      * @param pio the position in occurrence
      * @param cost the rule application cost
@@ -52,26 +63,26 @@ public class FindTacletAppContainer extends TacletAppContainer {
      * @param age the age
      */
     FindTacletAppContainer(NoPosTacletApp app,
-                           PosInOccurrence pio,
-                           RuleAppCost cost,
-                           Goal goal,
-                           long age) {
+            PosInOccurrence pio,
+            RuleAppCost cost,
+            Goal goal,
+            long age) {
         super(app, cost, age);
         applicationPosition = pio;
-        positionTag         =
-                goal.getFormulaTagManager().getTagForPos(pio.topLevel());
+        positionTag =
+            goal.getFormulaTagManager().getTagForPos(pio.topLevel());
 
         if (positionTag == null) {
             // faster than <code>assertFalse</code>
-            Debug.fail ("Formula " + pio + " does not exist");
+            Debug.fail("Formula " + pio + " does not exist");
         }
     }
 
 
     /**
      * @return true iff the stored rule app is applicable for the given sequent,
-     * i.e. if the find-position does still exist (if-formulas are not
-     * considered)
+     *         i.e. if the find-position does still exist (if-formulas are not
+     *         considered)
      */
     @Override
     protected boolean isStillApplicable(Goal p_goal) {
@@ -85,16 +96,16 @@ public class FindTacletAppContainer extends TacletAppContainer {
 
     /**
      * @return true iff a subformula that contains the find position stored by
-     * this object has been altered since the creation of this object or if a
-     * preceding update has changed
+     *         this object has been altered since the creation of this object or if a
+     *         preceding update has changed
      */
-    private boolean subformulaOrPreceedingUpdateHasChanged (Goal goal) {
+    private boolean subformulaOrPreceedingUpdateHasChanged(Goal goal) {
         ImmutableList<FormulaChangeInfo> infoList =
-                goal.getFormulaTagManager().getModifications(positionTag);
+            goal.getFormulaTagManager().getModifications(positionTag);
 
-        while (!infoList.isEmpty ()) {
-            final FormulaChangeInfo info = infoList.head ();
-            infoList = infoList.tail ();
+        while (!infoList.isEmpty()) {
+            final FormulaChangeInfo info = infoList.head();
+            infoList = infoList.tail();
 
             final SequentFormula newFormula = info.getNewFormula();
             if (newFormula == applicationPosition.sequentFormula()) {
@@ -102,8 +113,8 @@ public class FindTacletAppContainer extends TacletAppContainer {
                 // of the rule app object
                 return false;
             }
-            if (!independentSubformulas (info.getPositionOfModification(),
-                    newFormula)) {
+            if (!independentSubformulas(info.getPositionOfModification(),
+                newFormula)) {
                 return true;
             }
         }
@@ -118,40 +129,41 @@ public class FindTacletAppContainer extends TacletAppContainer {
      * a formula <code>F</code> if <code>F</code> is a subformula of the modified one
      * or the modification took part inside an update which may occur in the update
      * prefix instantiation of the taclet application
+     *
      * @return true iff <code>applicationPosition</code> is in the scope of
-     * the position <code>p_pos</code> (the formulas are not compared, only the
-     * positions within the formulas) and no indirect relationship exists which
-     * is established by a modification that occurred inside an update
+     *         the position <code>p_pos</code> (the formulas are not compared, only the
+     *         positions within the formulas) and no indirect relationship exists which
+     *         is established by a modification that occurred inside an update
      */
     private boolean independentSubformulas(PosInOccurrence changePos,
             SequentFormula newFormula) {
-        final PIOPathIterator changePIO = changePos.iterator ();
-        final PIOPathIterator appPIO = applicationPosition.iterator ();
+        final PIOPathIterator changePIO = changePos.iterator();
+        final PIOPathIterator appPIO = applicationPosition.iterator();
 
         while (true) {
-            final int changeIndex = changePIO.next ();
-            final int appIndex = appPIO.next ();
+            final int changeIndex = changePIO.next();
+            final int appIndex = appPIO.next();
 
             if (appIndex == -1) {
                 return false;
             }
 
             if (changeIndex == -1) {
-                final Term beforeChangeTerm = changePIO.getSubTerm ();
-                final Operator beforeChangeOp = beforeChangeTerm.op ();
+                final Term beforeChangeTerm = changePIO.getSubTerm();
+                final Operator beforeChangeOp = beforeChangeTerm.op();
 
                 // special case: a taclet application is not affected by changes
                 // to a preceding program, as long as the post-condition of the
                 // program does not change. this is a pretty common situation
                 // during symbolic program execution; also consider
                 // <code>TermTacletAppIndex.updateCompleteRebuild</code>
-                if ( beforeChangeOp instanceof Modality ) {
+                if (beforeChangeOp instanceof Modality) {
                     final PosInOccurrence afterChangePos =
-                            changePos.replaceConstrainedFormula (newFormula);
-                    final Term afterChangeTerm = afterChangePos.subTerm ();
-                    return beforeChangeOp == afterChangeTerm.op ()
-                            && beforeChangeTerm.sub (0)
-                            .equalsModIrrelevantTermLabels(afterChangeTerm.sub (0));
+                        changePos.replaceConstrainedFormula(newFormula);
+                    final Term afterChangeTerm = afterChangePos.subTerm();
+                    return beforeChangeOp == afterChangeTerm.op()
+                            && beforeChangeTerm.sub(0)
+                                    .equalsModIrrelevantTermLabels(afterChangeTerm.sub(0));
                 }
 
                 return false;
@@ -161,11 +173,11 @@ public class FindTacletAppContainer extends TacletAppContainer {
                 // in case a change within an update occurred, also (some)
                 // taclets within the update target expression have to be
                 // invalidated
-                final Operator modOp = changePIO.getSubTerm ().op ();
+                final Operator modOp = changePIO.getSubTerm().op();
 
                 return !(modOp instanceof UpdateApplication
-                        && appIndex == UpdateApplication.targetPos ()
-                        && updateContextIsRecorded ());
+                        && appIndex == UpdateApplication.targetPos()
+                        && updateContextIsRecorded());
             }
         }
     }
@@ -177,7 +189,7 @@ public class FindTacletAppContainer extends TacletAppContainer {
      *         update context changes
      */
     private boolean updateContextIsRecorded() {
-        return !getTacletApp ().instantiations ().getUpdateContext ().isEmpty ();
+        return !getTacletApp().instantiations().getUpdateContext().isEmpty();
     }
 
     /**

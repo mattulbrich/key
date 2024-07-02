@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.rule.conditions;
-
-import org.key_project.util.collection.ImmutableArray;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Name;
@@ -23,6 +31,8 @@ import de.uka.ilkd.key.logic.op.SchemaVariable;
 import de.uka.ilkd.key.logic.op.TermLabelSV;
 import de.uka.ilkd.key.rule.VariableConditionAdapter;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
+
+import org.key_project.util.collection.ImmutableArray;
 
 /**
  * This variable condition checks if an instantiation for term labels contains a specific
@@ -44,7 +54,7 @@ public class TermLabelCondition extends VariableConditionAdapter {
 
     @Override
     public boolean check(SchemaVariable var, SVSubstitute instCandidate,
-                         SVInstantiations instMap, Services services) {
+            SVInstantiations instMap, Services services) {
         assert instMap.getInstantiation(l) instanceof ImmutableArray<?>;
         ImmutableArray<?> tInsts = (ImmutableArray<?>) instMap.getInstantiation(l);
         boolean hasLabel = hasLabel(tInsts, ln);
@@ -53,15 +63,16 @@ public class TermLabelCondition extends VariableConditionAdapter {
 
     /**
      * Checks if an array of label contains the label specified in this condition
+     *
      * @param labels array of labels in the term to be matched
      * @param name name of the label specified in this condition
      * @return true if label matches, false if not
      */
     static boolean hasLabel(ImmutableArray<?> labels, Name name) {
         boolean found = false;
-        for (Object o: labels) {
+        for (Object o : labels) {
             assert o instanceof TermLabel;
-            TermLabel label = (TermLabel)o;
+            TermLabel label = (TermLabel) o;
             found = found || (label.name().compareTo(name) == 0);
         }
         return found;
@@ -69,6 +80,6 @@ public class TermLabelCondition extends VariableConditionAdapter {
 
     @Override
     public String toString() {
-        return (negated ? "\\not":"") + "\\hasLabel (" + l + ", " + ln + ")";
+        return (negated ? "\\not" : "") + "\\hasLabel (" + l + ", " + ln + ")";
     }
 }

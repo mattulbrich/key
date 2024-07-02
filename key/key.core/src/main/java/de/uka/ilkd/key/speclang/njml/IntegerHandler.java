@@ -1,4 +1,18 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.speclang.njml;
+
+import java.util.EnumMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.PrimitiveType;
@@ -7,25 +21,21 @@ import de.uka.ilkd.key.ldt.IntegerLDT;
 import de.uka.ilkd.key.logic.op.Operator;
 import de.uka.ilkd.key.speclang.njml.OverloadedOperatorHandler.JMLOperator;
 
-import java.util.EnumMap;
-import java.util.IdentityHashMap;
-import java.util.Map;
-
 import static de.uka.ilkd.key.speclang.njml.OverloadedOperatorHandler.JMLOperator.*;
 
-public class IntegerHandler extends LDTHandler  {
+public class IntegerHandler extends LDTHandler {
 
     private final Map<JMLOperator, Operator> jmlIntMap =
-            new EnumMap<>(JMLOperator.class);
+        new EnumMap<>(JMLOperator.class);
 
     private final Map<JMLOperator, Operator> jmlLongMap =
-            new EnumMap<>(JMLOperator.class);
+        new EnumMap<>(JMLOperator.class);
 
     private final Map<JMLOperator, Operator> jmlBigintMap =
-            new EnumMap<>(JMLOperator.class);
+        new EnumMap<>(JMLOperator.class);
 
     private final Map<PrimitiveType, Map<JMLOperator, Operator>> opCategories =
-            new IdentityHashMap<>();
+        new IdentityHashMap<>();
 
     private final Services services;
 

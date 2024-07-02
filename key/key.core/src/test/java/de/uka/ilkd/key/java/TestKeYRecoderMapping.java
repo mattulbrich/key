@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,18 +23,19 @@
 
 package de.uka.ilkd.key.java;
 
+import java.util.HashMap;
+
 import de.uka.ilkd.key.java.statement.EmptyStatement;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestKeYRecoderMapping {
 
-    private recoder.java.ProgramElement rp,rp2;
+    private recoder.java.ProgramElement rp, rp2;
     private ProgramElement kp;
     private recoder.ModelElement rm, rm2;
     private ModelElement km;
@@ -32,7 +43,7 @@ public class TestKeYRecoderMapping {
 
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         HashMap<Object, Object> map = new HashMap<>();
         HashMap<Object, Object> revmap = new HashMap<>();
         rp = new recoder.java.declaration.ClassDeclaration();
@@ -41,16 +52,16 @@ public class TestKeYRecoderMapping {
         km = new de.uka.ilkd.key.java.abstraction.Package("Packet");
         rp2 = new recoder.java.declaration.ClassDeclaration();
         rm2 = new recoder.java.statement.Case();
-        map.put(rp,kp);
-        revmap.put(kp,rp);
-        map.put(rm,km);
-        revmap.put(km,rm);
+        map.put(rp, kp);
+        revmap.put(kp, rp);
+        map.put(rm, km);
+        revmap.put(km, rm);
         mapping = new KeYRecoderMapping(map, revmap, null, false);
     }
-    
+
 
     @Test
-    public void testtoKeY(){
+    public void testtoKeY() {
         assertEquals(kp, mapping.toKeY(rp), "Fehler[1] in toKeY(recoder.java.ProgramElement)");
         assertNull(mapping.toKeY(rp2), "Fehler[2] in toKeY(recoder.java.ProgramElement)");
         assertEquals(km, mapping.toKeY(rm), "Fehler[3] in toKeY(recoder.ModelElement)");
@@ -59,13 +70,16 @@ public class TestKeYRecoderMapping {
 
 
 
-
     @Test
-    public void testtoRecoder(){
-        assertEquals(rp, mapping.toRecoder(kp), "Fehler[1] in toRecoder(de.uka.ilkd.key.java.ProgramElement)");
-//        Assert.assertTrue("Fehler[2] in toRecoder(de.uka.ilkd.key.java.ProgramElement)", null==mapping.toRecoder(kp2));
-        assertEquals(rm, mapping.toRecoder(km), "Fehler[2] in toRecoder(de.uka.ilkd.key.java.ModelElement)");
-//        Assert.assertTrue("Fehler[4] in toRecoder(de.uka.ilkd.key.java.ModelElement)", null==mapping.toRecoder(km2));
+    public void testtoRecoder() {
+        assertEquals(rp, mapping.toRecoder(kp),
+            "Fehler[1] in toRecoder(de.uka.ilkd.key.java.ProgramElement)");
+        // Assert.assertTrue("Fehler[2] in toRecoder(de.uka.ilkd.key.java.ProgramElement)",
+        // null==mapping.toRecoder(kp2));
+        assertEquals(rm, mapping.toRecoder(km),
+            "Fehler[2] in toRecoder(de.uka.ilkd.key.java.ModelElement)");
+        // Assert.assertTrue("Fehler[4] in toRecoder(de.uka.ilkd.key.java.ModelElement)",
+        // null==mapping.toRecoder(km2));
     }
 
 

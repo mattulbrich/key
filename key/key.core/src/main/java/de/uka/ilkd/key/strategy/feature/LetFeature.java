@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -30,14 +40,14 @@ import de.uka.ilkd.key.strategy.termProjection.TermBuffer;
  */
 public class LetFeature implements Feature {
 
-    private final TermBuffer       var;
+    private final TermBuffer var;
     private final ProjectionToTerm value;
-    private final Feature          body;
+    private final Feature body;
 
     public static Feature create(TermBuffer var,
-                                 ProjectionToTerm value,
-                                 Feature body) {
-        return new LetFeature ( var, value, body );
+            ProjectionToTerm value,
+            Feature body) {
+        return new LetFeature(var, value, body);
     }
 
     private LetFeature(TermBuffer var, ProjectionToTerm value, Feature body) {
@@ -47,12 +57,12 @@ public class LetFeature implements Feature {
     }
 
     public RuleAppCost computeCost(RuleApp app, PosInOccurrence pos, Goal goal) {
-        final Term outerVarContent = var.getContent ();
+        final Term outerVarContent = var.getContent();
 
-        var.setContent ( value.toTerm ( app, pos, goal ) );
-        final RuleAppCost res = body.computeCost ( app, pos, goal );
+        var.setContent(value.toTerm(app, pos, goal));
+        final RuleAppCost res = body.computeCost(app, pos, goal);
 
-        var.setContent ( outerVarContent );
+        var.setContent(outerVarContent);
         return res;
     }
 

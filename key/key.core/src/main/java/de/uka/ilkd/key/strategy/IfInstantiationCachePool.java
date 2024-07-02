@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.strategy;
 
 import java.util.HashMap;
@@ -6,69 +16,71 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
-import org.key_project.util.LRUCache;
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.proof.Node;
 import de.uka.ilkd.key.rule.IfFormulaInstantiation;
+
+import org.key_project.util.LRUCache;
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * Direct-mapped cache of lists of formulas (potential instantiations of
  * if-formulas of taclets) that were modified after a certain point of time
- * 
+ *
  * Hashmaps of the particular lists of formulas; the keys of the maps is the
  * point of time that separates old from new (modified) formulas
  *
  * Keys: Long Values: IList<IfFormulaInstantiation>
  */
 public class IfInstantiationCachePool {
-    
+
     public final LRUCache<Node, IfInstantiationCache> cacheMgr = new LRUCache<>(10);
 
     public IfInstantiationCache getCache(Node n) {
         IfInstantiationCache cache;
-        synchronized(cacheMgr) {
+        synchronized (cacheMgr) {
             cache = cacheMgr.get(n);
         }
-        
+
         if (cache != null) {
             return cache;
         }
-        
+
         cache = new IfInstantiationCache();
-        
+
         IfInstantiationCache cache2;
-        synchronized(cacheMgr) {
+        synchronized (cacheMgr) {
             cache2 = cacheMgr.putIfAbsent(n, cache);
         }
-        
+
         if (cache2 != null) {
             cache = cache2;
         }
-        
+
         return cache;
     }
-    
+
     public void releaseAll() {
-        synchronized(cacheMgr) {
+        synchronized (cacheMgr) {
             cacheMgr.clear();
         }
-    }  
-    
+    }
+
     public void release(Node n) {
         IfInstantiationCache cache = null;
-        synchronized(cacheMgr) {
-           cache = cacheMgr.remove(n);           
+        synchronized (cacheMgr) {
+            cache = cacheMgr.remove(n);
         }
         if (cache != null) {
             cache.reset();
         }
     }
-    
+
     public static class IfInstantiationCache {
 
-        private final HashMap<Long, ImmutableList<IfFormulaInstantiation>> antecCache = new LinkedHashMap<>();
-        private final HashMap<Long, ImmutableList<IfFormulaInstantiation>> succCache = new LinkedHashMap<>();
+        private final HashMap<Long, ImmutableList<IfFormulaInstantiation>> antecCache =
+            new LinkedHashMap<>();
+        private final HashMap<Long, ImmutableList<IfFormulaInstantiation>> succCache =
+            new LinkedHashMap<>();
 
         private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
         private final ReadLock readLock = lock.readLock();

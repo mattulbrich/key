@@ -1,15 +1,26 @@
-package de.uka.ilkd.key.prover.impl;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.prover.impl;
 
 import de.uka.ilkd.key.prover.ProverCore;
 import de.uka.ilkd.key.prover.ProverTaskListener;
 import de.uka.ilkd.key.prover.TaskFinishedInfo;
 import de.uka.ilkd.key.prover.TaskStartedInfo.TaskKind;
 
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
+
 /**
  * Common class for provers which takes care of listener registration and task event propagation
+ *
  * @author Richard Bubel
  */
 public abstract class AbstractProverCore implements ProverCore {
@@ -26,6 +37,7 @@ public abstract class AbstractProverCore implements ProverCore {
 
     /**
      * propagation method for the event that a task started
+     *
      * @param maxSteps an int with the maximal number of steps to be performed by the current task
      */
     protected void fireTaskStarted(int maxSteps) {
@@ -33,7 +45,7 @@ public abstract class AbstractProverCore implements ProverCore {
         // the add/remove task observer methods won't interfere
         for (final ProverTaskListener ptl : proverTaskObservers) {
             ptl.taskStarted(new DefaultTaskStartedInfo(TaskKind.Strategy,
-                    PROCESSING_STRATEGY, maxSteps));
+                PROCESSING_STRATEGY, maxSteps));
         }
     }
 
@@ -50,8 +62,9 @@ public abstract class AbstractProverCore implements ProverCore {
 
     /**
      * propagation method for the event that a task has finished
+     *
      * @param info an information object about the work done by the task e.g.
-     *  number of applied rules
+     *        number of applied rules
      */
     protected void fireTaskFinished(TaskFinishedInfo info) {
         // no need to synchronize here as we use immutable list and hence
@@ -63,22 +76,24 @@ public abstract class AbstractProverCore implements ProverCore {
 
     /**
      * adds a listener to the prover
+     *
      * @param observer the listener
      */
     @Override
     public void addProverTaskObserver(ProverTaskListener observer) {
-        synchronized(proverTaskObservers) {
+        synchronized (proverTaskObservers) {
             proverTaskObservers = proverTaskObservers.prepend(observer);
         }
     }
 
     /**
      * removes a listener from the prover
+     *
      * @param observer the listener
      */
     @Override
     public void removeProverTaskObserver(ProverTaskListener observer) {
-        synchronized(proverTaskObservers) {
+        synchronized (proverTaskObservers) {
             proverTaskObservers = proverTaskObservers.removeAll(observer);
         }
     }

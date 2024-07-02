@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -17,14 +27,14 @@ import java.util.Properties;
 
 public class SettingsConverter {
     private static String[][] encoding = {
-            {"#", "#hash"}, // must be the first in the list.
-            {"\n", "#newline"},
-            {"\t", "#tab"},
-            {"=", "#equals"},
-            {"\\\"", "#qmark"},
-            {"\\\\", "#backslash"},
-            {",", "#comma"
-            }};
+        { "#", "#hash" }, // must be the first in the list.
+        { "\n", "#newline" },
+        { "\t", "#tab" },
+        { "=", "#equals" },
+        { "\\\"", "#qmark" },
+        { "\\\\", "#backslash" },
+        { ",", "#comma"
+        } };
     private static final String PREFIX = "#beg";
     private static final String POSTFIX = "#end";
     private static final String LIST_SEPARATOR = ",";
@@ -33,7 +43,7 @@ public class SettingsConverter {
         String result = str;
         for (String[] strings : encoding) {
             result = result.replaceAll(strings[encode ? 1 : 0],
-                    strings[encode ? 0 : 1]);
+                strings[encode ? 0 : 1]);
         }
         return result;
     }
@@ -44,7 +54,7 @@ public class SettingsConverter {
             str = str.substring(PREFIX.length());
         } else {
             throw new RuntimeException(String.format(
-                    "Given string '%s' has not the right prefix ('%s').", str, PREFIX));
+                "Given string '%s' has not the right prefix ('%s').", str, PREFIX));
         }
         i = str.lastIndexOf(POSTFIX);
         str = str.substring(0, i);
@@ -155,7 +165,8 @@ public class SettingsConverter {
     private SettingsConverter() {
     }
 
-    public static <T extends Enum<?>> T read(Properties props, String key, T defaultValue, T[] values) {
+    public static <T extends Enum<?>> T read(Properties props, String key, T defaultValue,
+            T[] values) {
         int ord = read(props, key, defaultValue.ordinal());
         for (T value : values) {
             if (ord == value.ordinal()) {

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -43,11 +53,11 @@ public class ThrownExceptionFeature extends BinaryFeature {
     /**
      * creates a feature filtering first active throw statements where the
      * thrown exception is of one of the given types (or their subtypes)
-     * 
+     *
      * @param p_filteredExceptions
-     *            the String array with the types of the thrown exceptions
+     *        the String array with the types of the thrown exceptions
      * @param services
-     *            the Services
+     *        the Services
      */
     private ThrownExceptionFeature(String[] p_filteredExceptions,
             Services services) {
@@ -76,8 +86,9 @@ public class ThrownExceptionFeature extends BinaryFeature {
 
     protected boolean filter(RuleApp app, PosInOccurrence pos, Goal goal) {
         return app instanceof TacletApp && filter(pos.subTerm(), goal.proof()
-                .getServices(), ((TacletApp) app).instantiations()
-                .getExecutionContext());
+                .getServices(),
+            ((TacletApp) app).instantiations()
+                    .getExecutionContext());
     }
 
     protected boolean filter(Term term, Services services, ExecutionContext ec) {
@@ -93,9 +104,9 @@ public class ThrownExceptionFeature extends BinaryFeature {
     /**
      * returns the first executable statement (often identical with the first
      * active statement)
-     * 
+     *
      * @param term
-     *            the Term with the program at top level
+     *        the Term with the program at top level
      * @return the first executable statement
      */
     private ProgramElement getFirstExecutableStatement(Term term) {

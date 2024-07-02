@@ -1,15 +1,25 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.settings;
 
-import de.uka.ilkd.key.gui.MainWindow;
-import de.uka.ilkd.key.gui.actions.KeyAction;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.*;
+
+import de.uka.ilkd.key.gui.MainWindow;
+import de.uka.ilkd.key.gui.actions.KeyAction;
 
 /**
  * The settings dialog.
@@ -90,8 +100,8 @@ public class SettingsDialog extends JDialog {
             String msg = apply.stream().map(Throwable::getMessage)
                     .collect(Collectors.joining("<br>", "<html>", "</html>"));
             JOptionPane.showMessageDialog(this, msg,
-                    "Error in Settings",
-                    JOptionPane.ERROR_MESSAGE);
+                "Error in Settings",
+                JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

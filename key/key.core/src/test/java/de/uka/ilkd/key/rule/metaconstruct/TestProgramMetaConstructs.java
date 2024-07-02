@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -27,6 +37,7 @@ import de.uka.ilkd.key.logic.sort.ProgramSVSort;
 import de.uka.ilkd.key.proof.init.AbstractProfile;
 import de.uka.ilkd.key.rule.TacletForTests;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -45,32 +56,33 @@ public class TestProgramMetaConstructs {
         LabeledStatement labeledBlock = (LabeledStatement) ((StatementBlock) TacletForTests
                 .parsePrg
                 // ("{l1:l2:{l3:{l4:break l3; int i = 0;} int j=1;}}")).getChildAt(0);
-                        ("{l4:break l3; int i = 0; int j=1;}")).getChildAt(0);
+                ("{l4:break l3; int i = 0; int j=1;}")).getChildAt(0);
         DoBreak rmLabel = new DoBreak(labeledBlock);
 
         ProgramElement result = rmLabel.transform(rmLabel.body(),
-                new Services(AbstractProfile.getDefaultProfile()),
-                SVInstantiations.EMPTY_SVINSTANTIATIONS)[0];
+            new Services(AbstractProfile.getDefaultProfile()),
+            SVInstantiations.EMPTY_SVINSTANTIATIONS)[0];
         assertTrue(result instanceof Break);
     }
 
     /**
      * tests AST walkers
      */
-    @Test@Disabled
+    @Test
+    @Disabled
     public void testASTWalker() {
         ProgramElement block = TacletForTests.parsePrg(
-                "{int a=5; test1:test2:while (true) " + "{test3: {int j=3;}}}");
+            "{int a=5; test1:test2:while (true) " + "{test3: {int j=3;}}}");
         JavaASTCollector coll = new JavaASTCollector(block,
-                de.uka.ilkd.key.java.statement.LabeledStatement.class);
+            de.uka.ilkd.key.java.statement.LabeledStatement.class);
         coll.start();
         assertEquals(3, coll.getNodes().size());
 
         ProgramElement block2 = TacletForTests
                 .parsePrg("{while(true) {if (true) break; else continue;}}");
         WhileLoopTransformation trans = new WhileLoopTransformation(block2,
-                new ProgramElementName("l1"), new ProgramElementName("l2"),
-                new Services(AbstractProfile.getDefaultProfile()));
+            new ProgramElementName("l1"), new ProgramElementName("l2"),
+            new Services(AbstractProfile.getDefaultProfile()));
         trans.start();
         LOGGER.debug("Result:" + trans);
     }
@@ -85,7 +97,7 @@ public class TestProgramMetaConstructs {
                 .getChildAt(1);
         ProgramTransformer typeof = new TypeOf(expr);
         assertEquals("int", ((TypeRef) typeof.transform(expr, services,
-                SVInstantiations.EMPTY_SVINSTANTIATIONS)[0]).getName());
+            SVInstantiations.EMPTY_SVINSTANTIATIONS)[0]).getName());
     }
 
     @Test
@@ -94,16 +106,16 @@ public class TestProgramMetaConstructs {
                 .parsePrg("{ while ( true ) {} }");
         LoopStatement l = (LoopStatement) bl.getChildAt(0);
         UnwindLoop wlt = new UnwindLoop(
-                SchemaVariableFactory.createProgramSV(
-                        new ProgramElementName("inner"), ProgramSVSort.LABEL, false),
-                SchemaVariableFactory.createProgramSV(
-                        new ProgramElementName("outer"), ProgramSVSort.LABEL, false),
-                l);
+            SchemaVariableFactory.createProgramSV(
+                new ProgramElementName("inner"), ProgramSVSort.LABEL, false),
+            SchemaVariableFactory.createProgramSV(
+                new ProgramElementName("outer"), ProgramSVSort.LABEL, false),
+            l);
 
         SVInstantiations inst = SVInstantiations.EMPTY_SVINSTANTIATIONS;
         try {
             wlt.transform(l, new Services(AbstractProfile.getDefaultProfile()),
-                    inst);
+                inst);
         } catch (java.util.NoSuchElementException e) {
             fail(" Problem with empty while-blocks. See Bug #183 ");
         }
@@ -113,40 +125,40 @@ public class TestProgramMetaConstructs {
     @Test
     public void testForInitUnfoldTransformer1() {
         forInitUnfoldTransformerTest(
-                "{ for (int i = 4, y = 42; i <= 6; i++) { } }",
-                new String[]{"int i = 4,y = 42;"});
+            "{ for (int i = 4, y = 42; i <= 6; i++) { } }",
+            new String[] { "int i = 4,y = 42;" });
     }
 
     @Test
     public void testForInitUnfoldTransformer2() {
         forInitUnfoldTransformerTest("{ for (int i = 4; i <= 6; i++) { } }",
-                new String[]{"int i = 4;"});
+            new String[] { "int i = 4;" });
     }
 
     // By Dominic
     @Test
     public void testForInitUnfoldTransformer3() {
         forInitUnfoldTransformerTest(
-                "{ int i = 4, z = 42; for (i++, i--, z = 17; i <= 6; i++) { } }",
-                new String[]{"i++;", "i--;", "z=17;"});
+            "{ int i = 4, z = 42; for (i++, i--, z = 17; i <= 6; i++) { } }",
+            new String[] { "i++;", "i--;", "z=17;" });
     }
 
     private void forInitUnfoldTransformerTest(String programBlock,
-                                              String[] expectedStmts) {
+            String[] expectedStmts) {
         final ProgramElement block = TacletForTests.parsePrg(programBlock);
 
         final JavaASTCollector coll = new JavaASTCollector(block,
-                LoopInit.class);
+            LoopInit.class);
         coll.start();
 
         assertEquals(1, coll.getNodes().size());
 
         final ForInitUnfoldTransformer tf = new ForInitUnfoldTransformer(
-                (LoopInit) coll.getNodes().head());
+            (LoopInit) coll.getNodes().head());
         final Statement[] stmts = (Statement[]) tf.transform(
-                coll.getNodes().head(),
-                new Services(AbstractProfile.getDefaultProfile()),
-                SVInstantiations.EMPTY_SVINSTANTIATIONS);
+            coll.getNodes().head(),
+            new Services(AbstractProfile.getDefaultProfile()),
+            SVInstantiations.EMPTY_SVINSTANTIATIONS);
 
         assertEquals(expectedStmts.length, stmts.length);
 

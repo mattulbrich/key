@@ -1,8 +1,25 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.docking;
 
-import bibliothek.gui.dock.common.CControl;
-import bibliothek.gui.dock.util.IconManager;
-import bibliothek.gui.dock.util.Priority;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
+
 import de.uka.ilkd.key.core.KeYMediator;
 import de.uka.ilkd.key.gui.GUIListener;
 import de.uka.ilkd.key.gui.MainWindow;
@@ -15,15 +32,9 @@ import de.uka.ilkd.key.gui.fonticons.IconFontSwing;
 import de.uka.ilkd.key.gui.keyshortcuts.KeyStrokeManager;
 import de.uka.ilkd.key.settings.PathConfig;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.List;
+import bibliothek.gui.dock.common.CControl;
+import bibliothek.gui.dock.util.IconManager;
+import bibliothek.gui.dock.util.Priority;
 
 /**
  * Extension for working with layouts.
@@ -32,9 +43,9 @@ import java.util.List;
  * @version 1 (15.05.19)
  */
 @KeYGuiExtension.Info(name = "Docking Helpers",
-        optional = false,
-        experimental = false,
-        priority = 1)
+    optional = false,
+    experimental = false,
+    priority = 1)
 public final class DockingLayout
         implements KeYGuiExtension,
         KeYGuiExtension.Startup,
@@ -56,29 +67,29 @@ public final class DockingLayout
         Priority p = Priority.CLIENT;
 
         icons.setIcon("locationmanager.normalize", p,
-                IconFontSwing.buildIcon(FontAwesomeRegular.WINDOW_RESTORE, SIZE_ICON_DOCK));
+            IconFontSwing.buildIcon(FontAwesomeRegular.WINDOW_RESTORE, SIZE_ICON_DOCK));
 
         icons.setIcon("locationmanager.maximize", p,
-                IconFontSwing.buildIcon(FontAwesomeRegular.WINDOW_MAXIMIZE, SIZE_ICON_DOCK));
+            IconFontSwing.buildIcon(FontAwesomeRegular.WINDOW_MAXIMIZE, SIZE_ICON_DOCK));
 
         icons.setIcon("locationmanager.minimize", p,
-                IconFontSwing.buildIcon(FontAwesomeRegular.WINDOW_MINIMIZE, SIZE_ICON_DOCK));
+            IconFontSwing.buildIcon(FontAwesomeRegular.WINDOW_MINIMIZE, SIZE_ICON_DOCK));
 
         icons.setIcon("locationmanager.externalize", p,
-                IconFontSwing.buildIcon(FontAwesomeSolid.EXTERNAL_LINK_SQUARE_ALT, SIZE_ICON_DOCK));
+            IconFontSwing.buildIcon(FontAwesomeSolid.EXTERNAL_LINK_SQUARE_ALT, SIZE_ICON_DOCK));
 
         icons.setIcon("locationmanager.unexternalize", p,
-                new ImageIcon(IconFontSwing.buildImage(FontAwesomeSolid.EXTERNAL_LINK_ALT,
-                        SIZE_ICON_DOCK, Color.black, Math.PI)));
+            new ImageIcon(IconFontSwing.buildImage(FontAwesomeSolid.EXTERNAL_LINK_ALT,
+                SIZE_ICON_DOCK, Color.black, Math.PI)));
 
         icons.setIcon("locationmanager.unmaximize_externalized", p,
-                IconFontSwing.buildIcon(FontAwesomeSolid.EXTERNAL_LINK_ALT, SIZE_ICON_DOCK));
+            IconFontSwing.buildIcon(FontAwesomeSolid.EXTERNAL_LINK_ALT, SIZE_ICON_DOCK));
 
         icons.setIcon("screen.maximize", p,
-                IconFontSwing.buildIcon(FontAwesomeRegular.EDIT, SIZE_ICON_DOCK));
+            IconFontSwing.buildIcon(FontAwesomeRegular.EDIT, SIZE_ICON_DOCK));
 
         icons.setIcon("close", p,
-                IconFontSwing.buildIcon(FontAwesomeRegular.WINDOW_CLOSE, SIZE_ICON_DOCK));
+            IconFontSwing.buildIcon(FontAwesomeRegular.WINDOW_CLOSE, SIZE_ICON_DOCK));
     }
 
     private static void loadLayouts(CControl globalPort) {
@@ -134,7 +145,7 @@ public final class DockingLayout
     private void setLayout(String layout) {
         CControl globalPort = window.getDockControl();
         boolean defaultLayoutDefined =
-                Arrays.asList(globalPort.layouts()).contains(layout);
+            Arrays.asList(globalPort.layouts()).contains(layout);
         if (defaultLayoutDefined) {
             globalPort.load(layout);
         }
@@ -175,7 +186,8 @@ public final class DockingLayout
         }
 
         toolBar.add(new JLabel("Layouts: "));
-        for (String s : LAYOUT_NAMES) comboLayouts.addItem(s);
+        for (String s : LAYOUT_NAMES)
+            comboLayouts.addItem(s);
         toolBar.add(comboLayouts);
         toolBar.add(new LoadAction(mainWindow));
         toolBar.add(new SaveAction(mainWindow));
@@ -204,10 +216,10 @@ class SaveLayoutAction extends MainWindowAction {
         setMenuPath("View.Layout.Save");
         if (key != null) {
             setAcceleratorKey(KeyStroke.getKeyStroke(key,
-                    InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+                InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         }
         KeyStrokeManager.lookupAndOverride(this,
-                getClass().getName() + "$" + layoutName);
+            getClass().getName() + "$" + layoutName);
     }
 
     @Override
@@ -216,6 +228,7 @@ class SaveLayoutAction extends MainWindowAction {
         mainWindow.setStatusLine("Save layout as " + layoutName);
     }
 }
+
 
 class LoadLayoutAction extends MainWindowAction {
     private static final long serialVersionUID = 3378477658914832831L;
@@ -230,7 +243,7 @@ class LoadLayoutAction extends MainWindowAction {
             setAcceleratorKey(KeyStroke.getKeyStroke(key, InputEvent.CTRL_DOWN_MASK));
         }
         KeyStrokeManager.lookupAndOverride(this,
-                getClass().getName() + "$" + layoutName);
+            getClass().getName() + "$" + layoutName);
         setMenuPath("View.Layout.Load");
     }
 
@@ -246,6 +259,7 @@ class LoadLayoutAction extends MainWindowAction {
         }
     }
 }
+
 
 class ResetLayoutAction extends MainWindowAction {
     private static final long serialVersionUID = 8772915552504055750L;

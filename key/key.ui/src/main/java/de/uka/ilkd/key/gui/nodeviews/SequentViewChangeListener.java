@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -22,7 +32,8 @@ import java.beans.PropertyChangeListener;
 
 import de.uka.ilkd.key.gui.MainWindow;
 
-class SequentViewChangeListener implements ComponentListener, PropertyChangeListener, HierarchyBoundsListener {
+class SequentViewChangeListener
+        implements ComponentListener, PropertyChangeListener, HierarchyBoundsListener {
 
     private final SequentView sequentView;
 
@@ -34,7 +45,8 @@ class SequentViewChangeListener implements ComponentListener, PropertyChangeList
         // reprint sequent
         int lw = sequentView.computeLineWidth();
         if (lw != SequentView.getLineWidth()) {
-            // When switching sequents, ancestorResized is called while the sequentView has an empty rect
+            // When switching sequents, ancestorResized is called while the sequentView has an empty
+            // rect
             // Skip this repaint
             if (!sequentView.getVisibleRect().isEmpty()) {
                 SequentView.setLineWidth(lw);

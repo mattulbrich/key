@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.convenience;
@@ -87,24 +91,24 @@ public class ASTIterator {
                 NonTerminalProgramElement ntpe = (NonTerminalProgramElement) pe;
                 int childCount;
                 switch (listener.enterChildren(this, ntpe)) {
-                    case ASTIterator.ENTER_NONE:
-                        break;
-                    case ASTIterator.ENTER_SOME:
-                        childCount = ntpe.getChildCount();
-                        for (int i = 0; i < childCount; i++) {
-                            ProgramElement child = ntpe.getChildAt(i);
-                            if (listener.enterChildNode(this, ntpe, child)) {
-                                recurse(child);
-                                listener.returnedFromChildNode(this, ntpe, child);
-                            }
-                        }
-                        break;
-                    case ASTIterator.ENTER_ALL:
-                        childCount = ntpe.getChildCount();
-                        for (int i = 0; i < childCount; i++) {
-                            ProgramElement child = ntpe.getChildAt(i);
+                case ASTIterator.ENTER_NONE:
+                    break;
+                case ASTIterator.ENTER_SOME:
+                    childCount = ntpe.getChildCount();
+                    for (int i = 0; i < childCount; i++) {
+                        ProgramElement child = ntpe.getChildAt(i);
+                        if (listener.enterChildNode(this, ntpe, child)) {
                             recurse(child);
+                            listener.returnedFromChildNode(this, ntpe, child);
                         }
+                    }
+                    break;
+                case ASTIterator.ENTER_ALL:
+                    childCount = ntpe.getChildCount();
+                    for (int i = 0; i < childCount; i++) {
+                        ProgramElement child = ntpe.getChildAt(i);
+                        recurse(child);
+                    }
                 }
             }
             listener.leavingNode(this, pe);

@@ -1,12 +1,23 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.java;
+
+import java.net.MalformedURLException;
+import javax.annotation.Nullable;
 
 import de.uka.ilkd.key.parser.Location;
 import de.uka.ilkd.key.util.ExceptionTools;
 import de.uka.ilkd.key.util.parsing.HasLocation;
-import recoder.parser.ParseException;
 
-import javax.annotation.Nullable;
-import java.net.MalformedURLException;
+import recoder.parser.ParseException;
 
 /**
  * This exception extends recoder's {@link ParseException} by a filename.

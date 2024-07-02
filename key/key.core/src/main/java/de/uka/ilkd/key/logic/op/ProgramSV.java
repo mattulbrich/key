@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,9 +24,6 @@
 package de.uka.ilkd.key.logic.op;
 
 import java.io.IOException;
-
-import org.key_project.util.collection.ImmutableArray;
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.java.Comment;
 import de.uka.ilkd.key.java.Expression;
@@ -52,6 +59,10 @@ import de.uka.ilkd.key.rule.inst.ProgramList;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.speclang.HeapContext;
 import de.uka.ilkd.key.util.Debug;
+
+import org.key_project.util.collection.ImmutableArray;
+import org.key_project.util.collection.ImmutableList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import recoder.service.KeYCrossReferenceSourceInfo;
@@ -66,16 +77,16 @@ public final class ProgramSV extends AbstractSV
     public static final Logger LOGGER = LoggerFactory.getLogger(ProgramSV.class);
 
     private static final ProgramList EMPTY_LIST_INSTANTIATION = new ProgramList(
-            new ImmutableArray<ProgramElement>(new ProgramElement[0]));
+        new ImmutableArray<ProgramElement>(new ProgramElement[0]));
 
     private final boolean isListSV;
 
     /**
      * creates a new SchemaVariable used as a placeholder for program constructs
-     * 
+     *
      * @param name
-     *            the Name of the SchemaVariable allowed to match a list of
-     *            program constructs
+     *        the Name of the SchemaVariable allowed to match a list of
+     *        program constructs
      */
     ProgramSV(Name name, ProgramSVSort s, boolean isListSV) {
         super(name, s, false, false);
@@ -248,13 +259,13 @@ public final class ProgramSV extends AbstractSV
      * adds a found mapping from schema variable <code>var</code> to program
      * element <code>pe</code> and returns the updated match conditions or null
      * if mapping is not possible because of violating some variable condition
-     * 
+     *
      * @param pe
-     *            the ProgramElement <code>var</code> is mapped to
+     *        the ProgramElement <code>var</code> is mapped to
      * @param matchCond
-     *            the MatchConditions to be updated
+     *        the MatchConditions to be updated
      * @param services
-     *            the Services provide access to the Java model
+     *        the Services provide access to the Java model
      * @return the updated match conditions including mapping <code>var</code>
      *         to <code>pe</code> or null if some variable condition would be
      *         hurt by the mapping
@@ -273,7 +284,7 @@ public final class ProgramSV extends AbstractSV
             final Object newInst;
             if (foundInst instanceof Term) {
                 newInst = services.getTypeConverter().convertToLogicElement(pe,
-                        insts.getExecutionContext());
+                    insts.getExecutionContext());
             } else {
                 newInst = pe;
             }
@@ -294,13 +305,13 @@ public final class ProgramSV extends AbstractSV
      * program elements <code>list</code> and returns the updated match
      * conditions or null if mapping is not possible because of violating some
      * variable condition
-     * 
+     *
      * @param list
-     *            the ProgramList <code>var</code> is mapped to
+     *        the ProgramList <code>var</code> is mapped to
      * @param matchCond
-     *            the MatchConditions to be updated
+     *        the MatchConditions to be updated
      * @param services
-     *            the Services provide access to the Java model
+     *        the Services provide access to the Java model
      * @return the updated match conditions including mapping <code>var</code>
      *         to <code>list</code> or null if some variable condition would be
      *         hurt by the mapping
@@ -332,19 +343,20 @@ public final class ProgramSV extends AbstractSV
 
         if (src == null) {
             return addProgramInstantiation(EMPTY_LIST_INSTANTIATION, matchCond,
-                    services);
+                services);
         }
 
         SVInstantiations instantiations = matchCond.getInstantiations();
 
         final ExecutionContext ec = instantiations.getExecutionContext();
 
-        final java.util.ArrayList<ProgramElement> matchedElements = new java.util.ArrayList<ProgramElement>();
+        final java.util.ArrayList<ProgramElement> matchedElements =
+            new java.util.ArrayList<ProgramElement>();
 
         while (src != null) {
             if (!check(src, ec, services)) {
                 LOGGER.debug("taclet: Stopped list matching because of "
-                        + "incompatible elements {} {}", this, src);
+                    + "incompatible elements {} {}", this, src);
                 break;
             }
             matchedElements.add(src);
@@ -354,20 +366,20 @@ public final class ProgramSV extends AbstractSV
 
         LOGGER.debug("Program list match: {} {}", this, matchedElements);
         return addProgramInstantiation(
-                new ProgramList(
-                        new ImmutableArray<ProgramElement>(matchedElements)),
-                matchCond, services);
+            new ProgramList(
+                new ImmutableArray<ProgramElement>(matchedElements)),
+            matchCond, services);
     }
 
     /**
      * returns true, if the given SchemaVariable can stand for the
      * ProgramElement
-     * 
+     *
      * @param match
-     *            the ProgramElement to be matched
+     *        the ProgramElement to be matched
      * @param services
-     *            the Services object encapsulating information about the java
-     *            datastructures like (static)types etc.
+     *        the Services object encapsulating information about the java
+     *        datastructures like (static)types etc.
      * @return true if the SchemaVariable can stand for the given element
      */
     private boolean check(ProgramElement match, ExecutionContext ec,
@@ -394,7 +406,7 @@ public final class ProgramSV extends AbstractSV
 
         if (!check(src, ec, services)) {
             LOGGER.debug("taclet: MATCH FAILED. Sort of SchemaVariable cannot "
-                    + "stand for the program");
+                + "stand for the program");
             return null; // FAILED
         }
 
@@ -411,8 +423,8 @@ public final class ProgramSV extends AbstractSV
             }
         } else {
             LOGGER.debug("taclet: MATCH FAILED 3. Former match of "
-                    + " SchemaVariable incompatible with "
-                    + " the current match.");
+                + " SchemaVariable incompatible with "
+                + " the current match.");
             return null; // FAILED mismatch
         }
         source.next();
@@ -427,7 +439,7 @@ public final class ProgramSV extends AbstractSV
     @Override
     public String proofToString() {
         return "\\schemaVar \\program " + sort().declarationString() + " "
-                + name() + ";\n";
+            + name() + ";\n";
     }
 
     @Override

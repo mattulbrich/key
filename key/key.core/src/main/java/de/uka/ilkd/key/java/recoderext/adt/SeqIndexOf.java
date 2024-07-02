@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -25,6 +35,7 @@ public class SeqIndexOf extends Operator {
 
     /**
      * Creates an "index of" operator.
+     *
      * @param seq Sequence to operate on
      * @param elem The element to look for in the sequence
      */
@@ -40,37 +51,37 @@ public class SeqIndexOf extends Operator {
     }
 
 
-    @Override    
+    @Override
     public SeqIndexOf deepClone() {
         return new SeqIndexOf(this);
     }
 
 
-    @Override    
+    @Override
     public int getArity() {
         return 2;
     }
 
 
-    @Override    
+    @Override
     public int getPrecedence() {
         return 0;
     }
 
 
-    @Override    
+    @Override
     public int getNotation() {
         return PREFIX;
     }
 
 
-    @Override    
+    @Override
     public void accept(SourceVisitor v) {
 
     }
-    
+
     @Override
-    public String toSource(){
-        return "\\indexOf("+children.get(0).toSource()+","+children.get(1).toSource()+")";
+    public String toSource() {
+        return "\\indexOf(" + children.get(0).toSource() + "," + children.get(1).toSource() + ")";
     }
 }

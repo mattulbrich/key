@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,14 +23,16 @@
 
 package de.uka.ilkd.key.speclang.jml.pretranslation;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import de.uka.ilkd.key.java.recoderext.JMLTransformer;
 import de.uka.ilkd.key.speclang.njml.JmlParser;
-import org.antlr.v4.runtime.ParserRuleContext;
+
 import org.key_project.util.collection.ImmutableList;
 import org.key_project.util.java.StringUtil;
 
-import java.util.Objects;
-import java.util.stream.Collectors;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * A JML model method declaration in textual form.
@@ -30,7 +42,7 @@ public final class TextualJMLMethodDecl extends TextualJMLConstruct {
 
 
     public TextualJMLMethodDecl(ImmutableList<String> mods,
-                                JmlParser.Method_declarationContext methodDefinition) {
+            JmlParser.Method_declarationContext methodDefinition) {
         super(mods);
         this.methodDefinition = methodDefinition;
     }
@@ -49,11 +61,11 @@ public final class TextualJMLMethodDecl extends TextualJMLConstruct {
         String paramsString = methodDefinition.param_list().param_decl()
                 .stream()
                 .map(it -> it.typespec().getText() +
-                        " " + it.p.getText() + StringUtil.repeat("[]", it.LBRACKET().size()))
+                    " " + it.p.getText() + StringUtil.repeat("[]", it.LBRACKET().size()))
                 .collect(Collectors.joining(","));
         return String.format("%s %s %s (%s);",
-                m, methodDefinition.typespec().getText(),
-                getMethodName(), paramsString);
+            m, methodDefinition.typespec().getText(),
+            getMethodName(), paramsString);
     }
 
     public JmlParser.Method_declarationContext getDecl() {
@@ -75,8 +87,10 @@ public final class TextualJMLMethodDecl extends TextualJMLConstruct {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         TextualJMLMethodDecl that = (TextualJMLMethodDecl) o;
         return Objects.equals(methodDefinition, that.methodDefinition);
     }

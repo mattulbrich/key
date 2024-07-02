@@ -1,4 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.exploration.actions;
+
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 import de.uka.ilkd.key.gui.MainWindow;
 import de.uka.ilkd.key.gui.actions.KeyAction;
@@ -6,9 +19,6 @@ import de.uka.ilkd.key.settings.ProofIndependentSettings;
 
 import org.key_project.exploration.ExplorationModeModel;
 import org.key_project.exploration.Icons;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 /**
  * @author Alexander Weigl
@@ -21,13 +31,14 @@ public class ShowInteractiveBranchesAction extends KeyAction {
         this.model = model;
         setName("Hide justification");
         setTooltip("Exploration actions are \noften done using a cut. Choose to hide\n " +
-                "the second cut-branches from the view \nto focus on the actions. Uncheck to focus on these branches.");
+            "the second cut-branches from the view \nto focus on the actions. Uncheck to focus on these branches.");
         setMenuPath(ToggleExplorationAction.MENU_PATH);
         putValue(CHECKBOX, true);
 
-        model.addPropertyChangeListener(ExplorationModeModel.PROP_EXPLORE_MODE, e -> updateEnable());
+        model.addPropertyChangeListener(ExplorationModeModel.PROP_EXPLORE_MODE,
+            e -> updateEnable());
         ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings().addSettingsListener(
-                e -> updateEnable());
+            e -> updateEnable());
         updateEnable();
     }
 
@@ -36,7 +47,7 @@ public class ShowInteractiveBranchesAction extends KeyAction {
         setEnabled(model.isExplorationModeSelected());
 
         Icon secondBranch;
-        if(model.isShowInteractiveBranches()) {
+        if (model.isShowInteractiveBranches()) {
             secondBranch = Icons.SECOND_BRANCH_HIDE.get(16);
         } else {
             secondBranch = Icons.SECOND_BRANCH;
@@ -55,7 +66,8 @@ public class ShowInteractiveBranchesAction extends KeyAction {
         if (model.isShowInteractiveBranches()) {
             model.setExplorationTacletAppState(ExplorationModeModel.ExplorationState.WHOLE_APP);
         } else {
-            model.setExplorationTacletAppState(ExplorationModeModel.ExplorationState.SIMPLIFIED_APP);
+            model.setExplorationTacletAppState(
+                ExplorationModeModel.ExplorationState.SIMPLIFIED_APP);
         }
     }
 }

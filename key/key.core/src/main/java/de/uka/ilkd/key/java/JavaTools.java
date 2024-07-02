@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.java;
-
-import org.key_project.util.ExtList;
 
 import de.uka.ilkd.key.java.reference.ExecutionContext;
 import de.uka.ilkd.key.java.statement.CatchAllStatement;
@@ -24,8 +32,12 @@ import de.uka.ilkd.key.java.visitor.JavaASTVisitor;
 import de.uka.ilkd.key.logic.JavaBlock;
 import de.uka.ilkd.key.logic.ProgramPrefix;
 
-/** Miscellaneous static methods related to Java blocks or statements in KeY.
+import org.key_project.util.ExtList;
+
+/**
+ * Miscellaneous static methods related to Java blocks or statements in KeY.
  * Mostly moved from key.util.MiscTools here.
+ *
  * @author bruns
  *
  */
@@ -60,8 +72,7 @@ public final class JavaTools {
             Services services) {
         assert jb.program() != null;
         final SourceElement activeStatement = JavaTools.getActiveStatement(jb);
-        Statement newProg = (Statement)
-            (new CreatingASTVisitor(jb.program(), false, services) {
+        Statement newProg = (Statement) (new CreatingASTVisitor(jb.program(), false, services) {
             private boolean done = false;
 
             public ProgramElement go() {
@@ -125,11 +136,11 @@ public final class JavaTools {
     }
 
     public static ExecutionContext getInnermostExecutionContext(
-        						JavaBlock jb, 
+            JavaBlock jb,
             Services services) {
         final MethodFrame frame = getInnermostMethodFrame(jb, services);
-    return frame == null 
-               ? null
+        return frame == null
+                ? null
                 : (ExecutionContext) frame.getExecutionContext();
     }
 

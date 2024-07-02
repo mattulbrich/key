@@ -1,20 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.strategy;
-
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
 
 import de.uka.ilkd.key.logic.PIOPathIterator;
 import de.uka.ilkd.key.logic.PosInOccurrence;
@@ -23,6 +30,9 @@ import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.rule.RuleApp;
 import de.uka.ilkd.key.strategy.feature.BinaryFeature;
 import de.uka.ilkd.key.strategy.feature.NonDuplicateAppModPositionFeature;
+
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
 
 /**
  * A rule app manager that ensures that rules are only applied to a certain
@@ -66,7 +76,7 @@ public class FocussedRuleApplicationManager
             AutomatedRuleApplicationManager delegate, Goal goal,
             PosInOccurrence focussedSubterm) {
         this(delegate, goal, goal.getFormulaTagManager().getTagForPos(
-                focussedSubterm.topLevel()), focussedSubterm, true);
+            focussedSubterm.topLevel()), focussedSubterm, true);
 
         clearCache();
     }
@@ -84,7 +94,7 @@ public class FocussedRuleApplicationManager
     @Override
     public Object clone() {
         return new FocussedRuleApplicationManager(delegate.copy(), null,
-                focussedFormula, focussedSubterm, onlyModifyFocussedFormula);
+            focussedFormula, focussedSubterm, onlyModifyFocussedFormula);
     }
 
     @Override
@@ -149,7 +159,7 @@ public class FocussedRuleApplicationManager
     public void rulesAdded(ImmutableList<? extends RuleApp> rules,
             PosInOccurrence pos) {
         ImmutableList<RuleApp> applicableRules = ImmutableSLList
-                .<RuleApp> nil();
+                .<RuleApp>nil();
         for (RuleApp r : rules) {
             if (isRuleApplicationForFocussedFormula(r, pos)) {
                 applicableRules = applicableRules.prepend(r);

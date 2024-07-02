@@ -1,17 +1,31 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.taclettranslation.lemma;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
 import de.uka.ilkd.key.logic.Name;
@@ -22,14 +36,12 @@ import de.uka.ilkd.key.rule.Taclet;
 import de.uka.ilkd.key.taclettranslation.lemma.TacletSoundnessPOLoader.LoaderListener;
 import de.uka.ilkd.key.taclettranslation.lemma.TacletSoundnessPOLoader.TacletFilter;
 import de.uka.ilkd.key.taclettranslation.lemma.TacletSoundnessPOLoader.TacletInfo;
+
 import org.key_project.util.collection.DefaultImmutableSet;
 import org.key_project.util.collection.ImmutableSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * The Class TacletProofObligationInput is a special purpose proof obligations
@@ -158,24 +170,24 @@ public class TacletProofObligationInput implements ProofOblInput, IPersistablePO
             loader = new TacletLoader.KeYsTacletsLoader(null, null, environmentConfig.getProfile());
         } else {
             final ProblemInitializer problemInitializer =
-                    new ProblemInitializer(environmentConfig.getProfile());
+                new ProblemInitializer(environmentConfig.getProfile());
             // bugfix: All files are loaded relative to the basedir of the loaded file
             loader = new TacletLoader.TacletFromFileLoader(null, null, problemInitializer,
-                    new File(baseDir, tacletFile),
-                    fileCollection(axiomFiles), environmentConfig);
+                new File(baseDir, tacletFile),
+                fileCollection(axiomFiles), environmentConfig);
         }
 
         ProofEnvironment proofEnv = createProofEnvironment();
         InitConfig initConfig = proofEnv.getInitConfigForEnvironment();
 
         TacletSoundnessPOLoader poloader =
-                new TacletSoundnessPOLoader(listener, filter, true, loader,
-                        initConfig, true);
+            new TacletSoundnessPOLoader(listener, filter, true, loader,
+                initConfig, true);
 
         poloader.startSynchronously();
         if (proofObligation == null) {
             throw new ProofInputException("Cannot instantiate the proof obligation for taclet '" +
-                    tacletName + "'. Is it defined (in the specified tacletFile?)");
+                tacletName + "'. Is it defined (in the specified tacletFile?)");
         }
     }
 
@@ -197,8 +209,7 @@ public class TacletProofObligationInput implements ProofOblInput, IPersistablePO
      */
     @Override
     public ProofAggregate getPO() throws ProofInputException {
-        assert proofObligation != null :
-                "readProblem should have been called first";
+        assert proofObligation != null : "readProblem should have been called first";
         return proofObligation;
     }
 
@@ -214,13 +225,14 @@ public class TacletProofObligationInput implements ProofOblInput, IPersistablePO
             LOGGER.info("Proof obligation for taclet: {}", tacletName);
         }
         TacletProofObligationInput proofOblInput =
-                new TacletProofObligationInput(tacletName, initConfig);
+            new TacletProofObligationInput(tacletName, initConfig);
         proofOblInput.setLoadInfo(properties);
         return new LoadedPOContainer(proofOblInput);
     }
 
     private void setLoadInfo(Properties properties) {
-        this.baseDir = new File(properties.getProperty(IPersistablePO.PROPERTY_FILENAME)).getParent();
+        this.baseDir =
+            new File(properties.getProperty(IPersistablePO.PROPERTY_FILENAME)).getParent();
         this.tacletFile = properties.getProperty("tacletFile");
         this.definitionFile = properties.getProperty("definitionFile");
         List<String> axioms = new ArrayList<>();
@@ -235,7 +247,7 @@ public class TacletProofObligationInput implements ProofOblInput, IPersistablePO
     }
 
     public void setLoadInfo(File tacletFile, File definitionFile,
-                            Collection<File> axiomFiles) {
+            Collection<File> axiomFiles) {
         this.tacletFile = tacletFile.toString();
         this.definitionFile = definitionFile.toString();
         this.axiomFiles = new String[axiomFiles.size()];

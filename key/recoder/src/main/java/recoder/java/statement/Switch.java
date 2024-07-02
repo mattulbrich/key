@@ -1,6 +1,15 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.statement;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import recoder.abstraction.ClassType;
 import recoder.java.*;
@@ -9,18 +18,14 @@ import recoder.java.declaration.VariableSpecification;
 import recoder.list.generic.ASTList;
 import recoder.util.Debug;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Switch.
  *
  * @author <TT>AutoDoc</TT>
  */
 
-public class Switch extends BranchStatement implements ExpressionContainer, VariableScope, TypeScope {
+public class Switch extends BranchStatement
+        implements ExpressionContainer, VariableScope, TypeScope {
 
     /**
      * Undefined scope tag.
@@ -77,7 +82,7 @@ public class Switch extends BranchStatement implements ExpressionContainer, Vari
     /**
      * Switch.
      *
-     * @param e        an expression.
+     * @param e an expression.
      * @param branches a branch mutable list.
      */
 
@@ -414,7 +419,8 @@ public class Switch extends BranchStatement implements ExpressionContainer, Vari
     }
 
     public SourceElement getLastElement() {
-        if (getBranchCount() == 0) return this;
+        if (getBranchCount() == 0)
+            return this;
         return getBranchAt(getBranchCount() - 1).getLastElement();
     }
 }

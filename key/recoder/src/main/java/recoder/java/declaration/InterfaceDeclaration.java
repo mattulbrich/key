@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.declaration;
@@ -44,8 +48,9 @@ public class InterfaceDeclaration extends TypeDeclaration {
      * Construct a new outer or member interface class.
      */
 
-    public InterfaceDeclaration(ASTList<DeclarationSpecifier> modifiers, Identifier name, Extends extended,
-                                ASTList<MemberDeclaration> members, ASTList<TypeParameterDeclaration> typeParameters) {
+    public InterfaceDeclaration(ASTList<DeclarationSpecifier> modifiers, Identifier name,
+            Extends extended,
+            ASTList<MemberDeclaration> members, ASTList<TypeParameterDeclaration> typeParameters) {
         super(modifiers, name);
         setExtendedTypes(extended);
         setMembers(members);
@@ -53,8 +58,9 @@ public class InterfaceDeclaration extends TypeDeclaration {
         makeParentRoleValid();
     }
 
-    public InterfaceDeclaration(ASTList<DeclarationSpecifier> modifiers, Identifier name, Extends extended,
-                                ASTList<MemberDeclaration> members) {
+    public InterfaceDeclaration(ASTList<DeclarationSpecifier> modifiers, Identifier name,
+            Extends extended,
+            ASTList<MemberDeclaration> members) {
         this(modifiers, name, extended, members, null);
     }
 

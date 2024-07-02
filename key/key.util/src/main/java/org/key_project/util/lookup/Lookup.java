@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.util.lookup;
 
 import java.lang.ref.WeakReference;
@@ -10,8 +20,10 @@ import java.util.stream.Collectors;
 /**
  * This class handles the management of services and implementations.
  * <p>
- * This class is a flexible alternative for a mediator. You can register and deregister implementation for services.
- * And also you can lookup them up. Multiple implementations are possible; also notification on service change.
+ * This class is a flexible alternative for a mediator. You can register and deregister
+ * implementation for services.
+ * And also you can lookup them up. Multiple implementations are possible; also notification on
+ * service change.
  * <p>
  * {@link Lookup} can be arranged hierarchical, incl. support for notification.
  *
@@ -48,18 +60,19 @@ public class Lookup {
             parent.children.add(new WeakReference<>(this));
     }
 
-    /*public static Lookup fromServices(Services services) {
-        Lookup lookup = new Lookup();
-        lookup.register(services.getJavaInfo());
-        lookup.register(services.getJavaModel());
-        lookup.register(services.getProfile());
-        lookup.register(services.getProof());
-        lookup.register(services.getNamespaces());
-        lookup.register(services.getTermBuilder());
-        lookup.register(services.getNameRecorder());
-        lookup.register(services.getVariableNamer());
-        return lookup;
-    }
+    /*
+     * public static Lookup fromServices(Services services) {
+     * Lookup lookup = new Lookup();
+     * lookup.register(services.getJavaInfo());
+     * lookup.register(services.getJavaModel());
+     * lookup.register(services.getProfile());
+     * lookup.register(services.getProof());
+     * lookup.register(services.getNamespaces());
+     * lookup.register(services.getTermBuilder());
+     * lookup.register(services.getNameRecorder());
+     * lookup.register(services.getVariableNamer());
+     * return lookup;
+     * }
      */
 
     /**
@@ -87,8 +100,10 @@ public class Lookup {
     public <T> T get(Class<T> service) {
         List<? extends T> t = getList(service);
         if (t.isEmpty()) {
-            if (parent != null) return parent.get(service);
-            else throw new IllegalStateException("Service $service not registered");
+            if (parent != null)
+                return parent.get(service);
+            else
+                throw new IllegalStateException("Service $service not registered");
         } else {
             return t.get(0);
         }
@@ -109,19 +124,23 @@ public class Lookup {
 
     public <T> void deregister(T obj, Class<T> service) {
         boolean b = getList(service).remove(obj);
-        if (b) firePropertyChange(service);
-        if (parent != null) parent.deregister(obj, service);
+        if (b)
+            firePropertyChange(service);
+        if (parent != null)
+            parent.deregister(obj, service);
     }
 
     public <T> void deregister(Class<T> service) {
         getList(service).clear();
         firePropertyChange(service);
-        if (parent != null) parent.deregister(service);
+        if (parent != null)
+            parent.deregister(service);
     }
 
 
     public void dispose() {
-        if (parent != null) parent.children.remove(this);
+        if (parent != null)
+            parent.children.remove(this);
     }
 
     public <T> List<LookupListener> getListeners(Class<?> name) {
@@ -205,7 +224,8 @@ public class Lookup {
         if (services.stream().allMatch(Objects::nonNull)) {
             try {
                 return ctor.newInstance(services.toArray());
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            } catch (InstantiationException | IllegalAccessException
+                    | InvocationTargetException e) {
                 throw new InjectionException(e);
             }
         }
@@ -215,11 +235,13 @@ public class Lookup {
     /**
      * Injects all known service implementation in the given instance.
      * <p>
-     * This method searchs for methods single argument methods, that are annotated with {@link Inject},
+     * This method searchs for methods single argument methods, that are annotated with
+     * {@link Inject},
      * and calls it with the service implementation.
      *
      * @param instance arbitrary non-null method
-     * @throws InjectionException is thrown iff a service is unknown but needed for an {@link Inject} method.
+     * @throws InjectionException is thrown iff a service is unknown but needed for an
+     *         {@link Inject} method.
      */
     public void inject(Object instance) throws InjectionException {
         Class<?> clazz = instance.getClass();

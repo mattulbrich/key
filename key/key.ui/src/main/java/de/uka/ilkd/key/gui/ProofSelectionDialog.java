@@ -1,7 +1,15 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui;
 
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.zip.ZipFile;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 /**
  * This dialog allows the user to select the proof to load from a proof bundle.
@@ -57,6 +67,7 @@ public final class ProofSelectionDialog extends JDialog {
 
     /**
      * Creates a new ProofSelectionDialog for the given proof
+     *
      * @param bundlePath the path of the proof bundle to load
      * @throws IOException if the proof bundle can not be read
      */
@@ -114,6 +125,7 @@ public final class ProofSelectionDialog extends JDialog {
 
     /**
      * Creates a JList and fills it with the proofs found in the bundle.
+     *
      * @param bundlePath the path of the proof bundle
      * @return the created JList
      * @throws IOException if the proof bundle can not be read
@@ -124,10 +136,10 @@ public final class ProofSelectionDialog extends JDialog {
 
         // create a list of all *.proof files (only top level in bundle)
         List<Path> proofs = bundle.stream()
-            .filter(e -> !e.isDirectory())
-            .filter(e -> e.getName().endsWith(".proof"))
-            .map(e -> Paths.get(e.getName()))
-            .collect(Collectors.toList());
+                .filter(e -> !e.isDirectory())
+                .filter(e -> e.getName().endsWith(".proof"))
+                .map(e -> Paths.get(e.getName()))
+                .collect(Collectors.toList());
 
         // show the list in a JList
         DefaultListModel<Path> model = new DefaultListModel<>();
@@ -150,10 +162,10 @@ public final class ProofSelectionDialog extends JDialog {
         list.setCellRenderer(new ListCellRenderer<Path>() {
             @Override
             public Component getListCellRendererComponent(JList<? extends Path> jList,
-                                                          Path value,
-                                                          int index,
-                                                          boolean isSelected,
-                                                          boolean cellHasFocus) {
+                    Path value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus) {
                 JLabel label = new JLabel(abbreviateProofPath(value));
                 label.setOpaque(true); // allows for color changes via setSelectionBackground()
                 if (isSelected) {
@@ -171,6 +183,7 @@ public final class ProofSelectionDialog extends JDialog {
 
     /**
      * Abbreviates the filename of the proof if it matches the usual KeY format.
+     *
      * @param proofPath the path (actually only the filename) of the proof
      * @return the abbreviated proof name if it matches, the given path as String otherwise
      */
@@ -201,6 +214,7 @@ public final class ProofSelectionDialog extends JDialog {
 
     /**
      * Shows the dialog with the given path and returns the filename of the proof to load.
+     *
      * @param bundlePath the path of the proof bundle
      * @return the filename of the proof to load
      */
@@ -219,10 +233,11 @@ public final class ProofSelectionDialog extends JDialog {
 
     /**
      * Shows a dialog and allows the user to choose the proof to load from a bundle.
+     *
      * @param bundlePath the path of the proof bundle that is loaded
      * @return the path of the proof relative to the bundle (proofs are always top level,
-     *      which means the returned path will only contains the filename of the proof file)
-     *      or null if the given path does not denote a bundle
+     *         which means the returned path will only contains the filename of the proof file)
+     *         or null if the given path does not denote a bundle
      */
     public static Path chooseProofToLoad(Path bundlePath) {
         if (isProofBundle(bundlePath)) {
@@ -233,6 +248,7 @@ public final class ProofSelectionDialog extends JDialog {
 
     /**
      * Checks if a path denotes a proof bundle.
+     *
      * @param path the path to check
      * @return true iff the path denotes a proof bundle
      */

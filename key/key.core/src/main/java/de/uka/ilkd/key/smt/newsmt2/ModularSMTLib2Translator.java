@@ -1,4 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.smt.newsmt2;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
+import javax.annotation.Nullable;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Sequent;
@@ -8,15 +25,9 @@ import de.uka.ilkd.key.logic.TermBuilder;
 import de.uka.ilkd.key.smt.SMTSettings;
 import de.uka.ilkd.key.smt.SMTTranslator;
 import de.uka.ilkd.key.smt.newsmt2.SExpr.Type;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * This class provides a translation from a KeY sequent to the SMT-LIB 2 language, a common input
@@ -83,13 +94,13 @@ public class ModularSMTLib2Translator implements SMTTranslator {
 
         sb.append("\n(check-sat)");
 
-        if(!master.getUnknownValues().isEmpty()) {
+        if (!master.getUnknownValues().isEmpty()) {
             sb.append("\n\n; --- Translation of unknown values\n");
             for (Term t : master.getUnknownValues().keySet()) {
                 sb.append("; ")
-                    .append(master.getUnknownValues().get(t).toString())
-                    .append(" :  ")
-                    .append(t.toString().replace("\n", "")).append("\n");
+                        .append(master.getUnknownValues().get(t).toString())
+                        .append(" :  ")
+                        .append(t.toString().replace("\n", "")).append("\n");
             }
         }
 
@@ -101,7 +112,7 @@ public class ModularSMTLib2Translator implements SMTTranslator {
         }
 
         // TODO Find a concept for exceptions here
-        if(!exceptions.isEmpty()) {
+        if (!exceptions.isEmpty()) {
             LOGGER.error("Exception while translating: {}", sb);
             throw new RuntimeException(exceptions.get(0));
         }
@@ -113,7 +124,7 @@ public class ModularSMTLib2Translator implements SMTTranslator {
      * precompute the information on the required sources from the translation.
      */
     private void extractSortDeclarations(Sequent sequent, Services services, MasterHandler master,
-                                         List<Term> sequentAsserts) {
+            List<Term> sequentAsserts) {
         TypeManager tm = new TypeManager(services);
         tm.handle(master);
     }
@@ -136,8 +147,8 @@ public class ModularSMTLib2Translator implements SMTTranslator {
 
     private static String readResource(String s) {
         BufferedReader r = new BufferedReader(
-                new InputStreamReader(
-                        ModularSMTLib2Translator.class.getResourceAsStream(s)));
+            new InputStreamReader(
+                ModularSMTLib2Translator.class.getResourceAsStream(s)));
 
         try {
             String line;
@@ -174,13 +185,13 @@ public class ModularSMTLib2Translator implements SMTTranslator {
      * @return an equivalent smt code with some simplifications
      */
     private SExpr postProcess(SExpr result) {
-        // remove (u2i (i2u x)) --->  x
-        if(result.getName().equals("u2i") && result.getChildren().get(0).getName().equals("i2u")) {
+        // remove (u2i (i2u x)) ---> x
+        if (result.getName().equals("u2i") && result.getChildren().get(0).getName().equals("i2u")) {
             return postProcess(result.getChildren().get(0).getChildren().get(0));
         }
 
-        // remove (u2b (b2u x)) --->  x
-        if(result.getName().equals("u2b") && result.getChildren().get(0).getName().equals("b2u")) {
+        // remove (u2b (b2u x)) ---> x
+        if (result.getName().equals("u2b") && result.getChildren().get(0).getName().equals("b2u")) {
             return postProcess(result.getChildren().get(0).getChildren().get(0));
         }
 

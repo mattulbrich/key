@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.expression;
@@ -13,7 +17,8 @@ import recoder.list.generic.ASTList;
  * @author AL
  */
 
-public abstract class Operator extends JavaNonTerminalProgramElement implements Expression, ExpressionContainer {
+public abstract class Operator extends JavaNonTerminalProgramElement
+        implements Expression, ExpressionContainer {
 
     /**
      * Relative positioning of the operator.
@@ -81,7 +86,7 @@ public abstract class Operator extends JavaNonTerminalProgramElement implements 
 
     /**
      * @return true, if a has a higher priority (a lower precendence value) than
-     * b.
+     *         b.
      */
 
     public static boolean precedes(Operator a, Operator b) {
@@ -135,23 +140,23 @@ public abstract class Operator extends JavaNonTerminalProgramElement implements 
 
     public SourceElement getFirstElement() {
         switch (getNotation()) {
-            case INFIX:
-            case POSTFIX:
-                return children.get(0).getFirstElement();
-            case PREFIX:
-            default:
-                return this;
+        case INFIX:
+        case POSTFIX:
+            return children.get(0).getFirstElement();
+        case PREFIX:
+        default:
+            return this;
         }
     }
 
     public SourceElement getLastElement() {
         switch (getNotation()) {
-            case INFIX:
-            case PREFIX:
-                return children.get(getArity() - 1).getLastElement();
-            case POSTFIX:
-            default:
-                return this;
+        case INFIX:
+        case PREFIX:
+            return children.get(getArity() - 1).getLastElement();
+        case POSTFIX:
+        default:
+            return this;
         }
     }
 
@@ -311,7 +316,8 @@ public abstract class Operator extends JavaNonTerminalProgramElement implements 
      */
 
     public boolean isToBeParenthesized() {
-        return (expressionParent instanceof Operator) && (!(expressionParent instanceof ReferencePrefix))
+        return (expressionParent instanceof Operator)
+                && (!(expressionParent instanceof ReferencePrefix))
                 && (((Operator) expressionParent).getPrecedence() < getPrecedence
                 /*
                  * ReferencePrefices include ParenthesizedExpressions, New,

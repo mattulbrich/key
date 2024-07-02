@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.convenience;
@@ -14,7 +18,7 @@ public interface Formats {
      * descriptive external error messages. Derives messages such as <TT>
      * MethodReference "x.f(i + 1)"
      *
-     * @23/45 in FILE:/tmp/Foo.java</TT>.
+     * &#64;23/45 in FILE:/tmp/Foo.java</TT>.
      */
     String ELEMENT_LONG = "%c \"%s\" @%p in %f";
 
@@ -22,7 +26,7 @@ public interface Formats {
      * Long formatting string for program elements, omitting file information.
      * Derives messages such as <TT>MethodReference "x.f(i + 1)"
      *
-     * @23/45</TT>.
+     * &#64;23/45</TT>.
      */
     String ELEMENT_LONG_LOCAL = "%c \"%s\" @%p";
 
@@ -31,8 +35,7 @@ public interface Formats {
      * descriptive external error messages. Derives messages such as <TT>
      * MethodDeclaration "Foo.f(int)"
      *
-     * @23/45 in FILE:/tmp/Foo.java</TT>.
+     * &#64;23/45 in FILE:/tmp/Foo.java</TT>.
      */
     String ELEMENT_SHORT = "%c \"%N\" @%p in %f";
 }
-

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -16,10 +26,10 @@ package de.uka.ilkd.key.proof.rulefilter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.rule.RuleSet;
 import de.uka.ilkd.key.rule.Taclet;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * Filter that selects taclets using the method <code>admissible</code> of the
@@ -36,31 +46,30 @@ public class IHTacletFilter extends TacletFilter {
     private final boolean interactive;
     private final ImmutableList<RuleSet> heuristics;
 
-    
+
     private final HashMap<Taclet, Boolean> filterCache = new LinkedHashMap<Taclet, Boolean>(2000);
-    
-    
-    
-    public IHTacletFilter ( boolean interactive, ImmutableList<RuleSet> heuristics ) {
-	this.interactive = interactive;
-	this.heuristics  = heuristics;
+
+
+
+    public IHTacletFilter(boolean interactive, ImmutableList<RuleSet> heuristics) {
+        this.interactive = interactive;
+        this.heuristics = heuristics;
     }
 
     /**
      * @return true iff <code>taclet</code> should be included in the
-     * result
+     *         result
      */
-    public boolean filter ( Taclet taclet ) {
-	if (!interactive) {
-	    Boolean b = filterCache.get(taclet);
+    public boolean filter(Taclet taclet) {
+        if (!interactive) {
+            Boolean b = filterCache.get(taclet);
             if (b == null) {
-                b = taclet.admissible ( interactive, heuristics ) ? 
-                        Boolean.TRUE : Boolean.FALSE; 
+                b = taclet.admissible(interactive, heuristics) ? Boolean.TRUE : Boolean.FALSE;
                 filterCache.put(taclet, b);
-            } 
+            }
             return b.equals(Boolean.TRUE);
         }
         // in interactive case we do not need to cache; the user is too slow ;-)
-        return taclet.admissible ( interactive, heuristics );
+        return taclet.admissible(interactive, heuristics);
     }
 }

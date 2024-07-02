@@ -1,12 +1,22 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.smt.st;
+
+import javax.annotation.Nonnull;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.smt.*;
 import de.uka.ilkd.key.smt.communication.AbstractSolverSocket;
 import de.uka.ilkd.key.smt.communication.CVC4Socket;
 import de.uka.ilkd.key.smt.newsmt2.ModularSMTLib2Translator;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Alexander Weigl
@@ -17,9 +27,9 @@ public class CVC4NewTLSolverType extends AbstractSolverType {
     // TODO move to AbstractSolverType?
     @Override
     public SMTSolver createSolver(SMTProblem problem,
-                                  SolverListener listener, Services services) {
+            SolverListener listener, Services services) {
         return new SMTSolverImplementation(problem, listener,
-                services, this);
+            services, this);
     }
 
     @Override
@@ -50,7 +60,7 @@ public class CVC4NewTLSolverType extends AbstractSolverType {
 
     @Override
     public String[] getDelimiters() {
-        return new String[]{"CVC4>"};
+        return new String[] { "CVC4>" };
     }
 
     @Override
@@ -65,7 +75,7 @@ public class CVC4NewTLSolverType extends AbstractSolverType {
 
     @Override
     public String[] getSupportedVersions() {
-        return new String[]{"version 1.3", "version 1.7", "version 1.8"};
+        return new String[] { "version 1.3", "version 1.7", "version 1.8" };
     }
 
     @Override

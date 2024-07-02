@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -29,23 +39,24 @@ public class ExistentiallyConnectedFormulasFeature extends
     private final ProjectionToTerm for0, for1;
 
     private ExistentiallyConnectedFormulasFeature(ProjectionToTerm for0,
-                                                  ProjectionToTerm for1) {
+            ProjectionToTerm for1) {
         this.for0 = for0;
         this.for1 = for1;
     }
 
     public static Feature create(ProjectionToTerm for0, ProjectionToTerm for1) {
-        return new ExistentiallyConnectedFormulasFeature ( for0, for1 );
+        return new ExistentiallyConnectedFormulasFeature(for0, for1);
     }
 
     protected boolean filter(TacletApp app, PosInOccurrence pos, Goal goal) {
         assert pos != null : "Feature is only applicable to rules with find";
 
         final ClausesGraph graph =
-            ClausesGraph.create ( pos.sequentFormula ().formula (), goal.proof().getServices().getCaches() );
+            ClausesGraph.create(pos.sequentFormula().formula(),
+                goal.proof().getServices().getCaches());
 
-        return graph.connected ( for0.toTerm ( app, pos, goal ),
-                                 for1.toTerm ( app, pos, goal ) );
+        return graph.connected(for0.toTerm(app, pos, goal),
+            for1.toTerm(app, pos, goal));
     }
 
 }

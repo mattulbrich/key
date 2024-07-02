@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -56,19 +66,19 @@ public class ResolveMemberReference extends GenericResolutionTransformation {
 
     /**
      * Analys a MemberReference.
-     * 
+     *
      * Considering the following example:
-     * 
+     *
      * <pre>
      * class B ...
      * class G&lt;E&gt; { E m() {...} }
-     * 
-     * ... 
-     * G&lt;B&gt; g = new G&lt;B&gt;(); 
+     *
+     * ...
+     * G&lt;B&gt; g = new G&lt;B&gt;();
      * B b = g.m();
-     * ... 
+     * ...
      * </pre>
-     * 
+     *
      * The reference <code>g.m()</code> is the one under test. Several types
      * will show up:
      * <ul>
@@ -89,7 +99,7 @@ public class ResolveMemberReference extends GenericResolutionTransformation {
      * <li><code>resolvedType</code> - if there are multiple bounds the
      * reference might have to be cast to a different one than the first.</li>
      * </ul>
-     * 
+     *
      * Also, if there are explicit type parameters, they will be removed.
      */
     @Override
@@ -164,13 +174,13 @@ public class ResolveMemberReference extends GenericResolutionTransformation {
     /**
      * return true iff the reference is a lhs of an assignment: Either an
      * assignment operator or ???.
-     * 
+     *
      * @todo
-     * 
+     *
      * @param reference
      * @return true iff the reference is a lhs of an assignment: Either an
-     * assignment operator or ???.
-     *  
+     *         assignment operator or ???.
+     *
      */
     private static boolean isLHS(Reference reference) {
         NonTerminalProgramElement parent = reference.getASTParent();
@@ -185,7 +195,7 @@ public class ResolveMemberReference extends GenericResolutionTransformation {
     /**
      * get the static type of the the declaration of the member. This might be a
      * type variable even if the type instantiation does not have type variables
-     * 
+     *
      * @return the type of the the declaration of the referenced member
      */
     private Type getFormalType() {
@@ -208,37 +218,37 @@ public class ResolveMemberReference extends GenericResolutionTransformation {
 
     /**
      * Problem:
-     * 
+     *
      * <code>
      * interface B { void bb(); }
      * interface C {}
-     * 
+     *
      * class A&lt;E extends C&amp;B&gt; {
      *   E e;
-     *   
+     *
      *   void _d() {
      *     e.bb();
-     *   }         
+     *   }
      * }
      * </code>
-     * 
+     *
      * would be resolved to
-     * 
+     *
      * <code>
      * intfcs s. above
-     * 
+     *
      * class A {
      *   C e;
-     *   
+     *
      *   void _d() {
      *     ((B)e).bb();
      *   }
      * }
      * </code>
-     * 
+     *
      * because the element <code>e</code> cannot have a static types C and B
      * at the same time. Such casts have to be introduced in such situations.
-     * 
+     *
      * The detection is handled for the following situations:
      * <ul>
      * <li>FieldReference as suffix</li>
@@ -248,9 +258,9 @@ public class ResolveMemberReference extends GenericResolutionTransformation {
      * assignments!)</li>
      * <li>MethodReference as parameter</li>
      * </ul>
-     * 
+     *
      * @todo DAS IST JA WOHL NOCH NICHT
-     * 
+     *
      * @return the resolved type
      */
     private Type resolveType() {
@@ -329,8 +339,10 @@ public class ResolveMemberReference extends GenericResolutionTransformation {
 
         if (typeToReference != null) {
             ProgramFactory programFactory = getServiceConfiguration().getProgramFactory();
-            TypeCast cast = programFactory.createTypeCast((Expression) reference.deepClone(), typeToReference);
-            ParenthesizedExpression replaceWith = programFactory.createParenthesizedExpression(cast);
+            TypeCast cast =
+                programFactory.createTypeCast((Expression) reference.deepClone(), typeToReference);
+            ParenthesizedExpression replaceWith =
+                programFactory.createParenthesizedExpression(cast);
             if (replaceWith != null)
                 replace(reference, replaceWith);
         }

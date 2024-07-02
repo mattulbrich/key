@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -28,75 +38,75 @@ public abstract class TopLevelFindFeature extends BinaryTacletAppFeature {
 
     private static abstract class TopLevelWithoutUpdate extends TopLevelFindFeature {
         protected abstract boolean matches(PosInOccurrence pos);
-        
+
         protected boolean checkPosition(PosInOccurrence pos) {
-            return pos.isTopLevel () && matches ( pos );
+            return pos.isTopLevel() && matches(pos);
         }
     }
-    
+
     private static abstract class TopLevelWithUpdate extends TopLevelFindFeature {
         protected abstract boolean matches(PosInOccurrence pos);
-        
+
         protected boolean checkPosition(PosInOccurrence pos) {
-            if ( !pos.isTopLevel () ) {
-                final PIOPathIterator it = pos.iterator ();
-                while ( it.next () != -1 ) {
-                    if ( ! ( it.getSubTerm ().op () instanceof UpdateApplication ) )
+            if (!pos.isTopLevel()) {
+                final PIOPathIterator it = pos.iterator();
+                while (it.next() != -1) {
+                    if (!(it.getSubTerm().op() instanceof UpdateApplication))
                         return false;
                 }
             }
-            
-            return matches ( pos );
+
+            return matches(pos);
         }
     }
-    
+
     public final static Feature ANTEC_OR_SUCC =
-        new TopLevelWithoutUpdate () {
+        new TopLevelWithoutUpdate() {
             protected boolean matches(PosInOccurrence pos) {
                 return true;
-        }
-    };
-    
+            }
+        };
+
     public final static Feature ANTEC =
-        new TopLevelWithoutUpdate () {
+        new TopLevelWithoutUpdate() {
             protected boolean matches(PosInOccurrence pos) {
-                return pos.isInAntec ();
-        }
-    };
-    
+                return pos.isInAntec();
+            }
+        };
+
     public final static Feature SUCC =
-        new TopLevelWithoutUpdate () {
+        new TopLevelWithoutUpdate() {
             protected boolean matches(PosInOccurrence pos) {
-                return !pos.isInAntec ();
-        }
-    };
-    
+                return !pos.isInAntec();
+            }
+        };
+
     public final static Feature ANTEC_OR_SUCC_WITH_UPDATE =
-        new TopLevelWithUpdate () {
+        new TopLevelWithUpdate() {
             protected boolean matches(PosInOccurrence pos) {
                 return true;
-        }
-    };
-    
+            }
+        };
+
     public final static Feature ANTEC_WITH_UPDATE =
-        new TopLevelWithUpdate () {
+        new TopLevelWithUpdate() {
             protected boolean matches(PosInOccurrence pos) {
-                return pos.isInAntec ();
-        }
-    };
-    
+                return pos.isInAntec();
+            }
+        };
+
     public final static Feature SUCC_WITH_UPDATE =
-        new TopLevelWithUpdate () {
+        new TopLevelWithUpdate() {
             protected boolean matches(PosInOccurrence pos) {
-                return !pos.isInAntec ();
-        }
-    };
-    
+                return !pos.isInAntec();
+            }
+        };
+
     protected boolean filter(TacletApp app, PosInOccurrence pos, Goal goal) {
         assert pos != null : "Feature is only applicable to rules with find";
-        return checkPosition ( pos );
+        return checkPosition(pos);
     }
 
     protected abstract boolean checkPosition(PosInOccurrence pos);
-    
+
 }

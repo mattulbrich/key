@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -36,7 +46,7 @@ public class FullAutoPilotProofMacro extends SequentialProofMacro {
      * before retracting. This overrides the strategy setting.
      */
     private static final int NUMBER_OF_TRY_STEPS =
-            Integer.getInteger("key.autopilot.closesteps", 1000);
+        Integer.getInteger("key.autopilot.closesteps", 1000);
 
     @Override
     public String getName() {
@@ -57,16 +67,16 @@ public class FullAutoPilotProofMacro extends SequentialProofMacro {
     @Override
     public String getDescription() {
         return "<html><ol><li>Finish symbolic execution" +
-                "<li>Separate proof obligations" +
-                "<li>Expand invariant definitions" +
-                "<li>Try to close all proof obligations</ol>";
+            "<li>Separate proof obligations" +
+            "<li>Expand invariant definitions" +
+            "<li>Try to close all proof obligations</ol>";
     }
 
     @Override
     protected ProofMacro[] createProofMacroArray() {
         return new ProofMacro[] {
-                new AutoPilotPrepareProofMacro(),
-                new TryCloseMacro(NUMBER_OF_TRY_STEPS)
+            new AutoPilotPrepareProofMacro(),
+            new TryCloseMacro(NUMBER_OF_TRY_STEPS)
         };
     }
 }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -21,6 +31,29 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.uka.ilkd.key.java.recoderext.ClassFileDeclarationBuilder;
+import de.uka.ilkd.key.java.recoderext.EnumClassDeclaration;
+import de.uka.ilkd.key.java.recoderext.EscapeExpression;
+import de.uka.ilkd.key.java.recoderext.ExecutionContext;
+import de.uka.ilkd.key.java.recoderext.MethodCallStatement;
+import de.uka.ilkd.key.java.recoderext.adt.AllFields;
+import de.uka.ilkd.key.java.recoderext.adt.AllObjects;
+import de.uka.ilkd.key.java.recoderext.adt.EmptySeqLiteral;
+import de.uka.ilkd.key.java.recoderext.adt.EmptySetLiteral;
+import de.uka.ilkd.key.java.recoderext.adt.Intersect;
+import de.uka.ilkd.key.java.recoderext.adt.SeqConcat;
+import de.uka.ilkd.key.java.recoderext.adt.SeqIndexOf;
+import de.uka.ilkd.key.java.recoderext.adt.SeqLength;
+import de.uka.ilkd.key.java.recoderext.adt.SeqReverse;
+import de.uka.ilkd.key.java.recoderext.adt.SeqSingleton;
+import de.uka.ilkd.key.java.recoderext.adt.SeqSub;
+import de.uka.ilkd.key.java.recoderext.adt.SetMinus;
+import de.uka.ilkd.key.java.recoderext.adt.SetUnion;
+import de.uka.ilkd.key.java.recoderext.adt.Singleton;
+import de.uka.ilkd.key.util.Debug;
+import de.uka.ilkd.key.util.ExceptionHandlerException;
+import de.uka.ilkd.key.util.SpecDataLocation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,130 +85,109 @@ import recoder.java.reference.UncollatedReferenceQualifier;
 import recoder.java.reference.VariableReference;
 import recoder.java.statement.Case;
 import recoder.list.generic.ASTList;
-import de.uka.ilkd.key.java.recoderext.ClassFileDeclarationBuilder;
-import de.uka.ilkd.key.java.recoderext.EnumClassDeclaration;
-import de.uka.ilkd.key.java.recoderext.EscapeExpression;
-import de.uka.ilkd.key.java.recoderext.ExecutionContext;
-import de.uka.ilkd.key.java.recoderext.MethodCallStatement;
-import de.uka.ilkd.key.java.recoderext.adt.AllFields;
-import de.uka.ilkd.key.java.recoderext.adt.AllObjects;
-import de.uka.ilkd.key.java.recoderext.adt.EmptySeqLiteral;
-import de.uka.ilkd.key.java.recoderext.adt.EmptySetLiteral;
-import de.uka.ilkd.key.java.recoderext.adt.Intersect;
-import de.uka.ilkd.key.java.recoderext.adt.SeqConcat;
-import de.uka.ilkd.key.java.recoderext.adt.SeqIndexOf;
-import de.uka.ilkd.key.java.recoderext.adt.SeqLength;
-import de.uka.ilkd.key.java.recoderext.adt.SeqReverse;
-import de.uka.ilkd.key.java.recoderext.adt.SeqSingleton;
-import de.uka.ilkd.key.java.recoderext.adt.SeqSub;
-import de.uka.ilkd.key.java.recoderext.adt.SetMinus;
-import de.uka.ilkd.key.java.recoderext.adt.SetUnion;
-import de.uka.ilkd.key.java.recoderext.adt.Singleton;
-import de.uka.ilkd.key.util.Debug;
-import de.uka.ilkd.key.util.ExceptionHandlerException;
-import de.uka.ilkd.key.util.SpecDataLocation;
 
 
 public class KeYCrossReferenceSourceInfo
-    extends DefaultCrossReferenceSourceInfo {
+        extends DefaultCrossReferenceSourceInfo {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(KeYCrossReferenceSourceInfo.class);
 
-    private HashMap<String, recoder.java.declaration.VariableSpecification>  names2vars = null;
+    private HashMap<String, recoder.java.declaration.VariableSpecification> names2vars = null;
 
-    
+
     public KeYCrossReferenceSourceInfo(ServiceConfiguration config) {
-	super(config);
+        super(config);
     }
 
-    public void setNames2Vars(HashMap<String, recoder.java.declaration.VariableSpecification> names2vars){
-	this.names2vars = names2vars;
+    public void setNames2Vars(
+            HashMap<String, recoder.java.declaration.VariableSpecification> names2vars) {
+        this.names2vars = names2vars;
     }
 
     /**
-       Called by the service configuration indicating that all services
-       are known. Services may now start communicating or linking among
-       their configuration partners. The service configuration can be
-       memorized if it has not been passed in by a constructor already.
-       @param cfg the service configuration this services has been assigned to.
+     * Called by the service configuration indicating that all services
+     * are known. Services may now start communicating or linking among
+     * their configuration partners. The service configuration can be
+     * memorized if it has not been passed in by a constructor already.
+     *
+     * @param cfg the service configuration this services has been assigned to.
      */
     public void initialize(ServiceConfiguration cfg) {
-	super.initialize(cfg);
-	cfg.getChangeHistory().
-	    removeChangeHistoryListener(this);
-	cfg.getChangeHistory().addChangeHistoryListener(this);
-	
-	//HEAP
-	name2primitiveType.put("\\locset", new PrimitiveType("\\locset", this));
-	
-	// ADTs
-	name2primitiveType.put("\\seq", new PrimitiveType("\\seq", this));
-	name2primitiveType.put("\\free", new PrimitiveType("\\free", this));
-	name2primitiveType.put("\\map", new PrimitiveType("\\map", this));
-	
-	// JML's primitive types
-	name2primitiveType.put("\\bigint", new PrimitiveType("\\bigint", this));
-	name2primitiveType.put("\\real", new PrimitiveType("\\real", this));
+        super.initialize(cfg);
+        cfg.getChangeHistory().removeChangeHistoryListener(this);
+        cfg.getChangeHistory().addChangeHistoryListener(this);
+
+        // HEAP
+        name2primitiveType.put("\\locset", new PrimitiveType("\\locset", this));
+
+        // ADTs
+        name2primitiveType.put("\\seq", new PrimitiveType("\\seq", this));
+        name2primitiveType.put("\\free", new PrimitiveType("\\free", this));
+        name2primitiveType.put("\\map", new PrimitiveType("\\map", this));
+
+        // JML's primitive types
+        name2primitiveType.put("\\bigint", new PrimitiveType("\\bigint", this));
+        name2primitiveType.put("\\real", new PrimitiveType("\\real", this));
     }
 
     /**
-	Returns the class type that contains the given program element.
-	@param  context a program element.
-	@return the type to which the given program element belongs
-	(may be <CODE>null</CODE>).
-    */
-    public ClassType getContainingClassType(ProgramElement context){
-	if (context instanceof TypeDeclaration) {
-	    context = context.getASTParent();
-	}
-	do {
-	    if (context instanceof ClassType) {
-		return (ClassType)context;
-	    }else if(context instanceof MethodCallStatement){
-		return (ClassType) getType(((MethodCallStatement) context).
-					      getExecutionContext()
-					      .getTypeReference());
-	    }
-	    context = context.getASTParent();
-	} while (context != null);
-	return null;
+     * Returns the class type that contains the given program element.
+     *
+     * @param context a program element.
+     * @return the type to which the given program element belongs
+     *         (may be <CODE>null</CODE>).
+     */
+    public ClassType getContainingClassType(ProgramElement context) {
+        if (context instanceof TypeDeclaration) {
+            context = context.getASTParent();
+        }
+        do {
+            if (context instanceof ClassType) {
+                return (ClassType) context;
+            } else if (context instanceof MethodCallStatement) {
+                return (ClassType) getType(((MethodCallStatement) context).getExecutionContext()
+                        .getTypeReference());
+            }
+            context = context.getASTParent();
+        } while (context != null);
+        return null;
     }
 
 
     public void modelChanged(ChangeHistoryEvent event) {
-	List<TreeChange> changes = new ArrayList<TreeChange>();
-	changes.addAll(event.getChanges());
-	super.modelChanged(event);
+        List<TreeChange> changes = new ArrayList<TreeChange>();
+        changes.addAll(event.getChanges());
+        super.modelChanged(event);
 
-	for (TreeChange change : changes) {
-	    if (change instanceof AttachChange) {
-		ProgramElement pe = change.getCompilationUnit();
-		if (pe instanceof TypeDeclarationContainer) {
-		    TypeDeclarationContainer tdc = (TypeDeclarationContainer) pe;
-		    for (int i = 0; i<tdc.getTypeDeclarationCount(); i++) {
-		        ClassType ct = tdc.getTypeDeclarationAt(i);
-		        for (ClassType superType : ct.getSupertypes()) {
-		            registerSubtype(ct, superType);
-		        }
-		    }
-		}
-	    }
-	}
+        for (TreeChange change : changes) {
+            if (change instanceof AttachChange) {
+                ProgramElement pe = change.getCompilationUnit();
+                if (pe instanceof TypeDeclarationContainer) {
+                    TypeDeclarationContainer tdc = (TypeDeclarationContainer) pe;
+                    for (int i = 0; i < tdc.getTypeDeclarationCount(); i++) {
+                        ClassType ct = tdc.getTypeDeclarationAt(i);
+                        for (ClassType superType : ct.getSupertypes()) {
+                            registerSubtype(ct, superType);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void registerSubtype(ClassType c1, ClassType c2) {
 
-	try {
-	    super.registerSubtype(c1, c2);
-	} catch (IllegalAccessError iae) {
-	    // eclipse uses different classloaders and they cause an exception here
-	    // TODO: package new recoder library with protected registerSubtype
-	    // and delete the exception handling code below
-	    eclipseWorkaroundMethodAccess(c1, c2);
-	}
-	
-	
-	
+        try {
+            super.registerSubtype(c1, c2);
+        } catch (IllegalAccessError iae) {
+            // eclipse uses different classloaders and they cause an exception here
+            // TODO: package new recoder library with protected registerSubtype
+            // and delete the exception handling code below
+            eclipseWorkaroundMethodAccess(c1, c2);
+        }
+
+
+
     }
 
     // Woraround for eclipse as we need to access a package private method from the superclass
@@ -184,19 +196,20 @@ public class KeYCrossReferenceSourceInfo
     // TODO: package new recoder library with protected registerSubtype
     // and delete the exception handling code below
     private void eclipseWorkaroundMethodAccess(ClassType c1, ClassType c2) {
-	try {
-	    Method m = DefaultProgramModelInfo.class.getDeclaredMethod("registerSubtype", ClassType.class, ClassType.class);
-	    m.setAccessible(true);
-	    m.invoke(this, c1, c2);
-	} catch (IllegalAccessException e) {
-	    throw (IllegalAccessError)new IllegalAccessError().initCause(e);
-	} catch (InvocationTargetException e) {
-	    throw (IllegalAccessError)new IllegalAccessError().initCause(e);
-	} catch (SecurityException e) {
-	    throw (IllegalAccessError)new IllegalAccessError().initCause(e);
-	} catch (NoSuchMethodException e) {
-	    throw (IllegalAccessError)new IllegalAccessError().initCause(e);
-	}
+        try {
+            Method m = DefaultProgramModelInfo.class.getDeclaredMethod("registerSubtype",
+                ClassType.class, ClassType.class);
+            m.setAccessible(true);
+            m.invoke(this, c1, c2);
+        } catch (IllegalAccessException e) {
+            throw (IllegalAccessError) new IllegalAccessError().initCause(e);
+        } catch (InvocationTargetException e) {
+            throw (IllegalAccessError) new IllegalAccessError().initCause(e);
+        } catch (SecurityException e) {
+            throw (IllegalAccessError) new IllegalAccessError().initCause(e);
+        } catch (NoSuchMethodException e) {
+            throw (IllegalAccessError) new IllegalAccessError().initCause(e);
+        }
     }
 
     public Variable getVariable(String name, ProgramElement context) {
@@ -206,22 +219,27 @@ public class KeYCrossReferenceSourceInfo
 
         // Enum constants:
         // 2 cases:
-        //   1) its an original enum constant (see DefaultSourceInfo)
-        //   or
-        //   2) its an already transformed enum class constant
+        // 1) its an original enum constant (see DefaultSourceInfo)
+        // or
+        // 2) its an already transformed enum class constant
         //
         // In the KeY gui, however, the references will always be qualified
         // like in "EnumName.ConstantName"
 
         // 1)
-        if ((context instanceof VariableReference || context instanceof UncollatedReferenceQualifier)
+        if ((context instanceof VariableReference
+                || context instanceof UncollatedReferenceQualifier)
                 && context.getASTParent() instanceof Case
-                && getType(((Case)context.getASTParent()).getParent().getExpression()) instanceof EnumDeclaration) {
-            /* is it an enum constant? Possible iff:
+                && getType(((Case) context.getASTParent()).getParent()
+                        .getExpression()) instanceof EnumDeclaration) {
+            /*
+             * is it an enum constant? Possible iff:
              * 1) parent is "case" and
              * 2) switch-selector is an enum type (that way, the selector specifies the scope!)
              */
-            EnumConstantSpecification ecs = (EnumConstantSpecification)((EnumDeclaration)getType(((Case)context.getASTParent()).getParent().getExpression())).getVariableInScope(name);
+            EnumConstantSpecification ecs = (EnumConstantSpecification) ((EnumDeclaration) getType(
+                ((Case) context.getASTParent()).getParent().getExpression()))
+                        .getVariableInScope(name);
             if (ecs != null) {
                 return ecs;
             } else {
@@ -231,14 +249,18 @@ public class KeYCrossReferenceSourceInfo
         }
 
         // 2)
-        if ((context instanceof VariableReference || context instanceof UncollatedReferenceQualifier)
+        if ((context instanceof VariableReference
+                || context instanceof UncollatedReferenceQualifier)
                 && context.getASTParent() instanceof Case
-                && getType(((Case)context.getASTParent()).getParent().getExpression()) instanceof EnumClassDeclaration) {
-            /* is it an enum class constant (after transformation)? Possible iff:
+                && getType(((Case) context.getASTParent()).getParent()
+                        .getExpression()) instanceof EnumClassDeclaration) {
+            /*
+             * is it an enum class constant (after transformation)? Possible iff:
              * 1) parent is "case" and
              * 2) switch-selector is an enum type (that way, the selector specifies the scope!)
              */
-            EnumClassDeclaration ecd = ((EnumClassDeclaration)getType(((Case)context.getASTParent()).getParent().getExpression()));
+            EnumClassDeclaration ecd = ((EnumClassDeclaration) getType(
+                ((Case) context.getASTParent()).getParent().getExpression()));
             VariableSpecification vs = ecd.getVariableInScope(name);
             if (vs != null) {
                 return vs;
@@ -252,7 +274,7 @@ public class KeYCrossReferenceSourceInfo
                 && !(pe instanceof VariableScope)
                 && !((pe instanceof MethodCallStatement)
                         && !(context instanceof ExecutionContext) && !(context
-                        .equals(((MethodCallStatement) pe).getResultVariable())))) {
+                                .equals(((MethodCallStatement) pe).getResultVariable())))) {
             context = pe;
             pe = pe.getASTParent();
 
@@ -323,7 +345,8 @@ public class KeYCrossReferenceSourceInfo
             pe = scope.getASTParent();
             while (pe != null
                     && !(pe instanceof VariableScope)
-                    && !((pe instanceof MethodCallStatement) && !(context instanceof ExecutionContext))) {
+                    && !((pe instanceof MethodCallStatement)
+                            && !(context instanceof ExecutionContext))) {
                 context = pe; // proceed the context
                 pe = pe.getASTParent();
             }
@@ -354,10 +377,10 @@ public class KeYCrossReferenceSourceInfo
      * <code>s.getASTParent();</code> in Recoder 0.84.
      *
      * @param name
-     *                the name for the type to be looked up; may or may not be
-     *                qualified.
+     *        the name for the type to be looked up; may or may not be
+     *        qualified.
      * @param context
-     *                a program element defining the lookup context (scope).
+     *        a program element defining the lookup context (scope).
      * @return the corresponding type (may be <CODE>null</CODE>).
      */
     public Type getType(String name, ProgramElement context) {
@@ -371,7 +394,7 @@ public class KeYCrossReferenceSourceInfo
             return t;
         }
 
-        if(name.startsWith("\\dl_")) {
+        if (name.startsWith("\\dl_")) {
             var pt = new PrimitiveType(name, this);
             name2primitiveType.put(name, pt);
             return pt;
@@ -459,8 +482,8 @@ public class KeYCrossReferenceSourceInfo
         }
         if (result != null) {
             return result;
-        }        
-        
+        }
+
         // now the outer scope is null, so we have arrived at the top
         CompilationUnit cu = (CompilationUnit) scope;
 
@@ -474,7 +497,15 @@ public class KeYCrossReferenceSourceInfo
             result = getFromUnitPackage(name, cu);
             if (result == null && il != null) {
                 // then check package imports
-                result = getFromPackageImports(name, il, cu.getTypeDeclarationAt(0 /* doesn't matter which one to check, since this is important for static imports only */));
+                result = getFromPackageImports(name, il, cu.getTypeDeclarationAt(0 /*
+                                                                                    * doesn't matter
+                                                                                    * which one to
+                                                                                    * check, since
+                                                                                    * this is
+                                                                                    * important for
+                                                                                    * static imports
+                                                                                    * only
+                                                                                    */));
             }
         }
         if (result == null) {
@@ -494,6 +525,7 @@ public class KeYCrossReferenceSourceInfo
 
     /**
      * redirects the nesting of scopes when a method-frame occurs
+     *
      * @param scope the current scope
      * @return the new scope
      */
@@ -503,15 +535,15 @@ public class KeYCrossReferenceSourceInfo
                     .getExecutionContext().getTypeReference());
             if (!(type instanceof TypeDeclaration)) {
                 throw new IllegalStateException("In the source section of"
-                        + "method-frame only types for which source code is "
-                        + "available are supported.");
+                    + "method-frame only types for which source code is "
+                    + "available are supported.");
             }
             return (TypeDeclaration) getType(((MethodCallStatement) scope)
                     .getExecutionContext().getTypeReference());
         } else if (scope instanceof ExecutionContext
                 || (scope.getASTParent() instanceof MethodCallStatement &&
-                        scope == ((MethodCallStatement) scope.getASTParent()).
-                        getResultVariable())) {
+                        scope == ((MethodCallStatement) scope.getASTParent())
+                                .getResultVariable())) {
             scope = scope.getASTParent();
         }
 
@@ -523,10 +555,11 @@ public class KeYCrossReferenceSourceInfo
     /**
      * The mapping from class names to stub compilation units.
      */
-    protected Map<String, CompilationUnit> stubClasses = new LinkedHashMap<String, CompilationUnit>();
+    protected Map<String, CompilationUnit> stubClasses =
+        new LinkedHashMap<String, CompilationUnit>();
 
     /**
-     *  The flag which decides on the behaviour on undefined classes
+     * The flag which decides on the behaviour on undefined classes
      */
     private boolean ignoreUnresolvedClasses = false;
 
@@ -537,11 +570,11 @@ public class KeYCrossReferenceSourceInfo
      * {@link #registerUnresolvedTypeRef(TypeReference)} to create dummy stubs.
      *
      * @param ignoreUnresolvedClasses
-     *                ignore unresolved classes iff true
+     *        ignore unresolved classes iff true
      */
     public void setIgnoreUnresolvedClasses(boolean ignoreUnresolvedClasses) {
         this.ignoreUnresolvedClasses = ignoreUnresolvedClasses;
-        if(ignoreUnresolvedClasses) {
+        if (ignoreUnresolvedClasses) {
             stubClasses.clear();
         }
     }
@@ -558,7 +591,7 @@ public class KeYCrossReferenceSourceInfo
         try {
             return super.getType(tr);
         } catch (ExceptionHandlerException e) {
-            if(ignoreUnresolvedClasses && e.getCause() instanceof UnresolvedReferenceException) {
+            if (ignoreUnresolvedClasses && e.getCause() instanceof UnresolvedReferenceException) {
                 registerUnresolvedTypeRef(tr);
                 return super.getType(tr);
             } else {
@@ -576,12 +609,12 @@ public class KeYCrossReferenceSourceInfo
         String typeString = Naming.toPathName(tyref);
 
         // bugfix: The reference might be to an array. Remove the array reference then.
-        while(typeString.endsWith("[]"))
+        while (typeString.endsWith("[]"))
             typeString = typeString.substring(0, typeString.length() - 2);
 
         // look in the already created classes:
         CompilationUnit stub = stubClasses.get(typeString);
-        if(stub != null)
+        if (stub != null)
             throw new IllegalStateException("try to resolve an unknown type twice");
 
         recoder.abstraction.Type ty;
@@ -592,13 +625,17 @@ public class KeYCrossReferenceSourceInfo
             // this is still an unknown type, so set ty = null
             ty = null;
         }
-        if(ty == null) {
-            if(!typeString.contains("."))
-                throw new UnresolvedReferenceException("Type references to undefined classes may only appear if they are fully qualified: " + tyref.toSource(), tyref);
+        if (ty == null) {
+            if (!typeString.contains("."))
+                throw new UnresolvedReferenceException(
+                    "Type references to undefined classes may only appear if they are fully qualified: "
+                        + tyref.toSource(),
+                    tyref);
 
             recoder.java.CompilationUnit cu;
             try {
-                cu = ClassFileDeclarationBuilder.makeEmptyClassDeclaration(serviceConfiguration.getProgramFactory(), typeString);
+                cu = ClassFileDeclarationBuilder.makeEmptyClassDeclaration(
+                    serviceConfiguration.getProgramFactory(), typeString);
                 cu.setDataLocation(new SpecDataLocation("stub", typeString));
             } catch (ParserException e) {
                 throw new de.uka.ilkd.key.java.ConvertException(e);
@@ -629,36 +666,37 @@ public class KeYCrossReferenceSourceInfo
      * clears the cache for the TypeReference to Type resolution.
      * This is necessary if types are added after model evalutation.
      *
-    public void clearTypeRefCache() {
-        shit: reference2element.clear();
-    }*/
-    
-    @Override 
+     * public void clearTypeRefCache() {
+     * shit: reference2element.clear();
+     * }
+     */
+
+    @Override
     public Type getType(Expression expr) {
-	if(expr instanceof EmptySetLiteral
-           || expr instanceof Singleton
-           || expr instanceof SetUnion
-           || expr instanceof SetMinus
-           || expr instanceof Intersect
-           || expr instanceof AllObjects
-           || expr instanceof AllFields) {
-	    return name2primitiveType.get("\\locset");
-	} else if(expr instanceof EmptySeqLiteral
-                  || expr instanceof SeqSingleton
-                  || expr instanceof SeqConcat
-                  || expr instanceof SeqSub
-                  || expr instanceof SeqReverse) {
-        return name2primitiveType.get("\\seq");
-	} else if(expr instanceof EscapeExpression) {
-	    // w/o further resolution, a type cannot be determined.
-	    // but this does not fail.
-	    return getNameInfo().getUnknownType();
-	} else if (expr instanceof SeqLength
-	        || expr instanceof SeqIndexOf){
-	    return name2primitiveType.get("\\bigint");
-	    // TODO: handle SeqGet
-	} else {
-	    return super.getType(expr);
-	}
+        if (expr instanceof EmptySetLiteral
+                || expr instanceof Singleton
+                || expr instanceof SetUnion
+                || expr instanceof SetMinus
+                || expr instanceof Intersect
+                || expr instanceof AllObjects
+                || expr instanceof AllFields) {
+            return name2primitiveType.get("\\locset");
+        } else if (expr instanceof EmptySeqLiteral
+                || expr instanceof SeqSingleton
+                || expr instanceof SeqConcat
+                || expr instanceof SeqSub
+                || expr instanceof SeqReverse) {
+            return name2primitiveType.get("\\seq");
+        } else if (expr instanceof EscapeExpression) {
+            // w/o further resolution, a type cannot be determined.
+            // but this does not fail.
+            return getNameInfo().getUnknownType();
+        } else if (expr instanceof SeqLength
+                || expr instanceof SeqIndexOf) {
+            return name2primitiveType.get("\\bigint");
+            // TODO: handle SeqGet
+        } else {
+            return super.getType(expr);
+        }
     }
 }

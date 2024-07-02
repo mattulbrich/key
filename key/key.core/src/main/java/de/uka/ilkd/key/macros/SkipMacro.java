@@ -1,12 +1,22 @@
-package de.uka.ilkd.key.macros;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableList;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.macros;
 
 import de.uka.ilkd.key.control.UserInterfaceControl;
 import de.uka.ilkd.key.logic.PosInOccurrence;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.prover.ProverTaskListener;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * This macro does nothing and is not applicable. It can be used to create
@@ -33,17 +43,17 @@ public class SkipMacro extends AbstractProofMacro {
 
     @Override
     public boolean canApplyTo(Proof proof,
-                              ImmutableList<Goal> goals,
-                              PosInOccurrence posInOcc) {
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc) {
         return false;
     }
 
     @Override
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          Proof proof,                                          
-                                          ImmutableList<Goal> goals,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) throws InterruptedException {
+            Proof proof,
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) throws InterruptedException {
         // do nothing
         return new ProofMacroFinishedInfo(this, goals);
     }

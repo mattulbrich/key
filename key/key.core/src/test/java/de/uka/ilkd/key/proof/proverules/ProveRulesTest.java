@@ -1,4 +1,18 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.proof.proverules;
+
+import java.io.File;
+import java.util.*;
+import java.util.stream.Stream;
 
 import de.uka.ilkd.key.control.DefaultUserInterfaceControl;
 import de.uka.ilkd.key.control.KeYEnvironment;
@@ -12,14 +26,12 @@ import de.uka.ilkd.key.rule.Taclet;
 import de.uka.ilkd.key.util.HelperClassForTests;
 import de.uka.ilkd.key.util.LinkedHashMap;
 import de.uka.ilkd.key.util.Pair;
+
+import org.key_project.util.helper.FindResources;
+
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
-import org.key_project.util.helper.FindResources;
-
-import java.io.File;
-import java.util.*;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,7 +51,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Kai Wallisch
  */
-@Tag("slow") @Tag("owntest")
+@Tag("slow")
+@Tag("owntest")
 public class ProveRulesTest {
     /*
      * File object pointing to directory key/key.core.test
@@ -54,12 +67,12 @@ public class ProveRulesTest {
 
     public void loadTacletProof(String tacletName, Taclet taclet, File proofFile) throws Exception {
         assertNotNull(proofFile, "Taclet " + tacletName
-                + " was annoted with \\lemma but no taclet proof was found.");
+            + " was annoted with \\lemma but no taclet proof was found.");
         assertNotNull(taclet, "Proof file " + proofFile
-                + " claims that it contains a proof for taclet " + tacletName
-                + " but corresponding taclet seems to be unavailable.");
+            + " claims that it contains a proof for taclet " + tacletName
+            + " but corresponding taclet seems to be unavailable.");
         assertTrue(taclet.getRuleJustification() instanceof LemmaJustification,
-                "Found a taclet proof for taclet "
+            "Found a taclet proof for taclet "
                 + tacletName
                 + " but the taclet is not registered as a lemma. It can be registered as a lemma by "
                 + "adding annotation \\lemma to the declaration of the taclet.");
@@ -79,7 +92,7 @@ public class ProveRulesTest {
 
     private static List<File> getFilesRecursive(File directory) {
         assert directory.isDirectory() : "Expecting a directory as input parameter but found: "
-                + directory;
+            + directory;
         List<File> list = new LinkedList<>();
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             if (file.isFile()) {
@@ -96,7 +109,8 @@ public class ProveRulesTest {
 
     @TestFactory
     public Stream<DynamicTest> data() throws ProblemLoaderException {
-        assertTrue(PROOF_DIRECTORY.exists(), "Directory containing taclet proofs cannot be found at location: "
+        assertTrue(PROOF_DIRECTORY.exists(),
+            "Directory containing taclet proofs cannot be found at location: "
                 + PROOF_DIRECTORY);
 
         /*
@@ -109,7 +123,8 @@ public class ProveRulesTest {
          * test case of a taclet will fail if no proof file containg a taclet
          * proof for it can be found.
          */
-        KeYEnvironment<DefaultUserInterfaceControl> env = HelperClassForTests.createKeYEnvironment();
+        KeYEnvironment<DefaultUserInterfaceControl> env =
+            HelperClassForTests.createKeYEnvironment();
         Profile p = env.getProfile();
         Map<String, Taclet> tacletObjectByTacletName = new LinkedHashMap<>();
         for (Taclet taclet : env.getInitConfig().getTaclets()) {
@@ -143,9 +158,9 @@ public class ProveRulesTest {
          */
         return tacletNames.stream()
                 .map(tacletName -> DynamicTest.dynamicTest(tacletName,
-                        () -> loadTacletProof(tacletName,
-                                tacletObjectByTacletName.get(tacletName),
-                                proofFileByTacletName.get(tacletName))));
+                    () -> loadTacletProof(tacletName,
+                        tacletObjectByTacletName.get(tacletName),
+                        proofFileByTacletName.get(tacletName))));
     }
 
 }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -29,14 +39,14 @@ public class FocusProjection implements ProjectionToTerm {
     public static final ProjectionToTerm INSTANCE = create(0);
 
     private final int stepsUpwards;
-    
+
     private FocusProjection(int stepsUpwards) {
-       assert stepsUpwards >= 0;
+        assert stepsUpwards >= 0;
         this.stepsUpwards = stepsUpwards;
     }
 
     public static ProjectionToTerm create(int stepsUpwards) {
-        return new FocusProjection ( stepsUpwards );
+        return new FocusProjection(stepsUpwards);
     }
 
     @Override
@@ -44,11 +54,11 @@ public class FocusProjection implements ProjectionToTerm {
         assert pos != null : "Projection is only applicable to rules with find";
 
         int n = stepsUpwards;
-        while ( n-- > 0 && !pos.isTopLevel() ) {
-            pos = pos.up ();
+        while (n-- > 0 && !pos.isTopLevel()) {
+            pos = pos.up();
         }
-        
-        return pos.subTerm ();
+
+        return pos.subTerm();
     }
-    
+
 }

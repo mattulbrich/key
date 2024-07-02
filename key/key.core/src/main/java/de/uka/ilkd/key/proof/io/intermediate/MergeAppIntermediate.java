@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2015 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,13 +23,13 @@
 
 package de.uka.ilkd.key.proof.io.intermediate;
 
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.axiom_abstraction.predicateabstraction.AbstractPredicateAbstractionLattice;
 import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.logic.PosInTerm;
 import de.uka.ilkd.key.rule.merge.MergeRule;
 import de.uka.ilkd.key.util.Pair;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * Encapsulates intermediate information for constructing a {@link MergeRule}
@@ -41,30 +51,30 @@ public class MergeAppIntermediate extends BuiltInAppIntermediate {
      * Constructs a new join rule.
      *
      * @param ruleName
-     *            Name of the rule; should be "JoinRule".
+     *        Name of the rule; should be "JoinRule".
      * @param pos
-     *            Position information for the join rule application (Symbolic
-     *            State - Program Counter formula).
+     *        Position information for the join rule application (Symbolic
+     *        State - Program Counter formula).
      * @param id
-     *            ID of the join rule application (should have been stored
-     *            during proof saving and should match the joinNodeId fields of
-     *            the corresponding partner nodes).
+     *        ID of the join rule application (should have been stored
+     *        during proof saving and should match the joinNodeId fields of
+     *        the corresponding partner nodes).
      * @param joinProc
-     *            The name of the join procedure used during joining.
+     *        The name of the join procedure used during joining.
      * @param nrPartners
-     *            Number of involved join partners.
+     *        Number of involved join partners.
      * @param newNames
-     *            New names registered in the course of the join rule
-     *            application.
+     *        New names registered in the course of the join rule
+     *        application.
      * @param distinguishingFormula
-     *            The user-supplied distinguishing formula for the join.
+     *        The user-supplied distinguishing formula for the join.
      * @param predAbstrLatticeType
-     *            The type for the used predicate abstraction lattice which
-     *            determines how abstract domain elements are generated from
-     *            predicates.
+     *        The type for the used predicate abstraction lattice which
+     *        determines how abstract domain elements are generated from
+     *        predicates.
      * @param abstractionPredicates
-     *            The abstraction predicates, if predicate abstraction is used
-     *            as a join technique.
+     *        The abstraction predicates, if predicate abstraction is used
+     *        as a join technique.
      * @param currAbstractionPredicates
      */
     public MergeAppIntermediate(
@@ -80,7 +90,9 @@ public class MergeAppIntermediate extends BuiltInAppIntermediate {
         super(ruleName, pos, null, null, newNames);
 
         String mergeRuleName = MergeRule.INSTANCE.name().toString();
-        assert ruleName.equals(mergeRuleName) : "This was somehow unexpected; are there other join rules than " + mergeRuleName + "?";
+        assert ruleName.equals(mergeRuleName)
+                : "This was somehow unexpected; are there other join rules than " + mergeRuleName
+                    + "?";
 
         this.id = id;
         this.mergeProc = joinProc;

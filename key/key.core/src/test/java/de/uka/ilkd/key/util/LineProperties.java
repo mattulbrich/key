@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2020 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -58,7 +68,7 @@ public class LineProperties {
 
         while ((line = br.readLine()) != null) {
             if (line.startsWith("###")) {
-                if(lastKey != null) {
+                if (lastKey != null) {
                     String str = sb.toString().trim();
                     if (str.length() > 0) {
                         map.put(lastKey, str);
@@ -67,7 +77,7 @@ public class LineProperties {
                 sb.setLength(0);
 
                 lastKey = line.substring(3).trim();
-                if(lastKey.endsWith(":")) {
+                if (lastKey.endsWith(":")) {
                     lastKey = lastKey.substring(0, lastKey.length() - 1);
                 }
             } else {
@@ -75,7 +85,7 @@ public class LineProperties {
             }
         }
 
-        if(lastKey != null) {
+        if (lastKey != null) {
             String str = sb.toString().trim();
             if (str.length() > 0) {
                 map.put(lastKey, str);

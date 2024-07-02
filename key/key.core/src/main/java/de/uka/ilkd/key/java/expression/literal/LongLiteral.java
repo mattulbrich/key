@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,17 +25,18 @@ package de.uka.ilkd.key.java.expression.literal;
 
 import java.math.BigInteger;
 
-import org.key_project.util.ExtList;
-
 import de.uka.ilkd.key.java.PrettyPrinter;
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
 import de.uka.ilkd.key.java.abstraction.PrimitiveType;
 import de.uka.ilkd.key.java.visitor.Visitor;
 
+import org.key_project.util.ExtList;
+
 /**
- *  Long literal.
- *  @author <TT>AutoDoc</TT>
+ * Long literal.
+ *
+ * @author <TT>AutoDoc</TT>
  */
 
 public class LongLiteral extends AbstractIntegerLiteral {
@@ -59,6 +70,7 @@ public class LongLiteral extends AbstractIntegerLiteral {
 
     /**
      * Creates a new LongLiteral representing the given long.
+     *
      * @param value the long value represented by the literal
      */
     public LongLiteral(long value) {
@@ -74,9 +86,9 @@ public class LongLiteral extends AbstractIntegerLiteral {
      *
      * @param valStr the String that contains the literal
      * @throws NumberFormatException if the given String does not represent a syntactically valid
-     *          literal or represents a value out of long range
+     *         literal or represents a value out of long range
      * @see <a href="http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.1">
-     *               http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.1</a>
+     *      http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.1</a>
      */
     public LongLiteral(String valStr) {
         this.value = parseFromString(valStr);
@@ -89,7 +101,7 @@ public class LongLiteral extends AbstractIntegerLiteral {
      * @param children the children of this AST element as KeY classes, may contain: Comments
      * @param valStr the value of the literal
      * @throws NumberFormatException if the given String does not represent a syntactically valid
-     *          literal or represents a value out of long range
+     *         literal or represents a value out of long range
      */
     public LongLiteral(ExtList children, String valStr) {
         super(children);
@@ -140,9 +152,9 @@ public class LongLiteral extends AbstractIntegerLiteral {
      * @param sourceStr the String containing the value
      * @return the parsed value as a long
      * @throws NumberFormatException if the given String does not represent a syntactically valid
-     *          literal or represents a value out of long range
+     *         literal or represents a value out of long range
      * @see <a href="http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.1">
-     *               http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.1</a>
+     *      http://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.1</a>
      */
     protected long parseFromString(final String sourceStr) {
 
@@ -166,15 +178,15 @@ public class LongLiteral extends AbstractIntegerLiteral {
             valStr = valStr.substring(0, valStr.length() - 1);
         }
 
-        if (valStr.startsWith("0x") || valStr.startsWith("0X")) {        // hex
+        if (valStr.startsWith("0x") || valStr.startsWith("0X")) { // hex
             radix = 16;
-            valStr = valStr.substring(2);     // cut of '0x'
+            valStr = valStr.substring(2); // cut of '0x'
         } else if (valStr.startsWith("0b") || valStr.startsWith("0B")) { // bin
             radix = 2;
-            valStr = valStr.substring(2);     // cut of '0b'
-        } else if (valStr.startsWith("0") && valStr.length() > 1) {      // oct
+            valStr = valStr.substring(2); // cut of '0b'
+        } else if (valStr.startsWith("0") && valStr.length() > 1) { // oct
             radix = 8;
-            valStr = valStr.substring(1);     // cut of leading '0'
+            valStr = valStr.substring(1); // cut of leading '0'
         }
 
         // add minus sign again
@@ -185,7 +197,8 @@ public class LongLiteral extends AbstractIntegerLiteral {
         ///////////////////////////////////////////////////////////////////////////
         /* range check and actual conversion: */
 
-        /* the raw BigInteger converted from the input String without considering
+        /*
+         * the raw BigInteger converted from the input String without considering
          * allowed value range or two's complement
          */
         BigInteger val;
@@ -209,12 +222,14 @@ public class LongLiteral extends AbstractIntegerLiteral {
 
         // check if literal is in valid range
         if (val.compareTo(maxValue) > 0 || val.compareTo(minValue) < 0) {
-            //raiseError("Number constant out of bounds: " + literalString, n);
+            // raiseError("Number constant out of bounds: " + literalString, n);
             throw new NumberFormatException("Number constant out of bounds: " + sourceStr);
         }
 
-        /* perform the actual conversion (two's complement for bin, oct and hex!) of the
-         * BigInteger to a String containing the real (checked valid) value of the literal */
+        /*
+         * perform the actual conversion (two's complement for bin, oct and hex!) of the
+         * BigInteger to a String containing the real (checked valid) value of the literal
+         */
         return val.longValue(); // two's complement conversion
     }
 }

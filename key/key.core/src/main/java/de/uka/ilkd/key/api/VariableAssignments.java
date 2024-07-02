@@ -1,4 +1,15 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.api;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,9 +60,10 @@ public class VariableAssignments {
 
     /**
      * Create new, empty variable assignment, to add variables
+     *
      * @param parent
      */
-    public VariableAssignments(VariableAssignments parentAssignments){
+    public VariableAssignments(VariableAssignments parentAssignments) {
         this.currentAssignments = new HashMap<>();
         this.typeMap = new HashMap<>();
         this.parent = parentAssignments;
@@ -71,28 +83,30 @@ public class VariableAssignments {
     /**
      * Get the value of a stored variable name
      * TODO Exception spezifischer
+     *
      * @param varName
      * @return Value of variable
      */
     public Object getVarValue(String varName) throws Exception {
-        if(currentAssignments.containsKey(varName)){
+        if (currentAssignments.containsKey(varName)) {
             return currentAssignments.get(varName);
-        }else{
-            if(parent !=null) {
+        } else {
+            if (parent != null) {
                 return parent.getVarValue(varName);
-            }else{
-                throw new Exception("Variable "+varName+" could not be found");
+            } else {
+                throw new Exception("Variable " + varName + " could not be found");
             }
         }
     }
 
     /**
      * Add a variable assignment with type and value
+     *
      * @param varName
      * @param value
      * @param type
      */
-    public void addAssignmentWithType(String varName, Object value, VarType type){
+    public void addAssignmentWithType(String varName, Object value, VarType type) {
         typeMap.put(varName, type);
         currentAssignments.put(varName, value);
 
@@ -100,14 +114,15 @@ public class VariableAssignments {
 
     /**
      * Add a variable assignment without type
+     *
      * @param varName
      * @param value
      */
     public void addAssignment(String varName, Object value) throws Exception {
-        if(typeMap.containsKey(varName)) {
+        if (typeMap.containsKey(varName)) {
             currentAssignments.put(varName, value);
-        } else{
-            throw new Exception("Variable "+ varName +"must be declared first");
+        } else {
+            throw new Exception("Variable " + varName + "must be declared first");
         }
 
     }
@@ -115,41 +130,46 @@ public class VariableAssignments {
     /**
      * TODO better exception
      * Add a new type declaration
+     *
      * @param varName
      * @param type
      */
     public void addType(String varName, VarType type) throws Exception {
-        if(typeMap.containsKey(varName)){
-            if(typeMap.get(varName) != type){
-                throw new Exception("Variable "+varName+ "was already declared with type " + typeMap.get(varName).toString());
+        if (typeMap.containsKey(varName)) {
+            if (typeMap.get(varName) != type) {
+                throw new Exception("Variable " + varName + "was already declared with type "
+                    + typeMap.get(varName).toString());
             }
-        }else{
+        } else {
             typeMap.put(varName, type);
         }
     }
 
     /**
      * Returns the map of ID -> Type mappings
+     *
      * @return
      */
-    public Map<String, VariableAssignments.VarType> getTypeMap(){
+    public Map<String, VariableAssignments.VarType> getTypeMap() {
         return this.typeMap;
     }
 
 
-/*    public Object getValue(String name) {
-        return null;
-    }
-
-    public Type getType() {
-        return null;
-    }
-
-    public void setType(Type type) {
-
-    }
-
-    public void setValue(String name) {
-
-    }*/
+    /*
+     * public Object getValue(String name) {
+     * return null;
+     * }
+     *
+     * public Type getType() {
+     * return null;
+     * }
+     *
+     * public void setType(Type type) {
+     *
+     * }
+     *
+     * public void setValue(String name) {
+     *
+     * }
+     */
 }

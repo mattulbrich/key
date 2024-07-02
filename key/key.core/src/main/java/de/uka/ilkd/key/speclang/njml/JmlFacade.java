@@ -1,15 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.speclang.njml;
+
+import javax.annotation.Nonnull;
 
 import de.uka.ilkd.key.speclang.PositionedString;
 import de.uka.ilkd.key.speclang.jml.pretranslation.TextualJMLConstruct;
 import de.uka.ilkd.key.util.parsing.SyntaxErrorReporter;
+
+import org.key_project.util.collection.ImmutableList;
+
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.key_project.util.collection.ImmutableList;
-
-import javax.annotation.Nonnull;
 
 /**
  * This facade provides facilities for the creation of lexer and parser of JML.
@@ -31,8 +43,7 @@ public final class JmlFacade {
     /**
      * Creates an JML lexer for the give stream.
      */
-    public static @Nonnull
-    JmlLexer createLexer(@Nonnull CharStream stream) {
+    public static @Nonnull JmlLexer createLexer(@Nonnull CharStream stream) {
         return new JmlLexer(stream);
     }
 
@@ -40,8 +51,7 @@ public final class JmlFacade {
      * Creates a JML lexer for the given string with position.
      * The position information of the lexer is changed accordingly.
      */
-    public static @Nonnull
-    JmlLexer createLexer(@Nonnull PositionedString ps) {
+    public static @Nonnull JmlLexer createLexer(@Nonnull PositionedString ps) {
         CharStream result = CharStreams.fromString(ps.text, ps.fileName);
         JmlLexer lexer = createLexer(result);
         lexer.getInterpreter().setCharPositionInLine(ps.pos.getColumn());
@@ -52,8 +62,7 @@ public final class JmlFacade {
     /**
      * Creates a JML lexer for a given string.
      */
-    public static @Nonnull
-    JmlLexer createLexer(@Nonnull String content) {
+    public static @Nonnull JmlLexer createLexer(@Nonnull String content) {
         return createLexer(CharStreams.fromString(content));
     }
 
@@ -61,8 +70,7 @@ public final class JmlFacade {
      * Parse the given string as an JML expr. Position information are updated accordingly
      * to the position given with the string.
      */
-    public static @Nonnull
-    ParserRuleContext parseExpr(@Nonnull PositionedString expr) {
+    public static @Nonnull ParserRuleContext parseExpr(@Nonnull PositionedString expr) {
         return getExpressionContext(createLexer(expr));
     }
 
@@ -94,8 +102,7 @@ public final class JmlFacade {
      *
      * @see SyntaxErrorReporter
      */
-    public static @Nonnull
-    JmlParser createParser(@Nonnull JmlLexer lexer) {
+    public static @Nonnull JmlParser createParser(@Nonnull JmlLexer lexer) {
         JmlParser p = new JmlParser(new CommonTokenStream(lexer));
         p.addErrorListener(p.getErrorReporter());
         return p;
@@ -104,12 +111,10 @@ public final class JmlFacade {
     /**
      * Parses a given clause, like {@code ensures} or {@code requires} and returns a parse tree.
      */
-    public static @Nonnull
-    ParserRuleContext parseClause(@Nonnull String content) {
+    public static @Nonnull ParserRuleContext parseClause(@Nonnull String content) {
         JmlParser p = createParser(createLexer(content));
         JmlParser.ClauseContext ctx = p.clauseEOF().clause();
         p.getErrorReporter().throwException();
         return ctx;
     }
 }
-

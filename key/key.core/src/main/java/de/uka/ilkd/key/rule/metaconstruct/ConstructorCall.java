@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,8 +25,6 @@ package de.uka.ilkd.key.rule.metaconstruct;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.key_project.util.collection.ImmutableArray;
 
 import de.uka.ilkd.key.java.Expression;
 import de.uka.ilkd.key.java.KeYJavaASTFactory;
@@ -36,6 +44,8 @@ import de.uka.ilkd.key.logic.sort.Sort;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.util.Debug;
 
+import org.key_project.util.collection.ImmutableArray;
+
 /**
  * The constructor call meta construct is used to handle a allocation expression
  * like <code>new Class(...)</code>. Thereby it replaces the allocation
@@ -51,8 +61,8 @@ public class ConstructorCall extends ProgramTransformer {
      * The normal form identifier.
      */
     private static final String NORMALFORM_IDENTIFIER = //
-            de.uka.ilkd.key.java.recoderext. //
-                    ConstructorNormalformBuilder.CONSTRUCTOR_NORMALFORM_IDENTIFIER;
+        de.uka.ilkd.key.java.recoderext. //
+                ConstructorNormalformBuilder.CONSTRUCTOR_NORMALFORM_IDENTIFIER;
 
     // @ invariant (newObjectSV == null) != (newObjectVar == null);
     private final SchemaVariable newObjectSV;
@@ -60,11 +70,11 @@ public class ConstructorCall extends ProgramTransformer {
 
     /**
      * @param name
-     *            Constructor Name.
+     *        Constructor Name.
      * @param newObjectSV
-     *            The {@link SchemaVariable}
+     *        The {@link SchemaVariable}
      * @param consRef
-     *            The constructor reference.
+     *        The constructor reference.
      */
     protected ConstructorCall(Name name, SchemaVariable newObjectSV,
             ProgramElement consRef) {
@@ -77,9 +87,9 @@ public class ConstructorCall extends ProgramTransformer {
      * creates the metaconstruct
      *
      * @param newObjectSV
-     *            TODO
+     *        TODO
      * @param consRef
-     *            TODO
+     *        TODO
      */
     public ConstructorCall(SchemaVariable newObjectSV, ProgramElement consRef) {
         this(new Name(CONSTRUCTOR_CALL), newObjectSV, consRef);

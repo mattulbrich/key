@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2015 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -38,7 +48,7 @@ public class MergeWithPredicateAbstractionFactory extends
         MergeWithPredicateAbstraction {
 
     private static final MergeWithPredicateAbstractionFactory INSTANCE =
-            new MergeWithPredicateAbstractionFactory();
+        new MergeWithPredicateAbstractionFactory();
 
     /**
      * Hidden constructor since this class is a Singleton.
@@ -53,14 +63,14 @@ public class MergeWithPredicateAbstractionFactory extends
     public static MergeWithPredicateAbstractionFactory instance() {
         return INSTANCE;
     }
-    
+
     @Override
     public ValuesMergeResult mergeValuesInStates(
             Term v, SymbolicExecutionState state1, Term valueInState1,
             SymbolicExecutionState state2, Term valueInState2,
             Term distinguishingFormula, Services services) {
         throw new UnsupportedOperationException(
-                "You need to create an instance of MergeWithPredicateAbstraction.");
+            "You need to create an instance of MergeWithPredicateAbstraction.");
     }
 
     @Override
@@ -72,10 +82,10 @@ public class MergeWithPredicateAbstractionFactory extends
      * Creates a complete instance of {@link MergeWithPredicateAbstraction}.
      *
      * @param predicates
-     *            The predicates for the lattices to create.
+     *        The predicates for the lattices to create.
      * @param latticeType
-     *            The concrete lattice type which determines how abstract
-     *            elements are generated from abstraction predicates.
+     *        The concrete lattice type which determines how abstract
+     *        elements are generated from abstraction predicates.
      * @return A complete instance of {@link MergeWithPredicateAbstraction}.
      */
     public MergeWithPredicateAbstraction instantiate(

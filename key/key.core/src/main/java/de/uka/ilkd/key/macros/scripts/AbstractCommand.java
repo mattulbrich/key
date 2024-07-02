@@ -1,4 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.macros.scripts;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import de.uka.ilkd.key.control.AbstractUserInterfaceControl;
 import de.uka.ilkd.key.java.Services;
@@ -7,13 +22,10 @@ import de.uka.ilkd.key.macros.scripts.meta.DescriptionFacade;
 import de.uka.ilkd.key.macros.scripts.meta.ProofScriptArgument;
 import de.uka.ilkd.key.proof.Proof;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 /**
- * <p><b>Inheritance:</b></p>
+ * <p>
+ * <b>Inheritance:</b>
+ * </p>
  *
  * @param <T>
  * @author Alexander Weigl
@@ -66,7 +78,7 @@ public abstract class AbstractCommand<T> implements ProofScriptCommand<T> {
         try {
             execute(args);
         } finally {
-            //preventing memory leak
+            // preventing memory leak
             proof = null;
             service = null;
             state = null;

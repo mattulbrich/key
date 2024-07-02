@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.macros;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.control.UserInterfaceControl;
 import de.uka.ilkd.key.logic.PosInOccurrence;
@@ -25,6 +33,8 @@ import de.uka.ilkd.key.prover.TaskFinishedInfo;
 import de.uka.ilkd.key.prover.TaskStartedInfo;
 import de.uka.ilkd.key.prover.TaskStartedInfo.TaskKind;
 import de.uka.ilkd.key.prover.impl.DefaultTaskStartedInfo;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * The interface ProofMacro is the entry point to a general strategy extension
@@ -117,7 +127,7 @@ public interface ProofMacro {
      * <code>paramName</code>. For use in proof scripts.
      *
      * @param paramName
-     *            The name to check.
+     *        The name to check.
      * @return true iff this {@link ProofMacro} has a parameter named
      *         <code>paramName</code>.
      */
@@ -128,13 +138,13 @@ public interface ProofMacro {
      * representation in <code>paramValue</code>. For use in proof scripts.
      *
      * @param paramName
-     *            The name of the parameter.
+     *        The name of the parameter.
      * @param paramValue
-     *            The value of the parameter.
+     *        The value of the parameter.
      * @throws IllegalArgumentException
-     *             if there is no parameter of that name or the value is
-     *             incorrectly formatted (e.g., cannot be converted to a
-     *             number).
+     *         if there is no parameter of that name or the value is
+     *         incorrectly formatted (e.g., cannot be converted to a
+     *         number).
      */
     public void setParameter(String paramName, String paramValue)
             throws IllegalArgumentException;
@@ -154,17 +164,17 @@ public interface ProofMacro {
      * with that fact.
      *
      * @param proof
-     *            the current {@link Proof} (not <code>null</code>)
+     *        the current {@link Proof} (not <code>null</code>)
      * @param goals
-     *            the goals (not <code>null</code>)
+     *        the goals (not <code>null</code>)
      * @param posInOcc
-     *            the position in occurrence (may be <code>null</code>)
+     *        the position in occurrence (may be <code>null</code>)
      *
      * @return <code>true</code>, if the macro is allowed to be applied
      */
     public boolean canApplyTo(Proof proof,
-                              ImmutableList<Goal> goals,
-                              PosInOccurrence posInOcc);
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc);
 
     /**
      * Can this macro be applied on the given node?
@@ -181,14 +191,14 @@ public interface ProofMacro {
      * <code>node</code>.
      *
      * @param node
-     *            the node (not <code>null</code>)
+     *        the node (not <code>null</code>)
      * @param posInOcc
-     *            the position in occurrence (may be <code>null</code>)
+     *        the position in occurrence (may be <code>null</code>)
      *
      * @return <code>true</code>, if the macro is allowed to be applied
      */
     public boolean canApplyTo(Node node,
-                              PosInOccurrence posInOcc);
+            PosInOccurrence posInOcc);
 
     /**
      * Apply this macro on the given goals.
@@ -205,24 +215,24 @@ public interface ProofMacro {
      * them using a single listener object using the composite pattern.
      *
      * @param uic
-     *            the {@link UserInterfaceControl} to use
+     *        the {@link UserInterfaceControl} to use
      * @param proof
-     *            the current {@link Proof} (not <code>null</code>)
+     *        the current {@link Proof} (not <code>null</code>)
      * @param goals
-     *            the goals (not <code>null</code>)
+     *        the goals (not <code>null</code>)
      * @param posInOcc
-     *            the position in occurrence (may be <code>null</code>)
+     *        the position in occurrence (may be <code>null</code>)
      * @param listener
-     *            the listener to use for progress reports (may be
-     *            <code>null</code>)
+     *        the listener to use for progress reports (may be
+     *        <code>null</code>)
      * @throws InterruptedException
-     *             if the application of the macro has been interrupted.
+     *         if the application of the macro has been interrupted.
      */
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          Proof proof,
-                                          ImmutableList<Goal> goals,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) throws InterruptedException, Exception;
+            Proof proof,
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) throws InterruptedException, Exception;
 
     /**
      * Apply this macro on the given node.
@@ -239,21 +249,21 @@ public interface ProofMacro {
      * them using a single listener object using the composite pattern.
      *
      * @param uic
-     *            the {@link UserInterfaceControl} to use
+     *        the {@link UserInterfaceControl} to use
      * @param node
-     *            the node (not <code>null</code>)
+     *        the node (not <code>null</code>)
      * @param posInOcc
-     *            the position in occurrence (may be <code>null</code>)
+     *        the position in occurrence (may be <code>null</code>)
      * @param listener
-     *            the listener to use for progress reports (may be
-     *            <code>null</code>)
+     *        the listener to use for progress reports (may be
+     *        <code>null</code>)
      * @throws InterruptedException
-     *             if the application of the macro has been interrupted.
+     *         if the application of the macro has been interrupted.
      */
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          Node node,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) throws InterruptedException, Exception;
+            Node node,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) throws InterruptedException, Exception;
 
     /**
      * This observer acts as intermediate instance between the reports by the
@@ -271,7 +281,7 @@ public interface ProofMacro {
         private int completedGoals;
 
         ProgressBarListener(String name, int numberGoals,
-                            int numberSteps, ProverTaskListener l) {
+                int numberSteps, ProverTaskListener l) {
             super(name, l);
             this.numberGoals = numberGoals;
             this.numberSteps = numberSteps;
@@ -284,10 +294,10 @@ public interface ProofMacro {
 
         @Override
         public void taskStarted(TaskStartedInfo info) {
-            //assert size == numberSteps;
+            // assert size == numberSteps;
             String suffix = getMessageSuffix();
             super.taskStarted(new DefaultTaskStartedInfo(TaskKind.Macro,
-                  info.getMessage() + suffix, numberGoals * numberSteps));
+                info.getMessage() + suffix, numberGoals * numberSteps));
             super.taskProgress(completedGoals * numberSteps);
         }
 
@@ -303,7 +313,7 @@ public interface ProofMacro {
         @Override
         public void taskFinished(TaskFinishedInfo info) {
             super.taskFinished(info);
-            completedGoals ++;
+            completedGoals++;
         }
     }
 }

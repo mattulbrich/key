@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -21,7 +31,9 @@ import de.uka.ilkd.key.logic.TermServices;
 import de.uka.ilkd.key.logic.sort.GenericSort;
 import de.uka.ilkd.key.logic.sort.ProgramSVSort;
 import de.uka.ilkd.key.logic.sort.Sort;
+
 import org.key_project.util.collection.ImmutableArray;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,28 +54,28 @@ public final class SortDependingFunction extends Function {
     private final Sort sortDependingOn;
 
 
-    //-------------------------------------------------------------------------
-    //constructors
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // constructors
+    // -------------------------------------------------------------------------
 
     private SortDependingFunction(SortDependingFunctionTemplate template,
-                                  Sort sortDependingOn) {
+            Sort sortDependingOn) {
         super(instantiateName(template.kind, sortDependingOn),
-                instantiateResultSort(template, sortDependingOn),
-                instantiateArgSorts(template, sortDependingOn),
-                null,
-                template.unique, false);
+            instantiateResultSort(template, sortDependingOn),
+            instantiateArgSorts(template, sortDependingOn),
+            null,
+            template.unique, false);
         this.template = template;
         this.sortDependingOn = sortDependingOn;
     }
 
 
-    //-------------------------------------------------------------------------
-    //internal methods
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // internal methods
+    // -------------------------------------------------------------------------
 
     private static Name instantiateName(Name kind,
-                                        Sort sortDependingOn) {
+            Sort sortDependingOn) {
         return new Name(sortDependingOn + "::" + kind);
     }
 
@@ -82,8 +94,7 @@ public final class SortDependingFunction extends Function {
             Sort sortDependingOn) {
         Sort[] result = new Sort[template.argSorts.size()];
         for (int i = 0; i < result.length; i++) {
-            result[i]
-                    = (template.argSorts.get(i) == template.sortDependingOn
+            result[i] = (template.argSorts.get(i) == template.sortDependingOn
                     ? sortDependingOn
                     : template.argSorts.get(i));
         }
@@ -91,9 +102,9 @@ public final class SortDependingFunction extends Function {
     }
 
 
-    //-------------------------------------------------------------------------
-    //public interface
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // public interface
+    // -------------------------------------------------------------------------
 
     @Override
     public int hashCode() {
@@ -106,29 +117,27 @@ public final class SortDependingFunction extends Function {
             Sort sort,
             Sort[] argSorts,
             boolean unique) {
-        SortDependingFunctionTemplate template
-                = new SortDependingFunctionTemplate(sortDependingOn,
-                kind,
-                sort,
-                new ImmutableArray<>(argSorts),
-                unique);
+        SortDependingFunctionTemplate template = new SortDependingFunctionTemplate(sortDependingOn,
+            kind,
+            sort,
+            new ImmutableArray<>(argSorts),
+            unique);
         return new SortDependingFunction(template, Sort.ANY);
     }
 
 
     public static SortDependingFunction getFirstInstance(Name kind,
-                                                         TermServices services) {
-        return (SortDependingFunction)
-                services.getNamespaces()
-                        .functions()
-                        .lookup(instantiateName(kind, Sort.ANY));
+            TermServices services) {
+        return (SortDependingFunction) services.getNamespaces()
+                .functions()
+                .lookup(instantiateName(kind, Sort.ANY));
     }
 
     /**
      * returns the variant for the given sort
      *
-     * @param sort     the {@link Sort} for which to retrieve the corresponding
-     *                 variant of this function
+     * @param sort the {@link Sort} for which to retrieve the corresponding
+     *        variant of this function
      * @param services the {@link Services}
      * @return the variant for the given sort
      */
@@ -138,21 +147,22 @@ public final class SortDependingFunction extends Function {
         }
 
         SortDependingFunction n =
-                (SortDependingFunction)
-                        services.getNamespaces().lookup(instantiateName(getKind(), sort));
+            (SortDependingFunction) services.getNamespaces()
+                    .lookup(instantiateName(getKind(), sort));
 
 
-        if (sort instanceof ProgramSVSort) throw new AssertionError();
-        if (sort == AbstractTermTransformer.METASORT) throw new AssertionError();
+        if (sort instanceof ProgramSVSort)
+            throw new AssertionError();
+        if (sort == AbstractTermTransformer.METASORT)
+            throw new AssertionError();
 
         final NamespaceSet namespaces = services.getNamespaces();
         Namespace<Function> functions = namespaces.functions();
 
         SortDependingFunction result;
         synchronized (namespaces) {
-            result = (SortDependingFunction)
-                    namespaces.lookup(instantiateName(getKind(), sort));
-            //ugly: multiple generic sorts with the same name may exist over time
+            result = (SortDependingFunction) namespaces.lookup(instantiateName(getKind(), sort));
+            // ugly: multiple generic sorts with the same name may exist over time
 
             if (result != null
                     && sort instanceof GenericSort
@@ -162,7 +172,8 @@ public final class SortDependingFunction extends Function {
                     functions.add(result);
                     if (instantiateName(getKind(), sort).toString().contains("String")
                             && instantiateName(getKind(), sort).toString().contains("seqGet")
-                            && (n == null || sort instanceof GenericSort && n.getSortDependingOn() != sort)) {
+                            && (n == null || sort instanceof GenericSort
+                                    && n.getSortDependingOn() != sort)) {
                         LOGGER.debug("Hash code: {}", result.hashCode());
                     }
                 }
@@ -183,7 +194,8 @@ public final class SortDependingFunction extends Function {
         }
 
         if (result.getSortDependingOn() != sort) {
-            throw new AssertionError(String.format("%s depends on %s (hash %d) but should depend on %s (hash %d)",
+            throw new AssertionError(
+                String.format("%s depends on %s (hash %d) but should depend on %s (hash %d)",
                     result, result.getSortDependingOn(), result.hashCode(), sort, sort.hashCode()));
         }
         if (!isSimilar(result)) {
@@ -211,9 +223,9 @@ public final class SortDependingFunction extends Function {
         return template.kind;
     }
 
-    //-------------------------------------------------------------------------
-    //inner classes
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // inner classes
+    // -------------------------------------------------------------------------
 
     private static final class SortDependingFunctionTemplate {
         public final GenericSort sortDependingOn;
@@ -223,10 +235,10 @@ public final class SortDependingFunction extends Function {
         public final boolean unique;
 
         public SortDependingFunctionTemplate(GenericSort sortDependingOn,
-                                             Name kind,
-                                             Sort sort,
-                                             ImmutableArray<Sort> argSorts,
-                                             boolean unique) {
+                Name kind,
+                Sort sort,
+                ImmutableArray<Sort> argSorts,
+                boolean unique) {
             this.sortDependingOn = sortDependingOn;
             this.kind = kind;
             this.sort = sort;

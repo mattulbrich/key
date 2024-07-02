@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.kit.pattern;
@@ -62,7 +66,8 @@ public class FactoryMethod implements DesignPattern {
             throw new IllegalArgumentException("A factory method requires a product");
         }
         try {
-            this.product = product.getFactory().parseConstructorDeclaration("public " + product.getName() + "(){}");
+            this.product = product.getFactory()
+                    .parseConstructorDeclaration("public " + product.getName() + "(){}");
         } catch (ParserException pe) {
             System.err.println(pe); // this should never happen
         }
@@ -86,8 +91,10 @@ public class FactoryMethod implements DesignPattern {
             System.err.println(pe); // this should never happen
         }
         Identifier name = clone.getIdentifier();
-        producer = factory.createMethodDeclaration(clone.getDeclarationSpecifiers(), factory.createTypeReference(name), factory
-                .createIdentifier("create" + name.getText()), clone.getParameters(), clone.getThrown());
+        producer = factory.createMethodDeclaration(clone.getDeclarationSpecifiers(),
+            factory.createTypeReference(name), factory
+                    .createIdentifier("create" + name.getText()),
+            clone.getParameters(), clone.getThrown());
         ASTList<Statement> statements = new ASTArrayList<Statement>(1);
         statements.add(factory.createReturn(MethodKit.createNew(clone)));
         producer.setBody(factory.createStatementBlock(statements));
@@ -106,7 +113,8 @@ public class FactoryMethod implements DesignPattern {
         }
         if (!producer.getReturnType().getName().equals(product.getMemberParent().getName())) {
             // could be allowed to create subtypes of return type
-            throw new InconsistentPatternException("Factory Method producer must create correct product type");
+            throw new InconsistentPatternException(
+                "Factory Method producer must create correct product type");
         }
     }
 

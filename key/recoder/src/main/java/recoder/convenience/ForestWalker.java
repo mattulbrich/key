@@ -1,12 +1,16 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.convenience;
 
+import java.util.List;
+
 import recoder.java.CompilationUnit;
 import recoder.java.NonTerminalProgramElement;
 import recoder.java.ProgramElement;
-
-import java.util.List;
 
 /**
  * Walks all syntax trees from a list of compilation units in depth-first order.
@@ -43,7 +47,8 @@ public class ForestWalker extends AbstractTreeWalker {
             NonTerminalProgramElement nt = (NonTerminalProgramElement) current;
             int s = nt.getChildCount();
             if (count + s >= stack.length) {
-                ProgramElement[] newStack = new ProgramElement[Math.max(stack.length * 2, count + s)];
+                ProgramElement[] newStack =
+                    new ProgramElement[Math.max(stack.length * 2, count + s)];
                 System.arraycopy(stack, 0, newStack, 0, count);
                 stack = newStack;
             }

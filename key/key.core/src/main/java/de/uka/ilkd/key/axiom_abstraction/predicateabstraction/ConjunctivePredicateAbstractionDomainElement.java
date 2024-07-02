@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2015 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,10 +23,10 @@
 
 package de.uka.ilkd.key.axiom_abstraction.predicateabstraction;
 
-import org.key_project.util.collection.ImmutableSet;
-
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Term;
+
+import org.key_project.util.collection.ImmutableSet;
 
 /**
  * An abstract domain element for a predicate abstraction lattice based on the
@@ -31,13 +41,13 @@ public class ConjunctivePredicateAbstractionDomainElement extends
      * The bottom element of any predicate abstraction lattice.
      */
     public static final ConjunctivePredicateAbstractionDomainElement BOTTOM =
-            new ConjunctivePredicateAbstractionDomainElement(false);
+        new ConjunctivePredicateAbstractionDomainElement(false);
 
     /**
      * The top element of any predicate abstraction lattice.
      */
     public static final ConjunctivePredicateAbstractionDomainElement TOP =
-            new ConjunctivePredicateAbstractionDomainElement(true);
+        new ConjunctivePredicateAbstractionDomainElement(true);
 
     /**
      * Constructs a new {@link ConjunctivePredicateAbstractionDomainElement}
@@ -69,7 +79,7 @@ public class ConjunctivePredicateAbstractionDomainElement extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -78,8 +88,8 @@ public class ConjunctivePredicateAbstractionDomainElement extends
                 && (this != TOP || obj == TOP)
                 && (this != BOTTOM || obj == BOTTOM)
                 && this.getPredicates().equals(
-                        ((ConjunctivePredicateAbstractionDomainElement) obj)
-                                .getPredicates());
+                    ((ConjunctivePredicateAbstractionDomainElement) obj)
+                            .getPredicates());
     }
 
     @Override

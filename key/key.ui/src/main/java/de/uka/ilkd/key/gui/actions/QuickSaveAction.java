@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -17,14 +27,15 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
-import de.uka.ilkd.key.gui.TaskTree;
-import org.key_project.util.java.IOUtil;
-
 import de.uka.ilkd.key.gui.MainWindow;
+import de.uka.ilkd.key.gui.TaskTree;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.proof.io.ProofSaver;
 import de.uka.ilkd.key.util.Debug;
 import de.uka.ilkd.key.util.KeYConstants;
+
+import org.key_project.util.java.IOUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,8 +83,8 @@ public final class QuickSaveAction extends MainWindowAction {
                 LOGGER.debug(status);
             } catch (IOException x) {
                 mainWindow.popupWarning(
-                        "Quicksaving file " + filename + " failed:\n" + x.getMessage(),
-                        "Quicksave failed");
+                    "Quicksaving file " + filename + " failed:\n" + x.getMessage(),
+                    "Quicksave failed");
                 LOGGER.debug("Quicksaving file " + filename + " failed.", x);
             }
         } else {

@@ -1,4 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.extension.api;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import javax.swing.*;
 
 import de.uka.ilkd.key.core.KeYMediator;
 import de.uka.ilkd.key.gui.GoalList;
@@ -8,15 +23,11 @@ import de.uka.ilkd.key.gui.nodeviews.SequentView;
 import de.uka.ilkd.key.gui.prooftree.ProofTreeView;
 import de.uka.ilkd.key.gui.sourceview.SourceView;
 
-import javax.swing.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-
 /**
  * Adapter for {@link KeYGuiExtension.KeyboardShortcuts} interface.
  * <p>
- * This adapter helps at implementing the keyboard shortcuts interface correctly, by supporting dispatching
+ * This adapter helps at implementing the keyboard shortcuts interface correctly, by supporting
+ * dispatching
  * for the common shortcut extension points.
  *
  * @author Alexander Weigl
@@ -24,7 +35,8 @@ import java.util.Objects;
  */
 public abstract class KeyboardShortcutAdapter implements KeYGuiExtension.KeyboardShortcuts {
     @Override
-    public final Collection<Action> getShortcuts(KeYMediator mediator, String componentId, JComponent component) {
+    public final Collection<Action> getShortcuts(KeYMediator mediator, String componentId,
+            JComponent component) {
         if (Objects.equals(SEQUENT_VIEW, componentId))
             return getShortcuts(mediator, (SequentView) component);
         if (Objects.equals(GOAL_LIST, componentId))
@@ -45,22 +57,25 @@ public abstract class KeyboardShortcutAdapter implements KeYGuiExtension.Keyboar
 
     /**
      * Fallback implementation for non commonly known extension points.
+     *
      * @param mediator
      * @param componentId
      * @param component
      * @return an empty list
      */
-    protected Collection<Action> fallbackShortcuts(KeYMediator mediator, String componentId, JComponent component){
+    protected Collection<Action> fallbackShortcuts(KeYMediator mediator, String componentId,
+            JComponent component) {
         return Collections.emptyList();
     }
 
     /**
      * MainWindow shortcuts.
+     *
      * @param mediator
      * @param component
      * @return
      */
-    protected  Collection<Action> getShortcutsMainWindow(KeYMediator mediator, JPanel component) {
+    protected Collection<Action> getShortcutsMainWindow(KeYMediator mediator, JPanel component) {
         return Collections.emptyList();
     }
 
@@ -90,7 +105,8 @@ public abstract class KeyboardShortcutAdapter implements KeYGuiExtension.Keyboar
      * @param component
      * @return
      */
-    protected Collection<Action> getShortcuts(KeYMediator mediator, StrategySelectionView component) {
+    protected Collection<Action> getShortcuts(KeYMediator mediator,
+            StrategySelectionView component) {
         return Collections.emptyList();
     }
 

@@ -1,10 +1,14 @@
-package de.uka.ilkd.key.smt.newsmt2;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.java.Services;
-import de.uka.ilkd.key.logic.Term;
-import de.uka.ilkd.key.logic.op.Function;
-import de.uka.ilkd.key.logic.op.Operator;
-import de.uka.ilkd.key.smt.SMTTranslationException;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.smt.newsmt2;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,15 +16,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import de.uka.ilkd.key.java.Services;
+import de.uka.ilkd.key.logic.Term;
+import de.uka.ilkd.key.logic.op.Function;
+import de.uka.ilkd.key.logic.op.Operator;
+import de.uka.ilkd.key.smt.SMTTranslationException;
+
 // W I P
 public class SumProdHandler implements SMTHandler {
 
     private Function bsumOp, bprodOp;
 
-    //key is the term to identify the bsum, value is the name used for that function.
+    // key is the term to identify the bsum, value is the name used for that function.
     private final HashMap<Term, SExpr> usedBsumTerms = new LinkedHashMap();
 
-    //key is the term to identify the bprod, value is the name used for that function.
+    // key is the term to identify the bprod, value is the name used for that function.
     private final HashMap<Term, SExpr> usedBprodTerms = new LinkedHashMap();
 
     @Override
@@ -67,14 +77,14 @@ public class SumProdHandler implements SMTHandler {
             SExpr ret = new SExpr("bprod" + s, IntegerOpHandler.INT, exprs);
             usedBprodTerms.put(term, ret);
             return ret;
-        } else { //unreachable
+        } else { // unreachable
             return new SExpr("ERROR");
         }
     }
 
     private SExpr bsumOrProdDecl(String fun, String number) {
         return new SExpr("declare-fun", IntegerOpHandler.INT,
-                new SExpr(fun + number),
-                new SExpr(new SExpr("Int"), new SExpr("Int")), new SExpr("Int"));
+            new SExpr(fun + number),
+            new SExpr(new SExpr("Int"), new SExpr("Int")), new SExpr("Int"));
     }
 }

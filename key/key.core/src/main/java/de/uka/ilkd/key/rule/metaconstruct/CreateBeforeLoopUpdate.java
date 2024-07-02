@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -58,30 +68,30 @@ public final class CreateBeforeLoopUpdate extends AbstractTermTransformer {
         final Term anonPermissionsHeapTerm = term.sub(3);
 
         return createBeforeLoopUpdate(
-                MiscTools.isTransaction((Modality) loopTerm.op()),
-                MiscTools.isPermissions(services), anonHeapTerm,
-                anonSavedHeapTerm, anonPermissionsHeapTerm, services);
+            MiscTools.isTransaction((Modality) loopTerm.op()),
+            MiscTools.isPermissions(services), anonHeapTerm,
+            anonSavedHeapTerm, anonPermissionsHeapTerm, services);
     }
 
     /**
      * Creates the anonymizing update for the given loop specification.
      *
      * @param loopSpec
-     *     The {@link LoopSpecification}.
+     *        The {@link LoopSpecification}.
      * @param isTransaction
-     *     set to true iff we're in a transaction modality (then, there are more
-     *     heaps available).
+     *        set to true iff we're in a transaction modality (then, there are more
+     *        heaps available).
      * @param isPermissions
-     *     set to true if the permissions profile is active (then, the
-     *     permissions heap is available).
+     *        set to true if the permissions profile is active (then, the
+     *        permissions heap is available).
      * @param anonHeapTerm
-     *     The term with the Skolem heap.
+     *        The term with the Skolem heap.
      * @param anonSavedHeapTerm
-     *     The term with the Skolem saved heap.
+     *        The term with the Skolem saved heap.
      * @param anonPermissionsHeapTerm
-     *     The term with the Skolem permissions heap.
+     *        The term with the Skolem permissions heap.
      * @param services
-     *     The {@link Services} object (for the {@link TermBuilder}).
+     *        The {@link Services} object (for the {@link TermBuilder}).
      * @return The anonymizing update.
      */
     private static Term createBeforeLoopUpdate(boolean isTransaction,
@@ -91,20 +101,20 @@ public final class CreateBeforeLoopUpdate extends AbstractTermTransformer {
         final HeapLDT heapLDT = services.getTypeConverter().getHeapLDT();
 
         Term beforeLoopUpdate = tb.elementary(
-                (UpdateableOperator) anonHeapTerm.op(),
-                tb.var(heapLDT.getHeap()));
+            (UpdateableOperator) anonHeapTerm.op(),
+            tb.var(heapLDT.getHeap()));
 
         if (isTransaction) {
             beforeLoopUpdate = tb.parallel(beforeLoopUpdate,
-                    tb.elementary((UpdateableOperator) anonSavedHeapTerm.op(),
-                            tb.var(heapLDT.getSavedHeap())));
+                tb.elementary((UpdateableOperator) anonSavedHeapTerm.op(),
+                    tb.var(heapLDT.getSavedHeap())));
         }
 
         if (isPermissions) {
             beforeLoopUpdate = tb.parallel(beforeLoopUpdate,
-                    tb.elementary(
-                            (UpdateableOperator) anonPermissionsHeapTerm.op(),
-                            tb.var(heapLDT.getPermissionHeap())));
+                tb.elementary(
+                    (UpdateableOperator) anonPermissionsHeapTerm.op(),
+                    tb.var(heapLDT.getPermissionHeap())));
         }
 
         return beforeLoopUpdate;

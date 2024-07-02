@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -23,6 +33,7 @@ import java.util.List;
 import java.util.Properties;
 
 import de.uka.ilkd.key.pp.NotationInfo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Top of the proof independent settings.
  * <p>
- *     You can add your own settings by calling {@link #addSettings(Settings)}.
+ * You can add your own settings by calling {@link #addSettings(Settings)}.
  *
  * @see Settings
  */
@@ -38,10 +49,10 @@ public class ProofIndependentSettings {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProofIndependentSettings.class);
 
     public static final ProofIndependentSettings DEFAULT_INSTANCE =
-            new ProofIndependentSettings(PathConfig.getProofIndependentSettings());
+        new ProofIndependentSettings(PathConfig.getProofIndependentSettings());
 
     private final ProofIndependentSMTSettings smtSettings =
-            ProofIndependentSMTSettings.getDefaultSettingsData();
+        ProofIndependentSMTSettings.getDefaultSettingsData();
 
     private final LemmaGeneratorSettings lemmaGeneratorSettings = new LemmaGeneratorSettings();
     private final GeneralSettings generalSettings = new GeneralSettings();
@@ -77,10 +88,10 @@ public class ProofIndependentSettings {
     private void loadSettings() {
         try {
             File testFile = new File(filename);
-            if(testFile.exists()) {
-                if(Boolean.getBoolean(PathConfig.DISREGARD_SETTINGS_PROPERTY)) {
+            if (testFile.exists()) {
+                if (Boolean.getBoolean(PathConfig.DISREGARD_SETTINGS_PROPERTY)) {
                     LOGGER.warn("The settings in {} are *not* read due to flag '{}'", filename,
-                            PathConfig.DISREGARD_SETTINGS_PROPERTY);
+                        PathConfig.DISREGARD_SETTINGS_PROPERTY);
                 } else {
                     load(testFile);
                 }
@@ -91,7 +102,7 @@ public class ProofIndependentSettings {
     }
 
     private void load(File file) throws IOException {
-        try(FileInputStream in = new FileInputStream(file)) {
+        try (FileInputStream in = new FileInputStream(file)) {
             Properties properties = new Properties();
             properties.load(in);
             for (Settings settings : settings) {
@@ -113,7 +124,7 @@ public class ProofIndependentSettings {
         }
 
         try (FileOutputStream out = new FileOutputStream(file)) {
-            result.store(out, "Proof-Independent-Settings-File. Generated "+ new Date());
+            result.store(out, "Proof-Independent-Settings-File. Generated " + new Date());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -141,6 +152,7 @@ public class ProofIndependentSettings {
 
     /**
      * Checks if pretty printing is enabled or not.
+     *
      * @return {@code true} pretty printing is enabled, {@code false} pretty printing is disabled.
      */
     public static boolean isUsePrettyPrinting() {
@@ -149,8 +161,9 @@ public class ProofIndependentSettings {
 
     /**
      * Defines if pretty printing is enabled or not.
+     *
      * @param usePrettyPrinting {@code true} pretty printing is enabled,
-     *     {@code false} pretty printing is disabled.
+     *        {@code false} pretty printing is disabled.
      */
     public static void setUsePrettyPrinting(boolean usePrettyPrinting) {
         ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings().setUsePretty(usePrettyPrinting);

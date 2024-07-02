@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -18,43 +28,47 @@ import de.uka.ilkd.key.logic.label.SymbolicExecutionTermLabel;
 import de.uka.ilkd.key.logic.label.TermLabel;
 import de.uka.ilkd.key.logic.op.Junctor;
 import de.uka.ilkd.key.rule.TacletForTests;
+
+import org.key_project.util.collection.ImmutableArray;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.key_project.util.collection.ImmutableArray;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class LabeledTermImplTest {
 
-        private TermServices services;
-        private TermFactory tf;
+    private TermServices services;
+    private TermFactory tf;
 
-        @BeforeEach
-        public void setUp() {
-            services = TacletForTests.services();
-            tf = services.getTermFactory();
+    @BeforeEach
+    public void setUp() {
+        services = TacletForTests.services();
+        tf = services.getTermFactory();
 
-        }
+    }
 
     @Test
-	public void testEqualsLabelOnTop() {
-                Term unlabeledTerm =
-				tf.createTerm(Junctor.AND,
-						tf.createTerm(Junctor.TRUE),
-						tf.createTerm(Junctor.FALSE));
+    public void testEqualsLabelOnTop() {
+        Term unlabeledTerm =
+            tf.createTerm(Junctor.AND,
+                tf.createTerm(Junctor.TRUE),
+                tf.createTerm(Junctor.FALSE));
 
-		ImmutableArray<TermLabel> labels = new ImmutableArray<>(
-                ParameterlessTermLabel.ANON_HEAP_LABEL);
+        ImmutableArray<TermLabel> labels = new ImmutableArray<>(
+            ParameterlessTermLabel.ANON_HEAP_LABEL);
 
-		Term labeledTerm =
-				tf.createTerm(Junctor.AND,
-						tf.createTerm(Junctor.TRUE),
-						tf.createTerm(Junctor.FALSE), labels);
+        Term labeledTerm =
+            tf.createTerm(Junctor.AND,
+                tf.createTerm(Junctor.TRUE),
+                tf.createTerm(Junctor.FALSE), labels);
 
-        assertNotEquals(labeledTerm, unlabeledTerm, "Labeled and unlabeled terms must not be equal");
-        assertNotEquals(unlabeledTerm, labeledTerm, "Labeled and unlabeled terms must not be equal");
-	}
+        assertNotEquals(labeledTerm, unlabeledTerm,
+            "Labeled and unlabeled terms must not be equal");
+        assertNotEquals(unlabeledTerm, labeledTerm,
+            "Labeled and unlabeled terms must not be equal");
+    }
 
     /**
      * Tests {@link Term#hasLabels()}, {@link Term#hasLabels()} and
@@ -67,10 +81,14 @@ public class LabeledTermImplTest {
         SymbolicExecutionTermLabel sedLabel = new SymbolicExecutionTermLabel(1);
         SymbolicExecutionTermLabel anotherSedLabel = new SymbolicExecutionTermLabel(2);
         Term oneLabel = services.getTermBuilder().label(unlabeled, sedLabel);
-        Term oneLabelChanged = services.getTermBuilder().label(oneLabel, ParameterlessTermLabel.ANON_HEAP_LABEL);
-        Term twoLabels = services.getTermBuilder().label(unlabeled, new ImmutableArray<>(ParameterlessTermLabel.ANON_HEAP_LABEL, sedLabel));
-        Term oneLabelAdded0 = services.getTermBuilder().addLabel(oneLabel, ParameterlessTermLabel.ANON_HEAP_LABEL);
-        Term oneLabelAdded1 = services.getTermBuilder().addLabel(oneLabelAdded0, ParameterlessTermLabel.ANON_HEAP_LABEL);
+        Term oneLabelChanged =
+            services.getTermBuilder().label(oneLabel, ParameterlessTermLabel.ANON_HEAP_LABEL);
+        Term twoLabels = services.getTermBuilder().label(unlabeled,
+            new ImmutableArray<>(ParameterlessTermLabel.ANON_HEAP_LABEL, sedLabel));
+        Term oneLabelAdded0 =
+            services.getTermBuilder().addLabel(oneLabel, ParameterlessTermLabel.ANON_HEAP_LABEL);
+        Term oneLabelAdded1 = services.getTermBuilder().addLabel(oneLabelAdded0,
+            ParameterlessTermLabel.ANON_HEAP_LABEL);
         // Test unlabeled
         Assertions.assertFalse(unlabeled.hasLabels());
         Assertions.assertNotNull(unlabeled.getLabels());
@@ -90,9 +108,11 @@ public class LabeledTermImplTest {
         Assertions.assertTrue(oneLabelChanged.hasLabels());
         Assertions.assertNotNull(oneLabelChanged.getLabels());
         Assertions.assertEquals(1, oneLabelChanged.getLabels().size());
-        Assertions.assertSame(ParameterlessTermLabel.ANON_HEAP_LABEL, oneLabelChanged.getLabels().get(0));
+        Assertions.assertSame(ParameterlessTermLabel.ANON_HEAP_LABEL,
+            oneLabelChanged.getLabels().get(0));
         Assertions.assertFalse(oneLabelChanged.containsLabel(sedLabel));
-        Assertions.assertTrue(oneLabelChanged.containsLabel(ParameterlessTermLabel.ANON_HEAP_LABEL));
+        Assertions
+                .assertTrue(oneLabelChanged.containsLabel(ParameterlessTermLabel.ANON_HEAP_LABEL));
         Assertions.assertFalse(oneLabelChanged.containsLabel(anotherSedLabel));
         // Test twoLabels
         Assertions.assertTrue(twoLabels.hasLabels());
@@ -105,5 +125,5 @@ public class LabeledTermImplTest {
         Assertions.assertTrue(twoLabels.containsLabel(sedLabel));
         Assertions.assertTrue(twoLabels.containsLabel(ParameterlessTermLabel.ANON_HEAP_LABEL));
         Assertions.assertFalse(twoLabels.containsLabel(anotherSedLabel));
-	}
+    }
 }

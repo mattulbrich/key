@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,47 +23,53 @@
 
 package de.uka.ilkd.key.java.statement;
 
-import org.key_project.util.ExtList;
-
 import de.uka.ilkd.key.java.NonTerminalProgramElement;
 
+import org.key_project.util.ExtList;
+
 /**
- *  Branch statement.
- *  @author AL
- *  @author <TT>AutoDoc</TT>
+ * Branch statement.
+ *
+ * @author AL
+ * @author <TT>AutoDoc</TT>
  */
 
 public abstract class BranchStatement extends JavaStatement implements NonTerminalProgramElement {
 
     public BranchStatement() {
-	
+
     }
 
 
     /**
      * Constructor for the transformation of COMPOST ASTs to KeY.
+     *
      * @param children the children of this AST element as KeY classes.
-     * May contain: Comments
-     */ 
+     *        May contain: Comments
+     */
     public BranchStatement(ExtList children) {
-	super(children);
+        super(children);
     }
 
     /**
-     *      Get the number of branches in this container.
-     *      @return the number of branches.
+     * Get the number of branches in this container.
+     *
+     * @return the number of branches.
      */
 
     public abstract int getBranchCount();
 
     /*
-      Return the branch at the specified index in this node's
-      "virtual" branch array.
-      @param index an index for a branch.
-      @return the branch with the given index.
-      @exception ArrayIndexOutOfBoundsException if <tt>index</tt> is out
-      of bounds.
-    */
+     * Return the branch at the specified index in this node's
+     * "virtual" branch array.
+     *
+     * @param index an index for a branch.
+     *
+     * @return the branch with the given index.
+     *
+     * @exception ArrayIndexOutOfBoundsException if <tt>index</tt> is out
+     * of bounds.
+     */
 
     public abstract Branch getBranchAt(int index);
 }

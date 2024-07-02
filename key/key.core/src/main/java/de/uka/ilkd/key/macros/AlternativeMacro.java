@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2013 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -17,8 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.control.UserInterfaceControl;
 import de.uka.ilkd.key.logic.PosInOccurrence;
 import de.uka.ilkd.key.proof.Goal;
@@ -26,6 +34,8 @@ import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.prover.ProverTaskListener;
 import de.uka.ilkd.key.prover.TaskStartedInfo.TaskKind;
 import de.uka.ilkd.key.prover.impl.DefaultTaskStartedInfo;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * The abstract class AlternativeMacro can be used to create compound macros
@@ -62,8 +72,8 @@ public abstract class AlternativeMacro extends AbstractProofMacro {
      */
     @Override
     public boolean canApplyTo(Proof proof,
-                              ImmutableList<Goal> goals,
-                              PosInOccurrence posInOcc) {
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc) {
         final List<ProofMacro> macros = getProofMacros();
         for (int i = 0; i < macros.size(); i++) {
             if (macros.get(i).canApplyTo(proof, goals, posInOcc)) {
@@ -80,21 +90,21 @@ public abstract class AlternativeMacro extends AbstractProofMacro {
      * This launches the first applicable macro of {@link #getProofMacros()}.
      *
      * @throws InterruptedException
-     *             if the macro is interrupted.
+     *         if the macro is interrupted.
      */
     @Override
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          Proof proof,
-                                          ImmutableList<Goal> goals,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) throws InterruptedException, Exception {
+            Proof proof,
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) throws InterruptedException, Exception {
         ProofMacroFinishedInfo info = new ProofMacroFinishedInfo(this, goals);
         for (final ProofMacro macro : getProofMacros()) {
-            if(macro.canApplyTo(proof, goals, posInOcc)) {
+            if (macro.canApplyTo(proof, goals, posInOcc)) {
                 final ProverTaskListener pml =
-                        new ProofMacroListener(macro.getName(), listener);
+                    new ProofMacroListener(macro.getName(), listener);
                 pml.taskStarted(new DefaultTaskStartedInfo(TaskKind.Macro, macro.getName(), 0));
-                synchronized(macro) {
+                synchronized (macro) {
                     // wait for macro to terminate
                     info = macro.applyTo(uic, proof, goals, posInOcc, pml);
                 }
@@ -113,7 +123,7 @@ public abstract class AlternativeMacro extends AbstractProofMacro {
      * @return the proofMacros as an unmodifiable list.
      */
     public List<ProofMacro> getProofMacros() {
-        if(proofMacros == null) {
+        if (proofMacros == null) {
             this.proofMacros = createProofMacroArray();
             assert proofMacros != null;
             assert proofMacros.length > 0;

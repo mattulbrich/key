@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -16,10 +26,6 @@ package de.uka.ilkd.key.rule.metaconstruct.arith;
 import java.math.BigInteger;
 import java.util.Iterator;
 
-import org.key_project.util.LRUCache;
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
-
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.TypeConverter;
 import de.uka.ilkd.key.ldt.IntegerLDT;
@@ -27,6 +33,10 @@ import de.uka.ilkd.key.logic.Term;
 import de.uka.ilkd.key.logic.label.TermLabel;
 import de.uka.ilkd.key.logic.op.AbstractTermTransformer;
 import de.uka.ilkd.key.logic.op.Operator;
+
+import org.key_project.util.LRUCache;
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
 
 /**
  * Class for analysing and modifying polynomial expressions over the integers
@@ -37,12 +47,12 @@ public class Polynomial {
      * The polynomial expression of the BigInteger constant '0'.
      */
     public final static Polynomial ZERO =
-            new Polynomial(ImmutableSLList.<Monomial>nil(), BigInteger.ZERO);
+        new Polynomial(ImmutableSLList.<Monomial>nil(), BigInteger.ZERO);
     /**
      * The polynomial expression of the BigInteger constant '1'.
      */
     public final static Polynomial ONE =
-            new Polynomial(ImmutableSLList.<Monomial>nil(), BigInteger.ONE);
+        new Polynomial(ImmutableSLList.<Monomial>nil(), BigInteger.ONE);
 
     /**
      * The BigInteger constant for the value '-1'.
@@ -105,7 +115,7 @@ public class Polynomial {
 
         if (m.getParts().isEmpty()) {
             return new Polynomial(newParts,
-                    constantPart.multiply(m.getCoefficient()));
+                constantPart.multiply(m.getCoefficient()));
         }
 
         newParts = addPart(newParts, m.multiply(constantPart));
@@ -128,7 +138,7 @@ public class Polynomial {
     public Polynomial add(Monomial m) {
         if (m.getParts().isEmpty()) {
             return new Polynomial(parts,
-                    constantPart.add(m.getCoefficient()));
+                constantPart.add(m.getCoefficient()));
         }
 
         return new Polynomial(addPart(parts, m), constantPart);
@@ -235,6 +245,7 @@ public class Polynomial {
 
     /**
      * Creates a term from this polynomial expression.
+     *
      * @param services the services object
      * @return the resulting term
      */
@@ -299,7 +310,7 @@ public class Polynomial {
                 constantPart = constantPart.add(c);
             } else {
                 parts = addPart(parts,
-                        Monomial.create(polynomial, services));
+                    Monomial.create(polynomial, services));
             }
         }
     }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,11 +23,11 @@
 
 package de.uka.ilkd.key.proof;
 
-import org.key_project.util.collection.ImmutableArray;
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.logic.Term;
 import de.uka.ilkd.key.logic.op.QuantifiableVariable;
+
+import org.key_project.util.collection.ImmutableArray;
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * The abstract superclass of caches for taclet app indexes that are separated
@@ -26,10 +36,10 @@ import de.uka.ilkd.key.logic.op.QuantifiableVariable;
  * functions to this list.
  */
 abstract class PrefixTermTacletAppIndexCache implements
-                                             ITermTacletAppIndexCache {
+        ITermTacletAppIndexCache {
 
-    private final ImmutableList<QuantifiableVariable> prefix;   
-    
+    private final ImmutableList<QuantifiableVariable> prefix;
+
     protected PrefixTermTacletAppIndexCache(ImmutableList<QuantifiableVariable> prefix) {
         this.prefix = prefix;
     }
@@ -38,16 +48,16 @@ abstract class PrefixTermTacletAppIndexCache implements
         return prefix;
     }
 
-    protected ImmutableList<QuantifiableVariable>
-              getExtendedPrefix(ImmutableArray<QuantifiableVariable> extension) {
+    protected ImmutableList<QuantifiableVariable> getExtendedPrefix(
+            ImmutableArray<QuantifiableVariable> extension) {
         ImmutableList<QuantifiableVariable> res = prefix;
-        for ( int i = 0; i != extension.size (); ++i )
-            res = res.prepend ( extension.get ( i ) );
+        for (int i = 0; i != extension.size(); ++i)
+            res = res.prepend(extension.get(i));
         return res;
     }
 
     protected ImmutableList<QuantifiableVariable> getExtendedPrefix(Term t, int subtermIndex) {
-        return getExtendedPrefix ( t.varsBoundHere ( subtermIndex ) );
+        return getExtendedPrefix(t.varsBoundHere(subtermIndex));
     }
-    
+
 }

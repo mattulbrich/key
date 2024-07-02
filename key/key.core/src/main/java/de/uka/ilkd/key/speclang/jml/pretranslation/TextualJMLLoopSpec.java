@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,15 +23,16 @@
 
 package de.uka.ilkd.key.speclang.jml.pretranslation;
 
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+
 import de.uka.ilkd.key.ldt.HeapLDT;
 import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.speclang.njml.LabeledParserRuleContext;
-import javax.annotation.Nullable;
+
 import org.key_project.util.collection.ImmutableList;
 import org.key_project.util.collection.ImmutableSLList;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 import static de.uka.ilkd.key.speclang.jml.pretranslation.TextualJMLSpecCase.ClauseHd.ASSIGNABLE;
 
@@ -48,16 +59,19 @@ public final class TextualJMLLoopSpec extends TextualJMLConstruct {
         super(mods);
     }
 
-    /*public TextualJMLLoopSpec addClause(Clause clause, LabeledParserRuleContext ctx) {
-        clauses.add(new Entry(clause, ctx));
-        return this;
-    }*/
+    /*
+     * public TextualJMLLoopSpec addClause(Clause clause, LabeledParserRuleContext ctx) {
+     * clauses.add(new Entry(clause, ctx));
+     * return this;
+     * }
+     */
 
     public TextualJMLLoopSpec addClause(ClauseHd clause, LabeledParserRuleContext ctx) {
         return addClause(clause, null, ctx);
     }
 
-    public TextualJMLLoopSpec addClause(ClauseHd clause, @Nullable Name heapName, LabeledParserRuleContext ctx) {
+    public TextualJMLLoopSpec addClause(ClauseHd clause, @Nullable Name heapName,
+            LabeledParserRuleContext ctx) {
         if (heapName == null)
             heapName = HeapLDT.BASE_HEAP_NAME;
         clauses.add(new Entry(clause, ctx, heapName));
@@ -72,7 +86,8 @@ public final class TextualJMLLoopSpec extends TextualJMLConstruct {
 
     private ImmutableList<LabeledParserRuleContext> getList(Object key) {
         final List<LabeledParserRuleContext> seq =
-                clauses.stream().filter(it -> it.clauseType.equals(key)).map(it -> it.ctx).collect(Collectors.toList());
+            clauses.stream().filter(it -> it.clauseType.equals(key)).map(it -> it.ctx)
+                    .collect(Collectors.toList());
         return ImmutableList.fromList(seq);
     }
 
@@ -80,9 +95,11 @@ public final class TextualJMLLoopSpec extends TextualJMLConstruct {
         return getList(ASSIGNABLE);
     }
 
-    /*public ImmutableList<LabeledParserRuleContext> getAssignable(String hName) {
-        return getList(ClauseHd.ASSIGNABLE);
-    }*/
+    /*
+     * public ImmutableList<LabeledParserRuleContext> getAssignable(String hName) {
+     * return getList(ClauseHd.ASSIGNABLE);
+     * }
+     */
 
     public Map<String, ImmutableList<LabeledParserRuleContext>> getAssignables() {
         return getMap(ClauseHd.ASSIGNABLE);
@@ -107,7 +124,8 @@ public final class TextualJMLLoopSpec extends TextualJMLConstruct {
         for (Entry entry : clauses) {
             if (clause.equals(entry.clauseType)) {
                 String h = (entry.heap != null ? entry.heap : defaultHeap).toString();
-                ImmutableList<LabeledParserRuleContext> l = map.getOrDefault(h, ImmutableSLList.nil());
+                ImmutableList<LabeledParserRuleContext> l =
+                    map.getOrDefault(h, ImmutableSLList.nil());
                 map.put(h, l.append(entry.ctx));
             }
         }
@@ -126,7 +144,8 @@ public final class TextualJMLLoopSpec extends TextualJMLConstruct {
         for (Entry entry : clauses) {
             if (clause.equals(entry.clauseType)) {
                 String h = (entry.heap != null ? entry.heap : defaultHeap).toString();
-                ImmutableList<LabeledParserRuleContext> l = map.getOrDefault(h, ImmutableSLList.nil());
+                ImmutableList<LabeledParserRuleContext> l =
+                    map.getOrDefault(h, ImmutableSLList.nil());
                 map.put(h, l.append(entry.ctx));
             }
         }
@@ -147,56 +166,59 @@ public final class TextualJMLLoopSpec extends TextualJMLConstruct {
         return variant;
     }
 
-    /*@Override
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        Iterator<LabeledParserRuleContext> it;
-
-        for (Name heap : HeapLDT.VALID_HEAP_NAMES) {
-            it = invariants.get(heap.toString()).iterator();
-            while (it.hasNext()) {
-                sb.append("invariant<" + heap + ">: " + it.next() + "\n");
-            }
-        }
-        for (Name heap : HeapLDT.VALID_HEAP_NAMES) {
-            it = freeInvariants.get(heap.toString()).iterator();
-            while (it.hasNext()) {
-                sb.append("free invariant<" + heap + ">: " + it.next() + "\n");
-            }
-        }
-        for (Name heap : HeapLDT.VALID_HEAP_NAMES) {
-            it = assignables.get(heap.toString()).iterator();
-            while (it.hasNext()) {
-                sb.append("assignable<" + heap + ">: " + it.next() + "\n");
-            }
-        }
-        for (Name heap : HeapLDT.VALID_HEAP_NAMES) {
-            it = infFlowSpecs.iterator();
-            while (it.hasNext()) {
-                sb.append("determines<" + heap + ">: " + it.next() + "\n");
-            }
-        }
-        if (variant != null) {
-            sb.append("decreases: " + variant);
-        }
-
-        return sb.toString();
-    }
-       */
+    /*
+     * @Override
+     * public String toString() {
+     * StringBuffer sb = new StringBuffer();
+     * Iterator<LabeledParserRuleContext> it;
+     *
+     * for (Name heap : HeapLDT.VALID_HEAP_NAMES) {
+     * it = invariants.get(heap.toString()).iterator();
+     * while (it.hasNext()) {
+     * sb.append("invariant<" + heap + ">: " + it.next() + "\n");
+     * }
+     * }
+     * for (Name heap : HeapLDT.VALID_HEAP_NAMES) {
+     * it = freeInvariants.get(heap.toString()).iterator();
+     * while (it.hasNext()) {
+     * sb.append("free invariant<" + heap + ">: " + it.next() + "\n");
+     * }
+     * }
+     * for (Name heap : HeapLDT.VALID_HEAP_NAMES) {
+     * it = assignables.get(heap.toString()).iterator();
+     * while (it.hasNext()) {
+     * sb.append("assignable<" + heap + ">: " + it.next() + "\n");
+     * }
+     * }
+     * for (Name heap : HeapLDT.VALID_HEAP_NAMES) {
+     * it = infFlowSpecs.iterator();
+     * while (it.hasNext()) {
+     * sb.append("determines<" + heap + ">: " + it.next() + "\n");
+     * }
+     * }
+     * if (variant != null) {
+     * sb.append("decreases: " + variant);
+     * }
+     *
+     * return sb.toString();
+     * }
+     */
 
 
     @Override
     public String toString() {
         return "TextualJMLLoopSpec{" +
-                "variant=" + variant +
-                ", clauses=" + clauses +
-                '}';
+            "variant=" + variant +
+            ", clauses=" + clauses +
+            '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         TextualJMLLoopSpec that = (TextualJMLLoopSpec) o;
         return variant.equals(that.variant) &&
                 clauses.equals(that.clauses);

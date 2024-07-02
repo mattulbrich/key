@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -31,12 +41,13 @@ public interface ImmutableList<T> extends Iterable<T>, java.io.Serializable {
      */
     public static <T> Collector<T, List<T>, ImmutableList<T>> collector() {
         return Collector.of(
-                LinkedList<T>::new,
-                (list, el) -> list.add(el),
-                (list1, list2) -> {
-                    list1.addAll(list2);
-                    return list1; },
-                ImmutableList::<T>fromList);
+            LinkedList<T>::new,
+            (list, el) -> list.add(el),
+            (list1, list2) -> {
+                list1.addAll(list2);
+                return list1;
+            },
+            ImmutableList::<T>fromList);
     }
 
     /**
@@ -76,6 +87,7 @@ public interface ImmutableList<T> extends Iterable<T>, java.io.Serializable {
      * prepends an immutable list in reverse order, i.e.,
      * [4,5,6].prepend([1,2,3]) will be [3,2,1,4,5,6]
      * (more efficient than {@link ImmutableList#prepend(ImmutableList)})
+     *
      * @return reverse(collection)++this
      */
     ImmutableList<T> prependReverse(ImmutableList<T> collection);
@@ -83,6 +95,7 @@ public interface ImmutableList<T> extends Iterable<T>, java.io.Serializable {
     /**
      * prepends an iterable collection in reverse order, i.e.,
      * [4,5,6].prepend([1,2,3]) will be [3,2,1,4,5,6]
+     *
      * @return reverse(collection)++this
      */
     ImmutableList<T> prependReverse(Iterable<T> collection);
@@ -131,6 +144,7 @@ public interface ImmutableList<T> extends Iterable<T>, java.io.Serializable {
 
     /**
      * return true if predicate is fullfilled for at least one element
+     *
      * @param predicate the predicate
      * @return true if predicate is fullfilled for at least one element
      */

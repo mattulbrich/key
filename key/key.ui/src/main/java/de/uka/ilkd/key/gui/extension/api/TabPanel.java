@@ -1,13 +1,23 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.extension.api;
+
+import java.util.Collection;
+import java.util.Collections;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.swing.*;
 
 import bibliothek.gui.dock.common.action.CAction;
 import bibliothek.gui.dock.common.intern.DefaultCDockable;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import javax.swing.*;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author Alexander Weigl
@@ -17,8 +27,7 @@ public interface TabPanel {
     @Nonnull
     String getTitle();
 
-    default @Nullable
-    Icon getIcon() {
+    default @Nullable Icon getIcon() {
         return null;
     }
 
@@ -28,21 +37,18 @@ public interface TabPanel {
     /**
      * @return non-null
      */
-    default @Nonnull
-    Collection<Action> getTitleActions() {
+    default @Nonnull Collection<Action> getTitleActions() {
         return Collections.emptyList();
     }
 
     /**
      * @return
      */
-    default @Nonnull
-    Collection<CAction> getTitleCActions() {
+    default @Nonnull Collection<CAction> getTitleCActions() {
         return Collections.emptyList();
     }
 
-    default @Nullable
-    DefaultCDockable.Permissions getPermissions() {
+    default @Nullable DefaultCDockable.Permissions getPermissions() {
         return null;
     }
 }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.ui.interactionlog.algo;
 
-import org.key_project.ui.interactionlog.api.Markdownable;
+import java.io.PrintWriter;
+
 import org.key_project.ui.interactionlog.api.Interaction;
+import org.key_project.ui.interactionlog.api.Markdownable;
 import org.key_project.ui.interactionlog.model.InteractionLog;
 import org.key_project.ui.markdown.Markdown;
-
-import java.io.PrintWriter;
 
 public class MarkdownExport {
     private final PrintWriter writer;

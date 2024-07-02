@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -30,36 +40,36 @@ import de.uka.ilkd.key.strategy.RuleAppCost;
  */
 public class LeftmostNegAtomFeature extends AbstractBetaFeature {
 
-    public final static Feature INSTANCE = new LeftmostNegAtomFeature ();
+    public final static Feature INSTANCE = new LeftmostNegAtomFeature();
 
-    private LeftmostNegAtomFeature () {}
-    
+    private LeftmostNegAtomFeature() {}
+
     @Override
-    protected RuleAppCost doComputation (PosInOccurrence pos, Term findTerm, ServiceCaches caches) {
-        final PIOPathIterator it = pos.iterator ();
-        boolean positive = pos.isInAntec ();
+    protected RuleAppCost doComputation(PosInOccurrence pos, Term findTerm, ServiceCaches caches) {
+        final PIOPathIterator it = pos.iterator();
+        boolean positive = pos.isInAntec();
 
-        while ( it.next () != -1 ) {
-            final Term subTerm = it.getSubTerm ();
-            final Operator op = subTerm.op ();
+        while (it.next() != -1) {
+            final Term subTerm = it.getSubTerm();
+            final Operator op = subTerm.op();
 
-            if ( it.getChild () == 0 ) {
-                if ( op == Junctor.NOT || op == Junctor.IMP )
+            if (it.getChild() == 0) {
+                if (op == Junctor.NOT || op == Junctor.IMP)
                     positive = !positive;
-                else if ( op == Equality.EQV )
-		    return BinaryFeature.ZERO_COST; // TODO
+                else if (op == Equality.EQV)
+                    return BinaryFeature.ZERO_COST; // TODO
 
                 continue;
             }
 
-            if ( op == ( positive ? Junctor.OR : Junctor.AND ) ) {
-                if ( containsNegAtom ( subTerm.sub ( 0 ), positive, caches ) )
-		    return BinaryFeature.TOP_COST;
-            } else if ( positive && op == Junctor.IMP ) {
-                if ( containsNegAtom ( subTerm.sub ( 0 ), false, caches ) )
-		    return BinaryFeature.TOP_COST;
-            } else if ( op == Equality.EQV )
-		return BinaryFeature.ZERO_COST; // TODO
+            if (op == (positive ? Junctor.OR : Junctor.AND)) {
+                if (containsNegAtom(subTerm.sub(0), positive, caches))
+                    return BinaryFeature.TOP_COST;
+            } else if (positive && op == Junctor.IMP) {
+                if (containsNegAtom(subTerm.sub(0), false, caches))
+                    return BinaryFeature.TOP_COST;
+            } else if (op == Equality.EQV)
+                return BinaryFeature.ZERO_COST; // TODO
         }
 
         return BinaryFeature.ZERO_COST;

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2020 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -68,7 +78,7 @@ public class Exec extends BranchStatement
      * Exec.
      *
      * @param body
-     *            a statement block.
+     *        a statement block.
      */
 
     public Exec(StatementBlock body) {
@@ -80,9 +90,9 @@ public class Exec extends BranchStatement
      * Exec.
      *
      * @param body
-     *            a statement block.
+     *        a statement block.
      * @param branches
-     *            a branch mutable list.
+     *        a branch mutable list.
      */
     public Exec(StatementBlock body, ASTList<Branch> branches) {
         setBranchList(branches);
@@ -94,7 +104,7 @@ public class Exec extends BranchStatement
      * Exec.
      *
      * @param proto
-     *            a Exec.
+     *        a Exec.
      */
     protected Exec(Exec proto) {
         super(proto);
@@ -168,10 +178,10 @@ public class Exec extends BranchStatement
      * array
      *
      * @param index
-     *            an index into this node's "virtual" child array
+     *        an index into this node's "virtual" child array
      * @return the program element at the given position
      * @exception ArrayIndexOutOfBoundsException
-     *                if <tt>index</tt> is out of bounds
+     *            if <tt>index</tt> is out of bounds
      */
     @Override
     public ProgramElement getChildAt(int index) {
@@ -222,12 +232,12 @@ public class Exec extends BranchStatement
      * replaced child is left untouched.
      *
      * @param p
-     *            the old child.
+     *        the old child.
      * @param p
-     *            the new child.
+     *        the new child.
      * @return true if a replacement has occured, false otherwise.
      * @exception ClassCastException
-     *                if the new child cannot take over the role of the old one.
+     *            if the new child cannot take over the role of the old one.
      */
     @Override
     public boolean replaceChild(ProgramElement p, ProgramElement q) {
@@ -284,7 +294,7 @@ public class Exec extends BranchStatement
      * Set body.
      *
      * @param body
-     *            a statement block.
+     *        a statement block.
      */
 
     public void setBody(StatementBlock body) {
@@ -330,7 +340,7 @@ public class Exec extends BranchStatement
      * Set branch list.
      *
      * @param branches
-     *            a branch mutable list.
+     *        a branch mutable list.
      */
     public void setBranchList(ASTList<Branch> branches) {
         this.branches = branches;
@@ -366,8 +376,8 @@ public class Exec extends BranchStatement
         if (v instanceof SourceVisitorExtended) {
             ((SourceVisitorExtended) v).visitExec(this);
         } else {
-//            throw new IllegalStateException(
-//                "Method 'accept' not implemented in Exec");
+            // throw new IllegalStateException(
+            // "Method 'accept' not implemented in Exec");
         }
     }
 

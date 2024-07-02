@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2020 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -68,9 +78,9 @@ public class Ccatch extends Branch
      * Ccatch.
      *
      * @param e
-     *            a parameter declaration.
+     *        a parameter declaration.
      * @param body
-     *            a statement.
+     *        a statement.
      */
     public Ccatch(ParameterDeclaration e, StatementBlock body) {
         super();
@@ -84,9 +94,9 @@ public class Ccatch extends Branch
      * Ccatch.
      *
      * @param e
-     *            a parameter declaration.
+     *        a parameter declaration.
      * @param body
-     *            a statement.
+     *        a statement.
      */
     public Ccatch(CcatchNonstandardParameterDeclaration e,
             StatementBlock body) {
@@ -101,7 +111,7 @@ public class Ccatch extends Branch
      * Ccatch.
      *
      * @param proto
-     *            a Ccatch.
+     *        a Ccatch.
      */
     protected Ccatch(Ccatch proto) {
         super(proto);
@@ -168,10 +178,10 @@ public class Ccatch extends Branch
      * array
      *
      * @param index
-     *            an index into this node's "virtual" child array
+     *        an index into this node's "virtual" child array
      * @return the program element at the given position
      * @exception ArrayIndexOutOfBoundsException
-     *                if <tt>index</tt> is out of bounds
+     *            if <tt>index</tt> is out of bounds
      */
     @Override
     public ProgramElement getChildAt(int index) {
@@ -217,12 +227,12 @@ public class Ccatch extends Branch
      * replaced child is left untouched.
      *
      * @param p
-     *            the old child.
+     *        the old child.
      * @param p
-     *            the new child.
+     *        the new child.
      * @return true if a replacement has occured, false otherwise.
      * @exception ClassCastException
-     *                if the new child cannot take over the role of the old one.
+     *            if the new child cannot take over the role of the old one.
      */
     @Override
     public boolean replaceChild(ProgramElement p, ProgramElement q) {
@@ -328,7 +338,7 @@ public class Ccatch extends Branch
      * Set body.
      *
      * @param statement
-     *            a statement.
+     *        a statement.
      */
     public void setBody(Statement statement) {
         body = (StatementBlock) statement;
@@ -338,7 +348,7 @@ public class Ccatch extends Branch
      * Set parent.
      *
      * @param parent
-     *            a try.
+     *        a try.
      */
     public void setParent(Exec parent) {
         this.parent = parent;
@@ -374,7 +384,7 @@ public class Ccatch extends Branch
      * Set parameter declaration.
      *
      * @param p
-     *            a parameter declaration.
+     *        a parameter declaration.
      */
     public void setParameterDeclaration(ParameterDeclaration p) {
         parameter = Optional.ofNullable(p);
@@ -384,7 +394,7 @@ public class Ccatch extends Branch
      * Set parameter declaration.
      *
      * @param p
-     *            a parameter declaration.
+     *        a parameter declaration.
      */
     public void setNonStdParameterDeclaration(
             CcatchNonstandardParameterDeclaration p) {

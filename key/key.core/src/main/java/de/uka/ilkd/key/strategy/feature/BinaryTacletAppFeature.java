@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -23,41 +33,41 @@ import de.uka.ilkd.key.rule.TacletApp;
  * cost.
  */
 public abstract class BinaryTacletAppFeature extends BinaryFeature {
-    
+
     private final boolean nonTacletValue;
 
-    protected BinaryTacletAppFeature () {
+    protected BinaryTacletAppFeature() {
         nonTacletValue = true;
     }
 
     /**
      * @param p_nonTacletValue
-     *            the value that is to be returned should the feature be applied
-     *            to a rule that is not a taclet
+     *        the value that is to be returned should the feature be applied
+     *        to a rule that is not a taclet
      */
-    protected BinaryTacletAppFeature ( boolean p_nonTacletValue ) {
+    protected BinaryTacletAppFeature(boolean p_nonTacletValue) {
         nonTacletValue = p_nonTacletValue;
     }
 
-    final protected boolean filter ( RuleApp app, PosInOccurrence pos, Goal goal ) {
-        if ( app instanceof TacletApp )
-            return filter ( (TacletApp)app, pos, goal );
+    final protected boolean filter(RuleApp app, PosInOccurrence pos, Goal goal) {
+        if (app instanceof TacletApp)
+            return filter((TacletApp) app, pos, goal);
         return nonTacletValue;
     }
-    
+
     /**
      * Compute whether the result of the feature is zero (<code>true</code>)
      * or infinity (<code>false</code>)
-     * 
+     *
      * @param app
-     *            the TacletApp
+     *        the TacletApp
      * @param pos
-     *            position where <code>app</code> is to be applied
+     *        position where <code>app</code> is to be applied
      * @param goal
-     *            the goal on which <code>app</code> is to be applied
+     *        the goal on which <code>app</code> is to be applied
      * @return true iff the the result of the feature is supposed to be zero.
      */
-    protected abstract boolean filter ( TacletApp app,
-                                        PosInOccurrence pos,
-                                        Goal goal );
+    protected abstract boolean filter(TacletApp app,
+            PosInOccurrence pos,
+            Goal goal);
 }

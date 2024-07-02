@@ -1,6 +1,14 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.convenience;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 import recoder.abstraction.ClassType;
 import recoder.abstraction.ClassTypeContainer;
@@ -12,10 +20,6 @@ import recoder.java.PackageSpecification;
 import recoder.java.declaration.TypeDeclaration;
 import recoder.java.reference.*;
 import recoder.util.Debug;
-
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Utility class to obtain or transform Identifiers obeying a set of naming
@@ -114,8 +118,9 @@ public abstract class Naming {
 
     public static Identifier createMemberName(Identifier base) {
         String text = base.getText();
-        return hasLowerCaseBegin(text) ? base.deepClone() : base.getFactory().createIdentifier(
-                makeLowerCaseBegin(text));
+        return hasLowerCaseBegin(text) ? base.deepClone()
+                : base.getFactory().createIdentifier(
+                    makeLowerCaseBegin(text));
     }
 
     public static String createClassName(String base) {
@@ -124,8 +129,9 @@ public abstract class Naming {
 
     public static Identifier createClassName(Identifier base) {
         String text = base.getText();
-        return hasUpperCaseBegin(text) ? base.deepClone() : base.getFactory().createIdentifier(
-                makeUpperCaseBegin(text));
+        return hasUpperCaseBegin(text) ? base.deepClone()
+                : base.getFactory().createIdentifier(
+                    makeUpperCaseBegin(text));
     }
 
     public static String createPackageName(String base) {
@@ -257,7 +263,7 @@ public abstract class Naming {
      * is <CODE>null</CODE> or empty. Assumes that the prefix is not a type
      * reference with a dimension > 0.
      *
-     * @param ref    a reference prefix.
+     * @param ref a reference prefix.
      * @param suffix a suffix string.
      * @return the dotted representation of the given reference and the suffix.
      * @since 0.72
@@ -304,6 +310,7 @@ public abstract class Naming {
 
     /*
      * Returns the fully qualified name of the package of a compilation unit.
+     *
      * @param cu a compilation unit. @return the canonical name of the unit, or
      * <CODE> "" </CODE> if the unit has the default package.
      */
@@ -334,10 +341,11 @@ public abstract class Naming {
         // TODO Gutzmann - put back in. This is a hack for as long
         // as recoder does not recognize enums as types
         /*
-        if (m == null) {
-            throw new IllegalArgumentException("Compilation unit " + cu.getName() + " has no primary type declaration");
-        }
-        */
+         * if (m == null) {
+         * throw new IllegalArgumentException("Compilation unit " + cu.getName() +
+         * " has no primary type declaration");
+         * }
+         */
         String name;
         if (m == null || (!m.isPublic() && cu.getDataLocation() != null)) {
             // keep original filename, if possible
@@ -351,7 +359,8 @@ public abstract class Naming {
                 possibleFileName = dataLocStr.substring(lastSlash + 1);
             // TODO check if filename is correct
             name = possibleFileName;
-        } else name = m.getName();
+        } else
+            name = m.getName();
         String pname = getPackageName(cu);
         if (pname.length() == 0) {
             return name;
@@ -439,4 +448,3 @@ public abstract class Naming {
     }
 
 }
-

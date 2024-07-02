@@ -1,15 +1,26 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.nparser.builder;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import de.uka.ilkd.key.nparser.KeYParser;
 import de.uka.ilkd.key.proof.init.Includes;
 import de.uka.ilkd.key.proof.io.RuleSource;
 import de.uka.ilkd.key.proof.io.RuleSourceFactory;
 import de.uka.ilkd.key.util.parsing.BuildingException;
-import org.key_project.util.java.StringUtil;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.key_project.util.java.StringUtil;
 
 /**
  * This visitor finds all includes in the given ASTs.
@@ -53,10 +64,11 @@ public class IncludeFinder extends AbstractBuilder<Void> {
             filename += ".key";
 
         if (relativePath) {
-            filename = filename.replace('/', File.separatorChar); // Not required for Windows, but whatsoever
+            filename = filename.replace('/', File.separatorChar); // Not required for Windows, but
+                                                                  // whatsoever
             filename = filename.replace('\\', File.separatorChar); // Special handling for Linux
             URL path = new URL(base.getProtocol(), base.getHost(), base.getPort(),
-                    basePath + "/" + filename);
+                basePath + "/" + filename);
             source = RuleSourceFactory.initRuleFile(path);
         } else {
             source = RuleSourceFactory.fromDefaultLocation(filename);

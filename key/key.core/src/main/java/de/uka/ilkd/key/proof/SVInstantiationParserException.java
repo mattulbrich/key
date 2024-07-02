@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,37 +23,37 @@
 
 package de.uka.ilkd.key.proof;
 
-public class SVInstantiationParserException 
-    extends SVInstantiationExceptionWithPosition {
+public class SVInstantiationParserException
+        extends SVInstantiationExceptionWithPosition {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4411508672178909020L;
     private String instantiation;
     private String detail;
-         
-    public SVInstantiationParserException( String  instantiation, 
-					   int     row, 
-					   int     column,
-					   String  detail,
-					   boolean inIfSequent) {
-	super("Parser Error", row, column, inIfSequent);
-	this.instantiation   = instantiation;
-	this.detail = (detail == null) ? "" : detail;
+
+    public SVInstantiationParserException(String instantiation,
+            int row,
+            int column,
+            String detail,
+            boolean inIfSequent) {
+        super("Parser Error", row, column, inIfSequent);
+        this.instantiation = instantiation;
+        this.detail = (detail == null) ? "" : detail;
     }
-    
+
     private String space(int i) {
-	StringBuffer res=new StringBuffer();
-	for (int j=0; j<i; j++) {
-	    res.append(" ");
-	}
-	return res.toString();
+        StringBuffer res = new StringBuffer();
+        for (int j = 0; j < i; j++) {
+            res.append(" ");
+        }
+        return res.toString();
     }
 
-    public String getMessage () {
+    public String getMessage() {
 
-        int column    = getColumn();
+        int column = getColumn();
 
         String errmsg = super.getMessage();
         // needs non-prop font: errmsg +="\n"+inst;

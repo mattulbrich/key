@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,11 +23,7 @@
 
 package de.uka.ilkd.key.rule.merge.procedures;
 
-import static de.uka.ilkd.key.util.mergerule.MergeRuleUtils.getNewSkolemConstantForPrefix;
-
 import java.util.LinkedHashSet;
-
-import org.key_project.util.collection.DefaultImmutableSet;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Name;
@@ -27,13 +33,17 @@ import de.uka.ilkd.key.logic.op.Function;
 import de.uka.ilkd.key.rule.merge.MergeProcedure;
 import de.uka.ilkd.key.util.mergerule.SymbolicExecutionState;
 
+import org.key_project.util.collection.DefaultImmutableSet;
+
+import static de.uka.ilkd.key.util.mergerule.MergeRuleUtils.getNewSkolemConstantForPrefix;
+
 /**
  * Rule that merges two sequents based on "total" weakening: Replacement of
  * symbolic state by an update setting every program variable to a fresh Skolem
  * constant, if the respective program variable does not evaluate to the same
  * value in both states - in this case, the original value is preserved (->
  * idempotency).
- * 
+ *
  * @author Dominic Scheurer
  */
 public class MergeTotalWeakening extends MergeProcedure implements UnparametricMergeProcedure {
@@ -51,7 +61,7 @@ public class MergeTotalWeakening extends MergeProcedure implements UnparametricM
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.uka.ilkd.key.rule.merge.MergeProcedure#complete()
      */
     @Override
@@ -68,13 +78,13 @@ public class MergeTotalWeakening extends MergeProcedure implements UnparametricM
         final TermBuilder tb = services.getTermBuilder();
 
         final Function newSkolemConstant =
-                getNewSkolemConstantForPrefix(v.op().name().toString(),
-                        v.sort(), services);
+            getNewSkolemConstantForPrefix(v.op().name().toString(),
+                v.sort(), services);
         LinkedHashSet<Name> newNames = new LinkedHashSet<Name>();
         newNames.add(newSkolemConstant.name());
 
-        return new ValuesMergeResult(DefaultImmutableSet.<Term> nil(),
-                tb.func(newSkolemConstant), newNames, new LinkedHashSet<Term>());
+        return new ValuesMergeResult(DefaultImmutableSet.<Term>nil(),
+            tb.func(newSkolemConstant), newNames, new LinkedHashSet<Term>());
 
     }
 

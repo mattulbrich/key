@@ -1,7 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui;
 
 import java.util.Properties;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import de.uka.ilkd.key.pp.LogicPrinter;
@@ -18,8 +27,8 @@ import de.uka.ilkd.key.rule.Taclet;
  */
 public class InfoTreeNode extends DefaultMutableTreeNode {
 
-	private static final long serialVersionUID = 4187650510339169399L;
-	// the original rule name
+    private static final long serialVersionUID = 4187650510339169399L;
+    // the original rule name
     private final String altName;
     private String description;
 
@@ -59,7 +68,8 @@ public class InfoTreeNode extends DefaultMutableTreeNode {
         altName = taclet.name().toString();
         LogicPrinter lp = new LogicPrinter(new ProgramPrinter(), new NotationInfo(), null, true);
         lp.printTaclet(taclet);
-        description = lp.toString() +  "\n\n Defined at:" + taclet.getOrigin() + "\n\n under options:" + taclet.getChoices();
+        description = lp.toString() + "\n\n Defined at:" + taclet.getOrigin()
+            + "\n\n under options:" + taclet.getChoices();
     }
 
     InfoTreeNode(String title, String description) {
@@ -77,13 +87,13 @@ public class InfoTreeNode extends DefaultMutableTreeNode {
     String getTitle() {
         return (String) getUserObject();
     }
-    
+
     /**
      * switch title to alternative name (i.e., internal rule name)
      */
     void setTitleToAltName() {
-    	assert altName != null;
-    	userObject = altName;
+        assert altName != null;
+        userObject = altName;
     }
 
     String getDescription() {

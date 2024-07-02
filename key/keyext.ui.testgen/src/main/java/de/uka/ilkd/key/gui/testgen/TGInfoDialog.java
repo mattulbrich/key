@@ -1,14 +1,24 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.testgen;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 
 import de.uka.ilkd.key.core.KeYMediator;
 import de.uka.ilkd.key.gui.MainWindow;
 import de.uka.ilkd.key.gui.actions.KeyAction;
 import de.uka.ilkd.key.smt.testgen.TestGenerationLog;
-
-import javax.swing.*;
-import javax.swing.text.DefaultCaret;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 
 public class TGInfoDialog extends JDialog {
     private final JTextArea textArea;
@@ -19,7 +29,10 @@ public class TGInfoDialog extends JDialog {
     private transient TGWorker worker;
 
     private final KeyAction actionStop = new KeyAction() {
-        { setName("Stop"); }
+        {
+            setName("Stop");
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             // This method delegates the request only to the UserInterfaceControl
@@ -30,7 +43,10 @@ public class TGInfoDialog extends JDialog {
     };
 
     private final AbstractAction actionExit = new KeyAction() {
-        { setName("Exit"); }
+        {
+            setName("Exit");
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             TGInfoDialog.this.dispose();
@@ -38,7 +54,10 @@ public class TGInfoDialog extends JDialog {
     };
 
     private final KeyAction actionStart = new KeyAction() {
-        { setName("Start"); }
+        {
+            setName("Start");
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             KeYMediator mediator = MainWindow.getInstance().getMediator();
@@ -76,13 +95,13 @@ public class TGInfoDialog extends JDialog {
     public TGInfoDialog(Window owner) {
         super(owner);
 
-        //init members
+        // init members
         textArea = new JTextArea();
         stopButton = new JButton(actionStop);
         exitButton = new JButton(actionExit);
         startButton = new JButton(actionStart);
 
-        //configure properties
+        // configure properties
         setModal(false);
         setTitle("Test Suite Generation");
         setSize(1000, 700);
@@ -95,13 +114,13 @@ public class TGInfoDialog extends JDialog {
         final JPanel flowPanel = new JPanel(new FlowLayout());
 
         scrollpane.setHorizontalScrollBarPolicy(
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollpane.setVerticalScrollBarPolicy(
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         exitButton.setEnabled(false);
 
-        //build ui tree
+        // build ui tree
         flowPanel.add(startButton);
         flowPanel.add(stopButton);
         flowPanel.add(exitButton);

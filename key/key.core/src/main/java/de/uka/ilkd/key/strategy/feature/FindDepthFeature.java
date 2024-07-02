@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -22,20 +32,20 @@ import de.uka.ilkd.key.strategy.RuleAppCost;
 
 /**
  * A feature that computes the depth of the find-position of a taclet (top-level
- * positions have depth zero or if not a find taclet) 
- * 
+ * positions have depth zero or if not a find taclet)
+ *
  * TODO: eliminate this class and use term features instead
  */
 public class FindDepthFeature implements Feature {
 
-    public static final Feature INSTANCE = new FindDepthFeature ();
+    public static final Feature INSTANCE = new FindDepthFeature();
 
-    private FindDepthFeature () {}
-    
-    public RuleAppCost computeCost ( RuleApp app, PosInOccurrence pos, Goal goal ) {
-        //assert pos != null : "Feature is only applicable to rules with find";
+    private FindDepthFeature() {}
 
-        return NumberRuleAppCost.create ( pos == null ? 0 : pos.depth () );
+    public RuleAppCost computeCost(RuleApp app, PosInOccurrence pos, Goal goal) {
+        // assert pos != null : "Feature is only applicable to rules with find";
+
+        return NumberRuleAppCost.create(pos == null ? 0 : pos.depth());
     }
 
 }

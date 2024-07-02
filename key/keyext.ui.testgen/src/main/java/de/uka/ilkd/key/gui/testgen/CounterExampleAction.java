@@ -1,16 +1,29 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 package de.uka.ilkd.key.gui.testgen;
+
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 import de.uka.ilkd.key.control.AutoModeListener;
 import de.uka.ilkd.key.control.UserInterfaceControl;
@@ -32,9 +45,6 @@ import de.uka.ilkd.key.settings.DefaultSMTSettings;
 import de.uka.ilkd.key.smt.SolverLauncherListener;
 import de.uka.ilkd.key.smt.counterexample.AbstractCounterExampleGenerator;
 import de.uka.ilkd.key.smt.counterexample.AbstractSideProofCounterExampleGenerator;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class CounterExampleAction extends MainWindowAction {
     private static final long serialVersionUID = -1931682474791981751L;
@@ -73,7 +83,7 @@ public class CounterExampleAction extends MainWindowAction {
                     setEnabled(false);
                 } else {
                     final Node selNode = getMediator().getSelectedNode();
-                    //Can be applied only to root nodes
+                    // Can be applied only to root nodes
 
 
                     setEnabled(selNode.childrenCount() == 0 && !selNode.isClosed());
@@ -86,7 +96,8 @@ public class CounterExampleAction extends MainWindowAction {
             }
         };
         getMediator().addKeYSelectionListener(selListener);
-        // This method delegates the request only to the UserInterfaceControl which implements the functionality.
+        // This method delegates the request only to the UserInterfaceControl which implements the
+        // functionality.
         // No functionality is allowed in this method body!
         getMediator().getUI().getProofControl().addAutoModeListener(new AutoModeListener() {
             @Override
@@ -127,12 +138,14 @@ public class CounterExampleAction extends MainWindowAction {
      * Performs the {@link SemanticsBlastingMacro} in a side proof hidden to the
      * user and shows the result with help of the {@link SolverListener}.
      */
-    public static class NoMainWindowCounterExampleGenerator extends AbstractSideProofCounterExampleGenerator {
+    public static class NoMainWindowCounterExampleGenerator
+            extends AbstractSideProofCounterExampleGenerator {
         /**
          * {@inheritDoc}
          */
         @Override
-        protected SolverLauncherListener createSolverListener(DefaultSMTSettings settings, Proof proof) {
+        protected SolverLauncherListener createSolverListener(DefaultSMTSettings settings,
+                Proof proof) {
             return new SolverListener(settings, proof);
         }
     }
@@ -165,14 +178,15 @@ public class CounterExampleAction extends MainWindowAction {
          * {@inheritDoc}
          */
         @Override
-        protected Proof createProof(UserInterfaceControl ui, Proof oldProof, Sequent oldSequent, String proofName) {
+        protected Proof createProof(UserInterfaceControl ui, Proof oldProof, Sequent oldSequent,
+                String proofName) {
             Sequent newSequent = createNewSequent(oldSequent);
             InitConfig newInitConfig = oldProof.getInitConfig().deepCopy();
             Proof proof = new Proof(proofName,
-                    newSequent, "",
-                    newInitConfig.createTacletIndex(),
-                    newInitConfig.createBuiltInRuleIndex(),
-                    newInitConfig);
+                newSequent, "",
+                newInitConfig.createTacletIndex(),
+                newInitConfig.createBuiltInRuleIndex(),
+                newInitConfig);
 
             proof.setEnv(oldProof.getEnv());
             proof.setNamespaces(oldProof.getNamespaces());
@@ -202,7 +216,8 @@ public class CounterExampleAction extends MainWindowAction {
          * {@inheritDoc}
          */
         @Override
-        protected SolverLauncherListener createSolverListener(DefaultSMTSettings settings, Proof proof) {
+        protected SolverLauncherListener createSolverListener(DefaultSMTSettings settings,
+                Proof proof) {
             return new SolverListener(settings, proof);
         }
     }
@@ -218,7 +233,8 @@ public class CounterExampleAction extends MainWindowAction {
 
         @Override
         protected Void doInBackground() throws Exception {
-            final NoMainWindowCounterExampleGenerator generator = new NoMainWindowCounterExampleGenerator();
+            final NoMainWindowCounterExampleGenerator generator =
+                new NoMainWindowCounterExampleGenerator();
             generator.searchCounterExample(getMediator().getUI(), oldProof, oldSequent);
             return null;
         }

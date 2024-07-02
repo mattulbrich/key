@@ -1,12 +1,22 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.smt.st;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Facade for the management of {@link SolverType}.
@@ -28,13 +38,13 @@ public class SolverTypes {
      * Tries to find a solver type instance of the given clazz.
      *
      * @param clazz the class of the solver type
-     * @param <T>   the solver type
+     * @param <T> the solver type
      * @return an instance of {@code T} or null if no such solver type was loaded.
      */
     @Nullable
     public static <T extends SolverType> T get(Class<T> clazz) {
         for (SolverType solverType : getSolverTypes()) {
-            if(solverType.getClass() == clazz)
+            if (solverType.getClass() == clazz)
                 return clazz.cast(solverType);
         }
         return null;
@@ -49,8 +59,8 @@ public class SolverTypes {
         if (SOLVERS.isEmpty()) {
             ServiceLoader<SolverType> loader = ServiceLoader.load(SolverType.class);
             var s =
-                    StreamSupport.stream(loader.spliterator(), false)
-                            .collect(Collectors.toList());
+                StreamSupport.stream(loader.spliterator(), false)
+                        .collect(Collectors.toList());
             SOLVERS.addAll(s);
         }
         return SOLVERS;

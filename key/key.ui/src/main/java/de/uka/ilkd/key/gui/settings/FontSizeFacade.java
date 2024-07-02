@@ -1,61 +1,71 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.settings;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.*;
 
 /**
  * @author Alexander Weigl
  * @version 1 (10.05.19)
  */
 public class FontSizeFacade {
-    private static String[] KEYS = new String[]{
-            "Button.font",
-            "CheckBox.font",
-            "CheckBoxMenuItem.acceleratorFont",
-            "CheckBoxMenuItem.font",
-            "ColorChooser.font",
-            "ComboBox.font",
-            "EditorPane.font",
-            "FormattedTextField.font",
-            "IconButton.font",
-            "InternalFrame.optionDialogTitleFont",
-            "InternalFrame.paletteTitleFont",
-            "InternalFrame.titleFont",
-            "Label.font",
-            "List.font",
-            "Menu.acceleratorFont",
-            "Menu.font",
-            "MenuBar.font",
-            "MenuItem.acceleratorFont",
-            "MenuItem.font",
-            "OptionPane.buttonFont",
-            "OptionPane.font",
-            "OptionPane.messageFont",
-            "Panel.font",
-            "PasswordField.font",
-            "PopupMenu.font",
-            "ProgressBar.font",
-            "RadioButton.font",
-            "RadioButtonMenuItem.acceleratorFont",
-            "RadioButtonMenuItem.font",
-            "ScrollPane.font",
-            "Slider.font",
-            "Spinner.font",
-            "TabbedPane.font",
-            "TabbedPane.smallFont",
-            "Table.font",
-            "TableHeader.font",
-            "TextArea.font",
-            "TextField.font",
-            "TextPane.font",
-            "TitledBorder.font",
-            "ToggleButton.font",
-            "ToolBar.font",
-            "ToolTip.font",
-            "Tree.font",
-            "Viewport.font"
+    private static String[] KEYS = new String[] {
+        "Button.font",
+        "CheckBox.font",
+        "CheckBoxMenuItem.acceleratorFont",
+        "CheckBoxMenuItem.font",
+        "ColorChooser.font",
+        "ComboBox.font",
+        "EditorPane.font",
+        "FormattedTextField.font",
+        "IconButton.font",
+        "InternalFrame.optionDialogTitleFont",
+        "InternalFrame.paletteTitleFont",
+        "InternalFrame.titleFont",
+        "Label.font",
+        "List.font",
+        "Menu.acceleratorFont",
+        "Menu.font",
+        "MenuBar.font",
+        "MenuItem.acceleratorFont",
+        "MenuItem.font",
+        "OptionPane.buttonFont",
+        "OptionPane.font",
+        "OptionPane.messageFont",
+        "Panel.font",
+        "PasswordField.font",
+        "PopupMenu.font",
+        "ProgressBar.font",
+        "RadioButton.font",
+        "RadioButtonMenuItem.acceleratorFont",
+        "RadioButtonMenuItem.font",
+        "ScrollPane.font",
+        "Slider.font",
+        "Spinner.font",
+        "TabbedPane.font",
+        "TabbedPane.smallFont",
+        "Table.font",
+        "TableHeader.font",
+        "TextArea.font",
+        "TextField.font",
+        "TextPane.font",
+        "TitledBorder.font",
+        "ToggleButton.font",
+        "ToolBar.font",
+        "ToolTip.font",
+        "Tree.font",
+        "Viewport.font"
     };
     private static Map<String, Integer> originalFontSize = new HashMap<>();
     private static double currentFactor = 1;
@@ -90,7 +100,7 @@ public class FontSizeFacade {
             }
         });
 
-        //redraw all frames
+        // redraw all frames
         for (Window w : Window.getWindows()) {
             SwingUtilities.updateComponentTreeUI(w);
         }

@@ -1,24 +1,34 @@
-package de.uka.ilkd.key.gui.mergerule;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableList;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.gui.mergerule;
 
 import de.uka.ilkd.key.gui.InteractiveRuleApplicationCompletion;
 import de.uka.ilkd.key.logic.PosInOccurrence;
 import de.uka.ilkd.key.logic.Term;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.rule.IBuiltInRuleApp;
+import de.uka.ilkd.key.rule.merge.MergePartner;
 import de.uka.ilkd.key.rule.merge.MergeProcedure;
 import de.uka.ilkd.key.rule.merge.MergeRule;
 import de.uka.ilkd.key.rule.merge.MergeRuleBuiltInRuleApp;
-import de.uka.ilkd.key.rule.merge.MergePartner;
 import de.uka.ilkd.key.rule.merge.procedures.MergeByIfThenElse;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * This class completes the instantiation for a merge rule application. The user
  * is queried for partner goals and concrete merge rule to choose. If in forced
  * mode, all potential partners and the if-then-else merge method are chosen (no
  * query is shown to the user).
- * 
+ *
  * @author Dominic Scheurer
  */
 public class MergeRuleCompletion implements InteractiveRuleApplicationCompletion {
@@ -40,10 +50,10 @@ public class MergeRuleCompletion implements InteractiveRuleApplicationCompletion
         final PosInOccurrence pio = mergeApp.posInOccurrence();
 
         final ImmutableList<MergePartner> candidates =
-                MergeRule.findPotentialMergePartners(goal, pio);
+            MergeRule.findPotentialMergePartners(goal, pio);
 
         ImmutableList<MergePartner> chosenCandidates =
-                null;
+            null;
         final MergeProcedure chosenRule;
         Term chosenDistForm = null; // null is admissible standard ==> auto
                                     // generation
@@ -51,13 +61,12 @@ public class MergeRuleCompletion implements InteractiveRuleApplicationCompletion
         if (forced) {
             chosenCandidates = candidates;
             chosenRule = STD_CONCRETE_MERGE_RULE;
-        }
-        else {
+        } else {
             final MergePartnerSelectionDialog dialog =
-                    new MergePartnerSelectionDialog(goal, pio, candidates, goal
-                            .proof().getServices());
+                new MergePartnerSelectionDialog(goal, pio, candidates, goal
+                        .proof().getServices());
             dialog.setVisible(true);
-            
+
             chosenCandidates = dialog.getChosenCandidates();
             chosenRule = dialog.getChosenMergeRule();
             chosenDistForm = dialog.getChosenDistinguishingFormula();
@@ -68,7 +77,7 @@ public class MergeRuleCompletion implements InteractiveRuleApplicationCompletion
         }
 
         final MergeRuleBuiltInRuleApp result =
-                new MergeRuleBuiltInRuleApp(app.rule(), pio);
+            new MergeRuleBuiltInRuleApp(app.rule(), pio);
         result.setMergePartners(chosenCandidates);
         result.setConcreteRule(chosenRule);
         result.setDistinguishingFormula(chosenDistForm);

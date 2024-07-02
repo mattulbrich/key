@@ -1,4 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.nparser;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.logic.NamespaceSet;
@@ -8,12 +23,8 @@ import de.uka.ilkd.key.logic.op.*;
 import de.uka.ilkd.key.logic.sort.GenericSort;
 import de.uka.ilkd.key.logic.sort.Sort;
 import de.uka.ilkd.key.logic.sort.SortImpl;
-import org.key_project.util.collection.ImmutableArray;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.key_project.util.collection.ImmutableArray;
 
 /**
  * @author Alexander Weigl
@@ -22,7 +33,7 @@ import java.util.regex.Pattern;
 public class NamespaceBuilder {
     private NamespaceSet nss;
     private Pattern FUNCTION = Pattern.compile(
-            "(.+) (.+?) ?\\((?:(.+?)(?:, (.+?))*)?\\)");
+        "(.+) (.+?) ?\\((?:(.+?)(?:, (.+?))*)?\\)");
 
     public NamespaceBuilder() {
         this(new NamespaceSet());
@@ -52,7 +63,7 @@ public class NamespaceBuilder {
             } catch (IndexOutOfBoundsException e) {
             }
 
-            Function f = new Function(new Name(name), sort, args.toArray(new Sort[]{}));
+            Function f = new Function(new Name(name), sort, args.toArray(new Sort[] {}));
             nss.functions().add(f);
         }
         return this;

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.util;
 
 import java.io.File;
@@ -27,8 +37,10 @@ public class Filenames {
         final char sep = File.separatorChar;
         List<String> res = new ArrayList<String>();
         // if filename contains slashes, take it as UNIX filename, otherwise Windows
-        if (filename.indexOf("/") != -1) assert sep == '/' : "\"" + filename + "\" contains both / and \\";
-        else if (filename.indexOf("\\") != -1) assert sep == '\\' : "\"" + filename + "\" contains both / and \\";
+        if (filename.indexOf("/") != -1)
+            assert sep == '/' : "\"" + filename + "\" contains both / and \\";
+        else if (filename.indexOf("\\") != -1)
+            assert sep == '\\' : "\"" + filename + "\" contains both / and \\";
         else {
             res.add(filename);
             return res;
@@ -72,13 +84,15 @@ public class Filenames {
         final List<String> origFileNameSections = disectFilename(origFilename);
         String[] a = origFileNameSections.toArray(new String[origFileNameSections.size()]);
         final List<String> destinationFilenameSections = disectFilename(toFilename);
-        String[] b = destinationFilenameSections.toArray(new String[destinationFilenameSections.size()]);
+        String[] b =
+            destinationFilenameSections.toArray(new String[destinationFilenameSections.size()]);
 
         // check for Windows paths
         if (File.separatorChar == '\\' &&
                 a[0].length() == 2 && a[0].charAt(1) == ':') {
             char drive = Character.toUpperCase(a[0].charAt(0));
-            if (!(b[0].length() == 2 && Character.toUpperCase(b[0].charAt(0)) == drive && b[0].charAt(1) == ':'))
+            if (!(b[0].length() == 2 && Character.toUpperCase(b[0].charAt(0)) == drive
+                    && b[0].charAt(1) == ':'))
                 throw new RuntimeException("cannot make paths on different drives relative");
             // remove drive letter
             a[0] = "";
@@ -90,7 +104,8 @@ public class Filenames {
 
         if (a[0].equals("")) { // not already relative
             if (!b[0].equals(""))
-                throw new RuntimeException("\"" + toFilename + "\" is a relative path. Please use absolute paths to make others relative to them.");
+                throw new RuntimeException("\"" + toFilename
+                    + "\" is a relative path. Please use absolute paths to make others relative to them.");
 
             // remove ".." from paths
             a = removeDotDot(a);
@@ -102,7 +117,8 @@ public class Filenames {
             boolean diff = false;
             while (i < b.length) {
                 // shared until i
-                if (i >= a.length || !a[i].equals(b[i])) diff = true;
+                if (i >= a.length || !a[i].equals(b[i]))
+                    diff = true;
                 // add ".." for each remaining element in b
                 // and collect the remaining elements of a
                 if (diff) {

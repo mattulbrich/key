@@ -1,8 +1,14 @@
-package de.uka.ilkd.key.proof.io;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.IntStream;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.proof.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +19,10 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
+
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.IntStream;
 
 public class UrlRuleSource extends RuleSource {
 
@@ -32,7 +42,8 @@ public class UrlRuleSource extends RuleSource {
         try {
             final InputStream input = url.openStream();
             long localNumberOfBytes = 0;
-            for (int readValue = input.read(); readValue != -1; localNumberOfBytes++, readValue = input.read());
+            for (int readValue = input.read(); readValue != -1; localNumberOfBytes++, readValue =
+                input.read());
             input.close();
             return localNumberOfBytes;
         } catch (final IOException exception) {
@@ -78,12 +89,12 @@ public class UrlRuleSource extends RuleSource {
     public CharStream getCharStream() throws IOException {
         try (ReadableByteChannel channel = Channels.newChannel(getNewStream())) {
             return CharStreams.fromChannel(
-                    channel,
-                    StandardCharsets.UTF_8,
-                    4096,
-                    CodingErrorAction.REPLACE,
-                    url.toString(),
-                    -1);
+                channel,
+                StandardCharsets.UTF_8,
+                4096,
+                CodingErrorAction.REPLACE,
+                url.toString(),
+                -1);
         }
     }
 }

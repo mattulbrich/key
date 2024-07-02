@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,10 +24,6 @@
 package de.uka.ilkd.key.speclang;
 
 import java.util.function.UnaryOperator;
-
-import org.key_project.util.collection.DefaultImmutableSet;
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -33,6 +39,10 @@ import de.uka.ilkd.key.logic.op.SchemaVariable;
 import de.uka.ilkd.key.logic.op.SchemaVariableFactory;
 import de.uka.ilkd.key.rule.RewriteTaclet;
 
+import org.key_project.util.collection.DefaultImmutableSet;
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSet;
+
 /**
  * A contract for checking the well-definedness of a specification for a class invariant.
  *
@@ -43,19 +53,19 @@ public final class ClassWellDefinedness extends WellDefinednessCheck {
     private final ClassInvariant inv;
 
     private ClassWellDefinedness(String name, int id, Type type, IObserverFunction target,
-                                 LocationVariable heap, OriginalVariables origVars,
-                                 Condition requires, Term assignable, Term accessible,
-                                 Condition ensures, Term mby, Term rep, ClassInvariant inv,
-                                 TermBuilder tb) {
+            LocationVariable heap, OriginalVariables origVars,
+            Condition requires, Term assignable, Term accessible,
+            Condition ensures, Term mby, Term rep, ClassInvariant inv,
+            TermBuilder tb) {
         super(name, id, type, target, heap, origVars, requires,
-              assignable, accessible, ensures, mby, rep, tb);
+            assignable, accessible, ensures, mby, rep, tb);
         this.inv = inv;
     }
 
     public ClassWellDefinedness(ClassInvariant inv, IObserverFunction target,
-                                Term accessible, Term mby, Services services) {
+            Term accessible, Term mby, Services services) {
         super(inv.getKJT().getFullName() + "." + "JML class invariant", 0, target,
-              inv.getOrigVars(), Type.CLASS_INVARIANT, services);
+            inv.getOrigVars(), Type.CLASS_INVARIANT, services);
         assert inv != null;
         this.inv = inv;
         setRequires(inv.getOriginalInv());
@@ -68,13 +78,13 @@ public final class ClassWellDefinedness extends WellDefinednessCheck {
     @Override
     public ClassWellDefinedness map(UnaryOperator<Term> op, Services services) {
         return new ClassWellDefinedness(
-                getName(), id(), type(), getTarget(), getHeap(), getOrigVars(),
-                getRequires().map(op),
-                op.apply(getAssignable()), op.apply(getAccessible()),
-                getEnsures().map(op),
-                op.apply(getMby()), op.apply(getRepresents()),
-                inv.map(op, services),
-                services.getTermBuilder());
+            getName(), id(), type(), getTarget(), getHeap(), getOrigVars(),
+            getRequires().map(op),
+            op.apply(getAssignable()), op.apply(getAccessible()),
+            getEnsures().map(op),
+            op.apply(getMby()), op.apply(getRepresents()),
+            inv.map(op, services),
+            services.getTermBuilder());
     }
 
     @Override
@@ -91,6 +101,7 @@ public final class ClassWellDefinedness extends WellDefinednessCheck {
      * Creates a well-definedness taclet for an invariant reference. Actually we should
      * be able to statically denote this taclet in the rule folder, but somehow the type
      * java.lang.Object is not available there in the required manner.
+     *
      * @param services
      * @return the well-definedness taclet for an invariant reference
      */
@@ -100,12 +111,12 @@ public final class ClassWellDefinedness extends WellDefinednessCheck {
         final String prefix = WellDefinednessCheck.INV_TACLET;
         final LocationVariable heap = services.getTypeConverter().getHeapLDT().getHeap();
         final SchemaVariable heapSV =
-                SchemaVariableFactory.createTermSV(new Name("h"), heap.sort());
+            SchemaVariableFactory.createTermSV(new Name("h"), heap.sort());
         final SchemaVariable sv =
-                SchemaVariableFactory.createTermSV(new Name("a"), kjt.getSort());
+            SchemaVariableFactory.createTermSV(new Name("a"), kjt.getSort());
         final Term var = TB.var(sv);
         final Term wdSelf = TB.wd(var);
-        final Term[] heaps = new Term[] {TB.var(heapSV)};
+        final Term[] heaps = new Term[] { TB.var(heapSV) };
         final Term staticInvTerm = TB.staticInv(heaps, kjt);
         final Term invTerm = TB.inv(heaps, var);
         final Term wdHeaps = TB.and(TB.wd(heaps));
@@ -113,10 +124,10 @@ public final class ClassWellDefinedness extends WellDefinednessCheck {
         final Term pre = TB.and(wdSelf, wdHeaps, wellFormed);
         final Term staticPre = TB.and(wdHeaps, wellFormed);
         final RewriteTaclet inv =
-                WellDefinednessCheck.createTaclet(prefix, var, invTerm, pre, false, services);
+            WellDefinednessCheck.createTaclet(prefix, var, invTerm, pre, false, services);
         final RewriteTaclet staticInv =
-                WellDefinednessCheck.createTaclet(prefix + "_Static", var, staticInvTerm,
-                                                  staticPre, true, services);
+            WellDefinednessCheck.createTaclet(prefix + "_Static", var, staticInvTerm,
+                staticPre, true, services);
         return DefaultImmutableSet.<RewriteTaclet>nil().add(inv).add(staticInv);
     }
 
@@ -142,7 +153,7 @@ public final class ClassWellDefinedness extends WellDefinednessCheck {
     @Override
     public ClassWellDefinedness combine(WellDefinednessCheck wdc, TermServices services) {
         assert wdc instanceof ClassWellDefinedness;
-        final ClassWellDefinedness cwd = (ClassWellDefinedness)wdc;
+        final ClassWellDefinedness cwd = (ClassWellDefinedness) wdc;
         assert this.getInvariant().getKJT().equals(cwd.getInvariant().getKJT());
         super.combine(cwd, services);
         return this;
@@ -156,17 +167,17 @@ public final class ClassWellDefinedness extends WellDefinednessCheck {
     @Override
     public ClassWellDefinedness setID(int newId) {
         return new ClassWellDefinedness(getName(), newId, type(), getTarget(), getHeap(),
-                                        getOrigVars(), getRequires(), getAssignable(),
-                                        getAccessible(), getEnsures(), getMby(),
-                                        getRepresents(), getInvariant(), TB);
+            getOrigVars(), getRequires(), getAssignable(),
+            getAccessible(), getEnsures(), getMby(),
+            getRepresents(), getInvariant(), TB);
     }
 
     @Override
     public ClassWellDefinedness setTarget(KeYJavaType newKJT, IObserverFunction newPM) {
         return new ClassWellDefinedness(getName(), id(), type(), newPM, getHeap(),
-                                        getOrigVars(), getRequires(), getAssignable(),
-                                        getAccessible(), getEnsures(), getMby(),
-                                        getRepresents(), getInvariant().setKJT(newKJT), TB);
+            getOrigVars(), getRequires(), getAssignable(),
+            getAccessible(), getEnsures(), getMby(),
+            getRepresents(), getInvariant().setKJT(newKJT), TB);
     }
 
     @Override

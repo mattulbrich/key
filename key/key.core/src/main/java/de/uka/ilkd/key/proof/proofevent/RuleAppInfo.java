@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -16,10 +26,10 @@ package de.uka.ilkd.key.proof.proofevent;
 
 import java.util.Iterator;
 
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.proof.Node;
 import de.uka.ilkd.key.rule.RuleApp;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * More specific information about a rule application (currently
@@ -27,55 +37,54 @@ import de.uka.ilkd.key.rule.RuleApp;
  */
 public class RuleAppInfo {
 
-    RuleAppInfo ( RuleApp               p_appliedRule,
-		  Node                  p_originalNode,
-		  ImmutableList<NodeReplacement> p_newNodes ) {
-	app          = p_appliedRule;
-	originalNode = p_originalNode;
-	newNodes     = p_newNodes;
+    RuleAppInfo(RuleApp p_appliedRule,
+            Node p_originalNode,
+            ImmutableList<NodeReplacement> p_newNodes) {
+        app = p_appliedRule;
+        originalNode = p_originalNode;
+        newNodes = p_newNodes;
     }
-    
-    
+
+
     /**
      * RuleApp this event reports
      */
-    RuleApp               app          = null;
-    
+    RuleApp app = null;
+
     /**
      * Node the rule has been applied on
      */
-    Node                  originalNode = null;
+    Node originalNode = null;
 
     /**
      * New nodes that have been introduced by this rule application
      */
-    ImmutableList<NodeReplacement> newNodes     = null;
+    ImmutableList<NodeReplacement> newNodes = null;
 
-    public RuleApp                   getRuleApp          () {
-	return app;
+    public RuleApp getRuleApp() {
+        return app;
     }
 
     /**
      * @return Node the rule has been applied on
      */
-    public Node                      getOriginalNode     () {
-	return originalNode;
+    public Node getOriginalNode() {
+        return originalNode;
     }
 
     /**
      * @return Nodes by which the original one has been replaced (the
-     * original node, if only the closure constraint of this node has
-     * been changed)
+     *         original node, if only the closure constraint of this node has
+     *         been changed)
      */
-    public Iterator<NodeReplacement> getReplacementNodes () {
-	return newNodes.iterator ();
+    public Iterator<NodeReplacement> getReplacementNodes() {
+        return newNodes.iterator();
     }
-    
 
-    public String toString () {
-	return
-	    "RuleApp: " + getRuleApp () +
-	    "\nNode: " + getOriginalNode () +
-	    "\nResulting nodes: " + newNodes;
+
+    public String toString() {
+        return "RuleApp: " + getRuleApp() +
+            "\nNode: " + getOriginalNode() +
+            "\nResulting nodes: " + newNodes;
     }
 }

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.informationflow.po;
 
 import java.util.HashMap;
@@ -25,23 +35,23 @@ public class IFProofObligationVars {
 
 
     public IFProofObligationVars(ProofObligationVars symbExecVars,
-                                 Services services) {
+            Services services) {
         this(new ProofObligationVars(symbExecVars, "_A", services),
-             new ProofObligationVars(symbExecVars, "_B", services),
-             symbExecVars);
+            new ProofObligationVars(symbExecVars, "_B", services),
+            symbExecVars);
     }
 
 
     public IFProofObligationVars(ProofObligationVars c1,
-                                  ProofObligationVars c2,
-                                  ProofObligationVars symbExecVars) {
+            ProofObligationVars c2,
+            ProofObligationVars symbExecVars) {
         this.c1 = c1;
         this.c2 = c2;
         this.symbExecVars = symbExecVars;
 
         assert symbExecVars != null;
         infFlowToSymbExecVarsMaps =
-                new HashMap<ProofObligationVars, Map<Term, Term>>();
+            new HashMap<ProofObligationVars, Map<Term, Term>>();
         infFlowToSymbExecVarsMaps.put(c1, new HashMap<Term, Term>());
         infFlowToSymbExecVarsMaps.put(c2, new HashMap<Term, Term>());
         linkSymbExecVarsToCopies();
@@ -65,8 +75,8 @@ public class IFProofObligationVars {
 
 
     private void linkStateVarsToCopies(StateVars ifVars,
-                                       StateVars seVars,
-                                       Map<Term, Term> map) {
+            StateVars seVars,
+            Map<Term, Term> map) {
         final Iterator<Term> ifVarsIt = ifVars.termList.iterator();
         for (final Term symbTerm : seVars.termList) {
             final Term ifTerm = ifVarsIt.next();

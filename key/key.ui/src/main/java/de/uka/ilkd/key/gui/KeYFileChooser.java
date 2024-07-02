@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,15 +25,14 @@ package de.uka.ilkd.key.gui;
 
 import java.awt.Component;
 import java.io.File;
-
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.key_project.util.java.IOUtil;
-
 import de.uka.ilkd.key.core.Main;
+
+import org.key_project.util.java.IOUtil;
 
 /**
  * Extends the usual Swing file chooser by a bookmark panel and predefined filters. This class
@@ -35,7 +44,7 @@ import de.uka.ilkd.key.core.Main;
  * do this right after calling {@link #getFileChooser(String)}.
  *
  * @author Wolfram Pfeifer: refactoring: extend JFileChooser instead of wrapping it (avoids the
- *                          need for delegating many methods)
+ *         need for delegating many methods)
  */
 public final class KeYFileChooser extends JFileChooser {
 
@@ -108,7 +117,7 @@ public final class KeYFileChooser extends JFileChooser {
     public void approveSelection() {
         File file = getSelectedFile();
         if (saveDialog && file.exists() &&
-            showOverwriteDialog(file) != JOptionPane.YES_OPTION) {
+                showOverwriteDialog(file) != JOptionPane.YES_OPTION) {
             return;
         }
         super.approveSelection();
@@ -134,9 +143,9 @@ public final class KeYFileChooser extends JFileChooser {
     @Override
     public void setDialogTitle(String title) {
         if (title != null) {
-            super.setDialogTitle (title);
+            super.setDialogTitle(title);
         } else {
-            super.setDialogTitle ("Select file to load");
+            super.setDialogTitle("Select file to load");
         }
     }
 
@@ -153,8 +162,10 @@ public final class KeYFileChooser extends JFileChooser {
     /**
      * Show a file dialog for saving a file.
      * The dialog will provide a naming suggestion.
+     *
      * @param parent the main window
-     * @param originalFile the original file to be saved, if it exists and is a proof, this will be the suggestion
+     * @param originalFile the original file to be saved, if it exists and is a proof, this will be
+     *        the suggestion
      * @param extension the desired file name extension (usually ".proof")
      * @return either of {@link #APPROVE_OPTION}, {@link #CANCEL_OPTION}, or {@link #ERROR_OPTION}
      */
@@ -164,14 +175,16 @@ public final class KeYFileChooser extends JFileChooser {
             selectedFile = getCurrentDirectory();
         } else {
             selectedFile = originalFile.getAbsoluteFile();
-            if (selectedFile.isFile() || (!selectedFile.exists() && selectedFile.getName().contains("."))) {
+            if (selectedFile.isFile()
+                    || (!selectedFile.exists() && selectedFile.getName().contains("."))) {
                 selectedFile = selectedFile.getParentFile();
             }
         }
 
         if (extension != null) {
             // the idea is to find the right place where to put a key vs. proof file
-            // we should actually have a project file containing that information in a more reliable way
+            // we should actually have a project file containing that information in a more reliable
+            // way
             File dirForExtension = selectedFile;
             if (extension.endsWith(".key")) {
                 // serach for "src" folder;
@@ -181,8 +194,10 @@ public final class KeYFileChooser extends JFileChooser {
             }
             // project structure for KeY would be the sane thing to do; avoid NPE at any cost
 
-            resetFile = "src".equals(dirForExtension.getName()) && dirForExtension.getParentFile() != null ?
-                    dirForExtension.getParentFile() : selectedFile;
+            resetFile =
+                "src".equals(dirForExtension.getName()) && dirForExtension.getParentFile() != null
+                        ? dirForExtension.getParentFile()
+                        : selectedFile;
 
             selectedFile = new File(resetFile, extension);
         } else {
@@ -198,6 +213,7 @@ public final class KeYFileChooser extends JFileChooser {
 
     /**
      * Shows the dialog with the given file/directory as currently selected.
+     *
      * @param parent the Component the dialog is over
      * @param selectedFile the file or directory that shall be currently selected
      * @return either of {@link #APPROVE_OPTION}, {@link #CANCEL_OPTION}, or {@link #ERROR_OPTION}
@@ -262,9 +278,9 @@ public final class KeYFileChooser extends JFileChooser {
 
     private int showOverwriteDialog(File file) {
         return JOptionPane.showOptionDialog(this, "File " +
-                        file.getAbsolutePath() + " already exists. Overwrite?",
-                        "Save warning", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE, null, null, null);
+            file.getAbsolutePath() + " already exists. Overwrite?",
+            "Save warning", JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE, null, null, null);
     }
 
     /**
@@ -275,7 +291,7 @@ public final class KeYFileChooser extends JFileChooser {
      * user's home directory.
      *
      * @param title
-     *            the title of the key file chooser
+     *        the title of the key file chooser
      *
      * @return the key file chooser
      */

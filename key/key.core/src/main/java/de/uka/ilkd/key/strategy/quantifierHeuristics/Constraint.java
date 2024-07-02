@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -57,11 +67,12 @@ public interface Constraint {
 
     /**
      * Find a term the given metavariable can be instantiated with which
-     *         is consistent with every instantiation that satisfies this
-     *         constraint (that means, the term such an instantiation
-     *         substitutes the metavariable with can always be unified with the
-     *         returned term).
-     * @param p_mv the Metavariable 
+     * is consistent with every instantiation that satisfies this
+     * constraint (that means, the term such an instantiation
+     * substitutes the metavariable with can always be unified with the
+     * returned term).
+     *
+     * @param p_mv the Metavariable
      * @param services the Services
      * @return a term the given metavariable can be instantiated with
      */
@@ -71,14 +82,14 @@ public interface Constraint {
      * tries to unify the terms t1 and t2
      *
      * @param t1
-     *            Term to be unified
+     *        Term to be unified
      * @param t2
-     *            Term to be unified
+     *        Term to be unified
      * @param services
-     *            the Services providing access to the type model the parameter
-     *            may be <code>null</code> but then the unification fails (i.e. @link
-     *            Constraint#TOP is returned) when accessing the type model
-     *            (e.g. for introducing intersection sorts) would be necessary).
+     *        the Services providing access to the type model the parameter
+     *        may be <code>null</code> but then the unification fails (i.e. @link
+     *        Constraint#TOP is returned) when accessing the type model
+     *        (e.g. for introducing intersection sorts) would be necessary).
      *
      * @return TOP if not possible, else a new constraint with after unification
      *         of t1 and t2
@@ -89,13 +100,13 @@ public interface Constraint {
      * tries to unify terms t1 and t2.
      *
      * @param t1
-     *            Term to be unfied
+     *        Term to be unfied
      * @param t2
-     *            Term to be unfied
+     *        Term to be unfied
      * @param services
-     *            the Services providing access to the type model
+     *        the Services providing access to the type model
      * @param unchanged
-     *            true iff the new constraint equals this one
+     *        true iff the new constraint equals this one
      * @return TOP if not possible, else a new constraint with after unification
      *         of t1 and t2
      */
@@ -129,9 +140,9 @@ public interface Constraint {
      * and ( co instanceof EqualityConstraint ).
      *
      * @param co
-     *            Constraint to be joined with this one
+     *        Constraint to be joined with this one
      * @param services
-     *            the Services providing access to the type model
+     *        the Services providing access to the type model
      * @return the joined constraint
      */
     Constraint join(Constraint co, TermServices services);
@@ -144,12 +155,12 @@ public interface Constraint {
      * EqualityConstraint ).
      *
      * @param co
-     *            Constraint to be joined with this one
+     *        Constraint to be joined with this one
      * @param services
-     *            the Services providing access to the type model
+     *        the Services providing access to the type model
      * @param unchanged
-     *            the BooleanContainers value set true, if this constraint is as
-     *            strong as co
+     *        the BooleanContainers value set true, if this constraint is as
+     *        strong as co
      * @return the joined constraint
      */
     Constraint join(Constraint co, TermServices services, BooleanContainer unchanged);
@@ -178,11 +189,12 @@ public interface Constraint {
 
         /**
          * as this constraint is unsatisfiable it just returns the metavariable given as argument
+         *
          * @param p_mv the Metavariable
          * @param services the Services
          * @return the instantiation of the metavariable
          */
-        @Override       
+        @Override
         public Term getInstantiation(Metavariable p_mv, Services services) {
             // As there is in fact no instantiation satisfying this
             // constraint, we could return everything

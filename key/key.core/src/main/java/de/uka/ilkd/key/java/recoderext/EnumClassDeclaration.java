@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -36,7 +46,7 @@ import recoder.list.generic.ASTList;
 /**
  * This class is used to describe an enum type by its equivalent class
  * declaration.
- * 
+ *
  * The transformation {@link EnumClassBuilder} transform an
  * {@link EnumDeclaration} to an EnumClassDeclaration by
  * <ul>
@@ -46,18 +56,18 @@ import recoder.list.generic.ASTList;
  * <li>adding the methods as specified in the JLS 8.9
  * <li>adding "extends Enum" to the ClassDeclaration
  * </ul>
- * 
+ *
  * <p>
  * Currently anonymous implementations for constants are not supported as they
  * are anonymous inner classes which are not supported by KeY.
- * 
+ *
  * <p>
  * The additional methods are constructed as follows (E is the name of the enum,
  * (e1, ..., en) its constants):
- * 
+ *
  * <pre>
  *            public static E[] values() { return new E[] { e1,..., en } };
- *            
+ *
  *            public static E valueOf(java.lang.String string) {
  *               for(E e : values()) {
  *                  if(e.name().equals(string))
@@ -65,22 +75,22 @@ import recoder.list.generic.ASTList;
  *               }
  *               throw new IllegalArgumentException();
  *            }
- *            
+ *
  *            public java.lang.String name() { return ENUM_NAMES[ordinal()]; }
  * </pre>
- * 
+ *
  * <p>
  * Additionally the fields that are enum constants are remembered.
- *  
+ *
  * @author mulbrich
  * @since 2006-11-18
  * @version 2006-12-05
  */
 
 public class EnumClassDeclaration extends ClassDeclaration {
-    
+
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -7075041929429297548L;
 
@@ -90,12 +100,12 @@ public class EnumClassDeclaration extends ClassDeclaration {
     private static final String ENUM_NAMES = "<enumConstantNames>";
 
     private static final String VALUE_OF_PROTO =
-            "public static $E valueOf(String string) { for($E e : values()) { if(e.name().equals(string)) return e; } throw new IllegalArgumentException(); }";
+        "public static $E valueOf(String string) { for($E e : values()) { if(e.name().equals(string)) return e; } throw new IllegalArgumentException(); }";
     private static final String VALUES_PROTO =
-            "public static $E[] values() { return new $E[] { $consts }; }";
+        "public static $E[] values() { return new $E[] { $consts }; }";
     private static final String NAME_PROTO =
-            "public java.lang.String name() { return " + ENUM_NAMES
-                    + "[ordinal()]; }";
+        "public java.lang.String name() { return " + ENUM_NAMES
+            + "[ordinal()]; }";
 
     /**
      * store the EnumConstantDeclarations here.
@@ -112,7 +122,7 @@ public class EnumClassDeclaration extends ClassDeclaration {
     /**
      * make a new wrapping class declaration upon a given enum declaration. Deep
      * copy all things instead of relinking them!
-     * 
+     *
      * Anonymous inner classes are not supported --> no need for an abstract
      * keyword.
      */
@@ -147,7 +157,7 @@ public class EnumClassDeclaration extends ClassDeclaration {
         //
         // Extends
         setExtendedTypes(f.createExtends(TypeKit.createTypeReference(f,
-                "java.lang.Enum")));
+            "java.lang.Enum")));
 
         //
         // Implements
@@ -160,14 +170,14 @@ public class EnumClassDeclaration extends ClassDeclaration {
         // - Make internal fields
         // - Change constructors, create fields from constants, copy the rest
         ASTList<MemberDeclaration> members =
-                new ASTArrayList<MemberDeclaration>();
+            new ASTArrayList<MemberDeclaration>();
         setMembers(members);
         for (MemberDeclaration mem : ed.getMembers()) {
             if (mem instanceof EnumConstantDeclaration) {
                 members.add(makeConstantField((EnumConstantDeclaration) mem, ed));
                 enumConstants.add((EnumConstantDeclaration) mem.deepClone());
-            }  else
-                members.add((MemberDeclaration)mem.deepClone());
+            } else
+                members.add((MemberDeclaration) mem.deepClone());
 
         }
 
@@ -182,7 +192,7 @@ public class EnumClassDeclaration extends ClassDeclaration {
         //
         // set parent roles
         makeAllParentRolesValid();
-             
+
     }
 
     /*
@@ -200,15 +210,15 @@ public class EnumClassDeclaration extends ClassDeclaration {
             sb.append(ecd.getEnumConstantSpecification().getIdentifier().getText());
         }
         String valuesString =
-                VALUES_PROTO.replace("$E", getIdentifier().getText());
+            VALUES_PROTO.replace("$E", getIdentifier().getText());
         valuesString = valuesString.replace("$consts", sb.toString());
         MethodDeclaration values = parseMethodDeclaration(valuesString);
 
         //
         // valueOf
         MethodDeclaration valueOf =
-                parseMethodDeclaration(VALUE_OF_PROTO.replace("$E",
-                        getIdentifier().getText()));
+            parseMethodDeclaration(VALUE_OF_PROTO.replace("$E",
+                getIdentifier().getText()));
 
         //
         // name
@@ -227,7 +237,7 @@ public class EnumClassDeclaration extends ClassDeclaration {
     private MethodDeclaration parseMethodDeclaration(String string) {
         try {
             return ProofJavaProgramFactory.getInstance().parseMethodDeclaration(
-                    string);
+                string);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -241,37 +251,38 @@ public class EnumClassDeclaration extends ClassDeclaration {
         ProgramFactory f = getFactory();
 
         ASTArrayList<DeclarationSpecifier> dsml =
-                new ASTArrayList<DeclarationSpecifier>();
+            new ASTArrayList<DeclarationSpecifier>();
         dsml.add(f.createPrivate());
         dsml.add(f.createStatic());
-       
-        //       
-        // ENUM_NAMES       
+
+        //
+        // ENUM_NAMES
 
         dsml = dsml.deepClone();
         dsml.add(f.createFinal());
-        
+
         Expression init;
         /*
-        // use this, once Strings are supported
-        ASTList<Expression> nameList = new ASTArrayList<Expression>();
-        for (EnumConstantDeclaration edc : getEnumConstantDeclarations()) {
-            nameList.add(f.createStringLiteral('"' + edc.getEnumConstantSpecification().getIdentifier().getText() + '"'));
-        }
-        
-        init = f.createArrayInitializer(nameList);
-        */
+         * // use this, once Strings are supported
+         * ASTList<Expression> nameList = new ASTArrayList<Expression>();
+         * for (EnumConstantDeclaration edc : getEnumConstantDeclarations()) {
+         * nameList.add(f.createStringLiteral(
+         * '"' + edc.getEnumConstantSpecification().getIdentifier().getText() + '"'));
+         * }
+         *
+         * init = f.createArrayInitializer(nameList);
+         */
 
         // String literals are not supported at the moment
         init = f.createNullLiteral();
 
         TypeReference stringArrayType =
-                f.createTypeReference(f.createIdentifier("String"), 1);
-        
+            f.createTypeReference(f.createIdentifier("String"), 1);
+
 
         FieldDeclaration enumNames =
-                f.createFieldDeclaration(dsml.deepClone(), stringArrayType,
-                        createIdentifier(ENUM_NAMES), init);
+            f.createFieldDeclaration(dsml.deepClone(), stringArrayType,
+                createIdentifier(ENUM_NAMES), init);
 
         getMembers().add(enumNames);
     }
@@ -290,7 +301,7 @@ public class EnumClassDeclaration extends ClassDeclaration {
     /**
      * get all declared enum constants for this enum.
      * return them as a list.
-     * 
+     *
      * @return a list of the enum constants, not null
      */
     public List<EnumConstantDeclaration> getEnumConstantDeclarations() {
@@ -300,7 +311,7 @@ public class EnumClassDeclaration extends ClassDeclaration {
     /*
      * make a constantField out of a EnumConstantDeclaration enum A {a1(args)}
      * ==> ... public static A a1 = new A(args); ...
-     * 
+     *
      */
     private MemberDeclaration makeConstantField(EnumConstantDeclaration ecd,
             EnumDeclaration ed) {
@@ -309,14 +320,14 @@ public class EnumClassDeclaration extends ClassDeclaration {
         ASTList<Expression> args = ecs.getConstructorReference().getArguments();
 
         ASTArrayList<DeclarationSpecifier> dsml =
-                new ASTArrayList<DeclarationSpecifier>();
+            new ASTArrayList<DeclarationSpecifier>();
 
         //
         // Make Constructorref
         New constrref =
-                f.createNew(null,
-                        f.createTypeReference(getIdentifier().deepClone()),
-                        args);
+            f.createNew(null,
+                f.createTypeReference(getIdentifier().deepClone()),
+                args);
 
         //
         // make field
@@ -324,11 +335,11 @@ public class EnumClassDeclaration extends ClassDeclaration {
         dsml.add(f.createStatic());
         dsml.add(f.createFinal());
         FieldDeclaration fd =
-                f.createFieldDeclaration(dsml,
-                        f.createTypeReference(getIdentifier().deepClone()),
-                        ecs.getIdentifier().deepClone(), constrref);
+            f.createFieldDeclaration(dsml,
+                f.createTypeReference(getIdentifier().deepClone()),
+                ecs.getIdentifier().deepClone(), constrref);
 
         return fd;
     }
-    
+
 }

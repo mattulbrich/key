@@ -1,14 +1,24 @@
-package de.uka.ilkd.key.smt.newsmt2;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.java.Services;
-import de.uka.ilkd.key.logic.sort.NullSort;
-import de.uka.ilkd.key.logic.sort.Sort;
-import de.uka.ilkd.key.smt.newsmt2.SExpr.Type;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.smt.newsmt2;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import de.uka.ilkd.key.java.Services;
+import de.uka.ilkd.key.logic.sort.NullSort;
+import de.uka.ilkd.key.logic.sort.Sort;
+import de.uka.ilkd.key.smt.newsmt2.SExpr.Type;
 
 /**
  * This class contains the outsourced routines for KeY sort definitions and axioms
@@ -33,6 +43,7 @@ class TypeManager {
     /**
      * Creates a translated type hierarchy from the KeY sorts of the master handler
      * by asserting the subtype relationship (or its absence).
+     *
      * @param master the master handler
      */
     private void createSortTypeHierarchy(MasterHandler master, Services services) {
@@ -41,11 +52,13 @@ class TypeManager {
             Set<Sort> children = directChildSorts(s, master.getSorts(), services);
             for (Sort child : children) {
                 master.addAxiom(new SExpr("assert", new SExpr("subtype", SExprs.sortExpr(child),
-                        SExprs.sortExpr(s))));
+                    SExprs.sortExpr(s))));
                 for (Sort otherChild : children) {
-                    if (!(child.equals(otherChild)) && (!otherChild.name().toString().equals("Null"))
+                    if (!(child.equals(otherChild))
+                            && (!otherChild.name().toString().equals("Null"))
                             && (!child.name().toString().equals("Null"))) {
-                        SExpr st = new SExpr("subtype", SExprs.sortExpr(child), SExprs.sortExpr(otherChild));
+                        SExpr st = new SExpr("subtype", SExprs.sortExpr(child),
+                            SExprs.sortExpr(otherChild));
                         master.addAxiom(new SExpr("assert", new SExpr("not", st)));
                     }
                 }
@@ -57,7 +70,7 @@ class TypeManager {
             if (!(s instanceof NullSort) && !(s.equals(Sort.ANY))) {
                 if (s.extendsSorts().isEmpty()) {
                     master.addAxiom(new SExpr("assert", new SExpr("subtype",
-                            SExprs.sortExpr(s), SExprs.sortExpr(Sort.ANY))));
+                        SExprs.sortExpr(s), SExprs.sortExpr(Sort.ANY))));
                 }
             }
         }
@@ -90,6 +103,7 @@ class TypeManager {
     /**
      * make the constant declarations for the type constants. Each entry is of
      * the form
+     *
      * <pre>
      *     (declare-const sort_Name T)
      * </pre>
@@ -105,7 +119,7 @@ class TypeManager {
         List<SExpr> sortExprs = new LinkedList<>();
         for (Sort s : master.getSorts()) {
             SExpr sortExp = SExprs.sortExpr(s);
-            if(!master.isKnownSymbol(sortExp.toString())) {
+            if (!master.isKnownSymbol(sortExp.toString())) {
                 master.addDeclaration(new SExpr("declare-const", sortExp, new SExpr("T")));
                 master.addKnownSymbol(sortExp.toString());
             }
@@ -130,11 +144,11 @@ class TypeManager {
         // ... which are mutually distinct
         if (master.getSorts().size() > 1) {
             master.addDeclaration(new SExpr("assert", Type.BOOL,
-                    new SExpr("distinct", Type.BOOL, sortExprs)));
+                new SExpr("distinct", Type.BOOL, sortExprs)));
         }
 
         // and have a type hierarchy.
-        if(!HandlerUtil.PROPERTY_NO_TYPE_HIERARCHY.get(services)) {
+        if (!HandlerUtil.PROPERTY_NO_TYPE_HIERARCHY.get(services)) {
             createSortTypeHierarchy(master, services);
         }
     }

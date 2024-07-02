@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -18,21 +28,21 @@ import de.uka.ilkd.key.java.declaration.Modifier;
 import de.uka.ilkd.key.java.reference.TypeReference;
 import de.uka.ilkd.key.java.reference.TypeReferenceContainer;
 
-public class AnnotationUseSpecification extends Modifier implements TypeReferenceContainer{
+public class AnnotationUseSpecification extends Modifier implements TypeReferenceContainer {
 
     protected final TypeReference tr;
-    
-    public AnnotationUseSpecification(TypeReference tr){
+
+    public AnnotationUseSpecification(TypeReference tr) {
         super();
         this.tr = tr;
     }
-    
-    protected String getSymbol(){
-        return "@"+tr.toString();
+
+    protected String getSymbol() {
+        return "@" + tr.toString();
     }
 
     public TypeReference getTypeReferenceAt(int index) {
-        if(index==0){
+        if (index == 0) {
             return tr;
         }
         throw new ArrayIndexOutOfBoundsException();
@@ -43,7 +53,7 @@ public class AnnotationUseSpecification extends Modifier implements TypeReferenc
     }
 
     public ProgramElement getChildAt(int index) {
-        if(index==0){
+        if (index == 0) {
             return tr;
         }
         throw new ArrayIndexOutOfBoundsException();

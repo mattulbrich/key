@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,11 +23,11 @@
 
 package de.uka.ilkd.key.util;
 
+import java.lang.management.ManagementFactory;
+import javax.management.ObjectName;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
 
 /**
  * {@code Debug} offers some methods for assertions, debug output and so on.
@@ -29,14 +39,14 @@ public final class Debug {
      * has to be set in order to enable assertion
      */
     public static boolean ENABLE_ASSERTION =
-            Boolean.parseBoolean(System.getProperty("KeyAssertionFlag", "true"));
+        Boolean.parseBoolean(System.getProperty("KeyAssertionFlag", "true"));
 
     /**
      * has to be set in order to enable debugging
      */
     public static boolean ENABLE_DEBUG =
-            "on".equals(System.getProperty("KeyDebugFlag"))
-                    || "on".equals(System.getenv("KeyDebugFlag"));
+        "on".equals(System.getProperty("KeyDebugFlag"))
+                || "on".equals(System.getenv("KeyDebugFlag"));
 
 
     /**
@@ -60,7 +70,7 @@ public final class Debug {
      * an assertion failure is thrown if isOK is evaluated to false the text in
      * message is handed over to this exception
      *
-     * @param isOK    boolean the assertion that is checked
+     * @param isOK boolean the assertion that is checked
      * @param message String describes the failed assertion
      */
     public static void assertTrue(boolean isOK, String message) {
@@ -75,11 +85,11 @@ public final class Debug {
      * an assertion failure is thrown if isOK is evaluated to false the text in
      * message is handed over to this exception
      *
-     * @param isOK    boolean the assertion that is checked
+     * @param isOK boolean the assertion that is checked
      * @param message String describes the failed assertion
      */
     public static void assertTrue(boolean isOK, String message,
-                                  Object parameter) {
+            Object parameter) {
         if (ENABLE_ASSERTION) {
             if (!isOK) {
                 fail(message + ":" + parameter);
@@ -92,7 +102,7 @@ public final class Debug {
      * contains the null element.
      *
      * @param iterable The iterable object to check
-     * @param message  String describes the failed assertion
+     * @param message String describes the failed assertion
      */
     public static void assertDeepNonNull(Iterable<?> iterable, String message) {
         if (ENABLE_ASSERTION) {
@@ -123,7 +133,7 @@ public final class Debug {
     public static void fail(String message, Object o) {
         if (ENABLE_ASSERTION) {
             throw new AssertionFailure("\nAssertion failure: " + message + ":"
-                    + o);
+                + o);
         }
     }
 }

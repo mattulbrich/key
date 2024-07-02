@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -16,25 +26,20 @@ package de.uka.ilkd.key.parser.proofjava;
 import de.uka.ilkd.key.java.recoderext.KeYCrossReferenceServiceConfiguration;
 import de.uka.ilkd.key.java.recoderext.ProofJavaProgramFactory;
 import de.uka.ilkd.key.util.KeYRecoderExcHandler;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import recoder.ParserException;
 import recoder.ServiceConfiguration;
 import recoder.java.Expression;
-import de.uka.ilkd.key.java.recoderext.KeYCrossReferenceServiceConfiguration;
-import de.uka.ilkd.key.java.recoderext.ProofJavaProgramFactory;
-import de.uka.ilkd.key.util.KeYRecoderExcHandler;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import recoder.ParserException;
-import recoder.ServiceConfiguration;
-import recoder.java.Expression;
 
 /**
- * 
+ *
  * TestCases for a modified ProofJavaParser which supports <...> for generics
  * and for implicit identifiers.
- * 
+ *
  * @author mulbrich
  * @version 2006-10-27
  */
@@ -49,7 +54,7 @@ public class TestProofJavaParser {
     @BeforeEach
     public void setUp() throws Exception {
         sc = new KeYCrossReferenceServiceConfiguration(
-                new KeYRecoderExcHandler());
+            new KeYRecoderExcHandler());
         factory = (ProofJavaProgramFactory) sc.getProgramFactory();
     }
 
@@ -91,5 +96,5 @@ public class TestProofJavaParser {
         factory.parseMemberDeclaration("private <Default> getDefault() { };");
         factory.parseMemberDeclaration("private <T> Type m() { };");
     }
-        
+
 }

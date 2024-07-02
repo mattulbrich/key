@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.macros;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.control.UserInterfaceControl;
 import de.uka.ilkd.key.logic.PosInOccurrence;
@@ -26,6 +34,8 @@ import de.uka.ilkd.key.prover.impl.ApplyStrategy;
 import de.uka.ilkd.key.strategy.AutomatedRuleApplicationManager;
 import de.uka.ilkd.key.strategy.FocussedRuleApplicationManager;
 import de.uka.ilkd.key.strategy.Strategy;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * The abstract class StrategyProofMacro can be used to define proof macros
@@ -56,15 +66,16 @@ public abstract class StrategyProofMacro extends AbstractProofMacro {
      */
     @Override
     public boolean canApplyTo(Proof proof,
-                              ImmutableList<Goal> goals,
-                              PosInOccurrence posInOcc) {
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc) {
         return goals != null && !goals.isEmpty();
     }
 
     /**
      * Subclasses can use this method to do some postprocessing on the
      * proof-object after the strategy has finished.
-     * @param proof     The proof object.
+     *
+     * @param proof The proof object.
      */
     protected void doPostProcessing(Proof proof) {}
 
@@ -78,31 +89,32 @@ public abstract class StrategyProofMacro extends AbstractProofMacro {
      */
     @Override
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          Proof proof,
-                                          ImmutableList<Goal> goals,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) throws InterruptedException {
+            Proof proof,
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) throws InterruptedException {
         if (goals == null || goals.isEmpty()) {
             // should not happen, because in this case canApplyTo returns
             // false
             return null;
         }
 
-        final GoalChooser goalChooser = proof.getInitConfig().getProfile().getSelectedGoalChooserBuilder().create();
+        final GoalChooser goalChooser =
+            proof.getInitConfig().getProfile().getSelectedGoalChooserBuilder().create();
         final ProverCore applyStrategy = new ApplyStrategy(goalChooser);
         final ImmutableList<Goal> ignoredOpenGoals =
-                setDifference(proof.openGoals(), goals);
+            setDifference(proof.openGoals(), goals);
 
         //
         // The observer to handle the progress bar
-        final ProofMacroListener pml =  new ProgressBarListener(goals.size(),
-                                                                getMaxSteps(proof), listener);
+        final ProofMacroListener pml = new ProgressBarListener(goals.size(),
+            getMaxSteps(proof), listener);
         applyStrategy.addProverTaskObserver(pml);
         // add a focus manager if there is a focus
-        if(posInOcc != null && goals != null) {
+        if (posInOcc != null && goals != null) {
             AutomatedRuleApplicationManager realManager = null;
             FocussedRuleApplicationManager manager = null;
-            for (Goal goal: goals) {
+            for (Goal goal : goals) {
                 realManager = goal.getRuleAppManager();
                 realManager.clearCache();
                 manager = new FocussedRuleApplicationManager(realManager, goal, posInOcc);
@@ -115,13 +127,15 @@ public abstract class StrategyProofMacro extends AbstractProofMacro {
         proof.setActiveStrategy(createStrategy(proof, posInOcc));
 
         ProofMacroFinishedInfo info =
-                new ProofMacroFinishedInfo(this, goals, proof, false);
+            new ProofMacroFinishedInfo(this, goals, proof, false);
         try {
             // find the relevant goals
             // and start
             applyStrategy.start(proof, goals);
-            synchronized(applyStrategy) { // wait for applyStrategy to finish its last rule application
-                if(applyStrategy.hasBeenInterrupted()) { // reraise interrupted exception if necessary
+            synchronized (applyStrategy) { // wait for applyStrategy to finish its last rule
+                                           // application
+                if (applyStrategy.hasBeenInterrupted()) { // reraise interrupted exception if
+                                                          // necessary
                     throw new InterruptedException();
                 }
             }
@@ -131,14 +145,14 @@ public abstract class StrategyProofMacro extends AbstractProofMacro {
             for (final Goal openGoal : proof.openGoals()) {
                 AutomatedRuleApplicationManager manager = openGoal.getRuleAppManager();
                 // touch the manager only if necessary
-                if(manager instanceof FocussedRuleApplicationManager) {
+                if (manager instanceof FocussedRuleApplicationManager) {
                     manager = ((FocussedRuleApplicationManager) manager).rootManager;
                     manager.clearCache();
                     openGoal.setRuleAppManager(manager);
                 }
             }
             final ImmutableList<Goal> resultingGoals =
-                    setDifference(proof.openGoals(), ignoredOpenGoals);
+                setDifference(proof.openGoals(), ignoredOpenGoals);
             info = new ProofMacroFinishedInfo(this, resultingGoals);
             proof.setActiveStrategy(oldStrategy);
             doPostProcessing(proof);
@@ -148,7 +162,7 @@ public abstract class StrategyProofMacro extends AbstractProofMacro {
     }
 
     private static ImmutableList<Goal> setDifference(ImmutableList<Goal> goals1,
-                                                     ImmutableList<Goal> goals2) {
+            ImmutableList<Goal> goals2) {
         ImmutableList<Goal> difference = goals1;
         for (Goal goal : goals2) {
             difference = difference.removeFirst(goal);

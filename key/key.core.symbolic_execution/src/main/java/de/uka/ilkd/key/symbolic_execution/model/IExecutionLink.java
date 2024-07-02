@@ -1,19 +1,32 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.symbolic_execution.model;
 
 /**
  * A link between two {@link IExecutionNode}s.
+ *
  * @author Martin Hentschel
  */
 public interface IExecutionLink {
-   /**
-    * Returns the source.
-    * @return The source.
-    */
-   public IExecutionNode<?> getSource();
+    /**
+     * Returns the source.
+     *
+     * @return The source.
+     */
+    public IExecutionNode<?> getSource();
 
-   /**
-    * Returns the target.
-    * @return The target.
-    */
-   public IExecutionNode<?> getTarget();
+    /**
+     * Returns the target.
+     *
+     * @return The target.
+     */
+    public IExecutionNode<?> getTarget();
 }

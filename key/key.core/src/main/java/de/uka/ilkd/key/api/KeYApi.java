@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.api;
+
+import java.io.File;
+import java.util.List;
 
 import de.uka.ilkd.key.control.KeYEnvironment;
 import de.uka.ilkd.key.proof.io.ProblemLoaderException;
 import de.uka.ilkd.key.util.KeYConstants;
-
-import java.io.File;
-import java.util.List;
 
 /**
  * The Entry Point.
@@ -71,7 +81,7 @@ public abstract class KeYApi {
      * @throws ProblemLoaderException
      */
     public static ProofManagementApi loadProof(File location,
-                                               List<File> classPath, File bootClassPath, List<File> includes)
+            List<File> classPath, File bootClassPath, List<File> includes)
             throws ProblemLoaderException {
         return new ProofManagementApi(KeYEnvironment
                 .load(location, classPath, bootClassPath, includes));
@@ -88,14 +98,15 @@ public abstract class KeYApi {
     }
 
     /**
-     * Load a proof file, creates a KeY environment that can be accessed with other methods from this facade
+     * Load a proof file, creates a KeY environment that can be accessed with other methods from
+     * this facade
      *
-     * @param file          Path to the source code folder/file or to a *.proof file
-     * @param classPaths    Optionally: Additional specifications for API classes
+     * @param file Path to the source code folder/file or to a *.proof file
+     * @param classPaths Optionally: Additional specifications for API classes
      * @param bootClassPath Optionally: Different default specifications for Java API
-     * @param includes      Optionally: Additional includes to consider
+     * @param includes Optionally: Additional includes to consider
      */
     public abstract void loadProofFile(File file, List<File> classPaths,
-                                       File bootClassPath, List<File> includes);
+            File bootClassPath, List<File> includes);
 
 }

@@ -1,11 +1,15 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.bytecode;
 
-import recoder.abstraction.Package;
-import recoder.abstraction.*;
-
 import java.util.List;
+
+import recoder.abstraction.*;
+import recoder.abstraction.Package;
 
 public class ClassFile extends ByteCodeElement implements ClassType {
 
@@ -234,4 +238,3 @@ public class ClassFile extends ByteCodeElement implements ClassType {
     }
 
 }
-

@@ -1,4 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.speclang.njml;
+
+import java.util.Map;
+import javax.annotation.Nullable;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -11,9 +24,6 @@ import de.uka.ilkd.key.speclang.njml.OverloadedOperatorHandler.JMLOperatorHandle
 import de.uka.ilkd.key.speclang.translation.SLExpression;
 import de.uka.ilkd.key.speclang.translation.SLTranslationException;
 
-import javax.annotation.Nullable;
-import java.util.Map;
-
 public abstract class LDTHandler implements JMLOperatorHandler {
 
     protected final Services services;
@@ -23,12 +33,14 @@ public abstract class LDTHandler implements JMLOperatorHandler {
     }
 
     @Nullable
-    public SLExpression build(JMLOperator op, SLExpression left, SLExpression right) throws SLTranslationException {
-        if(OverloadedOperatorHandler.UNARY_OPERATORS.contains(op)) {
+    public SLExpression build(JMLOperator op, SLExpression left, SLExpression right)
+            throws SLTranslationException {
+        if (OverloadedOperatorHandler.UNARY_OPERATORS.contains(op)) {
             return buildUnary(op, left);
         }
 
-        KeYJavaType promotedType = services.getTypeConverter().getPromotedType(left.getType(), right.getType());
+        KeYJavaType promotedType =
+            services.getTypeConverter().getPromotedType(left.getType(), right.getType());
         Map<JMLOperator, Operator> opMap = getOperatorMap(promotedType.getJavaType());
         if (opMap == null) {
             // we are not responsible for the promoted promotedType

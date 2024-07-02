@@ -1,9 +1,16 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.declaration;
 
-import recoder.abstraction.Package;
+import java.util.ArrayList;
+import java.util.List;
+
 import recoder.abstraction.*;
+import recoder.abstraction.Package;
 import recoder.convenience.Naming;
 import recoder.java.*;
 import recoder.java.reference.TypeReference;
@@ -12,18 +19,17 @@ import recoder.list.generic.ASTList;
 import recoder.service.ProgramModelInfo;
 import recoder.util.Debug;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Method declaration.
  *
  * @author <TT>AutoDoc</TT>
  */
 
-public class MethodDeclaration extends JavaDeclaration implements MemberDeclaration, TypeReferenceContainer,
-        NamedProgramElement, ParameterContainer, Method, VariableScope, TypeDeclarationContainer, TypeScope {
-// public String toString() { return getName()+"("+getSignature()+")"; }
+public class MethodDeclaration extends JavaDeclaration
+        implements MemberDeclaration, TypeReferenceContainer,
+        NamedProgramElement, ParameterContainer, Method, VariableScope, TypeDeclarationContainer,
+        TypeScope {
+    // public String toString() { return getName()+"("+getSignature()+")"; }
     /**
      * serialization id
      */
@@ -87,15 +93,16 @@ public class MethodDeclaration extends JavaDeclaration implements MemberDeclarat
     /**
      * Method declaration.
      *
-     * @param modifiers  a modifier mutable list.
+     * @param modifiers a modifier mutable list.
      * @param returnType a type reference.
-     * @param name       an identifier.
+     * @param name an identifier.
      * @param parameters a parameter declaration mutable list.
      * @param exceptions a throws.
      */
 
-    public MethodDeclaration(ASTList<DeclarationSpecifier> modifiers, TypeReference returnType, Identifier name,
-                             ASTList<ParameterDeclaration> parameters, Throws exceptions) {
+    public MethodDeclaration(ASTList<DeclarationSpecifier> modifiers, TypeReference returnType,
+            Identifier name,
+            ASTList<ParameterDeclaration> parameters, Throws exceptions) {
         super(modifiers);
         setTypeReference(returnType);
         setIdentifier(name);
@@ -107,16 +114,17 @@ public class MethodDeclaration extends JavaDeclaration implements MemberDeclarat
     /**
      * Method declaration.
      *
-     * @param modifiers  a modifier mutable list.
+     * @param modifiers a modifier mutable list.
      * @param returnType a type reference.
-     * @param name       an identifier.
+     * @param name an identifier.
      * @param parameters a parameter declaration mutable list.
      * @param exceptions a throws.
-     * @param body       a statement block.
+     * @param body a statement block.
      */
 
-    public MethodDeclaration(ASTList<DeclarationSpecifier> modifiers, TypeReference returnType, Identifier name,
-                             ASTList<ParameterDeclaration> parameters, Throws exceptions, StatementBlock body) {
+    public MethodDeclaration(ASTList<DeclarationSpecifier> modifiers, TypeReference returnType,
+            Identifier name,
+            ASTList<ParameterDeclaration> parameters, Throws exceptions, StatementBlock body) {
         super(modifiers);
         setTypeReference(returnType);
         setIdentifier(name);
@@ -192,9 +200,9 @@ public class MethodDeclaration extends JavaDeclaration implements MemberDeclarat
         if (body != null) {
             body.setStatementContainer(this);
         }
-//        if (isVarArg != null) {
-//            isVarArg.setParent(this);
-//        }
+        // if (isVarArg != null) {
+        // isVarArg.setParent(this);
+        // }
         if (typeParameters != null) {
             for (TypeParameterDeclaration tpd : typeParameters) {
                 tpd.setParent(this);
@@ -236,9 +244,9 @@ public class MethodDeclaration extends JavaDeclaration implements MemberDeclarat
         if (body == child) {
             return 5;
         }
-//        if (isVarArg == child) {
-//            return 6;
-//        }
+        // if (isVarArg == child) {
+        // return 6;
+        // }
         if (typeParameters != null) {
             int index = typeParameters.indexOf(child);
             if (index != -1)
@@ -308,8 +316,8 @@ public class MethodDeclaration extends JavaDeclaration implements MemberDeclarat
             result++;
         if (body != null)
             result++;
-//        if (isVarArg != null)
-//            result++;
+        // if (isVarArg != null)
+        // result++;
         if (typeParameters != null)
             result += typeParameters.size();
         return result;
@@ -366,11 +374,11 @@ public class MethodDeclaration extends JavaDeclaration implements MemberDeclarat
                 return body;
             index--;
         }
-//        if (isVarArg != null) {
-//            if (index == 0)
-//                return isVarArg;
-//            index--;
-//        }
+        // if (isVarArg != null) {
+        // if (index == 0)
+        // return isVarArg;
+        // index--;
+        // }
         throw new ArrayIndexOutOfBoundsException();
     }
 
@@ -790,7 +798,7 @@ public class MethodDeclaration extends JavaDeclaration implements MemberDeclarat
             Debug.log("Zero service while " + Debug.makeStackTrace());
             updateModel();
         }
-        //return service.getTypes(this);
+        // return service.getTypes(this);
         return getBody() == null ? new ArrayList(0) : getBody().getTypesInScope();
     }
 
@@ -851,24 +859,24 @@ public class MethodDeclaration extends JavaDeclaration implements MemberDeclarat
     }
 
     public boolean isVarArgMethod() {
-//        //return isVarArg != null;
-//    	return isVarArg;
+        // //return isVarArg != null;
+        // return isVarArg;
         if (parameters == null || parameters.size() == 0)
             return false;
         return parameters.get(parameters.size() - 1).isVarArg();
     }
 
-//    public VarArgSpecifier getVarArgSpecifier() {
-//    	return isVarArg;
-//    }
+    // public VarArgSpecifier getVarArgSpecifier() {
+    // return isVarArg;
+    // }
 
-//    public void setVarArgMethod(VarArgSpecifier isVarArg) {
-//        this.isVarArg = isVarArg; 
-//    }
+    // public void setVarArgMethod(VarArgSpecifier isVarArg) {
+    // this.isVarArg = isVarArg;
+    // }
 
-//    public void setVarArgMethod(boolean isVarArg) {
-//    	this.isVarArg = isVarArg;
-//    }
+    // public void setVarArgMethod(boolean isVarArg) {
+    // this.isVarArg = isVarArg;
+    // }
 
     public ASTList<TypeParameterDeclaration> getTypeParameters() {
         return typeParameters;

@@ -1,9 +1,10 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.io;
-
-import recoder.util.FileCollector;
-import recoder.util.StringUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -11,6 +12,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import recoder.util.FileCollector;
+import recoder.util.StringUtils;
 
 /**
  * This class describes a list of search paths. Search paths may contain a
@@ -184,7 +188,7 @@ public class PathList {
      *
      * @param relativeName the relative name of the file
      * @return the location object or <tt>null</tt> if the file could not be
-     * found.
+     *         found.
      */
     public DataLocation find(String relativeName) {
         DataLocation result = locations.get(relativeName);

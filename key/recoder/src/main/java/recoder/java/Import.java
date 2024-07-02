@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java;
@@ -10,7 +14,8 @@ import recoder.java.reference.*;
  * @author <TT>AutoDoc</TT>
  */
 
-public class Import extends JavaNonTerminalProgramElement implements TypeReferenceContainer, PackageReferenceContainer {
+public class Import extends JavaNonTerminalProgramElement
+        implements TypeReferenceContainer, PackageReferenceContainer {
 
     /**
      * serialization id
@@ -53,7 +58,7 @@ public class Import extends JavaNonTerminalProgramElement implements TypeReferen
      * Creates a non-static (default) Import.
      * Same as <code>new Import(t, multi, false)</code>
      *
-     * @param t     a type reference.
+     * @param t a type reference.
      * @param multi indicates the wildcard.
      */
 
@@ -128,7 +133,8 @@ public class Import extends JavaNonTerminalProgramElement implements TypeReferen
             ((PackageReference) reference).setParent(this);
         } else if (reference instanceof UncollatedReferenceQualifier) {
             ((UncollatedReferenceQualifier) reference).setParent(this);
-        } else throw new IllegalStateException("Unknown reference type encountered");
+        } else
+            throw new IllegalStateException("Unknown reference type encountered");
     }
 
     /**

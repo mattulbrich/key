@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -21,27 +31,28 @@ import recoder.java.Identifier;
  * customary class fields.
  */
 public class ImplicitIdentifier extends Identifier {
-    
+
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -4226362019731704838L;
 
     public ImplicitIdentifier(String id) {
-	super(id);
+        super(id);
     }
 
     protected void setText(String text) {
-	id = text.intern();
+        id = text.intern();
     }
-    
+
     /**
      * Deep clone.
+     *
      * @return the object.
      */
-    
+
     public ImplicitIdentifier deepClone() {
         return new ImplicitIdentifier(id);
     }
-    
+
 }

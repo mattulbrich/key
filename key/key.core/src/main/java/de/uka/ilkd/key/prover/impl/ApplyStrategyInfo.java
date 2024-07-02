@@ -1,9 +1,20 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.prover.impl;
 
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Proof;
 
-/** The final result of the strategy application is stored in this container
+/**
+ * The final result of the strategy application is stored in this container
  * and returned to the instance that started the strategies.
  *
  * It contains statistic information about the number of applied rules, time needed or
@@ -27,9 +38,9 @@ public class ApplyStrategyInfo {
             long timeInMillis, int appliedRuleAppsCount, int nrClosedGoals) {
         this.message = message;
         this.proof = proof;
-        this.error   = error;
+        this.error = error;
         this.nonCloseableGoal = nonCloseableGoal;
-        this.timeInMillis    = timeInMillis;
+        this.timeInMillis = timeInMillis;
         this.appliedRuleAppsCount = appliedRuleAppsCount;
         this.nrClosedGoals = nrClosedGoals;
     }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,20 +24,21 @@
 package de.uka.ilkd.key.gui.settings;
 
 
-import de.uka.ilkd.key.gui.KeYFileChooser;
-import de.uka.ilkd.key.gui.fonticons.FontAwesomeSolid;
-import de.uka.ilkd.key.gui.fonticons.IconFontSwing;
-import net.miginfocom.layout.AC;
-import net.miginfocom.layout.CC;
-import net.miginfocom.layout.LC;
-import net.miginfocom.swing.MigLayout;
-import javax.annotation.Nullable;
-
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nullable;
+import javax.swing.*;
+
+import de.uka.ilkd.key.gui.KeYFileChooser;
+import de.uka.ilkd.key.gui.fonticons.FontAwesomeSolid;
+import de.uka.ilkd.key.gui.fonticons.IconFontSwing;
+
+import net.miginfocom.layout.AC;
+import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Extension of {@link SimpleSettingsPanel} which uses {@link MigLayout} to
@@ -45,13 +56,13 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
 
     protected SettingsPanel() {
         pCenter.setLayout(new MigLayout(
-                new LC().fillX().wrapAfter(3),
-                new AC().count(3)
-                        .fill(1)
-                        .grow(1000f, 1)
-                        .size("16px", 2)
-                        .grow(0f, 0)
-                        .align("right", 0)));
+            new LC().fillX().wrapAfter(3),
+            new AC().count(3)
+                    .fill(1)
+                    .grow(1000f, 1)
+                    .size("16px", 2)
+                    .grow(0f, 0)
+                    .align("right", 0)));
     }
 
     /**
@@ -60,7 +71,7 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
      */
     protected static JTextArea createInfoArea(String info) {
         JTextArea textArea = new JTextArea(info);
-        //textArea.setBackground(this.getBackground());
+        // textArea.setBackground(this.getBackground());
         textArea.setEditable(false);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
@@ -76,7 +87,7 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
         for (int i = 0, length = components.length; i < length; i++) {
             JComponent component = components[i];
             component.setAlignmentX(LEFT_ALIGNMENT);
-            //last component, either line break or info
+            // last component, either line break or info
             pCenter.add(component);
         }
 
@@ -120,7 +131,7 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
      * @return
      */
     protected JCheckBox addCheckBox(String title, String info,
-                                    boolean value, final Validator<Boolean> validator) {
+            boolean value, final Validator<Boolean> validator) {
         JCheckBox checkBox = createCheckBox(title, value, validator);
         addRowWithHelp(info, new JLabel(), checkBox);
         return checkBox;
@@ -136,7 +147,7 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
      * @return
      */
     protected JTextField addFileChooserPanel(String title, String file, String info,
-                                             boolean isSave, final Validator<String> validator) {
+            boolean isSave, final Validator<String> validator) {
         JTextField textField = new JTextField(file);
         textField.addActionListener(e -> {
             try {
@@ -153,9 +164,11 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
         pCenter.add(lbl);
         Box box = new Box(BoxLayout.X_AXIS);
         JButton btnFileChooser = new JButton(IconFontSwing.buildIcon(FontAwesomeSolid.SEARCH, 12f));
-        /*btnFileChooser.setBorderPainted(false);
-        btnFileChooser.setFocusPainted(false);
-        btnFileChooser.setContentAreaFilled(false);*/
+        /*
+         * btnFileChooser.setBorderPainted(false);
+         * btnFileChooser.setFocusPainted(false);
+         * btnFileChooser.setContentAreaFilled(false);
+         */
 
         btnFileChooser.addActionListener(e -> {
             KeYFileChooser fileChooser;
@@ -190,8 +203,8 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
      * @return
      */
     protected <T> JComboBox<T> addComboBox(String title,
-                                           String info, int selectionIndex,
-                                           @Nullable Validator<T> validator, T... items) {
+            String info, int selectionIndex,
+            @Nullable Validator<T> validator, T... items) {
         JComboBox<T> comboBox = new JComboBox<>(items);
         comboBox.setSelectedIndex(selectionIndex);
         comboBox.addActionListener(e -> {
@@ -227,7 +240,8 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
     }
 
 
-    protected JTextArea addTextArea(String title, String text, String info, final Validator<String> validator) {
+    protected JTextArea addTextArea(String title, String text, String info,
+            final Validator<String> validator) {
         JScrollPane field = createTextArea(text, validator);
         addTitledComponent(title, field, info);
         return (JTextArea) field.getViewport().getView();
@@ -241,15 +255,17 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
      * @param validator
      * @return
      */
-    protected JTextField addTextField(String title, String text, String info, final Validator<String> validator) {
+    protected JTextField addTextField(String title, String text, String info,
+            final Validator<String> validator) {
         JTextField field = createTextField(text, validator);
         addTitledComponent(title, field, info);
         return field;
     }
 
 
-    protected JTextField addTextField(String title, String text, String info, final Validator<String> validator,
-                                      JComponent additionalActions) {
+    protected JTextField addTextField(String title, String text, String info,
+            final Validator<String> validator,
+            JComponent additionalActions) {
         JTextField field = createTextField(text, validator);
         JLabel label = new JLabel(title);
         label.setLabelFor(field);
@@ -267,7 +283,7 @@ public abstract class SettingsPanel extends SimpleSettingsPanel {
      * @return
      */
     protected JSpinner addNumberField(String title, int min, int max, int step, String info,
-                                      final Validator<Integer> validator) {
+            final Validator<Integer> validator) {
         JSpinner field = createNumberTextField(min, max, step, validator);
         addTitledComponent(title, field, info);
         return field;

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.proof.io;
 
 import java.io.File;
@@ -13,9 +23,9 @@ import de.uka.ilkd.key.util.MiscTools;
  * This class is responsible for saving (zipped) proof bundles.
  * These bundles contain all data needed for successfully reloading the proofs:
  * <ul>
- *  <li>.key files</li>
- *  <li>.proof files</li>
- *  <li>Java Source files (including additional files from classpath)</li>
+ * <li>.key files</li>
+ * <li>.proof files</li>
+ * <li>Java Source files (including additional files from classpath)</li>
  * </ul>
  * Not included are internal rule files of KeY.
  *
@@ -25,6 +35,7 @@ public class ProofBundleSaver extends ProofSaver {
 
     /**
      * Creates a new ProofBundleSaver.
+     *
      * @param proof the proof to save
      * @param saveFile the target filename
      */
@@ -40,18 +51,20 @@ public class ProofBundleSaver extends ProofSaver {
         // this ProofSaver can not be used with TrivialFileRepo
         if (!(repo instanceof AbstractFileRepo)) {
             throw new UnsupportedOperationException("Error! This FileRepo does not support"
-                    + "bundle saving!");
+                + "bundle saving!");
         }
 
-        /* create a filename for the actual proof file in the FileRepo:
+        /*
+         * create a filename for the actual proof file in the FileRepo:
          * We always use the contract name here (preparation for proof bundle
-         * -> saving multiple proofs). */
+         * -> saving multiple proofs).
+         */
         String proofFileName = MiscTools.toValidFileName(proof.name().toString() + ".proof");
 
         // save the proof file to the FileRepo (stream is closed by the save method!)
         save(repo.createOutputStream(Paths.get(proofFileName)));
 
         // save proof bundle with the help of the FileRepo
-        ((AbstractFileRepo)repo).saveProof(file.toPath());
+        ((AbstractFileRepo) repo).saveProof(file.toPath());
     }
 }

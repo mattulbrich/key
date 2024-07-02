@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -28,19 +38,19 @@ import de.uka.ilkd.key.rule.tacletbuilder.TacletGoalTemplate;
 public class DiffFindAndReplacewithFeature extends BinaryTacletAppFeature {
 
     /** the single instance of this feature */
-    public static final Feature INSTANCE = new DiffFindAndReplacewithFeature ();
+    public static final Feature INSTANCE = new DiffFindAndReplacewithFeature();
 
-    private DiffFindAndReplacewithFeature () {}
+    private DiffFindAndReplacewithFeature() {}
 
     @Override
-    protected boolean filter ( TacletApp app, PosInOccurrence pos, Goal goal ) {
+    protected boolean filter(TacletApp app, PosInOccurrence pos, Goal goal) {
         assert pos != null && app.rule() instanceof RewriteTaclet
-               : "Feature is only applicable to rewrite taclets";
+                : "Feature is only applicable to rewrite taclets";
 
-        for(TacletGoalTemplate temp : ((Taclet)app.rule()).goalTemplates()) {
+        for (TacletGoalTemplate temp : ((Taclet) app.rule()).goalTemplates()) {
             RewriteTacletGoalTemplate rwtemp = (RewriteTacletGoalTemplate) temp;
-            if(rwtemp.replaceWith().equalsModIrrelevantTermLabels(pos.subTerm())) {
-        	return false;
+            if (rwtemp.replaceWith().equalsModIrrelevantTermLabels(pos.subTerm())) {
+                return false;
             }
         }
         return true;

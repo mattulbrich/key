@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -46,12 +56,12 @@ public class StaticFieldCondition extends VariableConditionAdapter {
 
     @Override
     public boolean check(SchemaVariable var, SVSubstitute instCandidate,
-                         SVInstantiations instMap, Services services) {
+            SVInstantiations instMap, Services services) {
         final Object o = instMap.getInstantiation(field);
         if (o == null || !(o instanceof Term)) {
             return false;
         }
-        final Term f = (Term)o;
+        final Term f = (Term) o;
         final Operator op = f.op();
         if (op instanceof Function) {
             final String name = op.name().toString();
@@ -62,21 +72,21 @@ public class StaticFieldCondition extends VariableConditionAdapter {
             int startAttributeName = endOfClassName + 3;
 
 
-            if ( endOfClassName < 0) {
+            if (endOfClassName < 0) {
                 // not a normal attribute, maybe an implicit attribute like <created>?
                 endOfClassName = name.indexOf("::<");
                 startAttributeName = endOfClassName + 2;
             }
 
-            if ( endOfClassName < 0 ) {
+            if (endOfClassName < 0) {
                 return false;
             }
 
-            final String className     = name.substring(0, endOfClassName);
+            final String className = name.substring(0, endOfClassName);
             final String attributeName = name.substring(startAttributeName);
 
             final ProgramVariable attribute =
-                    services.getJavaInfo().getAttribute(attributeName, className);
+                services.getJavaInfo().getAttribute(attributeName, className);
 
             if (attribute == null) {
                 return false;
@@ -89,6 +99,6 @@ public class StaticFieldCondition extends VariableConditionAdapter {
 
     @Override
     public String toString() {
-        return (negated ? "\\not":"") + "\\isStaticField(" + field + ")";
+        return (negated ? "\\not" : "") + "\\isStaticField(" + field + ")";
     }
 }

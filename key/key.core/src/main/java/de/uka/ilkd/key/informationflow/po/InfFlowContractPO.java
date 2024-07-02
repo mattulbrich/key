@@ -1,11 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.informationflow.po;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.informationflow.po.snippet.InfFlowPOSnippetFactory;
 import de.uka.ilkd.key.informationflow.po.snippet.POSnippetFactory;
@@ -26,6 +34,8 @@ import de.uka.ilkd.key.proof.init.ProofObligationVars;
 import de.uka.ilkd.key.rule.NoPosTacletApp;
 import de.uka.ilkd.key.speclang.Contract;
 import de.uka.ilkd.key.speclang.InformationFlowContract;
+
+import org.key_project.util.collection.ImmutableList;
 
 
 /**
@@ -48,14 +58,14 @@ public class InfFlowContractPO extends AbstractInfFlowPO
     private InfFlowProofSymbols infFlowSymbols = new InfFlowProofSymbols();
 
     public InfFlowContractPO(InitConfig initConfig,
-                             InformationFlowContract contract) {
+            InformationFlowContract contract) {
         super(initConfig, contract.getName());
         this.contract = contract;
 
         // generate proof obligation variables
         final IProgramMethod pm = contract.getTarget();
         symbExecVars =
-                new ProofObligationVars(pm, contract.getKJT(), environmentServices);
+            new ProofObligationVars(pm, contract.getKJT(), environmentServices);
 
         assert (symbExecVars.pre.self == null) == (pm.isStatic());
         ifVars = new IFProofObligationVars(symbExecVars, environmentServices);
@@ -81,12 +91,12 @@ public class InfFlowContractPO extends AbstractInfFlowPO
 
         // create proof obligation
         InfFlowPOSnippetFactory f =
-                POSnippetFactory.getInfFlowFactory(contract, ifVars.c1,
-                                                   ifVars.c2, proofServices);
+            POSnippetFactory.getInfFlowFactory(contract, ifVars.c1,
+                ifVars.c2, proofServices);
         final Term selfComposedExec =
-                f.create(InfFlowPOSnippetFactory.Snippet.SELFCOMPOSED_EXECUTION_WITH_PRE_RELATION);
+            f.create(InfFlowPOSnippetFactory.Snippet.SELFCOMPOSED_EXECUTION_WITH_PRE_RELATION);
         final Term post =
-                f.create(InfFlowPOSnippetFactory.Snippet.INF_FLOW_INPUT_OUTPUT_RELATION);
+            f.create(InfFlowPOSnippetFactory.Snippet.INF_FLOW_INPUT_OUTPUT_RELATION);
         final Term finalTerm = tb.imp(selfComposedExec, post);
         addLabeledIFSymbol(selfComposedExec);
 
@@ -94,7 +104,7 @@ public class InfFlowContractPO extends AbstractInfFlowPO
         assignPOTerms(finalTerm);
         collectClassAxioms(contract.getKJT(), proofConfig);
 
-        for (final NoPosTacletApp t: taclets) {
+        for (final NoPosTacletApp t : taclets) {
             if (t.taclet().name().toString().startsWith("Class_invariant_axiom")) {
                 addIFSymbol(t.taclet());
             }
@@ -189,20 +199,20 @@ public class InfFlowContractPO extends AbstractInfFlowPO
 
     /**
      * Instantiates a new proof obligation with the given settings.
+     *
      * @param initConfig The already load {@link InitConfig}.
      * @param properties The settings of the proof obligation to instantiate.
      * @return The instantiated proof obligation.
      */
     public static LoadedPOContainer loadFrom(InitConfig initConfig, Properties properties) {
-       final String contractName = properties.getProperty("contract");
-       final Contract contract =
-               initConfig.getServices().getSpecificationRepository().getContractByName(contractName);
-       if (contract == null) {
-          throw new RuntimeException("Contract not found: " + contractName);
-       }
-       else {
-          return new LoadedPOContainer(contract.createProofObl(initConfig), 0);
-       }
+        final String contractName = properties.getProperty("contract");
+        final Contract contract =
+            initConfig.getServices().getSpecificationRepository().getContractByName(contractName);
+        if (contract == null) {
+            throw new RuntimeException("Contract not found: " + contractName);
+        } else {
+            return new LoadedPOContainer(contract.createProofObl(initConfig), 0);
+        }
     }
 
 
@@ -244,10 +254,10 @@ public class InfFlowContractPO extends AbstractInfFlowPO
 
     @Override
     protected Term getGlobalDefs(LocationVariable heap,
-                                 Term heapTerm,
-                                 Term selfTerm,
-                                 ImmutableList<Term> paramTerms,
-                                 Services services) {
+            Term heapTerm,
+            Term selfTerm,
+            ImmutableList<Term> paramTerms,
+            Services services) {
         // information flow contracts do not have global defs
         return null;
     }
@@ -263,60 +273,60 @@ public class InfFlowContractPO extends AbstractInfFlowPO
     @Override
     @Deprecated
     protected ImmutableList<StatementBlock> buildOperationBlocks(
-                                        ImmutableList<LocationVariable> formalParVars,
-                                        ProgramVariable selfVar,
-                                        ProgramVariable resultVar,
-                                        Services services) {
+            ImmutableList<LocationVariable> formalParVars,
+            ProgramVariable selfVar,
+            ProgramVariable resultVar,
+            Services services) {
         throw new UnsupportedOperationException("Not supported any more. " +
-                 "Please use the POSnippetFactory instead.");
+            "Please use the POSnippetFactory instead.");
     }
 
 
     @Override
     @Deprecated
     protected Term getPre(List<LocationVariable> modHeaps,
-                          ProgramVariable selfVar,
-                          ImmutableList<ProgramVariable> paramVars,
-                          Map<LocationVariable, LocationVariable> atPreVars,
-                          Services services) {
+            ProgramVariable selfVar,
+            ImmutableList<ProgramVariable> paramVars,
+            Map<LocationVariable, LocationVariable> atPreVars,
+            Services services) {
         throw new UnsupportedOperationException("Not supported any more. " +
-                                                "Please use the POSnippetFactory instead.");
+            "Please use the POSnippetFactory instead.");
     }
 
 
     @Override
     @Deprecated
     protected Term getPost(List<LocationVariable> modHeaps,
-                           ProgramVariable selfVar,
-                           ImmutableList<ProgramVariable> paramVars,
-                           ProgramVariable resultVar,
-                           ProgramVariable exceptionVar,
-                           Map<LocationVariable, LocationVariable> atPreVars,
-                           Services services) {
+            ProgramVariable selfVar,
+            ImmutableList<ProgramVariable> paramVars,
+            ProgramVariable resultVar,
+            ProgramVariable exceptionVar,
+            Map<LocationVariable, LocationVariable> atPreVars,
+            Services services) {
         throw new UnsupportedOperationException("Not supported any more. " +
-                                                "Please use the POSnippetFactory instead.");
+            "Please use the POSnippetFactory instead.");
     }
 
 
     @Override
     @Deprecated
     protected Term buildFrameClause(List<LocationVariable> modHeaps,
-                                    Map<Term, Term> heapToAtPre,
-                                    ProgramVariable selfVar,
-                                    ImmutableList<ProgramVariable> paramVars,
-                                    Services services) {
+            Map<Term, Term> heapToAtPre,
+            ProgramVariable selfVar,
+            ImmutableList<ProgramVariable> paramVars,
+            Services services) {
         throw new UnsupportedOperationException("Not supported any more. " +
-                                                "Please use the POSnippetFactory instead.");
+            "Please use the POSnippetFactory instead.");
     }
 
 
     @Override
     @Deprecated
     protected Term generateMbyAtPreDef(ProgramVariable selfVar,
-                                       ImmutableList<ProgramVariable> paramVars,
-                                       Services services) {
+            ImmutableList<ProgramVariable> paramVars,
+            Services services) {
         throw new UnsupportedOperationException("Not supported any more. " +
-                                                "Please use the POSnippetFactory instead.");
+            "Please use the POSnippetFactory instead.");
     }
 
     /**
@@ -324,6 +334,6 @@ public class InfFlowContractPO extends AbstractInfFlowPO
      */
     @Override
     public KeYJavaType getContainerType() {
-       return getContract().getKJT();
+        return getContract().getKJT();
     }
 }

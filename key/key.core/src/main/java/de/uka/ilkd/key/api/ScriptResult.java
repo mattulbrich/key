@@ -1,14 +1,25 @@
-package de.uka.ilkd.key.api;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.java.PositionInfo;
-import de.uka.ilkd.key.proof.Node;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.api;
 
 import java.util.List;
 import java.util.Set;
 
+import de.uka.ilkd.key.java.PositionInfo;
+import de.uka.ilkd.key.proof.Node;
+
 /**
  * Object that represents one result goal of a script command
- * It holds a reference to its parent node and to the list of variables and their values for this result
+ * It holds a reference to its parent node and to the list of variables and their values for this
+ * result
  * Created by S. Grebing
  */
 public class ScriptResult {
@@ -31,7 +42,7 @@ public class ScriptResult {
     /**
      * The reference to the variableassingments for this result
      */
-    //private VariableAssignments assignments;
+    // private VariableAssignments assignments;
 
     /**
      * The list of labels for the result
@@ -43,16 +54,17 @@ public class ScriptResult {
      */
     private List<PositionInfo> linenumbers;
 
-    //getLineNumbers hier
+    // getLineNumbers hier
 
     /**
      *
      */
     ScriptResult() {
-        //nulls
+        // nulls
     }
 
-    public static <T> ScriptResult create(Node node, ProjectedNode onNode, ProofScriptCommandCall<T> call) {
+    public static <T> ScriptResult create(Node node, ProjectedNode onNode,
+            ProofScriptCommandCall<T> call) {
         ScriptResult sr = new ScriptResult();
         sr.parentNode = onNode;
         sr.newNode = new ProjectedNode(node, onNode);

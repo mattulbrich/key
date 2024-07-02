@@ -1,17 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.exploration;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.Nonnull;
 
 import de.uka.ilkd.key.gui.MainWindow;
 import de.uka.ilkd.key.gui.prooftree.GUIProofTreeModel;
 import de.uka.ilkd.key.gui.prooftree.ProofTreeViewFilter;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.settings.ProofIndependentSettings;
-
-import javax.annotation.Nonnull;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The central place to store global information for Proof Exploration.
@@ -40,7 +50,8 @@ public class ExplorationModeModel {
 
 
     /**
-     * boolean flag indicating whether actions mode is turned on and special rules are shown to the user
+     * boolean flag indicating whether actions mode is turned on and special rules are shown to the
+     * user
      */
     private boolean explorationModeSelected = false;
 
@@ -57,7 +68,8 @@ public class ExplorationModeModel {
     public void setExplorationTacletAppState(ExplorationState explorationTacletAppState) {
         boolean old = this.explorationModeSelected;
         this.explorationTacletAppState = explorationTacletAppState;
-        changeSupport.firePropertyChange(PROP_EXPLORE_TACLET_APP_STATE, old, explorationModeSelected);
+        changeSupport.firePropertyChange(PROP_EXPLORE_TACLET_APP_STATE, old,
+            explorationModeSelected);
     }
 
     /**
@@ -71,6 +83,7 @@ public class ExplorationModeModel {
      * Set selection of Exploration mode.
      *
      * Triggers a property change event.
+     *
      * @see #PROP_EXPLORE_MODE
      */
     public void setExplorationModeSelected(boolean explorationModeSelected) {
@@ -83,7 +96,8 @@ public class ExplorationModeModel {
      * Returns whether the justification branch should be visible.
      */
     public boolean isShowInteractiveBranches() {
-        return !ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings().getHideInteractiveGoals();
+        return !ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings()
+                .getHideInteractiveGoals();
     }
 
     /**
@@ -100,8 +114,9 @@ public class ExplorationModeModel {
      */
     public void setShowInteractiveBranches(boolean showInteractiveBranches) {
         GUIProofTreeModel delegateModel =
-                MainWindow.getInstance().getProofTreeView().getDelegateModel();
-        delegateModel.setFilter(ProofTreeViewFilter.HIDE_INTERACTIVE_GOALS, !showInteractiveBranches);
+            MainWindow.getInstance().getProofTreeView().getDelegateModel();
+        delegateModel.setFilter(ProofTreeViewFilter.HIDE_INTERACTIVE_GOALS,
+            !showInteractiveBranches);
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

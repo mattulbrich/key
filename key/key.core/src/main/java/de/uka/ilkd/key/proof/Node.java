@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -23,11 +33,8 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
-import org.key_project.util.collection.DefaultImmutableSet;
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
-import org.key_project.util.collection.ImmutableSet;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import de.uka.ilkd.key.logic.RenamingTable;
 import de.uka.ilkd.key.logic.Sequent;
@@ -37,10 +44,12 @@ import de.uka.ilkd.key.logic.op.IProgramVariable;
 import de.uka.ilkd.key.rule.NoPosTacletApp;
 import de.uka.ilkd.key.rule.RuleApp;
 import de.uka.ilkd.key.rule.merge.MergeRule;
-import org.key_project.util.lookup.Lookup;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.key_project.util.collection.DefaultImmutableSet;
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
+import org.key_project.util.collection.ImmutableSet;
+import org.key_project.util.lookup.Lookup;
 
 public class Node implements Iterable<Node> {
     private static final String RULE_WITHOUT_NAME = "rule without name";
@@ -97,7 +106,7 @@ public class Node implements Iterable<Node> {
     private String cachedName = null;
 
     @Nullable
-    private Lookup userData =null;
+    private Lookup userData = null;
 
 
     /**
@@ -438,7 +447,7 @@ public class Node implements Iterable<Node> {
 
     /**
      * @return an iterator for the leaves of the subtree below this node. The
-     *  computation is called at every call!
+     *         computation is called at every call!
      */
     public Iterator<Node> leavesIterator() {
         return new NodeIterator(getLeaves().iterator());
@@ -515,12 +524,12 @@ public class Node implements Iterable<Node> {
      * Helper for {@link #toString()}
      *
      * @param prefix needed to keep track if a line has to be printed
-     * @param tree   the tree representation we want to add this subtree " @param
-     *               preEnumeration the enumeration of the parent without the last
-     *               number
+     * @param tree the tree representation we want to add this subtree " @param
+     *        preEnumeration the enumeration of the parent without the last
+     *        number
      * @param postNr the last number of the parents enumeration
-     * @param maxNr  the number of nodes at this level
-     * @param ownNr  the place of this node at this level
+     * @param maxNr the number of nodes at this level
+     * @param ownNr the place of this node at this level
      * @return the string representation of this node.
      */
 
@@ -575,7 +584,7 @@ public class Node implements Iterable<Node> {
         while (childrenIt.hasNext()) {
             childId++;
             childrenIt.next().toString(prefix, tree, newEnumeration, newPostNr, children.size(),
-                    childId);
+                childId);
         }
 
         return tree;
@@ -754,7 +763,7 @@ public class Node implements Iterable<Node> {
      * Retrieves a user-defined data.
      *
      * @param service the class for which the data were registered
-     * @param <T>     any class
+     * @param <T> any class
      * @return null or the previous data
      * @see #register(Object, Class)
      */
@@ -773,7 +782,7 @@ public class Node implements Iterable<Node> {
      * Register a user-defined data in this node info.
      *
      * @param obj an object to be registered
-     * @param service  the key under it should be registered
+     * @param service the key under it should be registered
      * @param <T>
      */
     public <T> void register(T obj, Class<T> service) {
@@ -782,6 +791,7 @@ public class Node implements Iterable<Node> {
 
     /**
      * Remove a previous registered user-defined data.
+     *
      * @param obj registered object
      * @param service the key under which the data was registered
      * @param <T> arbitray object
@@ -798,7 +808,8 @@ public class Node implements Iterable<Node> {
      * @return
      */
     public @Nonnull Lookup getUserData() {
-        if(userData == null) userData = new Lookup();
+        if (userData == null)
+            userData = new Lookup();
         return userData;
     }
 }

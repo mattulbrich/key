@@ -1,23 +1,23 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.docking;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
-
+import javax.annotation.Nonnull;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
-import javax.annotation.Nonnull;
-
-import bibliothek.gui.dock.common.CGrid;
-import bibliothek.gui.dock.common.DefaultSingleCDockable;
-import bibliothek.gui.dock.common.MultipleCDockable;
-import bibliothek.gui.dock.common.SingleCDockable;
-import bibliothek.gui.dock.common.action.CAction;
-import bibliothek.gui.dock.common.action.CButton;
-import bibliothek.gui.dock.common.action.CCheckBox;
-import bibliothek.gui.dock.common.intern.CDockable;
 import de.uka.ilkd.key.gui.GoalList;
 import de.uka.ilkd.key.gui.InfoView;
 import de.uka.ilkd.key.gui.MainWindow;
@@ -27,6 +27,15 @@ import de.uka.ilkd.key.gui.extension.api.TabPanel;
 import de.uka.ilkd.key.gui.nodeviews.MainFrame;
 import de.uka.ilkd.key.gui.prooftree.ProofTreeView;
 import de.uka.ilkd.key.gui.sourceview.SourceViewFrame;
+
+import bibliothek.gui.dock.common.CGrid;
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
+import bibliothek.gui.dock.common.MultipleCDockable;
+import bibliothek.gui.dock.common.SingleCDockable;
+import bibliothek.gui.dock.common.action.CAction;
+import bibliothek.gui.dock.common.action.CButton;
+import bibliothek.gui.dock.common.action.CCheckBox;
+import bibliothek.gui.dock.common.intern.CDockable;
 
 public class DockingHelper {
     public final static List<String> LEFT_TOP_PANEL = new LinkedList<>();
@@ -64,14 +73,12 @@ public class DockingHelper {
      * @see #createSingleDock(TabPanel)
      */
     public static void restoreFactoryDefault(MainWindow mainWindow) {
-        List<CDockable>
-                leftPanels = new LinkedList<>(),
+        List<CDockable> leftPanels = new LinkedList<>(),
                 leftTopPanels = new LinkedList<>(),
                 mainPanels = new LinkedList<>(),
                 rightPanels = new LinkedList<>();
 
-        for (int c = mainWindow.getDockControl().getCDockableCount(), i = 0;
-             i < c; i++) {
+        for (int c = mainWindow.getDockControl().getCDockableCount(), i = 0; i < c; i++) {
             final CDockable cur = mainWindow.getDockControl().getCDockable(i);
             if (cur instanceof SingleCDockable) {
                 final String id = ((SingleCDockable) cur).getUniqueId();
@@ -101,10 +108,10 @@ public class DockingHelper {
         }
 
         CGrid grid = new CGrid(mainWindow.getDockControl());
-        grid.add(0, 0, 1, 1, leftTopPanels.toArray(new CDockable[]{}));
-        grid.add(0, 1, 1, 2, leftPanels.toArray(new CDockable[]{}));
-        grid.add(1, 0, 2, 3, mainPanels.toArray(new CDockable[]{}));
-        grid.add(2, 0, 1, 3, rightPanels.toArray(new CDockable[]{}));
+        grid.add(0, 0, 1, 1, leftTopPanels.toArray(new CDockable[] {}));
+        grid.add(0, 1, 1, 2, leftPanels.toArray(new CDockable[] {}));
+        grid.add(1, 0, 2, 3, mainPanels.toArray(new CDockable[] {}));
+        grid.add(2, 0, 1, 3, rightPanels.toArray(new CDockable[] {}));
         mainWindow.getDockControl().getContentArea().deploy(grid);
     }
 
@@ -112,7 +119,7 @@ public class DockingHelper {
     /**
      * Constructs a dockable for the given component.
      *
-     * @param title     a non-null, non-empty title for this dock
+     * @param title a non-null, non-empty title for this dock
      * @param component a non-null component to show
      * @return a {@link DefaultSingleCDockable}
      * @see #createSingleDock(TabPanel)
@@ -134,8 +141,8 @@ public class DockingHelper {
         CAction[] a = Stream.concat(actions, p.getTitleCActions().stream()).toArray(CAction[]::new);
 
         return new DefaultSingleCDockable(p.getClass().getName(),
-                p.getIcon(), p.getTitle(), p.getComponent(),
-                p.getPermissions(), a);
+            p.getIcon(), p.getTitle(), p.getComponent(),
+            p.getPermissions(), a);
     }
 
     public static @Nonnull CAction translateAction(@Nonnull Action action) {
@@ -149,8 +156,8 @@ public class DockingHelper {
 
     private static @Nonnull CAction createCheckBox(@Nonnull Action action) {
         CCheckBox button = new CCheckBox(
-                (String) action.getValue(Action.NAME),
-                (Icon) action.getValue(Action.SMALL_ICON)) {
+            (String) action.getValue(Action.NAME),
+            (Icon) action.getValue(Action.SMALL_ICON)) {
             @Override
             protected void changed() {
                 action.putValue(Action.SELECTED_KEY, this.isSelected());
@@ -172,8 +179,8 @@ public class DockingHelper {
 
     private static CAction createButton(Action action) {
         CButton button = new CButton(
-                (String) action.getValue(Action.NAME),
-                (Icon) action.getValue(Action.SMALL_ICON));
+            (String) action.getValue(Action.NAME),
+            (Icon) action.getValue(Action.SMALL_ICON));
         button.addActionListener(action);
         button.setTooltip((String) action.getValue(Action.SHORT_DESCRIPTION));
         button.setEnabled(action.isEnabled());

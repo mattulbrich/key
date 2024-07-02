@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.macros.scripts;
 
 import java.util.Map;
@@ -11,12 +21,14 @@ public class LetCommand extends AbstractCommand<Map<String, String>> {
         super(null);
     }
 
-    @Override public Map<String, String> evaluateArguments(EngineState state,
+    @Override
+    public Map<String, String> evaluateArguments(EngineState state,
             Map<String, String> arguments) {
         return arguments;
     }
 
-    @Override public void execute(AbstractUserInterfaceControl uiControl,
+    @Override
+    public void execute(AbstractUserInterfaceControl uiControl,
             Map<String, String> args, EngineState stateMap)
             throws ScriptException, InterruptedException {
 
@@ -31,8 +43,8 @@ public class LetCommand extends AbstractCommand<Map<String, String>> {
             }
             if (!key.startsWith("@")) {
                 throw new ScriptException(
-                        "Unexpected parameter to let, only @var allowed: "
-                                + key);
+                    "Unexpected parameter to let, only @var allowed: "
+                        + key);
             }
 
             // get rid of @
@@ -41,19 +53,19 @@ public class LetCommand extends AbstractCommand<Map<String, String>> {
             if (abbrMap.containsAbbreviation(key)) {
                 // XXX desired or not?
                 throw new ScriptException(
-                        key + " is already fixed in this script");
+                    key + " is already fixed in this script");
             }
             try {
                 abbrMap.put(stateMap.toTerm(entry.getValue(), null), key, true);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new ScriptException(e);
             }
         }
 
     }
 
-    @Override public String getName() {
+    @Override
+    public String getName() {
         return "let";
     }
 

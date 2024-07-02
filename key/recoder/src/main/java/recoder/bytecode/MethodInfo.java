@@ -1,12 +1,16 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.bytecode;
 
-import recoder.abstraction.Package;
-import recoder.abstraction.*;
-import recoder.convenience.Naming;
-
 import java.util.List;
+
+import recoder.abstraction.*;
+import recoder.abstraction.Package;
+import recoder.convenience.Naming;
 
 public class MethodInfo extends MemberInfo implements Method {
 
@@ -22,8 +26,9 @@ public class MethodInfo extends MemberInfo implements Method {
 
     protected List<TypeParameterInfo> typeParms;
 
-    public MethodInfo(int accessFlags, String returntype, String name, String[] paramtypes, String[] exceptions,
-                      ClassFile cf) {
+    public MethodInfo(int accessFlags, String returntype, String name, String[] paramtypes,
+            String[] exceptions,
+            ClassFile cf) {
         super(accessFlags, name, cf);
         if (returntype != null) {
             this.returntype = returntype.intern();

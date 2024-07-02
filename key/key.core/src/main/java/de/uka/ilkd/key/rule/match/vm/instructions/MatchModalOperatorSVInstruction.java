@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule.match.vm.instructions;
 
 import de.uka.ilkd.key.java.Services;
@@ -8,29 +18,30 @@ import de.uka.ilkd.key.rule.MatchConditions;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.rule.match.vm.TermNavigator;
 
-public class MatchModalOperatorSVInstruction extends MatchSchemaVariableInstruction<ModalOperatorSV> {
+public class MatchModalOperatorSVInstruction
+        extends MatchSchemaVariableInstruction<ModalOperatorSV> {
 
     public MatchModalOperatorSVInstruction(ModalOperatorSV op) {
         super(op);
     }
 
     @Override
-    public MatchConditions match(Term subst, MatchConditions mc, Services services) {                
+    public MatchConditions match(Term subst, MatchConditions mc, Services services) {
         if (subst.op() instanceof Modality) {
             final Modality modality = (Modality) subst.op();
-            if(op.getModalities().contains(modality)) {
+            if (op.getModalities().contains(modality)) {
                 final SVInstantiations instantiations = mc.getInstantiations();
                 final Object o = instantiations.getInstantiation(op);
-                if(o == null) {
+                if (o == null) {
                     return mc.setInstantiations(instantiations.add(op, modality, services));
-                } else if(o != modality) {
+                } else if (o != modality) {
                     return null;
                 } else {
                     return mc;
                 }
             }
-        }   
-        return null; 
+        }
+        return null;
     }
 
     @Override

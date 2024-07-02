@@ -1,6 +1,12 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.kit;
+
+import java.util.List;
 
 import recoder.ProgramFactory;
 import recoder.abstraction.PrimitiveType;
@@ -20,8 +26,6 @@ import recoder.service.NameInfo;
 import recoder.service.SourceInfo;
 import recoder.util.Debug;
 
-import java.util.List;
-
 public class ExpressionKit {
 
     private ExpressionKit() {
@@ -37,7 +41,7 @@ public class ExpressionKit {
      *
      * @param expr an expression.
      * @return <CODE>true</CODE>, if the expression contains expressions,
-     * <CODE>false</CODE> if it does not.
+     *         <CODE>false</CODE> if it does not.
      */
     public static boolean containsStatements(Expression expr) {
         if (expr instanceof Statement) {
@@ -65,7 +69,7 @@ public class ExpressionKit {
      *
      * @param r an expression.
      * @return <CODE>true</CODE> if the specified expression is an L-value,
-     * <CODE>false</CODE> otherwise.
+     *         <CODE>false</CODE> otherwise.
      * @since 0.63
      */
     public static boolean isLValue(Expression r) {
@@ -125,7 +129,9 @@ public class ExpressionKit {
                     i += 1;
                 }
             } else {
-                for (int i = parent.getExpressionCount() - 1; (expr = parent.getExpressionAt(i)) != x; i -= 1) {
+                for (int i =
+                    parent.getExpressionCount() - 1; (expr = parent.getExpressionAt(i)) != x; i -=
+                        1) {
                     dest.add(expr);
                 }
             }
@@ -154,14 +160,15 @@ public class ExpressionKit {
      * field in the newly created class or object initializer block.
      *
      * @param si the source info service.
-     * @param x  the expression that shall be accessed first in its statement
-     *           or initializer.
+     * @param x the expression that shall be accessed first in its statement
+     *        or initializer.
      * @param ch the change history service (may be <CODE>null</CODE>).
      * @return <CODE>true</CODE> if the shift has been necessary, <CODE>false
      * </CODE> otherwise.
      * @deprecated replaced by transformation
      */
-    public static boolean shiftPreceedingStatementExpressions(SourceInfo si, Expression x, ChangeHistory ch) {
+    public static boolean shiftPreceedingStatementExpressions(SourceInfo si, Expression x,
+            ChangeHistory ch) {
 
         // get all expressions that are executed before x
         List<Expression> exprs = collectPreceedingExpressions(x);
@@ -190,7 +197,8 @@ public class ExpressionKit {
             Type t = exTypes[i];
             TypeReference minTypeRef = TypeKit.createTypeReference(si, t, sde);
             String varName = varNames[i];
-            LocalVariableDeclaration lvd = f.createLocalVariableDeclaration(minTypeRef, f.createIdentifier(varName));
+            LocalVariableDeclaration lvd =
+                f.createLocalVariableDeclaration(minTypeRef, f.createIdentifier(varName));
             lvd.getVariables().get(0).setInitializer(ex);
             // lvd.makeAllParentRolesValid(); done later
             tempVarDecls.add(lvd);
@@ -212,7 +220,8 @@ public class ExpressionKit {
         do {
             NonTerminalProgramElement parent = pe.getASTParent();
             Debug.assertNonnull(parent);
-            if ((parent instanceof Statement) && (((Statement) parent).getStatementContainer() != null)) {
+            if ((parent instanceof Statement)
+                    && (((Statement) parent).getStatementContainer() != null)) {
                 Statement parentStatement = (Statement) parent;
                 destination = StatementKit.prepareStatementMutableList(parentStatement, ch);
                 destParent = parentStatement.getStatementContainer();
@@ -251,8 +260,9 @@ public class ExpressionKit {
                     ch.detached(init, initIndex);
                     // parent link is still valid
                 }
-                CopyAssignment ca = f.createCopyAssignment(f.createVariableReference(f.createIdentifier(fs.getName())),
-                        init);
+                CopyAssignment ca = f.createCopyAssignment(
+                    f.createVariableReference(f.createIdentifier(fs.getName())),
+                    init);
                 ca.makeAllParentRolesValid();
                 destination.add(ca); // add to end of body list
                 // we already reported ci (parent of ca) as attached
@@ -280,9 +290,9 @@ public class ExpressionKit {
      * their corresponding default value (<CODE>0</CODE>,<CODE>false
      * </CODE>,<CODE>'\0'</CODE>).
      *
-     * @param f  the program factory for the literal to create.
+     * @param f the program factory for the literal to create.
      * @param ni the name info defining the primitive type objects.
-     * @param t  the type to create a default value for.
+     * @param t the type to create a default value for.
      * @return a new literal object widening to the given type.
      */
     public static Literal createDefaultValue(ProgramFactory f, NameInfo ni, Type t) {

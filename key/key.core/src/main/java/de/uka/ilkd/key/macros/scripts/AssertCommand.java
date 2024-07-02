@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.macros.scripts;
 
 import java.util.Map;
@@ -22,7 +32,7 @@ public class AssertCommand extends AbstractCommand<AssertCommand.Parameters> {
     public Parameters evaluateArguments(EngineState state,
             Map<String, String> arguments) throws Exception {
         return state.getValueInjector().inject(this, new Parameters(),
-                arguments);
+            arguments);
     }
 
     @Override
@@ -34,11 +44,10 @@ public class AssertCommand extends AbstractCommand<AssertCommand.Parameters> {
 
         if (state.getProof().openEnabledGoals().size() != args.goals.intValue()) {
             throw new ScriptException(
-                    "Assertion failed: number of open goals is " +
-                            state.getProof().openGoals().size() +
-                            ", but should be " +
-                            args.goals.intValue()
-            );
+                "Assertion failed: number of open goals is " +
+                    state.getProof().openGoals().size() +
+                    ", but should be " +
+                    args.goals.intValue());
         }
     }
 

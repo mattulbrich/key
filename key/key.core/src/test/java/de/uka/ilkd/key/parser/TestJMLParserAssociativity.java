@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.parser;
 
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -5,6 +15,7 @@ import de.uka.ilkd.key.logic.Term;
 import de.uka.ilkd.key.logic.op.ProgramVariable;
 import de.uka.ilkd.key.speclang.PositionedString;
 import de.uka.ilkd.key.speclang.njml.JmlIO;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,11 +32,12 @@ public class TestJMLParserAssociativity extends AbstractTestTermParser {
     public Term parseTerm(String s) throws Exception {
         PositionedString p = new PositionedString(s);
         /*
-         containerType and self variable are not relevant for the tests
-         currently and can be changed if needed.
+         * containerType and self variable are not relevant for the tests
+         * currently and can be changed if needed.
          */
         KeYJavaType containerType = services.getJavaInfo().getKeYJavaType("testTermParserHeap.A");
-        ProgramVariable self = services.getJavaInfo().getCanonicalFieldProgramVariable("next", containerType);
+        ProgramVariable self =
+            services.getJavaInfo().getCanonicalFieldProgramVariable("next", containerType);
         JmlIO io = new JmlIO()
                 .services(getServices())
                 .classType(containerType)
@@ -47,7 +59,8 @@ public class TestJMLParserAssociativity extends AbstractTestTermParser {
 
         // test */%
         String s1 = parseTerm("1 * 2 / 3 % 4 * 5 / 6 % 7").toString();
-        String s2 = "javaMod(javaDivInt(javaMulInt(javaMod(javaDivInt(javaMulInt(Z(1(#)),Z(2(#))),Z(3(#))),Z(4(#))),Z(5(#))),Z(6(#))),Z(7(#)))";
+        String s2 =
+            "javaMod(javaDivInt(javaMulInt(javaMod(javaDivInt(javaMulInt(Z(1(#)),Z(2(#))),Z(3(#))),Z(4(#))),Z(5(#))),Z(6(#))),Z(7(#)))";
         assertEquals(s1, s2);
 
         // test +-

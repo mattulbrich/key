@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -24,24 +34,23 @@ import de.uka.ilkd.key.logic.sort.Sort;
  * the parallel update connector "|".
  */
 public final class UpdateJunctor extends AbstractSortedOperator {
-    
-    public static final UpdateJunctor SKIP 
-    	= new UpdateJunctor(new Name("skip"), 0);
-    
-    public static final UpdateJunctor PARALLEL_UPDATE 
-    	= new UpdateJunctor(new Name("parallel-upd"), 2);
-    
-    
+
+    public static final UpdateJunctor SKIP = new UpdateJunctor(new Name("skip"), 0);
+
+    public static final UpdateJunctor PARALLEL_UPDATE =
+        new UpdateJunctor(new Name("parallel-upd"), 2);
+
+
     private static Sort[] createUpdateSortArray(int arity) {
-	Sort[] result = new Sort[arity];
-	for(int i = 0; i < arity; i++) {
-	    result[i] = Sort.UPDATE;
-	}
-	return result;
+        Sort[] result = new Sort[arity];
+        for (int i = 0; i < arity; i++) {
+            result[i] = Sort.UPDATE;
+        }
+        return result;
     }
-    
-    
+
+
     private UpdateJunctor(Name name, int arity) {
-	super(name, createUpdateSortArray(arity), Sort.UPDATE, false);
-    } 
+        super(name, createUpdateSortArray(arity), Sort.UPDATE, false);
+    }
 }

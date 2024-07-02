@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,39 +23,39 @@
 
 package de.uka.ilkd.key.java.visitor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import de.uka.ilkd.key.java.Recoder2KeY;
 import de.uka.ilkd.key.logic.JavaBlock;
 import de.uka.ilkd.key.logic.Named;
 import de.uka.ilkd.key.logic.NamespaceSet;
 import de.uka.ilkd.key.rule.TacletForTests;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestDeclarationProgramVariableCollector {private static final Logger LOGGER = LoggerFactory.getLogger(TestDeclarationProgramVariableCollector.class);
+public class TestDeclarationProgramVariableCollector {
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(TestDeclarationProgramVariableCollector.class);
 
     // some nonsense java blocks with lots of statements and expressions
-    private static final String[] jblocks=new String[]{
-            "{ int j1 = 0; int j2, j3, j4 = 0;}",
-            "{ int j1; { int j2; } { int j3; } for (int j4; j4=0; j4++) {} int j5; }",
-            "{ int j0; { { { { {  int j1; } int j2; } int j3;} int j4; } } }"
+    private static final String[] jblocks = new String[] {
+        "{ int j1 = 0; int j2, j3, j4 = 0;}",
+        "{ int j1; { int j2; } { int j3; } for (int j4; j4=0; j4++) {} int j5; }",
+        "{ int j0; { { { { {  int j1; } int j2; } int j3;} int j4; } } }"
     };
 
     // names of variables expected to be collected in jblocks
-    private static final String[][] expectedVars = new String[][]{
-            {"j1", "j2", "j3", "j4"},
-            {"j1", "j5"},
-            {"j0"}
+    private static final String[][] expectedVars = new String[][] {
+        { "j1", "j2", "j3", "j4" },
+        { "j1", "j5" },
+        { "j0" }
     };
 
 
@@ -61,7 +71,8 @@ public class TestDeclarationProgramVariableCollector {private static final Logge
 
     @BeforeEach
     public void setUp() {
-        if (down != 0) return;
+        if (down != 0)
+            return;
         final Recoder2KeY r2k = new Recoder2KeY(TacletForTests.services(), new NamespaceSet());
         for (int i = 0; i < jblocks.length; i++) {
             test_block[i] = r2k.readBlockWithEmptyContext(jblocks[i]);
@@ -71,7 +82,8 @@ public class TestDeclarationProgramVariableCollector {private static final Logge
     @AfterEach
     public void tearDown() {
         down++;
-        if (down < testCases) return;
+        if (down < testCases)
+            return;
         test_block = null;
     }
 
@@ -81,7 +93,7 @@ public class TestDeclarationProgramVariableCollector {private static final Logge
             String name = "" + programVariable.name();
             if (result.contains(name)) {
                 LOGGER.warn("Warning: Program variables have same name." +
-                        " Probably unsane test case");
+                    " Probably unsane test case");
             }
             result.add(name);
         }
@@ -94,19 +106,19 @@ public class TestDeclarationProgramVariableCollector {private static final Logge
         DeclarationProgramVariableCollector dpvc;
         for (int i = 0; i < jblocks.length; i++) {
             dpvc = new DeclarationProgramVariableCollector(test_block[i].program(),
-                    TacletForTests.services());
+                TacletForTests.services());
             dpvc.start();
             HashSet<String> names = toNames(dpvc.result());
 
 
-	    assertTrue(dpvc.result().size() <= expectedVars[i].length, "" +
+            assertTrue(dpvc.result().size() <= expectedVars[i].length, "" +
                 "Too many variables collected. Collected:" +
-                        dpvc.result() + " in " + jblocks[i]);
+                dpvc.result() + " in " + jblocks[i]);
 
 
             for (int j = 0; j < expectedVars[i].length; j++) {
-		assertTrue(names.contains(expectedVars[i][j]),
-                "Missing variable: " + expectedVars[i][j] + " of " + jblocks[i]);
+                assertTrue(names.contains(expectedVars[i][j]),
+                    "Missing variable: " + expectedVars[i][j] + " of " + jblocks[i]);
             }
         }
     }

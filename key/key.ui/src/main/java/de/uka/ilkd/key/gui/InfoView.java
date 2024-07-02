@@ -1,16 +1,34 @@
-// This file is part of KeY - Integrated Deductive Software Design 
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+// This file is part of KeY - Integrated Deductive Software Design
 //
-// Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany 
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
-// Copyright (C) 2011-2013 Karlsruhe Institute of Technology, Germany 
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
+// Copyright (C) 2011-2013 Karlsruhe Institute of Technology, Germany
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
-// The KeY system is protected by the GNU General 
+// The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
-// 
+//
 package de.uka.ilkd.key.gui;
+
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
 import de.uka.ilkd.key.core.KeYMediator;
 import de.uka.ilkd.key.core.KeYSelectionEvent;
@@ -29,14 +47,6 @@ import de.uka.ilkd.key.rule.Rule;
 import de.uka.ilkd.key.util.ThreadUtilities;
 import de.uka.ilkd.key.util.XMLResources;
 
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 /**
  * Class for info contents displayed in {@link MainWindow}.
  *
@@ -48,7 +58,8 @@ public class InfoView extends JSplitPane implements TabPanel {
      *
      */
     private static final long serialVersionUID = -6944612837850368411L;
-    public static final Icon INFO_ICON = IconFactory.INFO_VIEW.get(MainWindowTabbedPane.TAB_ICON_SIZE);
+    public static final Icon INFO_ICON =
+        IconFactory.INFO_VIEW.get(MainWindowTabbedPane.TAB_ICON_SIZE);
 
 
     private final InfoTree infoTree;
@@ -134,12 +145,12 @@ public class InfoView extends JSplitPane implements TabPanel {
             }
 
             private void checkPopup(MouseEvent e) {
-                if(e.isPopupTrigger()) {
+                if (e.isPopupTrigger()) {
                     Rule selected = infoTree.getLastSelectedPathComponent().getRule();
                     JPopupMenu menu = KeYGuiExtensionFacade.createContextMenu(
-                            DefaultContextMenuKind.TACLET_INFO, selected,
-                            mediator);
-                    if(menu.getComponentCount()>0) {
+                        DefaultContextMenuKind.TACLET_INFO, selected,
+                        mediator);
+                    if (menu.getComponentCount() > 0) {
                         menu.show(InfoView.this, e.getX(), e.getY());
                     }
                 }
@@ -152,7 +163,8 @@ public class InfoView extends JSplitPane implements TabPanel {
         setLeftComponent(new JScrollPane(infoTree));
         setRightComponent(contentPane);
 
-        KeYGuiExtensionFacade.installKeyboardShortcuts(mediator, this, KeYGuiExtension.KeyboardShortcuts.INFO_VIEW);
+        KeYGuiExtensionFacade.installKeyboardShortcuts(mediator, this,
+            KeYGuiExtension.KeyboardShortcuts.INFO_VIEW);
     }
 
     public InfoView(MainWindow window, KeYMediator mediator) {

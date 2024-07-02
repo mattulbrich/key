@@ -1,6 +1,14 @@
-package de.uka.ilkd.key.informationflow.macros;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableList;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.informationflow.macros;
 
 import de.uka.ilkd.key.control.UserInterfaceControl;
 import de.uka.ilkd.key.informationflow.po.IFProofObligationVars;
@@ -20,6 +28,8 @@ import de.uka.ilkd.key.rule.Taclet;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.speclang.InformationFlowContract;
 
+import org.key_project.util.collection.ImmutableList;
+
 /**
  *
  * @author christoph
@@ -29,8 +39,8 @@ public class FinishAuxiliaryMethodComputationMacro
 
     @Override
     public boolean canApplyTo(Proof proof,
-                              ImmutableList<Goal> goals,
-                              PosInOccurrence posInOcc) {
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc) {
         if (proof != null && proof.getServices() != null) {
             final ProofOblInput poForProof =
                 proof.getServices().getSpecificationRepository().getProofOblInput(proof);
@@ -43,19 +53,19 @@ public class FinishAuxiliaryMethodComputationMacro
 
     @Override
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          final Proof proof,
-                                          ImmutableList<Goal> goals,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) {
+            final Proof proof,
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) {
 
         final ProofOblInput poForProof =
-                proof.getServices().getSpecificationRepository().getProofOblInput(proof);
+            proof.getServices().getSpecificationRepository().getProofOblInput(proof);
         final Goal initiatingGoal = ((SymbolicExecutionPO) poForProof).getInitiatingGoal();
         final InfFlowProof initiatingProof = (InfFlowProof) initiatingGoal.proof();
         final Services services = initiatingProof.getServices();
         final InfFlowContractPO ifPO =
-                (InfFlowContractPO) services.getSpecificationRepository()
-                                         .getProofOblInput(initiatingProof);
+            (InfFlowContractPO) services.getSpecificationRepository()
+                    .getProofOblInput(initiatingProof);
         final IFProofObligationVars ifVars = ifPO.getIFVars().labelHeapAtPreAsAnonHeapFunc();
         final InformationFlowContract ifContract = ifPO.getContract();
 
@@ -64,7 +74,7 @@ public class FinishAuxiliaryMethodComputationMacro
         // create and register resulting taclets
         final Term result = calculateResultingTerm(proof, ifVars, initiatingGoal);
         final MethodInfFlowUnfoldTacletBuilder tacletBuilder =
-                new MethodInfFlowUnfoldTacletBuilder(services);
+            new MethodInfFlowUnfoldTacletBuilder(services);
         tacletBuilder.setContract(ifContract);
         tacletBuilder.setInfFlowVars(ifVars);
         tacletBuilder.setReplacewith(result);

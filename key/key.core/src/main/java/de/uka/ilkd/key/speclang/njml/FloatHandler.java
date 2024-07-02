@@ -1,4 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.speclang.njml;
+
+import java.util.EnumMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import javax.annotation.Nullable;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -14,11 +29,6 @@ import de.uka.ilkd.key.speclang.njml.OverloadedOperatorHandler.JMLOperatorHandle
 import de.uka.ilkd.key.speclang.translation.SLExceptionFactory;
 import de.uka.ilkd.key.speclang.translation.SLExpression;
 import de.uka.ilkd.key.speclang.translation.SLTranslationException;
-
-import javax.annotation.Nullable;
-import java.util.EnumMap;
-import java.util.IdentityHashMap;
-import java.util.Map;
 
 import static de.uka.ilkd.key.speclang.njml.OverloadedOperatorHandler.JMLOperator.ADD;
 import static de.uka.ilkd.key.speclang.njml.OverloadedOperatorHandler.JMLOperator.BITWISE_AND;
@@ -41,7 +51,7 @@ import static de.uka.ilkd.key.speclang.njml.OverloadedOperatorHandler.JMLOperato
 public class FloatHandler extends LDTHandler {
 
     private final Map<JMLOperator, Operator> opMap =
-            new EnumMap<>(JMLOperator.class);
+        new EnumMap<>(JMLOperator.class);
 
     public FloatHandler(Services services) {
         super(services);
@@ -62,7 +72,7 @@ public class FloatHandler extends LDTHandler {
 
     @Override
     protected Map<JMLOperator, Operator> getOperatorMap(Type promotedType) {
-        if(promotedType == PrimitiveType.JAVA_FLOAT) {
+        if (promotedType == PrimitiveType.JAVA_FLOAT) {
             return opMap;
         } else {
             return null;

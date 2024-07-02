@@ -1,20 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.java.visitor;
-
-import org.key_project.util.ExtList;
-import org.key_project.util.collection.ImmutableArray;
 
 import de.uka.ilkd.key.java.ProgramElement;
 import de.uka.ilkd.key.java.Services;
@@ -25,6 +32,9 @@ import de.uka.ilkd.key.logic.op.SchemaVariable;
 import de.uka.ilkd.key.rule.AbstractProgramElement;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.rule.metaconstruct.ProgramTransformer;
+
+import org.key_project.util.ExtList;
+import org.key_project.util.collection.ImmutableArray;
 
 /**
  * Walks through a java AST in depth-left-fist-order. This walker is used to
@@ -40,11 +50,11 @@ public class ProgramReplaceVisitor extends CreatingASTVisitor {
      * create the ProgramReplaceVisitor
      *
      * @param root
-     *            the ProgramElement where to begin
+     *        the ProgramElement where to begin
      * @param services
-     *            The Services object.
+     *        The Services object.
      * @param svi
-     *            Schema Variable Instantiations
+     *        Schema Variable Instantiations
      */
     public ProgramReplaceVisitor(ProgramElement root, Services services,
             SVInstantiations svi) {
@@ -115,7 +125,7 @@ public class ProgramReplaceVisitor extends CreatingASTVisitor {
         } else {
             throw new IllegalStateException(
                 "programreplacevisitor: Instantiation missing "
-                        + "for schema variable " + sv);
+                    + "for schema variable " + sv);
         }
         changed();
     }
@@ -134,7 +144,7 @@ public class ProgramReplaceVisitor extends CreatingASTVisitor {
         assert body != null : "A program transformer without program to transform?";
 
         final ProgramElement[] transformResult = //
-                x.transform(body, services, svinsts);
+            x.transform(body, services, svinsts);
         if (transformResult == null) {
             /*
              * NOTE (DS, 2018-10-19): This is awkward... But there are

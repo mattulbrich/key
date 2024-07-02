@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,10 +24,6 @@
 package de.uka.ilkd.key.rule;
 
 import java.util.List;
-
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -32,53 +38,58 @@ import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.speclang.Contract;
 import de.uka.ilkd.key.speclang.HeapContext;
 
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
+import org.key_project.util.collection.ImmutableSet;
+
 public class UseDependencyContractApp extends AbstractContractRuleApp {
 
     private final PosInOccurrence step;
     private List<LocationVariable> heapContext;
-	
-	public UseDependencyContractApp(BuiltInRule builtInRule, PosInOccurrence pio) {
-	    this(builtInRule, pio, null, null);
+
+    public UseDependencyContractApp(BuiltInRule builtInRule, PosInOccurrence pio) {
+        this(builtInRule, pio, null, null);
     }
 
-	public UseDependencyContractApp(BuiltInRule builtInRule, PosInOccurrence pio,
-			Contract instantiation, PosInOccurrence step) {
-	    this(builtInRule, pio, ImmutableSLList.<PosInOccurrence>nil(), instantiation, step);
+    public UseDependencyContractApp(BuiltInRule builtInRule, PosInOccurrence pio,
+            Contract instantiation, PosInOccurrence step) {
+        this(builtInRule, pio, ImmutableSLList.<PosInOccurrence>nil(), instantiation, step);
     }
-	
+
     public UseDependencyContractApp(BuiltInRule rule,
             PosInOccurrence pio, ImmutableList<PosInOccurrence> ifInsts,
             Contract contract, PosInOccurrence step) {
-	    super(rule, pio, ifInsts, contract);
-	    this.step = step;
+        super(rule, pio, ifInsts, contract);
+        this.step = step;
 
     }
 
     public UseDependencyContractApp replacePos(PosInOccurrence newPos) {
-	    return new UseDependencyContractApp(rule(), newPos, ifInsts, instantiation, step);
+        return new UseDependencyContractApp(rule(), newPos, ifInsts, instantiation, step);
     }
 
     public boolean isSufficientlyComplete() {
-    	return pio != null && instantiation != null && !ifInsts.isEmpty();    	
+        return pio != null && instantiation != null && !ifInsts.isEmpty();
     }
-    
+
     public boolean complete() {
-    	return super.complete() && step != null;
+        return super.complete() && step != null;
     }
 
     private UseDependencyContractApp computeStep(Sequent seq, Services services) {
         assert this.step == null;
-        final List<PosInOccurrence> steps = 
-            UseDependencyContractRule.
-            getSteps(this.getHeapContext(), this.posInOccurrence(), seq, services);                
-        PosInOccurrence l_step = 
+        final List<PosInOccurrence> steps =
+            UseDependencyContractRule.getSteps(this.getHeapContext(), this.posInOccurrence(), seq,
+                services);
+        PosInOccurrence l_step =
             UseDependencyContractRule.findStepInIfInsts(steps, this, services);
-        assert l_step != null;/* 
-				: "The strategy failed to properly "
-				+ "instantiate the base heap!\n"
-				+ "at: " + app.posInOccurrence().subTerm() + "\n"
-				+ "ifInsts: " + app.ifInsts() + "\n"
-				+ "steps: " + steps;*/
+        assert l_step != null;/*
+                               * : "The strategy failed to properly "
+                               * + "instantiate the base heap!\n"
+                               * + "at: " + app.posInOccurrence().subTerm() + "\n"
+                               * + "ifInsts: " + app.ifInsts() + "\n"
+                               * + "steps: " + steps;
+                               */
         return setStep(l_step);
     }
 
@@ -89,22 +100,22 @@ public class UseDependencyContractApp extends AbstractContractRuleApp {
 
     public UseDependencyContractApp setStep(PosInOccurrence p_step) {
         assert this.step == null;
-        return new UseDependencyContractApp(rule(), 
-                posInOccurrence(), ifInsts(), instantiation, p_step);
+        return new UseDependencyContractApp(rule(),
+            posInOccurrence(), ifInsts(), instantiation, p_step);
     }
 
-	@Override
+    @Override
     public UseDependencyContractApp setContract(Contract contract) {
-	    return new UseDependencyContractApp(builtInRule, posInOccurrence(), ifInsts, 
-	    		contract, step);
+        return new UseDependencyContractApp(builtInRule, posInOccurrence(), ifInsts,
+            contract, step);
     }
-	
+
     public UseDependencyContractRule rule() {
-    	return (UseDependencyContractRule) super.rule();
+        return (UseDependencyContractRule) super.rule();
     }
 
     public UseDependencyContractApp tryToInstantiate(Goal goal) {
-        if(heapContext == null){
+        if (heapContext == null) {
             heapContext = HeapContext.getModHeaps(goal.proof().getServices(), false);
         }
         if (complete()) {
@@ -114,19 +125,20 @@ public class UseDependencyContractApp extends AbstractContractRuleApp {
 
         final Services services = goal.proof().getServices();
 
-        app = tryToInstantiateContract(services);		
+        app = tryToInstantiateContract(services);
 
         if (!app.complete() && app.isSufficientlyComplete()) {
             app = app.computeStep(goal.sequent(), services);
         }
         return app;
     }
-    
+
     public UseDependencyContractApp tryToInstantiateContract(final Services services) {
         final Term focus = posInOccurrence().subTerm();
-        if (! (focus.op() instanceof IObserverFunction))
+        if (!(focus.op() instanceof IObserverFunction))
             // TODO: find more appropriate exception
-            throw new RuntimeException("Dependency contract rule is not applicable to term "+focus);
+            throw new RuntimeException(
+                "Dependency contract rule is not applicable to term " + focus);
         final IObserverFunction target = (IObserverFunction) focus.op();
 
         final Term selfTerm;
@@ -136,19 +148,19 @@ public class UseDependencyContractApp extends AbstractContractRuleApp {
             selfTerm = null;
             kjt = target.getContainerType();
         } else {
-            if(getHeapContext() == null) {
+            if (getHeapContext() == null) {
                 heapContext = HeapContext.getModHeaps(services, false);
             }
             selfTerm = focus.sub(target.getStateCount() * target.getHeapCount(services));
             kjt = services.getJavaInfo().getKeYJavaType(
-                    selfTerm.sort());
+                selfTerm.sort());
         }
         ImmutableSet<Contract> contracts = UseDependencyContractRule.getApplicableContracts(
-                services, kjt, target);
+            services, kjt, target);
 
         if (contracts.size() > 0) {
             UseDependencyContractApp r = setContract(contracts.iterator().next());
-            if(r.getHeapContext() == null) {
+            if (r.getHeapContext() == null) {
                 r.heapContext = HeapContext.getModHeaps(services, false);
             }
             return r;
@@ -164,18 +176,18 @@ public class UseDependencyContractApp extends AbstractContractRuleApp {
     @Override
     public IObserverFunction getObserverFunction(Services services) {
         final Operator op = posInOccurrence().subTerm().op();
-        return (IObserverFunction) (op instanceof IObserverFunction ? op : null); 
+        return (IObserverFunction) (op instanceof IObserverFunction ? op : null);
     }
 
-    
-    
+
+
     @Override
     public UseDependencyContractApp setIfInsts(ImmutableList<PosInOccurrence> ifInsts) {
         setMutable(ifInsts);
         return this;
-        //return new UseDependencyContractApp(builtInRule, pio, ifInsts, instantiation, step);
+        // return new UseDependencyContractApp(builtInRule, pio, ifInsts, instantiation, step);
     }
 
 
-	
+
 }

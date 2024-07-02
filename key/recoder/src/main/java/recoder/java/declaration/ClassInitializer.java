@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.declaration;
@@ -13,7 +17,8 @@ import recoder.list.generic.ASTList;
  * @author <TT>AutoDoc</TT>
  */
 
-public class ClassInitializer extends JavaDeclaration implements MemberDeclaration, StatementContainer {
+public class ClassInitializer extends JavaDeclaration
+        implements MemberDeclaration, StatementContainer {
 
     /**
      * serialization id
@@ -55,7 +60,7 @@ public class ClassInitializer extends JavaDeclaration implements MemberDeclarati
      * Class initializer.
      *
      * @param modifier a static.
-     * @param body     a statement block.
+     * @param body a statement block.
      */
 
     public ClassInitializer(Static modifier, StatementBlock body) {

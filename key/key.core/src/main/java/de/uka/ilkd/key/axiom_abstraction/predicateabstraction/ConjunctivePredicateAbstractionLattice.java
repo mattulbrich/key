@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2015 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -17,13 +27,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import de.uka.ilkd.key.axiom_abstraction.AbstractDomainElement;
+import de.uka.ilkd.key.util.mergerule.MergeRuleUtils;
+
 import org.key_project.util.bitops.ImmutableFixedLengthBitSet;
 import org.key_project.util.collection.DefaultImmutableSet;
 import org.key_project.util.collection.ImmutableSet;
 import org.key_project.util.collection.NotUniqueException;
-
-import de.uka.ilkd.key.axiom_abstraction.AbstractDomainElement;
-import de.uka.ilkd.key.util.mergerule.MergeRuleUtils;
 
 /**
  * A lattice for all predicates accepting the given sort. This lattice consists
@@ -45,7 +55,7 @@ public class ConjunctivePredicateAbstractionLattice extends
     public static final String PREDICATE_NAME_CONBINATION_STRING = "_AND_";
 
     private List<AbstractionPredicate> predicates =
-            new ArrayList<AbstractionPredicate>();
+        new ArrayList<AbstractionPredicate>();
 
     /**
      * Constructs a new {@link ConjunctivePredicateAbstractionLattice} for the
@@ -53,7 +63,7 @@ public class ConjunctivePredicateAbstractionLattice extends
      * sure that none of the predicates is valid.
      *
      * @param applicablePredicates
-     *            The predicates to generate the lattice from.
+     *        The predicates to generate the lattice from.
      */
     public ConjunctivePredicateAbstractionLattice(
             List<AbstractionPredicate> applicablePredicates) {
@@ -65,7 +75,7 @@ public class ConjunctivePredicateAbstractionLattice extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.uka.ilkd.key.axiom_abstraction.AbstractDomainLattice#join(de.uka.ilkd
      * .key.axiom_abstraction.AbstractDomainElement,
@@ -79,7 +89,7 @@ public class ConjunctivePredicateAbstractionLattice extends
          * the intersection of the respective predicates.
          */
         return super.join(a, b, (set1, set2) -> (set1.intersect(set2)),
-                set -> new ConjunctivePredicateAbstractionDomainElement(set));
+            set -> new ConjunctivePredicateAbstractionDomainElement(set));
     }
 
     /**
@@ -103,7 +113,7 @@ public class ConjunctivePredicateAbstractionLattice extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -120,13 +130,13 @@ public class ConjunctivePredicateAbstractionLattice extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return "Conjunctive Predicate Abstraction Lattice of size " + size()
-                + " with predicates " + predicates.toString();
+            + " with predicates " + predicates.toString();
     }
 
     /**
@@ -156,7 +166,7 @@ public class ConjunctivePredicateAbstractionLattice extends
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Iterator#hasNext()
          */
         @Override
@@ -166,7 +176,7 @@ public class ConjunctivePredicateAbstractionLattice extends
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Iterator#next()
          */
         @Override
@@ -182,32 +192,30 @@ public class ConjunctivePredicateAbstractionLattice extends
             }
 
             ImmutableSet<AbstractionPredicate> predicatesForElem =
-                    DefaultImmutableSet.<AbstractionPredicate> nil();
+                DefaultImmutableSet.<AbstractionPredicate>nil();
 
             ImmutableFixedLengthBitSet currBitSet =
-                    getBitSetsByNumZeroes().get(nrZeroes).get(idx);
+                getBitSetsByNumZeroes().get(nrZeroes).get(idx);
 
             for (int nonZeroPosition : currBitSet.getNonzeroPositions()) {
                 try {
                     predicatesForElem =
-                            predicatesForElem.addUnique(predicates
-                                    .get(nonZeroPosition));
-                }
-                catch (NotUniqueException e) {
+                        predicatesForElem.addUnique(predicates
+                                .get(nonZeroPosition));
+                } catch (NotUniqueException e) {
                     // Not unique -- just don't add
                 }
             }
 
             if (getBitSetsByNumZeroes().get(nrZeroes).size() - 1 > idx) {
                 idx++;
-            }
-            else {
+            } else {
                 nrZeroes++;
                 idx = 0;
             }
 
             return new ConjunctivePredicateAbstractionDomainElement(
-                    predicatesForElem);
+                predicatesForElem);
         }
     }
 

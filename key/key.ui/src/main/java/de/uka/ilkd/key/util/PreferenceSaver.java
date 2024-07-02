@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,15 +23,15 @@
 
 package de.uka.ilkd.key.util;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import javax.swing.*;
 
 /**
  * A simple utility which stores and loads user manipulatable properties of
  * swing components in the system's preferences.
- * 
+ *
  * These properties include:
  * <ul>
  * <li>Position and size of windows</li>
@@ -29,22 +39,22 @@ import java.util.prefs.Preferences;
  * <li>Position of split dividers in a split pane</li>
  * <li>State of JCheckBoxMenuItem (selected or not).</li>
  * </ul>
- * 
+ *
  * Only named components (use {@link Component#setName(String)}) have their
  * properties written/read.
- * 
+ *
  * New components can be supported by implementing a new Saver to the list
  * {@link #SAVERS}.
- * 
+ *
  * @author mattias ulbrich
  */
 public class PreferenceSaver {
 
     /**
      * Every Component class has its own Saver class.
-     * 
+     *
      * @param <C>
-     *            the type of Components to store/read.
+     *        the type of Components to store/read.
      */
     private static interface Saver<C extends Component> {
         Class<C> supportedClass();
@@ -58,7 +68,7 @@ public class PreferenceSaver {
      * {@link Saver}s knwon to the system.
      */
     private static Saver<?> SAVERS[] = {
-            new WindowSaver(), new SplitPaneSaver(), new TabbedPaneSaver(),
+        new WindowSaver(), new SplitPaneSaver(), new TabbedPaneSaver(),
         new AbstractButtonSaver()
     };
 
@@ -81,15 +91,15 @@ public class PreferenceSaver {
     /**
      * Create a new instance allowing to store and load UI properties from the
      * user's preferences.
-     * 
+     *
      * @param prefs
-     *            a non-null preference object.
+     *        a non-null preference object.
      */
     public PreferenceSaver(Preferences prefs) {
         assert prefs != null;
         this.prefs = prefs;
     }
-    
+
     // JMenu.getComponents() returns an empty array.
     // JMenu.getMenuComponents() has to be used instead.
     private Component[] getChildren(Component component) {
@@ -101,18 +111,18 @@ public class PreferenceSaver {
         }
         return children;
     }
-    
+
     /**
      * Save the properties of the argument and all its children (in depth).
-     * 
+     *
      * The preferences are {@linkplain Preferences#flush() flushed} after
      * writing them.
-     * 
+     *
      * @param component
-     *            component to store.
-     * 
+     *        component to store.
+     *
      * @throws BackingStoreException
-     *             possibly thrown by {@link Preferences}.
+     *         possibly thrown by {@link Preferences}.
      */
     public void save(Component component) {
         assert component != null;
@@ -145,9 +155,9 @@ public class PreferenceSaver {
 
     /**
      * Load the properties of the argument and all its children (in depth).
-     * 
+     *
      * @param component
-     *            component to load.
+     *        component to load.
      */
     public void load(Component component) {
         assert component != null;
@@ -225,7 +235,7 @@ public class PreferenceSaver {
 
             int splitPoint = component.getDividerLocation();
             component.setDividerLocation(prefs.getInt(
-                    name + ".dividerLocation", splitPoint));
+                name + ".dividerLocation", splitPoint));
         }
 
         @Override
@@ -257,7 +267,7 @@ public class PreferenceSaver {
             int index = component.getSelectedIndex();
             int pref = prefs.getInt(name + ".selectedIndex", index);
             component.setSelectedIndex(Math.min(pref,
-                    component.getTabCount() - 1));
+                component.getTabCount() - 1));
         }
 
         @Override
@@ -306,5 +316,5 @@ public class PreferenceSaver {
     public void flush() throws BackingStoreException {
         prefs.flush();
     }
-    
+
 }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -36,7 +46,7 @@ import de.uka.ilkd.key.logic.TermServices;
  * </p>
  *
  * @param <T>
- *            the type of term labels which are returned by this factory.
+ *        the type of term labels which are returned by this factory.
  *
  * @see SingletonLabelFactory
  * @author Mattias Ulbrich
@@ -51,16 +61,16 @@ public interface TermLabelFactory<T extends TermLabel> {
      * arguments cannot be parsed correctly for this type.
      *
      * @param arguments
-     *            the arguments for parsing, not <code>null</code>, no entry
-     *            <code>null</code>
+     *        the arguments for parsing, not <code>null</code>, no entry
+     *        <code>null</code>
      * @param services
-     *            a non-<code>null</code> services object to look up symbols.
+     *        a non-<code>null</code> services object to look up symbols.
      *
      * @return the according term label with the given arguments, not
      *         <code>null</code>
      *
      * @throws TermLabelException
-     *             if the parameters were illegally formatted
+     *         if the parameters were illegally formatted
      */
     public T parseInstance(List<String> arguments, TermServices services) throws TermLabelException;
 }

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule.match.vm.instructions;
 
 import de.uka.ilkd.key.java.Services;
@@ -13,70 +23,78 @@ import de.uka.ilkd.key.rule.match.vm.TermNavigator;
 public class MatchSortDependingFunctionInstruction extends
         Instruction<SortDependingFunction> {
 
-    private final GenericSort genericSortOfOp; 
-    
+    private final GenericSort genericSortOfOp;
+
     protected MatchSortDependingFunctionInstruction(SortDependingFunction op) {
         super(op);
         if (op.getSortDependingOn() instanceof GenericSort) {
-            genericSortOfOp = (GenericSort)op.getSortDependingOn();
+            genericSortOfOp = (GenericSort) op.getSortDependingOn();
         } else {
             genericSortOfOp = null;
         }
     }
 
     /**
-     * matches the depending sort of this instructions sort depending function against the given sort. If a match is possible 
+     * matches the depending sort of this instructions sort depending function against the given
+     * sort. If a match is possible
      * the resulting match conditions are returned otherwise {@code null} is returned.
-     * @param dependingSortToMatch the depending {@link Sort} of the concrete function to be matched   
-     * @param matchConditions the {@link MatchConditions} accumulated so far 
-     * @return <code>null</code> if failed the resulting match conditions 
-     * otherwise the resulting {@link MatchConditions} 
+     *
+     * @param dependingSortToMatch the depending {@link Sort} of the concrete function to be matched
+     * @param matchConditions the {@link MatchConditions} accumulated so far
+     * @return <code>null</code> if failed the resulting match conditions
+     *         otherwise the resulting {@link MatchConditions}
      */
-    private MatchConditions matchSorts(Sort dependingSortToMatch, MatchConditions matchConditions, Services services) {
+    private MatchConditions matchSorts(Sort dependingSortToMatch, MatchConditions matchConditions,
+            Services services) {
         // This restriction has been dropped for free generic sorts to prove taclets correct
-        //         assert !(s2 instanceof GenericSort)
-        //               : "Sort s2 is not allowed to be of type generic.";
+        // assert !(s2 instanceof GenericSort)
+        // : "Sort s2 is not allowed to be of type generic.";
         MatchConditions result = null;
         if (genericSortOfOp != null) {
-            final GenericSortCondition c 
-                = GenericSortCondition.createIdentityCondition(genericSortOfOp, dependingSortToMatch);                                               
-            if(c != null) {
-                try {                   
-                    result = matchConditions.setInstantiations(matchConditions.getInstantiations().add(c, services));
-                } catch(SortException e) {
+            final GenericSortCondition c =
+                GenericSortCondition.createIdentityCondition(genericSortOfOp, dependingSortToMatch);
+            if (c != null) {
+                try {
+                    result = matchConditions.setInstantiations(
+                        matchConditions.getInstantiations().add(c, services));
+                } catch (SortException e) {
                     result = null;
                 }
-            }                  
+            }
         } else if (op.getSortDependingOn() == dependingSortToMatch) {
             result = matchConditions;
-        }               
+        }
         return result;
     }
-    
-    
+
+
     /**
-     * Tries to match the top level operator of the given term with this instruction's sort depending function symbol.
-     * It returns the resulting match conditions or {@code null} if no match is possible because the top level operator is
+     * Tries to match the top level operator of the given term with this instruction's sort
+     * depending function symbol.
+     * It returns the resulting match conditions or {@code null} if no match is possible because the
+     * top level operator is
      * not a sort depending function or the resulting constraints on the sorts are unsatisfiable.
+     *
      * @param instantiationCandidate the {@link Term} to be matched
-     * @param matchConditions the {@link MatchConditions} specifying the constraints to be considered
-     * @param services the {@link Services} 
+     * @param matchConditions the {@link MatchConditions} specifying the constraints to be
+     *        considered
+     * @param services the {@link Services}
      */
-    @Override    
-    public final MatchConditions match(Term instantiationCandidate, 
-                                       MatchConditions matchConditions,
-                                       Services services) {  
-        MatchConditions result = null; 
-        if(instantiationCandidate.op() instanceof SortDependingFunction) {      
-            final SortDependingFunction sdp = (SortDependingFunction)instantiationCandidate.op();
-            if(op.isSimilar(sdp)) {
+    @Override
+    public final MatchConditions match(Term instantiationCandidate,
+            MatchConditions matchConditions,
+            Services services) {
+        MatchConditions result = null;
+        if (instantiationCandidate.op() instanceof SortDependingFunction) {
+            final SortDependingFunction sdp = (SortDependingFunction) instantiationCandidate.op();
+            if (op.isSimilar(sdp)) {
                 result = matchSorts(sdp.getSortDependingOn(), matchConditions, services);
             }
-        } 
+        }
         return result;
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
      */

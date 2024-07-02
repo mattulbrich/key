@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.expression.operator;
@@ -29,7 +33,8 @@ import recoder.list.generic.ASTList;
  * constructor is invoked from an outer instance.
  */
 
-public class New extends TypeOperator implements ConstructorReference, ExpressionStatement, ReferencePrefix,
+public class New extends TypeOperator
+        implements ConstructorReference, ExpressionStatement, ReferencePrefix,
         ReferenceSuffix, TypeDeclarationContainer {
 
     /**
@@ -69,12 +74,13 @@ public class New extends TypeOperator implements ConstructorReference, Expressio
     /**
      * New.
      *
-     * @param accessPath      a reference prefix.
+     * @param accessPath a reference prefix.
      * @param constructorName a type reference.
-     * @param arguments       an expression mutable list.
+     * @param arguments an expression mutable list.
      */
 
-    public New(ReferencePrefix accessPath, TypeReference constructorName, ASTList<Expression> arguments) {
+    public New(ReferencePrefix accessPath, TypeReference constructorName,
+            ASTList<Expression> arguments) {
         setReferencePrefix(accessPath);
         setTypeReference(constructorName);
         setArguments(arguments);
@@ -84,14 +90,15 @@ public class New extends TypeOperator implements ConstructorReference, Expressio
     /**
      * New.
      *
-     * @param accessPath      a reference prefix.
+     * @param accessPath a reference prefix.
      * @param constructorName a type reference.
-     * @param arguments       an expression mutable list.
-     * @param anonymousClass  a class declaration.
+     * @param arguments an expression mutable list.
+     * @param anonymousClass a class declaration.
      */
 
-    public New(ReferencePrefix accessPath, TypeReference constructorName, ASTList<Expression> arguments,
-               ClassDeclaration anonymousClass) {
+    public New(ReferencePrefix accessPath, TypeReference constructorName,
+            ASTList<Expression> arguments,
+            ClassDeclaration anonymousClass) {
         this(accessPath, constructorName, arguments);
         setClassDeclaration(anonymousClass);
         makeParentRoleValid();
@@ -270,6 +277,7 @@ public class New extends TypeOperator implements ConstructorReference, Expressio
      * Return the type declaration at the specified index in this node's
      * "virtual" type declaration array. @param index an index for a type
      * declaration. @return the type declaration with the given index.
+     *
      * @exception ArrayIndexOutOfBoundsException if <tt> index </tt> is out of
      * bounds.
      */

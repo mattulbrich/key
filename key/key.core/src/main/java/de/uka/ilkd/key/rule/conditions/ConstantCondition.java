@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -41,22 +51,22 @@ public class ConstantCondition extends VariableConditionAdapter {
 
     @Override
     public boolean check(SchemaVariable var,
-                         SVSubstitute instCandidate,
-                         SVInstantiations instMap,
-                         Services services) {
+            SVSubstitute instCandidate,
+            SVInstantiations instMap,
+            Services services) {
         if ((!(var instanceof TermSV)
-                    || var != this.t)
+                || var != this.t)
                 && (!(var instanceof FormulaSV)
                         || var != this.t)) {
             return true;
         }
         if (var instanceof TermSV) {
-            Term tInst = (Term) instMap.getInstantiation((TermSV)t);
+            Term tInst = (Term) instMap.getInstantiation((TermSV) t);
             boolean atomic = (tInst.arity() == 0);
             return negated ? !atomic : atomic;
         }
         if (var instanceof FormulaSV) {
-            Term tInst = (Term) instMap.getInstantiation((FormulaSV)t);
+            Term tInst = (Term) instMap.getInstantiation((FormulaSV) t);
             boolean atomic = (tInst.arity() == 0);
             return negated ? !atomic : atomic;
         }
@@ -65,6 +75,6 @@ public class ConstantCondition extends VariableConditionAdapter {
 
     @Override
     public String toString() {
-        return (negated ? "\\not":"") + "\\isConstant (" + t + ")";
+        return (negated ? "\\not" : "") + "\\isConstant (" + t + ")";
     }
 }

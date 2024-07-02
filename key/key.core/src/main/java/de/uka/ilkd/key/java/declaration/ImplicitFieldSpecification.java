@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -17,10 +27,11 @@ import de.uka.ilkd.key.java.abstraction.Type;
 import de.uka.ilkd.key.java.visitor.Visitor;
 import de.uka.ilkd.key.logic.op.ProgramVariable;
 
-/* An implicit field specification. In KeY we store information about states of 
+/*
+ * An implicit field specification. In KeY we store information about states of
  * classes and/or objects as static or instance fields
- *  (e.g. if a class is initialized or an object created). To avoid name clashes
- *  the name of implicit fields is enclosed by angle brackets.  
+ * (e.g. if a class is initialized or an object created). To avoid name clashes
+ * the name of implicit fields is enclosed by angle brackets.
  */
 public class ImplicitFieldSpecification extends FieldSpecification {
 
@@ -31,6 +42,7 @@ public class ImplicitFieldSpecification extends FieldSpecification {
 
     /**
      * Implicit Field specification.
+     *
      * @param var the ProgramVariable representing this concrete field
      */
     public ImplicitFieldSpecification(ProgramVariable var) {
@@ -38,9 +50,10 @@ public class ImplicitFieldSpecification extends FieldSpecification {
     }
 
     /**
-     *      Implicit Field specification.
-     *      @param var the ProgramVariable representing this concrete field
-     *      @param type the Type of this field      
+     * Implicit Field specification.
+     *
+     * @param var the ProgramVariable representing this concrete field
+     * @param type the Type of this field
      */
 
     public ImplicitFieldSpecification(ProgramVariable var, Type type) {
@@ -48,12 +61,14 @@ public class ImplicitFieldSpecification extends FieldSpecification {
     }
 
 
-    /** calls the corresponding method of a visitor in order to
+    /**
+     * calls the corresponding method of a visitor in order to
      * perform some action/transformation on this element
+     *
      * @param v the Visitor
      */
     public void visit(Visitor v) {
-	v.performActionOnImplicitFieldSpecification(this);
+        v.performActionOnImplicitFieldSpecification(this);
     }
 
 

@@ -1,9 +1,18 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.declaration;
 
-import recoder.abstraction.Package;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import recoder.abstraction.*;
+import recoder.abstraction.Package;
 import recoder.convenience.Naming;
 import recoder.java.*;
 import recoder.list.generic.ASTArrayList;
@@ -11,17 +20,13 @@ import recoder.list.generic.ASTList;
 import recoder.service.ProgramModelInfo;
 import recoder.util.Debug;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Type declaration.
  *
  * @author <TT>AutoDoc</TT>
  */
-public abstract class TypeDeclaration extends JavaDeclaration implements NamedProgramElement, MemberDeclaration,
+public abstract class TypeDeclaration extends JavaDeclaration
+        implements NamedProgramElement, MemberDeclaration,
         TypeDeclarationContainer, ClassType, VariableScope, TypeScope {
 
     /**
@@ -253,6 +258,7 @@ public abstract class TypeDeclaration extends JavaDeclaration implements NamedPr
      * Return the type declaration at the specified index in this node's
      * "virtual" type declaration array. @param index an index for a type
      * declaration. @return the type declaration with the given index.
+     *
      * @exception ArrayIndexOutOfBoundsException if <tt> index </tt> is out of
      * bounds.
      */
@@ -561,7 +567,8 @@ public abstract class TypeDeclaration extends JavaDeclaration implements NamedPr
     }
 
     public void addVariableToScope(VariableSpecification var) {
-        Debug.assertBoolean(var instanceof FieldSpecification || (var instanceof EnumConstantSpecification && this instanceof EnumDeclaration));
+        Debug.assertBoolean(var instanceof FieldSpecification
+                || (var instanceof EnumConstantSpecification && this instanceof EnumDeclaration));
         if (name2field == null || name2field == UNDEFINED_SCOPE) {
             name2field = new HashMap<String, FieldSpecification>();
         }

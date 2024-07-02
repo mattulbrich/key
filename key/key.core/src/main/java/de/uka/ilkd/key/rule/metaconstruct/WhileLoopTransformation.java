@@ -1,17 +1,32 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.rule.metaconstruct;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedHashMap;
+import java.util.Stack;
 
 import de.uka.ilkd.key.java.*;
 import de.uka.ilkd.key.java.declaration.LocalVariableDeclaration;
@@ -29,18 +44,16 @@ import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.speclang.BlockContract;
 import de.uka.ilkd.key.speclang.LoopContract;
 import de.uka.ilkd.key.util.Debug;
+
 import org.key_project.util.ExtList;
 import org.key_project.util.collection.ImmutableArray;
 import org.key_project.util.collection.ImmutableSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedHashMap;
-import java.util.Stack;
-
-/** Walks through a java AST in depth-left-fist-order.
+/**
+ * Walks through a java AST in depth-left-fist-order.
  * This walker is used to transform a loop (not only
  * while loops) according to the rules of the dynamic logic.
  */
@@ -49,7 +62,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
 
     protected static final Boolean CHANGED = Boolean.TRUE;
     protected static final int TRANSFORMATION = 0;
-    protected static final int CHECK          = 1;
+    protected static final int CHECK = 1;
 
     /** the replacement element */
     protected ProgramElement replacement;
@@ -61,33 +74,39 @@ public class WhileLoopTransformation extends JavaASTVisitor {
     protected ExtList labelList = new ExtList();
     /**  */
     protected Deque<ExtList> stack = new ArrayDeque<>();
-    /** if there is a loop inside the loop the breaks of these inner loops have
+    /**
+     * if there is a loop inside the loop the breaks of these inner loops have
      * not to be replaced. The replaceBreakWithNoLabel counts the depth of the
      * loop cascades. Replacements are only performed if the value of the
      * variable is zero.
      */
     protected int replaceBreakWithNoLabel;
-    /** there are two modes the visitor can be run. The check and transformation
+    /**
+     * there are two modes the visitor can be run. The check and transformation
      * mode. In the check mode it is only looked if there are unlabeled break
      * and continues that needs to be replaced, the transformation mode performs
      * the unwinding of the loop with all necessary replacements
      */
     protected int runMode;
-    /** indicates if an unlabled break has been found and an outer
+    /**
+     * indicates if an unlabled break has been found and an outer
      * label is needed
      */
     protected boolean needOuterLabel = false;
-    /** Indicates if an unlabled continue has been found or if a labelled
+    /**
+     * Indicates if an unlabled continue has been found or if a labelled
      * continue with a label outside of the loop currently transformed has
      * been found. Then an inner label is needed.
      */
     protected boolean needInnerLabel = false;
-    /** counts the number of labelled continues with an label outside the
+    /**
+     * counts the number of labelled continues with an label outside the
      * while loop that is transformed
      */
     protected int newLabels = 0;
 
-    /** if run in check mode there are normally schemavaribles, so we need the
+    /**
+     * if run in check mode there are normally schemavaribles, so we need the
      * instantiations of them
      */
     protected SVInstantiations instantiations = SVInstantiations.EMPTY_SVINSTANTIATIONS;
@@ -101,16 +120,18 @@ public class WhileLoopTransformation extends JavaASTVisitor {
 
     protected Stack<MethodFrame> methodStack = new Stack<MethodFrame>();
 
-    /** creates the WhileLoopTransformation for the transformation mode
+    /**
+     * creates the WhileLoopTransformation for the transformation mode
+     *
      * @param root the ProgramElement where to begin
      * @param outerLabel the ProgramElementName of the outer label
      * @param innerLabel the ProgramElementName of the inner label
      * @param services services instance
      */
     public WhileLoopTransformation(ProgramElement root,
-                                   ProgramElementName outerLabel,
-                                   ProgramElementName innerLabel,
-                                   Services services) {
+            ProgramElementName outerLabel,
+            ProgramElementName innerLabel,
+            Services services) {
         super(root, services);
         breakOuterLabel =
             (outerLabel == null ? null : KeYJavaASTFactory.breakStatement(outerLabel));
@@ -120,14 +141,16 @@ public class WhileLoopTransformation extends JavaASTVisitor {
         runMode = TRANSFORMATION;
     }
 
-    /** creates the  WhileLoopTransformation for the check mode
+    /**
+     * creates the WhileLoopTransformation for the check mode
+     *
      * @param root the ProgramElement where to begin
      * @param inst the SVInstantiations if available
      * @param services services instance
      */
     public WhileLoopTransformation(ProgramElement root,
-                                   SVInstantiations inst,
-                                   Services services) {
+            SVInstantiations inst,
+            Services services) {
         super(root, services);
         instantiations =
             (inst == null ? SVInstantiations.EMPTY_SVINSTANTIATIONS : inst);
@@ -150,28 +173,32 @@ public class WhileLoopTransformation extends JavaASTVisitor {
 
 
     private static Statement[] getInnerBlockStatements(IForUpdates updates,
-                                                       Statement body, For remainder,
-                                                       final int updateSize) {
+            Statement body, For remainder,
+            final int updateSize) {
         Statement innerBlockStatements[] = new Statement[updateSize + 2];
         innerBlockStatements[0] = body;
         if (updates != null) {
             for (int copyStatements = 0; copyStatements < updateSize; copyStatements++) {
                 innerBlockStatements[copyStatements + 1] =
-                    (ExpressionStatement)updates.getExpressionAt(copyStatements);
+                    (ExpressionStatement) updates.getExpressionAt(copyStatements);
             }
         }
         innerBlockStatements[updateSize + 1] = remainder;
         return innerBlockStatements;
     }
 
-    /** returns true if an inner label is needed
+    /**
+     * returns true if an inner label is needed
+     *
      * @return boolean as described above
      */
     public boolean innerLabelNeeded() {
         return needInnerLabel;
     }
 
-    /** returns true if an outer label is needed
+    /**
+     * returns true if an outer label is needed
+     *
      * @return boolean as described above
      */
     public boolean outerLabelNeeded() {
@@ -179,8 +206,10 @@ public class WhileLoopTransformation extends JavaASTVisitor {
     }
 
 
-    /** the action that is performed just before leaving the node the
+    /**
+     * the action that is performed just before leaving the node the
      * last time
+     *
      * @param node respective node as program element
      */
     @Override
@@ -188,9 +217,9 @@ public class WhileLoopTransformation extends JavaASTVisitor {
         if (runMode == CHECK) {
             // in check mode we look only for unlabeled breaks and continues
             if (node instanceof Break
-                  || node instanceof Continue
-                  || node instanceof SchemaVariable
-                  || node instanceof Return) {
+                    || node instanceof Continue
+                    || node instanceof SchemaVariable
+                    || node instanceof Return) {
                 node.visit(this);
             }
         } else {
@@ -198,7 +227,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
         }
     }
 
-    /** starts the walker*/
+    /** starts the walker */
     @Override
     public void start() {
         replaceBreakWithNoLabel = -1;
@@ -217,21 +246,23 @@ public class WhileLoopTransformation extends JavaASTVisitor {
     }
 
 
-    /** walks through the AST. While keeping track of the current node
+    /**
+     * walks through the AST. While keeping track of the current node
+     *
      * @param node the JavaProgramElement the walker is at
      */
     @Override
     protected void walk(ProgramElement node) {
         stack.push(new ExtList());
         if ((node instanceof LoopStatement) ||
-            (node instanceof Switch)) {
+                (node instanceof Switch)) {
             replaceBreakWithNoLabel++;
         }
         if (node instanceof LabeledStatement) {
-            labelStack.push(((LabeledStatement)node).getLabel());
+            labelStack.push(((LabeledStatement) node).getLabel());
         }
         if (node instanceof MethodFrame) {
-            methodStack.push((MethodFrame)node);
+            methodStack.push((MethodFrame) node);
         }
 
         super.walk(node);
@@ -243,7 +274,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
             }
         }
         if (node instanceof LoopStatement ||
-            node instanceof Switch) {
+                node instanceof Switch) {
             replaceBreakWithNoLabel--;
         }
     }
@@ -253,8 +284,10 @@ public class WhileLoopTransformation extends JavaASTVisitor {
         return stack.peek().toString();
     }
 
-    /** the implemented default action is called if a program element is,
+    /**
+     * the implemented default action is called if a program element is,
      * and if it has children all its children too are left unchanged
+     *
      * @param x source element
      */
     @Override
@@ -272,11 +305,11 @@ public class WhileLoopTransformation extends JavaASTVisitor {
             needOuterLabel = true;
         } else {
             if (buffer instanceof ProgramElement) {
-                walk((ProgramElement)buffer);
+                walk((ProgramElement) buffer);
             } else {
-                final ImmutableArray<?> aope = (ImmutableArray<?>)buffer;
+                final ImmutableArray<?> aope = (ImmutableArray<?>) buffer;
                 for (int iterate = 0; iterate < aope.size(); iterate++) {
-                    ProgramElement pe = (Statement)aope.get(iterate);
+                    ProgramElement pe = (Statement) aope.get(iterate);
                     if (pe != null) {
                         walk(pe);
                     }
@@ -286,18 +319,19 @@ public class WhileLoopTransformation extends JavaASTVisitor {
 
 
 
-        /**This was the part handling only ProgramElements
-        ProgramElement pe = (ProgramElement)
-            instantiations.getInstantiation(sv);
-        if (pe != null) {
-            walk(pe);
-        } else {
-            // we cannont decide whether there are unlabeled breaks that is why
-            // both labeled are needed
-            needInnerLabel = true;
-            needOuterLabel = true;
-        }
-        */
+        /**
+         * This was the part handling only ProgramElements
+         * ProgramElement pe = (ProgramElement)
+         * instantiations.getInstantiation(sv);
+         * if (pe != null) {
+         * walk(pe);
+         * } else {
+         * // we cannont decide whether there are unlabeled breaks that is why
+         * // both labeled are needed
+         * needInnerLabel = true;
+         * needOuterLabel = true;
+         * }
+         */
 
     }
 
@@ -345,7 +379,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
 
     protected boolean replaceJumpStatement(LabelJumpStatement x) {
         if (replaceBreakWithNoLabel == 0
-              && x.getProgramElementName() == null) {
+                && x.getProgramElementName() == null) {
             return true;
         }
         return labelList.contains(x.getProgramElementName());
@@ -377,7 +411,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
                 changed();
             }
         } else if ((x.getLabel() != null)
-                     && (labelStack.search(x.getLabel()) == -1)) {
+                && (labelStack.search(x.getLabel()) == -1)) {
             if (runMode == CHECK) {
                 needInnerLabel = true;
             } else if (runMode == TRANSFORMATION) {
@@ -395,172 +429,172 @@ public class WhileLoopTransformation extends JavaASTVisitor {
     }
 
     /**
-    *
-    * public void performActionOnFor(For x) {
-    *   ExtList changeList = stack.peek();
-    *   if (replaceBreakWithNoLabel==0) {
-    *     //most outer for loop
-    *     if (changeList.getFirst() == CHANGED)
-    *       changeList.removeFirst();
-    *
-    *       LoopInitializer init[] =
-    *         new LoopInitializer[x.getInitializers().size()];
-    *
-    *       Expression[] updates =
-    *           new Expression[x.getUpdates().size()];
-    *s
-    *       //the unchanged updates need to be extracted to initialize the
-    *       //remainding 'for' statement
-    *       Expression[] unchangedUpdates =
-    *           new Expression[x.getUpdates().size()];
-    *
-    *       Expression guard = null;
-    *       Statement body = null;
-    *       ProgramElement element =
-    *         (ProgramElement) (changeList.isEmpty() ?
-    *                             null :
-    *                             changeList.removeFirst());
-    *       // get loop initializers
-    *       int foundInitializers = 0;
-    *       while (element instanceof LoopInitializer) {
-    *           init[foundInitializers] = (LoopInitializer) element;
-    *           element = (ProgramElement) (changeList.isEmpty() ?
-    *                                       null :
-    *                                       changeList.removeFirst());
-    *           foundInitializers++;
-    *       }
-    *       de.uka.ilkd.key.util.Debug.assertTrue
-    *                 (init.length == x.getInitializers().size(),
-    *            "Critical Error: not all initializers found. "+
-    *            "performActionOnFor in WhileLoopTransformation.");
-    *       // get guard
-    *       if (x.getGuard() != null) {
-    *           guard = (Expression)element;
-    *       }
-    *
-    *       // getUpdates
-    *       int foundUpdates = 0;
-    *       element = (ProgramElement) (changeList.isEmpty() ?
-    *                                   null :
-    *                                   changeList.removeFirst());
-    *       while (element instanceof Expression && foundUpdates<x.getUpdates().size()) {
-    *           updates[foundUpdates] = (Expression) element;
-    *           element = (ProgramElement) (changeList.isEmpty() ?
-    *                                       null :
-    *                                       changeList.removeFirst());
-    *           unchangedUpdates[foundUpdates] = x.getUpdates().getExpression(foundUpdates);
-    *           foundUpdates++;
-    *       }
-    *       de.uka.ilkd.key.util.Debug.assertTrue
-    *            (updates.length == x.getUpdates().size(),
-    *            "Critical Error: not all updates found. "+
-    *            "performActionOnFor in WhileLoopTransformation.");
-    *
-    *       // getBody
-    *       body = (Statement) element;
-    *
-    *       For remainder = new For(null, x.getGuard(), unchangedUpdates, x.getBody());
-    *       if (breakInnerLabel!=null)
-    *           body = (Statement) new LabeledStatement(breakInnerLabel.getLabel(), body);
-    *
-    *
-    *       Statement innerBlockStatements[] = new Statement[updates.length+2];
-    *       innerBlockStatements[0] = body;
-    *       for (int copyStatements=0; copyStatements<updates.length;copyStatements++)
-    *           innerBlockStatements[copyStatements+1] =
-    *               (ExpressionStatement) updates[copyStatements];
-    *       innerBlockStatements[updates.length+1] = remainder;
-    *
-    *             Statement outerBlockStatements[] = new Statement[init.length+1];
-    *             for (int copyStatements=0; copyStatements<init.length;copyStatements++)
-    *                 outerBlockStatements[copyStatements] = init[copyStatements];
-    *             outerBlockStatements[init.length] =
-    *                 new If(guard,
-    *                        new Then(new StatementBlock(
-    *                                     new ArrayOf<Statement>(innerBlockStatements))));
-    *             //outerBlockStatements[init.length+1] = remainder;
-    *
-    *       if (breakOuterLabel!=null)
-    *           addChild(new LabeledStatement(breakOuterLabel.getLabel(), new StatementBlock(
-    *               new ArrayOf<Statement>(outerBlockStatements))));
-    *       else
-    *           addChild(new StatementBlock(new ArrayOf<Statement>(outerBlockStatements)));
-    *               changed();
-    *   } else {
-    *       if (changeList.getFirst() == CHANGED) {
-    *           changeList.removeFirst();
-    *
-    *           LoopInitializer init[] = new
-    *               LoopInitializer[x.getInitializers().size()];
-    *
-    *           Expression[] updates = new
-    *               Expression[x.getUpdates().size()];
-    *
-    *           Expression guard = null;
-    *           Statement body = null;
-    *           ProgramElement element =
-    *               (ProgramElement) (changeList.isEmpty() ?
-    *                                 null :
-    *                                 changeList.removeFirst());
-    *           // get loop initializers
-    *           int foundInitializers = 0;
-    *           while (element instanceof LoopInitializer) {
-    *               init[foundInitializers] = (LoopInitializer) element;
-    *               element = (ProgramElement) (changeList.isEmpty() ?
-    *                                           null :
-    *                                           changeList.removeFirst());
-    *               foundInitializers++;
-    *           }
-    *           de.uka.ilkd.key.util.Debug.assertTrue
-    *                     (init.length == x.getInitializers().size(),
-    *                     "Critical Error: not all initializers found. "+
-    *                "performActionOnFor in WhileLoopTransformation.");
-    *           // get guard
-    *           if (x.getGuard() != null) {
-    *               guard = (Expression)element;
-    *           }
-    *
-    *           // getUpdates
-    *           int foundUpdates = 0;
-    *           element = (ProgramElement) (changeList.isEmpty() ?
-    *                                       null :
-    *                                       changeList.removeFirst());
-    *           while (element instanceof Expression) {
-    *               updates[foundUpdates] = (Expression) element;
-    *               element = (ProgramElement) (changeList.isEmpty() ?
-    *                                           null :
-    *                                           changeList.removeFirst());
-    *               foundUpdates++;
-    *           }
-    *           de.uka.ilkd.key.util.Debug.assertTrue
-    *               (updates.length == x.getUpdates().size(),
-    *                "Critical Error: not all updates found. "+
-    *                "performActionOnFor in WhileLoopTransformation.");
-    *
-    *           // getBody
-    *           body = (Statement) element;
-    *           addChild(new For(init, guard, updates, body));
-    *           changed();
-    *       } else {
-    *           doDefaultAction(x);
-    *       }
-    *     }
-    *  }
-    *
-    * @param x For loop statement
-    */
+     *
+     * public void performActionOnFor(For x) {
+     * ExtList changeList = stack.peek();
+     * if (replaceBreakWithNoLabel==0) {
+     * //most outer for loop
+     * if (changeList.getFirst() == CHANGED)
+     * changeList.removeFirst();
+     *
+     * LoopInitializer init[] =
+     * new LoopInitializer[x.getInitializers().size()];
+     *
+     * Expression[] updates =
+     * new Expression[x.getUpdates().size()];
+     * s
+     * //the unchanged updates need to be extracted to initialize the
+     * //remainding 'for' statement
+     * Expression[] unchangedUpdates =
+     * new Expression[x.getUpdates().size()];
+     *
+     * Expression guard = null;
+     * Statement body = null;
+     * ProgramElement element =
+     * (ProgramElement) (changeList.isEmpty() ?
+     * null :
+     * changeList.removeFirst());
+     * // get loop initializers
+     * int foundInitializers = 0;
+     * while (element instanceof LoopInitializer) {
+     * init[foundInitializers] = (LoopInitializer) element;
+     * element = (ProgramElement) (changeList.isEmpty() ?
+     * null :
+     * changeList.removeFirst());
+     * foundInitializers++;
+     * }
+     * de.uka.ilkd.key.util.Debug.assertTrue
+     * (init.length == x.getInitializers().size(),
+     * "Critical Error: not all initializers found. "+
+     * "performActionOnFor in WhileLoopTransformation.");
+     * // get guard
+     * if (x.getGuard() != null) {
+     * guard = (Expression)element;
+     * }
+     *
+     * // getUpdates
+     * int foundUpdates = 0;
+     * element = (ProgramElement) (changeList.isEmpty() ?
+     * null :
+     * changeList.removeFirst());
+     * while (element instanceof Expression && foundUpdates<x.getUpdates().size()) {
+     * updates[foundUpdates] = (Expression) element;
+     * element = (ProgramElement) (changeList.isEmpty() ?
+     * null :
+     * changeList.removeFirst());
+     * unchangedUpdates[foundUpdates] = x.getUpdates().getExpression(foundUpdates);
+     * foundUpdates++;
+     * }
+     * de.uka.ilkd.key.util.Debug.assertTrue
+     * (updates.length == x.getUpdates().size(),
+     * "Critical Error: not all updates found. "+
+     * "performActionOnFor in WhileLoopTransformation.");
+     *
+     * // getBody
+     * body = (Statement) element;
+     *
+     * For remainder = new For(null, x.getGuard(), unchangedUpdates, x.getBody());
+     * if (breakInnerLabel!=null)
+     * body = (Statement) new LabeledStatement(breakInnerLabel.getLabel(), body);
+     *
+     *
+     * Statement innerBlockStatements[] = new Statement[updates.length+2];
+     * innerBlockStatements[0] = body;
+     * for (int copyStatements=0; copyStatements<updates.length;copyStatements++)
+     * innerBlockStatements[copyStatements+1] =
+     * (ExpressionStatement) updates[copyStatements];
+     * innerBlockStatements[updates.length+1] = remainder;
+     *
+     * Statement outerBlockStatements[] = new Statement[init.length+1];
+     * for (int copyStatements=0; copyStatements<init.length;copyStatements++)
+     * outerBlockStatements[copyStatements] = init[copyStatements];
+     * outerBlockStatements[init.length] =
+     * new If(guard,
+     * new Then(new StatementBlock(
+     * new ArrayOf<Statement>(innerBlockStatements))));
+     * //outerBlockStatements[init.length+1] = remainder;
+     *
+     * if (breakOuterLabel!=null)
+     * addChild(new LabeledStatement(breakOuterLabel.getLabel(), new StatementBlock(
+     * new ArrayOf<Statement>(outerBlockStatements))));
+     * else
+     * addChild(new StatementBlock(new ArrayOf<Statement>(outerBlockStatements)));
+     * changed();
+     * } else {
+     * if (changeList.getFirst() == CHANGED) {
+     * changeList.removeFirst();
+     *
+     * LoopInitializer init[] = new
+     * LoopInitializer[x.getInitializers().size()];
+     *
+     * Expression[] updates = new
+     * Expression[x.getUpdates().size()];
+     *
+     * Expression guard = null;
+     * Statement body = null;
+     * ProgramElement element =
+     * (ProgramElement) (changeList.isEmpty() ?
+     * null :
+     * changeList.removeFirst());
+     * // get loop initializers
+     * int foundInitializers = 0;
+     * while (element instanceof LoopInitializer) {
+     * init[foundInitializers] = (LoopInitializer) element;
+     * element = (ProgramElement) (changeList.isEmpty() ?
+     * null :
+     * changeList.removeFirst());
+     * foundInitializers++;
+     * }
+     * de.uka.ilkd.key.util.Debug.assertTrue
+     * (init.length == x.getInitializers().size(),
+     * "Critical Error: not all initializers found. "+
+     * "performActionOnFor in WhileLoopTransformation.");
+     * // get guard
+     * if (x.getGuard() != null) {
+     * guard = (Expression)element;
+     * }
+     *
+     * // getUpdates
+     * int foundUpdates = 0;
+     * element = (ProgramElement) (changeList.isEmpty() ?
+     * null :
+     * changeList.removeFirst());
+     * while (element instanceof Expression) {
+     * updates[foundUpdates] = (Expression) element;
+     * element = (ProgramElement) (changeList.isEmpty() ?
+     * null :
+     * changeList.removeFirst());
+     * foundUpdates++;
+     * }
+     * de.uka.ilkd.key.util.Debug.assertTrue
+     * (updates.length == x.getUpdates().size(),
+     * "Critical Error: not all updates found. "+
+     * "performActionOnFor in WhileLoopTransformation.");
+     *
+     * // getBody
+     * body = (Statement) element;
+     * addChild(new For(init, guard, updates, body));
+     * changed();
+     * } else {
+     * doDefaultAction(x);
+     * }
+     * }
+     * }
+     *
+     * @param x For loop statement
+     */
     @Override
     public void performActionOnFor(For x) {
         ExtList changeList = stack.peek();
         if (replaceBreakWithNoLabel == 0) {
-            //most outer for loop
+            // most outer for loop
             if (changeList.getFirst() == CHANGED) {
                 changeList.removeFirst();
             }
             ILoopInit inits = null;
             IForUpdates updates = null;
-            //the unchanged updates need to be extracted to initialize the
-            //remaining 'for' statement
+            // the unchanged updates need to be extracted to initialize the
+            // remaining 'for' statement
             IForUpdates unchangedUpdates = x.getIForUpdates();
             Statement body = null;
             if (changeList.get(0) instanceof ILoopInit) {
@@ -573,14 +607,14 @@ public class WhileLoopTransformation extends JavaASTVisitor {
             body = (Statement) changeList.removeFirst();
             For remainder =
                 KeYJavaASTFactory.forLoop(x.getGuard(), unchangedUpdates,
-                                          x.getBody());
+                    x.getBody());
             if (innerLabelNeeded() && breakInnerLabel != null) {
                 body = KeYJavaASTFactory.labeledStatement(
-                breakInnerLabel.getLabel(), body, PositionInfo.UNDEFINED);
+                    breakInnerLabel.getLabel(), body, PositionInfo.UNDEFINED);
             }
             final int updateSize = updates == null ? 0 : updates.size();
             Statement[] innerBlockStatements =
-                    getInnerBlockStatements(updates, body, remainder, updateSize);
+                getInnerBlockStatements(updates, body, remainder, updateSize);
             final int initSize = inits == null ? 0 : inits.size();
             final Statement outerBlockStatements[] = new Statement[initSize + 1];
             if (inits != null) {
@@ -642,7 +676,8 @@ public class WhileLoopTransformation extends JavaASTVisitor {
         }
     }
 
-    /** Performs the unwinding of the loop
+    /**
+     * Performs the unwinding of the loop
      * Warning: The unwinding does not comply with the rule in the KeY book up to 100%
      * The difference is revealed by the following example:
      * <code> Label1:while(c){b}</code>
@@ -665,15 +700,14 @@ public class WhileLoopTransformation extends JavaASTVisitor {
             }
             Expression guard = ((Guard) changeList.removeFirst()).getExpression();
             Statement body =
-                (Statement) (changeList.isEmpty() ?
-                    null : changeList.removeFirst());
+                (Statement) (changeList.isEmpty() ? null : changeList.removeFirst());
 
             // rename all occ. variables in the body (same name but different object)
             ProgVarReplaceVisitor replacer =
                 new ProgVarReplaceVisitor(body,
-                                          new LinkedHashMap<ProgramVariable, ProgramVariable>(),
-                                          true,
-                                          services);
+                    new LinkedHashMap<ProgramVariable, ProgramVariable>(),
+                    true,
+                    services);
             replacer.start();
             body = (Statement) replacer.result();
 
@@ -681,7 +715,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
                 // an unlabeled continue needs to be handled with (replaced)
                 body =
                     KeYJavaASTFactory.labeledStatement(breakInnerLabel.getLabel(),
-                                                       body, PositionInfo.UNDEFINED);
+                        body, PositionInfo.UNDEFINED);
             }
             Then then = null;
             StatementBlock block =
@@ -692,7 +726,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
                 then =
                     KeYJavaASTFactory.thenBlock(
                         KeYJavaASTFactory.labeledStatement(breakOuterLabel.getLabel(),
-                        block, PositionInfo.UNDEFINED));
+                            block, PositionInfo.UNDEFINED));
 
             } else {
                 then = KeYJavaASTFactory.thenBlock(block);
@@ -707,7 +741,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
                 Statement body =
                     (Statement) (changeList.isEmpty() ? null : changeList.removeFirst());
                 While newLoop = KeYJavaASTFactory.whileLoop(guard, body,
-                                                            x.getPositionInfo());
+                    x.getPositionInfo());
                 services.getSpecificationRepository().copyLoopInvariant(x, newLoop);
 
                 ImmutableSet<LoopContract> lcs =
@@ -742,14 +776,14 @@ public class WhileLoopTransformation extends JavaASTVisitor {
                 // an unlabeled continue needs to be handled with (replaced)
                 unwindedBody =
                     KeYJavaASTFactory.labeledStatement(breakInnerLabel.getLabel(),
-                                                       body, PositionInfo.UNDEFINED);
+                        body, PositionInfo.UNDEFINED);
             } else {
                 unwindedBody = body;
             }
             Statement resultStatement = null;
             While newLoop =
                 KeYJavaASTFactory.whileLoop(guard, x.getBody(),
-                                            x.getPositionInfo());
+                    x.getPositionInfo());
             services.getSpecificationRepository().copyLoopInvariant(x, newLoop);
             StatementBlock block = KeYJavaASTFactory.block(unwindedBody, newLoop);
 
@@ -758,7 +792,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
                 // body therefore we need a labeled statement
                 resultStatement =
                     KeYJavaASTFactory.labeledStatement(breakOuterLabel.getLabel(),
-                                                       block, PositionInfo.UNDEFINED);
+                        block, PositionInfo.UNDEFINED);
             } else {
                 resultStatement = block;
             }
@@ -824,7 +858,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
                 l = (Label) changeList.removeFirst();
             }
             addChild(KeYJavaASTFactory.labeledStatement(changeList, l,
-                                                        x.getPositionInfo()));
+                x.getPositionInfo()));
             changed();
         } else {
             doDefaultAction(x);
@@ -915,7 +949,7 @@ public class WhileLoopTransformation extends JavaASTVisitor {
                 e = (Expression) changeList.removeFirst();
             }
             addChild(KeYJavaASTFactory.caseBlock(changeList, e,
-                                                 x.getPositionInfo()));
+                x.getPositionInfo()));
             changed();
         } else {
             doDefaultAction(x);
@@ -982,8 +1016,8 @@ public class WhileLoopTransformation extends JavaASTVisitor {
 
         public void doAction(ProgramElement x) {
             ExtList changeList = stack.peek();
-            if (changeList.size () > 0
-                  && changeList.getFirst() == CHANGED) {
+            if (changeList.size() > 0
+                    && changeList.getFirst() == CHANGED) {
                 changeList.removeFirst();
                 changeList.add(x.getPositionInfo());
                 addNewChild(changeList);

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule.metaconstruct;
 
 import de.uka.ilkd.key.java.ProgramElement;
@@ -25,7 +35,7 @@ import de.uka.ilkd.key.util.Debug;
 public class ForInitUnfoldTransformer extends ProgramTransformer {
     /**
      * @param loopInit
-     *            A loop initializer if called for a concrete program.
+     *        A loop initializer if called for a concrete program.
      */
     public ForInitUnfoldTransformer(LoopInit loopInit) {
         super("forInitUnfoldTransformer", loopInit);
@@ -33,7 +43,7 @@ public class ForInitUnfoldTransformer extends ProgramTransformer {
 
     /**
      * @param programSV
-     *            A {@link ProgramSV} if called while parsing a taclet.
+     *        A {@link ProgramSV} if called while parsing a taclet.
      */
     public ForInitUnfoldTransformer(ProgramSV programSV) {
         super("forInitUnfoldTransformer", programSV);
@@ -43,7 +53,7 @@ public class ForInitUnfoldTransformer extends ProgramTransformer {
     public ProgramElement[] transform(ProgramElement pe, Services services,
             SVInstantiations svInst) {
         Debug.assertTrue(pe instanceof LoopInit,
-                "ForInitUnfoldTransformer cannot handle ", pe);
+            "ForInitUnfoldTransformer cannot handle ", pe);
 
         final LoopInit astLoopInit = (LoopInit) pe;
         final Statement[] loopInitStatementList = new Statement[astLoopInit

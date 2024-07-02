@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -72,7 +82,7 @@ public class MergePointStatement extends JavaStatement
      * Finds the source element that occurs first in the source.
      *
      * @return the last source element in the syntactical representation of this
-     * element, may be equals to this element.
+     *         element, may be equals to this element.
      */
     @Override
     public SourceElement getFirstElement() {
@@ -83,7 +93,7 @@ public class MergePointStatement extends JavaStatement
      * Finds the source element that occurs last in the source.
      *
      * @return the last source element in the syntactical representation of this
-     * element, may be equals to this element.
+     *         element, may be equals to this element.
      */
     @Override
     public SourceElement getLastElement() {

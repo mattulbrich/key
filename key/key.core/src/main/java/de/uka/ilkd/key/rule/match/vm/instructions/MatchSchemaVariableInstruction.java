@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule.match.vm.instructions;
 
 import de.uka.ilkd.key.java.ProgramElement;
@@ -7,11 +17,14 @@ import de.uka.ilkd.key.logic.op.SchemaVariable;
 import de.uka.ilkd.key.rule.MatchConditions;
 import de.uka.ilkd.key.rule.inst.IllegalInstantiationException;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class MatchSchemaVariableInstruction<SV extends SchemaVariable> extends Instruction<SV> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MatchSchemaVariableInstruction.class);
+public abstract class MatchSchemaVariableInstruction<SV extends SchemaVariable>
+        extends Instruction<SV> {
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(MatchSchemaVariableInstruction.class);
 
     public MatchSchemaVariableInstruction(SV op) {
         super(op);
@@ -28,41 +41,45 @@ public abstract class MatchSchemaVariableInstruction<SV extends SchemaVariable> 
 
         if (op.isRigid() && !term.isRigid()) {
             return null;
-        }      
+        }
 
         final SVInstantiations inst = matchCond.getInstantiations();
 
         final Term t = inst.getTermInstantiation(op, inst.getExecutionContext(), services);
-        if(t != null) {
-            if(!t.equalsModRenaming(term)) {
+        if (t != null) {
+            if (!t.equalsModRenaming(term)) {
                 return null;
             } else {
                 return matchCond;
             }
-        } 
+        }
 
-        try {           
+        try {
             return matchCond.setInstantiations(inst.add(op, term, services));
         } catch (IllegalInstantiationException e) {
             LOGGER.debug("FAILED. Exception thrown at sorted schema variable", e);
         }
-        
+
         return null;
     }
 
     /**
-     * tries to match the schema variable of this instruction with the specified {@link ProgramElement} {@code instantiationCandidate}
-     * w.r.t. the given constraints by {@link MatchConditions} 
+     * tries to match the schema variable of this instruction with the specified
+     * {@link ProgramElement} {@code instantiationCandidate}
+     * w.r.t. the given constraints by {@link MatchConditions}
+     *
      * @param instantiationCandidate the {@link ProgramElement} to be matched
-     * @param mc the {@link MatchConditions} with additional constraints (e.g. previous matches of this instructions {@link SchemaVariable})
+     * @param mc the {@link MatchConditions} with additional constraints (e.g. previous matches of
+     *        this instructions {@link SchemaVariable})
      * @param services the {@link Services}
      * @return {@code null} if no matches have been found or the new
-     *     {@link MatchConditions} with the pair ({@link SchemaVariable},
-     *                                            {@link ProgramElement}) added
+     *         {@link MatchConditions} with the pair ({@link SchemaVariable},
+     *         {@link ProgramElement}) added
      */
-    public MatchConditions match(ProgramElement instantiationCandidate, MatchConditions mc, Services services) {
+    public MatchConditions match(ProgramElement instantiationCandidate, MatchConditions mc,
+            Services services) {
         return null;
     }
-   
+
 
 }

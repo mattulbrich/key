@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -29,8 +39,8 @@ public final class JMLBuiltInPropertyResolver extends SLExpressionResolver {
 
 
     public JMLBuiltInPropertyResolver(JavaInfo javaInfo,
-                                      SLResolverManager manager,
-                                      KeYJavaType specInClass) {
+            SLResolverManager manager,
+            KeYJavaType specInClass) {
         super(javaInfo, manager, specInClass);
         this.seqLDT = services.getTypeConverter().getSeqLDT();
     }
@@ -44,8 +54,8 @@ public final class JMLBuiltInPropertyResolver extends SLExpressionResolver {
 
     @Override
     protected SLExpression doResolving(SLExpression receiver,
-                                       String name,
-                                       SLParameters parameters)
+            String name,
+            SLParameters parameters)
             throws SLTranslationException {
         if (parameters != null) {
             return null;
@@ -55,7 +65,7 @@ public final class JMLBuiltInPropertyResolver extends SLExpressionResolver {
                 && receiver.isTerm()
                 && receiver.getTerm().sort().equals(seqLDT.targetSort())) {
             return new SLExpression(services.getTermBuilder().seqLen(receiver.getTerm()),
-                    javaInfo.getPrimitiveKeYJavaType(PrimitiveType.JAVA_INT));
+                javaInfo.getPrimitiveKeYJavaType(PrimitiveType.JAVA_INT));
         }
 
         return null;

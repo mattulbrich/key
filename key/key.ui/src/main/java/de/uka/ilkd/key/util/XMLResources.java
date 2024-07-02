@@ -1,12 +1,22 @@
-package de.uka.ilkd.key.util;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An instance of this class loads several XML files, whose contents are
@@ -20,7 +30,8 @@ public class XMLResources {
     private static final Logger LOGGER = LoggerFactory.getLogger(XMLResources.class);
     protected final Properties ruleExplanations;
 
-    private static final String LABEL_RESOURCE = "/de/uka/ilkd/key/gui/help/termLabelExplanations.xml";
+    private static final String LABEL_RESOURCE =
+        "/de/uka/ilkd/key/gui/help/termLabelExplanations.xml";
     protected final Properties termLabelExplanations;
 
     static final String FUNCTION_RESOURCE = "/de/uka/ilkd/key/gui/help/functionExplanations.xml";
@@ -31,15 +42,15 @@ public class XMLResources {
         termLabelExplanations = getResource(LABEL_RESOURCE);
         functionExplanations = getResource(FUNCTION_RESOURCE);
     }
-    
+
     public Properties getRuleExplanations() {
         return ruleExplanations;
     }
-    
+
     public Properties getTermLabelExplanations() {
         return termLabelExplanations;
     }
-    
+
     public Properties getFunctionExplanations() {
         return functionExplanations;
     }

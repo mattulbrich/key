@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -30,46 +40,46 @@ import de.uka.ilkd.key.rule.RuleApp;
  */
 public class AllowedCutPositionsGenerator implements TermGenerator {
 
-    private AllowedCutPositionsGenerator () {}
-    
-    public final static TermGenerator INSTANCE = new AllowedCutPositionsGenerator ();
-    
+    private AllowedCutPositionsGenerator() {}
+
+    public final static TermGenerator INSTANCE = new AllowedCutPositionsGenerator();
+
     public Iterator<Term> generate(RuleApp app, PosInOccurrence pos, Goal goal) {
-        return new ACPIterator ( pos.sequentFormula ().formula (),
-                              pos.isInAntec () );
+        return new ACPIterator(pos.sequentFormula().formula(),
+            pos.isInAntec());
     }
 
     private static class ACPIterator implements Iterator<Term> {
-        private final Stack<Object> termStack = new Stack<Object> (); 
+        private final Stack<Object> termStack = new Stack<Object>();
 
         public ACPIterator(Term t, boolean negated) {
-            push ( t, negated );
+            push(t, negated);
         }
 
         private void push(Term t, boolean negated) {
-            termStack.push ( t );
-            termStack.push ( Boolean.valueOf ( negated ) );
+            termStack.push(t);
+            termStack.push(Boolean.valueOf(negated));
         }
 
         public boolean hasNext() {
-            return !termStack.isEmpty ();
+            return !termStack.isEmpty();
         }
 
         public Term next() {
-            final boolean negated = ( (Boolean)termStack.pop () ).booleanValue ();
-            final Term res = (Term)termStack.pop ();
-            final Operator op = res.op ();
-            
-            if ( op == Junctor.NOT ) {
-                push ( res.sub ( 0 ), !negated );
-            } else if ( op == ( negated ? Junctor.OR : Junctor.AND ) ) {
-                push ( res.sub ( 0 ), negated );
-                push ( res.sub ( 1 ), negated );
-            } else if ( negated && op == Junctor.IMP ) {
-                push ( res.sub ( 0 ), !negated );
-                push ( res.sub ( 1 ), negated );
+            final boolean negated = ((Boolean) termStack.pop()).booleanValue();
+            final Term res = (Term) termStack.pop();
+            final Operator op = res.op();
+
+            if (op == Junctor.NOT) {
+                push(res.sub(0), !negated);
+            } else if (op == (negated ? Junctor.OR : Junctor.AND)) {
+                push(res.sub(0), negated);
+                push(res.sub(1), negated);
+            } else if (negated && op == Junctor.IMP) {
+                push(res.sub(0), !negated);
+                push(res.sub(1), negated);
             }
-            
+
             return res;
         }
 

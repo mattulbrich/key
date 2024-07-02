@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -43,7 +53,7 @@ public class SubFormulaCondition extends VariableConditionAdapter {
 
     @Override
     public boolean check(SchemaVariable var, SVSubstitute instCandidate,
-                         SVInstantiations instMap, Services services) {        
+            SVInstantiations instMap, Services services) {
         if (!(var instanceof FormulaSV) || var != this.a) {
             return false;
         }
@@ -51,7 +61,7 @@ public class SubFormulaCondition extends VariableConditionAdapter {
         if (tInst.arity() == 0) {
             return negated;
         } else {
-            for (Term sub: tInst.subs()) {
+            for (Term sub : tInst.subs()) {
                 if (sub.sort() == Sort.FORMULA) {
                     return !negated;
                 }
@@ -62,6 +72,6 @@ public class SubFormulaCondition extends VariableConditionAdapter {
 
     @Override
     public String toString() {
-        return (negated ? "\\not":"") + "\\hasSubFormulas (" + a + ")";
+        return (negated ? "\\not" : "") + "\\hasSubFormulas (" + a + ")";
     }
 }

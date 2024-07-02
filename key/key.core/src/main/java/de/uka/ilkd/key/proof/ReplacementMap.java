@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.proof;
 
 import java.util.Collection;
@@ -33,8 +43,8 @@ public interface ReplacementMap<S extends SVSubstitute, T> extends Map<S, T> {
      * @param proof the currently loaded proof, or {@code null} if no proof is loaded.
      * @return a new replacement map.
      */
-    public static <S extends SVSubstitute, T>
-        ReplacementMap<S, T> create(TermFactory tf, Proof proof) {
+    public static <S extends SVSubstitute, T> ReplacementMap<S, T> create(TermFactory tf,
+            Proof proof) {
         if (ProofIndependentSettings.DEFAULT_INSTANCE.getTermLabelSettings().getUseOriginLabels()) {
             return new NoIrrelevantLabelsReplacementMap<S, T>(tf);
         } else {
@@ -52,8 +62,8 @@ public interface ReplacementMap<S extends SVSubstitute, T> extends Map<S, T> {
      * @param initialMappings a map whose mapping should be added to the new replacement map.
      * @return a new replacement map.
      */
-    public static <S extends SVSubstitute, T>
-        ReplacementMap<S, T> create(TermFactory tf, Proof proof, Map<S, T> initialMappings) {
+    public static <S extends SVSubstitute, T> ReplacementMap<S, T> create(TermFactory tf,
+            Proof proof, Map<S, T> initialMappings) {
         ReplacementMap<S, T> result = create(tf, proof);
         result.putAll(initialMappings);
         return result;
@@ -72,7 +82,7 @@ public interface ReplacementMap<S extends SVSubstitute, T> extends Map<S, T> {
      * @param <T> the type of the replacements.
      */
     public static class DefaultReplacementMap<S extends SVSubstitute, T>
-        extends LinkedHashMap<S, T> implements ReplacementMap<S, T> {
+            extends LinkedHashMap<S, T> implements ReplacementMap<S, T> {
         private static final long serialVersionUID = 6223486569442129676L;
     }
 
@@ -81,7 +91,9 @@ public interface ReplacementMap<S extends SVSubstitute, T> extends Map<S, T> {
      * The replacement map type to use if {@link TermLabelSettings#getUseOriginLabels()} is true.
      * </p>
      *
-     * <p> This map considers otherwise equal terms with different origins as equal. </p>
+     * <p>
+     * This map considers otherwise equal terms with different origins as equal.
+     * </p>
      *
      * @author lanzinger
      *
@@ -90,8 +102,8 @@ public interface ReplacementMap<S extends SVSubstitute, T> extends Map<S, T> {
      *
      * @see OriginTermLabel
      */
-    public static class NoIrrelevantLabelsReplacementMap
-        <S extends SVSubstitute, T> implements ReplacementMap<S, T> {
+    public static class NoIrrelevantLabelsReplacementMap<S extends SVSubstitute, T>
+            implements ReplacementMap<S, T> {
 
         /**
          * The map wrapped by this one.

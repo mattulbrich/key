@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,12 +24,7 @@
 package de.uka.ilkd.key.control.instantiation_model;
 
 import java.util.Iterator;
-
 import javax.swing.DefaultComboBoxModel;
-
-import de.uka.ilkd.key.nparser.KeyIO;
-import org.antlr.runtime.RecognitionException;
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.java.Recoder2KeY;
 import de.uka.ilkd.key.java.Services;
@@ -29,6 +34,7 @@ import de.uka.ilkd.key.logic.Term;
 import de.uka.ilkd.key.logic.label.OriginTermLabel;
 import de.uka.ilkd.key.logic.label.OriginTermLabel.NodeOrigin;
 import de.uka.ilkd.key.logic.label.OriginTermLabel.SpecType;
+import de.uka.ilkd.key.nparser.KeyIO;
 import de.uka.ilkd.key.parser.ParserMode;
 import de.uka.ilkd.key.pp.AbbrevMap;
 import de.uka.ilkd.key.proof.Goal;
@@ -39,6 +45,10 @@ import de.uka.ilkd.key.rule.IfFormulaInstDirect;
 import de.uka.ilkd.key.rule.IfFormulaInstantiation;
 import de.uka.ilkd.key.rule.TacletApp;
 import de.uka.ilkd.key.settings.ProofIndependentSettings;
+
+import org.key_project.util.collection.ImmutableList;
+
+import org.antlr.runtime.RecognitionException;
 
 public class TacletAssumesModel extends DefaultComboBoxModel<IfFormulaInstantiation> {
 
@@ -119,7 +129,7 @@ public class TacletAssumesModel extends DefaultComboBoxModel<IfFormulaInstantiat
 
     /**
      * @param pos int describes position of the if-sequent (only required for error
-     *            message)
+     *        message)
      * @return the selected instantiation of the if sequent
      * @throws SVInstantiationParserException
      * @throws MissingInstantiationException
@@ -132,8 +142,8 @@ public class TacletAssumesModel extends DefaultComboBoxModel<IfFormulaInstantiat
         try {
             if (manualInput == null || "".equals(manualInput)) {
                 throw new MissingInstantiationException(
-                        "'\\assumes'-formula: " + ProofSaver.printAnything(ifFma, services), pos,
-                        -1, true);
+                    "'\\assumes'-formula: " + ProofSaver.printAnything(ifFma, services), pos,
+                    -1, true);
             }
 
             Term term = parseFormula(manualInput);
@@ -141,18 +151,18 @@ public class TacletAssumesModel extends DefaultComboBoxModel<IfFormulaInstantiat
             if (ProofIndependentSettings.DEFAULT_INSTANCE
                     .getTermLabelSettings().getUseOriginLabels()) {
                 term = services.getTermBuilder().addLabelToAllSubs(term, new OriginTermLabel(
-                        new NodeOrigin(
-                                SpecType.USER_INTERACTION,
-                                app.rule().displayName(),
-                                goal.node().serialNr())));
+                    new NodeOrigin(
+                        SpecType.USER_INTERACTION,
+                        app.rule().displayName(),
+                        goal.node().serialNr())));
             }
 
             return new IfFormulaInstDirect(new SequentFormula(term));
         } catch (RecognitionException e) {
             throw new SVInstantiationParserException(manualInput, pos, e.charPositionInLine,
-                    "Problem occured parsing a manual input" + " of an '\\assumes'-sequent.\n"
-                            + e.getMessage(),
-                    true).initCause(e);
+                "Problem occured parsing a manual input" + " of an '\\assumes'-sequent.\n"
+                    + e.getMessage(),
+                true).initCause(e);
         }
     }
 

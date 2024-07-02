@@ -1,17 +1,29 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.proof;
+
+import java.lang.reflect.Method;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Semisequent;
@@ -20,13 +32,13 @@ import de.uka.ilkd.key.logic.SequentFormula;
 import de.uka.ilkd.key.proof.init.AbstractProfile;
 import de.uka.ilkd.key.proof.init.InitConfig;
 import de.uka.ilkd.key.rule.TacletForTests;
+
+import org.key_project.util.collection.ImmutableList;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.key_project.util.collection.ImmutableList;
-
-import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,34 +68,38 @@ public class TestGoal {
         Sequent seq = Sequent
                 .createSuccSequent(Semisequent.EMPTY_SEMISEQUENT
                         .insert(0,
-                                new SequentFormula(
-                                        TacletForTests.parseTerm("A")))
+                            new SequentFormula(
+                                TacletForTests.parseTerm("A")))
                         .semisequent());
 
-        final InitConfig initConfig = new InitConfig(new Services(AbstractProfile.getDefaultProfile()));
+        final InitConfig initConfig =
+            new InitConfig(new Services(AbstractProfile.getDefaultProfile()));
         proof = new Proof("",
-                seq,
-                "",
-                initConfig.createTacletIndex(),
-                initConfig.createBuiltInRuleIndex(),
-                initConfig);
+            seq,
+            "",
+            initConfig.createTacletIndex(),
+            initConfig.createBuiltInRuleIndex(),
+            initConfig);
 
 
-        Goal g = proof.openGoals().head();//new Goal(proof.root(), new RuleAppIndex(new TacletAppIndex(new TacletIndex(), proof.getServices()), new BuiltInRuleAppIndex(new BuiltInRuleIndex()), proof.getServices()));
+        Goal g = proof.openGoals().head();// new Goal(proof.root(), new RuleAppIndex(new
+                                          // TacletAppIndex(new TacletIndex(), proof.getServices()),
+                                          // new BuiltInRuleAppIndex(new BuiltInRuleIndex()),
+                                          // proof.getServices()));
         ImmutableList<Goal> lg = g.split(3);
         lg.head().addNoPosTacletApp(
-                TacletForTests.getRules().lookup("imp_right"));
+            TacletForTests.getRules().lookup("imp_right"));
         lg.tail()
                 .head()
                 .addNoPosTacletApp(
-                        TacletForTests.getRules()
-                                .lookup("imp_left"));
+                    TacletForTests.getRules()
+                            .lookup("imp_left"));
         lg.tail()
                 .tail()
                 .head()
                 .addNoPosTacletApp(
-                        TacletForTests.getRules()
-                                .lookup("or_right"));
+                    TacletForTests.getRules()
+                            .lookup("or_right"));
         // just check if the test is trivially correct because of rules
         // not found
         assertNotNull(lg.head().indexOfTaclets().lookup("imp_right"));
@@ -97,13 +113,16 @@ public class TestGoal {
         proof.pruneProof(lg.tail().head());
         assertEquals(1, proof.openGoals().size());
         assertNull(proof.openGoals().head()
-                .indexOfTaclets().lookup("imp_right"), "Taclet Index of set back goal contains rule \"imp-right\" that were not "
+                .indexOfTaclets().lookup("imp_right"),
+            "Taclet Index of set back goal contains rule \"imp-right\" that were not "
                 + "there before");
         assertNull(proof.openGoals().head()
-                .indexOfTaclets().lookup("or_right"), "Taclet Index of set back goal contains rule \"or-right\"that were not "
+                .indexOfTaclets().lookup("or_right"),
+            "Taclet Index of set back goal contains rule \"or-right\"that were not "
                 + "there before");
         assertNull(proof.openGoals().head()
-                .indexOfTaclets().lookup("imp_left"), "Taclet Index of set back goal contains rule \"imp-left\" that were not "
+                .indexOfTaclets().lookup("imp_left"),
+            "Taclet Index of set back goal contains rule \"imp-left\" that were not "
                 + "there before");
 
     }
@@ -114,47 +133,47 @@ public class TestGoal {
         Sequent seq = Sequent
                 .createSuccSequent(Semisequent.EMPTY_SEMISEQUENT
                         .insert(0,
-                                new SequentFormula(
-                                        TacletForTests.parseTerm("A")))
+                            new SequentFormula(
+                                TacletForTests.parseTerm("A")))
                         .semisequent());
         Node root = new Node(proof, seq);
         proof.setRoot(root);
         Goal g = new Goal(
-                root,
-                new RuleAppIndex(
-                        new TacletAppIndex(
-                                TacletIndexKit.getKit()
-                                        .createTacletIndex(),
-                                proof.getServices()),
-                        new BuiltInRuleAppIndex(
-                                new BuiltInRuleIndex()),
-                        proof.getServices()));
+            root,
+            new RuleAppIndex(
+                new TacletAppIndex(
+                    TacletIndexKit.getKit()
+                            .createTacletIndex(),
+                    proof.getServices()),
+                new BuiltInRuleAppIndex(
+                    new BuiltInRuleIndex()),
+                proof.getServices()));
         ImmutableList<Goal> lg = g.split(3);
         lg.head().addNoPosTacletApp(
-                TacletForTests.getRules().lookup("imp_right"));
+            TacletForTests.getRules().lookup("imp_right"));
         lg.tail()
                 .head()
                 .addNoPosTacletApp(
-                        TacletForTests.getRules()
-                                .lookup("imp_left"));
+                    TacletForTests.getRules()
+                            .lookup("imp_left"));
         lg.tail()
                 .tail()
                 .head()
                 .addNoPosTacletApp(
-                        TacletForTests.getRules()
-                                .lookup("or_right"));
+                    TacletForTests.getRules()
+                            .lookup("or_right"));
         // just check if the test is trivially correct because of rules
         // not found
         assertNotNull(lg.head().indexOfTaclets().lookup("imp_right"));
 
         ImmutableList<Goal> lg0 = lg.head().split(4);
         lg0.head().addNoPosTacletApp(
-                TacletForTests.getRules().lookup("or_left"));
+            TacletForTests.getRules().lookup("or_left"));
         lg0.tail()
                 .head()
                 .addNoPosTacletApp(
-                        TacletForTests.getRules()
-                                .lookup("or_left"));
+                    TacletForTests.getRules()
+                            .lookup("or_left"));
         ImmutableList<Goal> lg1 = lg.tail().tail().head().split(2);
         proof.add(lg1.append(lg0).append(lg.tail().head()));
         proof.pruneProof(lg0.tail().head());
@@ -167,7 +186,7 @@ public class TestGoal {
 
         // use reflection as method has private access
         Method remove = proof.getClass().getDeclaredMethod("remove",
-                Goal.class);
+            Goal.class);
         remove.setAccessible(true);
 
         assertNull(lg1.head().indexOfTaclets().lookup("or_left"));

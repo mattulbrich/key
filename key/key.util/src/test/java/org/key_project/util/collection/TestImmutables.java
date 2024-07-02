@@ -1,6 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.util.collection;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestImmutables {
@@ -8,7 +19,7 @@ public class TestImmutables {
     @Test
     public void testRemoveDuplicatesLarge() {
         ImmutableList<Integer> l = ImmutableSLList.nil();
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             l = l.prepend((i * 2) % 160);
         }
 
@@ -31,15 +42,15 @@ public class TestImmutables {
     public void testRemoveDuplicates() {
 
         String[][] a = {
-                { "a", "b", "a", "c", "d", "d", "a", "e" },
-                { null, "a" , null },
-                { "1", "1", "1", "1", "1" }
+            { "a", "b", "a", "c", "d", "d", "a", "e" },
+            { null, "a", null },
+            { "1", "1", "1", "1", "1" }
         };
 
         String[][] expected = {
-                { "a", "b", "c", "d", "e" },
-                { null, "a" },
-                { "1" }
+            { "a", "b", "c", "d", "e" },
+            { null, "a" },
+            { "1" }
         };
 
         for (int i = 0; i < a.length; i++) {
@@ -69,19 +80,19 @@ public class TestImmutables {
     @Test
     public void testIsDuplicateFree() {
         String[][] a = { { "a", "b", "c", "d", "e" },
-                {  }, {"a"}, { null }, { null, "a" } };
+            {}, { "a" }, { null }, { null, "a" } };
 
         for (String[] strings : a) {
             ImmutableList<String> l = ImmutableSLList.<String>nil().prepend(strings);
             assertTrue(Immutables.isDuplicateFree(l));
         }
 
-        String[][] b = { { "a", "a"},
-                { "a", "b", "c", "d", "a" },
-                { "a", "b", "a", "d", "e" },
-                { "a", "b", "d", "d", "e" },
-                { "a", "b", "c", "d", "d" },
-                { null, "a", null }};
+        String[][] b = { { "a", "a" },
+            { "a", "b", "c", "d", "a" },
+            { "a", "b", "a", "d", "e" },
+            { "a", "b", "d", "d", "e" },
+            { "a", "b", "c", "d", "d" },
+            { null, "a", null } };
 
         for (String[] strings : b) {
             ImmutableList<String> l = ImmutableSLList.<String>nil().prepend(strings);
@@ -97,40 +108,41 @@ public class TestImmutables {
             assertEquals(expected[i], array[i]);
         }
     }
-    
+
     @Test
     public void testUnion() {
-       for (int setSize = 0; setSize < DefaultImmutableSet.UNION_OPTIMIZATION_SIZE * 2 + 2; setSize++) {
-          ImmutableSet<Integer> s1 = DefaultImmutableSet.nil();
-          ImmutableSet<Integer> s2 = DefaultImmutableSet.nil();
-          ImmutableSet<Integer> s1UnionS2 = DefaultImmutableSet.nil();
-          for (int i = 0; i < setSize; i++) {
-             s1 = s1.add(i);
-             s2 = s2.add(i * -1);
-             s1UnionS2 = s1UnionS2.add(i);
-             s1UnionS2 = s1UnionS2.add(i * -1);
-          }
-          // Test union without duplicates
-          ImmutableSet<Integer> union = s1.union(s2);
-          assertEquals(s1UnionS2, union);
-          // Test union with duplicates
-          union = union.union(s1);
-          assertEquals(s1UnionS2, union);
-          union = union.union(s2);
-          assertEquals(s1UnionS2, union);
-          union = union.union(union);
-          assertEquals(s1UnionS2, union);
-          // Test union without duplicates (other way round)
-          union = s2.union(s1);
-          assertEquals(s1UnionS2, union);
-          // Test union with duplicates
-          union = union.union(s1);
-          assertEquals(s1UnionS2, union);
-          union = union.union(s2);
-          assertEquals(s1UnionS2, union);
-          union = union.union(union);
-          assertEquals(s1UnionS2, union);
-       }
+        for (int setSize = 0; setSize < DefaultImmutableSet.UNION_OPTIMIZATION_SIZE * 2
+                + 2; setSize++) {
+            ImmutableSet<Integer> s1 = DefaultImmutableSet.nil();
+            ImmutableSet<Integer> s2 = DefaultImmutableSet.nil();
+            ImmutableSet<Integer> s1UnionS2 = DefaultImmutableSet.nil();
+            for (int i = 0; i < setSize; i++) {
+                s1 = s1.add(i);
+                s2 = s2.add(i * -1);
+                s1UnionS2 = s1UnionS2.add(i);
+                s1UnionS2 = s1UnionS2.add(i * -1);
+            }
+            // Test union without duplicates
+            ImmutableSet<Integer> union = s1.union(s2);
+            assertEquals(s1UnionS2, union);
+            // Test union with duplicates
+            union = union.union(s1);
+            assertEquals(s1UnionS2, union);
+            union = union.union(s2);
+            assertEquals(s1UnionS2, union);
+            union = union.union(union);
+            assertEquals(s1UnionS2, union);
+            // Test union without duplicates (other way round)
+            union = s2.union(s1);
+            assertEquals(s1UnionS2, union);
+            // Test union with duplicates
+            union = union.union(s1);
+            assertEquals(s1UnionS2, union);
+            union = union.union(s2);
+            assertEquals(s1UnionS2, union);
+            union = union.union(union);
+            assertEquals(s1UnionS2, union);
+        }
     }
 
     @Test

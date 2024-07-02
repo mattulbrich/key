@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.proof.runallproofs.performance;
 
 import java.io.File;
@@ -15,7 +25,7 @@ public class FunctionPerformanceData {
     private final Map<Integer, NodeData> nodeId2NodeData = new HashMap<>();
     private final File dataDir;
     private final DataRecordingTestFile dataRecordingTestFile;
-    
+
     public int totalInvocations = 0;
     public long totalDuration = 0;
 
@@ -43,7 +53,7 @@ public class FunctionPerformanceData {
         } else {
             ruleData.addDuration(duration);
         }
-        
+
         totalInvocations++;
         totalDuration += duration;
     }
@@ -53,7 +63,8 @@ public class FunctionPerformanceData {
         if (table == null) {
             try {
                 File ruleDataLocation = new File(dataDir, ruleName + ".data");
-                String[] columns = new String[]{"nodeId", "astCount", "proofTreeDepth", "numberInvocations", "         duration", "averageTimePerInvocation"};
+                String[] columns = new String[] { "nodeId", "astCount", "proofTreeDepth",
+                    "numberInvocations", "         duration", "averageTimePerInvocation" };
                 String description = "Profiling data for rule " + ruleName;
                 table = new DataRecordingTable(ruleDataLocation, columns, description);
                 tables.put(ruleName, table);
@@ -73,8 +84,9 @@ public class FunctionPerformanceData {
                 RuleData ruleData = entry.getValue();
                 int invocations = ruleData.numberInvocations;
                 long duration = ruleData.duration;
-                getTable(entry.getKey(), tables).writeRow(node.id, node.astDepth, node.proofTreeDepth,
-                        invocations, duration, ((double) duration) / ((double) invocations));
+                getTable(entry.getKey(), tables).writeRow(node.id, node.astDepth,
+                    node.proofTreeDepth,
+                    invocations, duration, ((double) duration) / ((double) invocations));
             }
         }
         for (DataRecordingTable table : tables.values()) {

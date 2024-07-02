@@ -1,16 +1,30 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 package de.uka.ilkd.key.gui;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
 
 import de.uka.ilkd.key.control.InteractionListener;
 import de.uka.ilkd.key.core.InterruptListener;
@@ -26,12 +40,9 @@ import de.uka.ilkd.key.prover.ProverTaskListener;
 import de.uka.ilkd.key.prover.TaskStartedInfo;
 import de.uka.ilkd.key.prover.impl.DefaultTaskStartedInfo;
 import de.uka.ilkd.key.util.Debug;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The Class ProofMacroWorker is a swing worker for the application of proof
@@ -40,7 +51,8 @@ import java.util.List;
  * It decouples proof macros from the GUI event thread. It registers with the
  * mediator to receive Stop-Button events
  */
-public class ProofMacroWorker extends SwingWorker<ProofMacroFinishedInfo, Void> implements InterruptListener {
+public class ProofMacroWorker extends SwingWorker<ProofMacroFinishedInfo, Void>
+        implements InterruptListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProofMacroWorker.class);
 
     /**
@@ -49,7 +61,7 @@ public class ProofMacroWorker extends SwingWorker<ProofMacroFinishedInfo, Void> 
      * where it was.
      */
     private static final boolean SELECT_GOAL_AFTER_MACRO =
-            Boolean.parseBoolean(System.getProperty("key.macro.selectGoalAfter", "true"));
+        Boolean.parseBoolean(System.getProperty("key.macro.selectGoalAfter", "true"));
 
     /**
      * The {@link Node} to start macro at.
@@ -69,7 +81,8 @@ public class ProofMacroWorker extends SwingWorker<ProofMacroFinishedInfo, Void> 
      */
     private final PosInOccurrence posInOcc;
     /**
-     * The resulting information of the task or null if the task was cancelled an exception was thrown
+     * The resulting information of the task or null if the task was cancelled an exception was
+     * thrown
      */
     private ProofMacroFinishedInfo info;
     /**
@@ -81,12 +94,13 @@ public class ProofMacroWorker extends SwingWorker<ProofMacroFinishedInfo, Void> 
     /**
      * Instantiates a new proof macro worker.
      *
-     * @param node     the {@link Node} to start macro at.
-     * @param macro    the macro, not null
+     * @param node the {@link Node} to start macro at.
+     * @param macro the macro, not null
      * @param mediator the mediator, not null
      * @param posInOcc the position, possibly null
      */
-    public ProofMacroWorker(Node node, ProofMacro macro, KeYMediator mediator, PosInOccurrence posInOcc) {
+    public ProofMacroWorker(Node node, ProofMacro macro, KeYMediator mediator,
+            PosInOccurrence posInOcc) {
         assert macro != null;
         assert mediator != null;
         this.node = node;
@@ -100,13 +114,14 @@ public class ProofMacroWorker extends SwingWorker<ProofMacroFinishedInfo, Void> 
         final ProverTaskListener ptl = mediator.getUI();
         Proof selectedProof = node.proof();
         info = ProofMacroFinishedInfo.getDefaultInfo(macro, selectedProof);
-        ptl.taskStarted(new DefaultTaskStartedInfo(TaskStartedInfo.TaskKind.Macro, macro.getName(), 0));
+        ptl.taskStarted(
+            new DefaultTaskStartedInfo(TaskStartedInfo.TaskKind.Macro, macro.getName(), 0));
         try {
             synchronized (macro) {
                 info = macro.applyTo(mediator.getUI(), node, posInOcc, ptl);
             }
         } catch (final InterruptedException exception) {
-            LOGGER.debug("Proof macro has been interrupted:",exception);
+            LOGGER.debug("Proof macro has been interrupted:", exception);
             info = new ProofMacroFinishedInfo(macro, selectedProof, true);
             this.exception = exception;
         } catch (final Exception exception) {
@@ -126,7 +141,8 @@ public class ProofMacroWorker extends SwingWorker<ProofMacroFinishedInfo, Void> 
     protected void done() {
         synchronized (macro) {
             mediator.removeInterruptedListener(this);
-            if (!isCancelled() && exception != null) { // user cancelled task is fine, we do not report this
+            if (!isCancelled() && exception != null) { // user cancelled task is fine, we do not
+                                                       // report this
                 // This should actually never happen.
                 IssueDialog.showExceptionDialog(MainWindow.getInstance(), exception);
             }
@@ -145,7 +161,7 @@ public class ProofMacroWorker extends SwingWorker<ProofMacroFinishedInfo, Void> 
     }
 
     protected void emitProofMacroFinished(Node node, ProofMacro macro,
-                                          PosInOccurrence posInOcc, ProofMacroFinishedInfo info) {
+            PosInOccurrence posInOcc, ProofMacroFinishedInfo info) {
         interactionListeners.forEach((l) -> l.runMacro(node, macro, posInOcc, info));
     }
 

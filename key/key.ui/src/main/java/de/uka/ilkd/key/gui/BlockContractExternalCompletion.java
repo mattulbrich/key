@@ -1,8 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui;
 
 import java.util.List;
-
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.StatementBlock;
@@ -15,6 +23,8 @@ import de.uka.ilkd.key.rule.IBuiltInRuleApp;
 import de.uka.ilkd.key.speclang.BlockContract;
 import de.uka.ilkd.key.speclang.HeapContext;
 
+import org.key_project.util.collection.ImmutableSet;
+
 /**
  * Interactive completion for {@link BlockContractExternalBuiltInRuleApp}.
  */
@@ -22,7 +32,7 @@ public class BlockContractExternalCompletion implements InteractiveRuleApplicati
 
     private final MainWindow mainWindow;
 
-    BlockContractExternalCompletion(MainWindow mainWindow){
+    BlockContractExternalCompletion(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
     }
 
@@ -30,7 +40,7 @@ public class BlockContractExternalCompletion implements InteractiveRuleApplicati
     public IBuiltInRuleApp complete(final IBuiltInRuleApp application,
             final Goal goal, final boolean force) {
         BlockContractExternalBuiltInRuleApp result =
-        		(BlockContractExternalBuiltInRuleApp) application;
+            (BlockContractExternalBuiltInRuleApp) application;
         if (!result.complete() && result.cannotComplete(goal)) {
             return result;
         }
@@ -42,20 +52,20 @@ public class BlockContractExternalCompletion implements InteractiveRuleApplicati
         }
         final Services services = goal.proof().getServices();
         final Instantiation instantiation =
-                BlockContractExternalRule.INSTANCE
-                .instantiate(application.posInOccurrence().subTerm(), goal, services);
+            BlockContractExternalRule.INSTANCE
+                    .instantiate(application.posInOccurrence().subTerm(), goal, services);
         final ImmutableSet<BlockContract> contracts =
-                BlockContractExternalRule.getApplicableContracts(instantiation, goal, services);
-        final AuxiliaryContractConfigurator<BlockContract> configurator
-            = new AuxiliaryContractConfigurator<>("Block Contract Configurator",
-                    new BlockContractSelectionPanel(services, true),
-                    mainWindow, services, contracts.toArray(new BlockContract[contracts.size()]),
-                    "Contracts for Block: " + instantiation.statement);
+            BlockContractExternalRule.getApplicableContracts(instantiation, goal, services);
+        final AuxiliaryContractConfigurator<BlockContract> configurator =
+            new AuxiliaryContractConfigurator<>("Block Contract Configurator",
+                new BlockContractSelectionPanel(services, true),
+                mainWindow, services, contracts.toArray(new BlockContract[contracts.size()]),
+                "Contracts for Block: " + instantiation.statement);
         if (configurator.wasSuccessful()) {
             final List<LocationVariable> heaps =
-                    HeapContext.getModHeaps(services, instantiation.isTransactional());
+                HeapContext.getModHeaps(services, instantiation.isTransactional());
             result.update(
-                    (StatementBlock) instantiation.statement, configurator.getContract(), heaps);
+                (StatementBlock) instantiation.statement, configurator.getContract(), heaps);
         }
         return result;
     }
@@ -70,6 +80,6 @@ public class BlockContractExternalCompletion implements InteractiveRuleApplicati
      * This functionality is also used by the Eclipse plug-ins like the KeYIDE.
      */
     public static boolean checkCanComplete(final IBuiltInRuleApp app) {
-       return app.rule() instanceof BlockContractExternalRule;
-   }
+        return app.rule() instanceof BlockContractExternalRule;
+    }
 }

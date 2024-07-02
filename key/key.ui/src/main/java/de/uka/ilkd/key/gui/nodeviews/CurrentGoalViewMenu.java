@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -16,15 +26,11 @@ package de.uka.ilkd.key.gui.nodeviews;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.*;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
 
 import de.uka.ilkd.key.core.KeYMediator;
 import de.uka.ilkd.key.core.Main;
@@ -51,12 +57,15 @@ import de.uka.ilkd.key.rule.*;
 import de.uka.ilkd.key.rule.merge.MergeRule;
 import de.uka.ilkd.key.rule.tacletbuilder.RewriteTacletGoalTemplate;
 import de.uka.ilkd.key.rule.tacletbuilder.TacletGoalTemplate;
-import de.uka.ilkd.key.settings.ProofIndependentSettings;
 import de.uka.ilkd.key.settings.DefaultSMTSettings;
+import de.uka.ilkd.key.settings.ProofIndependentSettings;
 import de.uka.ilkd.key.settings.ViewSettings;
 import de.uka.ilkd.key.smt.SMTProblem;
 import de.uka.ilkd.key.smt.SolverLauncher;
 import de.uka.ilkd.key.smt.SolverTypeCollection;
+
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
 
 /**
  * The menu shown by a {@link CurrentGoalViewListener} when the user clicks on a
@@ -82,7 +91,7 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
     private Set<String> clutterRuleSets;
     private Set<String> clutterRules;
 
-    public static final int TOO_MANY_TACLETS_THRESHOLD = 15; //reduce for debugging.
+    public static final int TOO_MANY_TACLETS_THRESHOLD = 15; // reduce for debugging.
 
     private KeYMediator mediator;
     private TacletAppComparator comp = new TacletAppComparator();
@@ -99,11 +108,11 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
      * given position
      *
      * @param sequentView the SequentView that is the parent of this menu
-     * @param findList    with all applicable FindTaclets
+     * @param findList with all applicable FindTaclets
      * @param rewriteList with all applicable RewriteTaclets
-     * @param noFindList  with all applicable noFindTaclets
+     * @param noFindList with all applicable noFindTaclets
      * @param builtInList with all applicable BuiltInRules
-     * @param pos         the PosInSequent
+     * @param pos the PosInSequent
      */
     CurrentGoalViewMenu(CurrentGoalView sequentView, ImmutableList<TacletApp> findList,
             ImmutableList<TacletApp> rewriteList, ImmutableList<TacletApp> noFindList,
@@ -115,8 +124,9 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
 
         // delete RewriteTaclet from findList because they will be in
         // the rewrite list and concatenate both lists
-        createMenu(removeRewrites(findList).prepend(rewriteList), removeIntroduceAxiomTaclet(noFindList),
-                builtInList, new MenuControl());
+        createMenu(removeRewrites(findList).prepend(rewriteList),
+            removeIntroduceAxiomTaclet(noFindList),
+            builtInList, new MenuControl());
     }
 
     /**
@@ -124,14 +134,14 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
      * taclets.
      *
      * @param list
-     *            The list from which to filter.
+     *        The list from which to filter.
      * @return The original list, without the "introduceAxiom" taclet.
      */
-    private static ImmutableList<TacletApp>
-            removeIntroduceAxiomTaclet(ImmutableList<TacletApp> list) {
+    private static ImmutableList<TacletApp> removeIntroduceAxiomTaclet(
+            ImmutableList<TacletApp> list) {
         return list.stream().filter(
-                app -> !app.rule().name().toString()
-                        .equals(INTRODUCE_AXIOM_TACLET_NAME))
+            app -> !app.rule().name().toString()
+                    .equals(INTRODUCE_AXIOM_TACLET_NAME))
                 .collect(ImmutableSLList.toImmutableList());
     }
 
@@ -235,7 +245,7 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
     private void addMacroMenu() {
         ProofMacroMenu menu = new ProofMacroMenu(mediator, getPos().getPosInOccurrence());
         if (!menu.isEmpty()) {
-//            addSeparator();
+            // addSeparator();
             add(menu);
         }
     }
@@ -273,9 +283,9 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
      */
     private void createMergeRuleMenu() {
         if (MergeRule.isOfAdmissibleForm(mediator.getSelectedGoal(), getPos().getPosInOccurrence(),
-                true)) {
+            true)) {
             JMenuItem item = new MergeRuleMenuItem(mediator.getSelectedGoal(),
-                    getPos().getPosInOccurrence(), mediator);
+                getPos().getPosInOccurrence(), mediator);
             add(item);
         }
     }
@@ -290,51 +300,51 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
         } else if (builtInRule == WhileInvariantRule.INSTANCE) {
             // we add two items in this case: one for auto one for interactive
             item = new MenuItemForTwoModeRules(
-                    builtInRule.displayName(),
-                    APPLY_RULE,
-                    "Applies a known and complete loop specification immediately.",
-                    ENTER_LOOP_SPECIFICATION,
-                    "Allows to modify an existing or to enter a new loop specification.",
-                    builtInRule);
+                builtInRule.displayName(),
+                APPLY_RULE,
+                "Applies a known and complete loop specification immediately.",
+                ENTER_LOOP_SPECIFICATION,
+                "Allows to modify an existing or to enter a new loop specification.",
+                builtInRule);
             item.addActionListener(control);
             add(item);
         } else if (builtInRule == BlockContractInternalRule.INSTANCE) {
             // we add two items in this case: one for auto one for interactive
             item = new MenuItemForTwoModeRules(builtInRule.displayName(), APPLY_RULE,
-                    "Applies a known and complete block specification immediately.",
-                    CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
-                    builtInRule);
+                "Applies a known and complete block specification immediately.",
+                CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
+                builtInRule);
             item.addActionListener(control);
             add(item);
         } else if (builtInRule == BlockContractExternalRule.INSTANCE) {
             // we add two items in this case: one for auto one for interactive
             item = new MenuItemForTwoModeRules(builtInRule.displayName(), APPLY_RULE,
-                    "All available contracts of the block are combined and applied.",
-                    CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
-                    builtInRule);
+                "All available contracts of the block are combined and applied.",
+                CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
+                builtInRule);
             item.addActionListener(control);
             add(item);
         } else if (builtInRule == LoopContractInternalRule.INSTANCE) {
             // we add two items in this case: one for auto one for interactive
             item = new MenuItemForTwoModeRules(builtInRule.displayName(), APPLY_RULE,
-                    "Applies a known and complete loop block specification immediately.",
-                    CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
-                    builtInRule);
+                "Applies a known and complete loop block specification immediately.",
+                CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
+                builtInRule);
             item.addActionListener(control);
             add(item);
         } else if (builtInRule == LoopContractExternalRule.INSTANCE) {
             // we add two items in this case: one for auto one for interactive
             item = new MenuItemForTwoModeRules(builtInRule.displayName(), APPLY_RULE,
-                    "All available contracts of the loop block are combined and applied.",
-                    CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
-                    builtInRule);
+                "All available contracts of the loop block are combined and applied.",
+                CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
+                builtInRule);
             item.addActionListener(control);
             add(item);
         } else if (builtInRule == UseOperationContractRule.INSTANCE) {
             item = new MenuItemForTwoModeRules(builtInRule.displayName(), APPLY_CONTRACT,
-                    "All available contracts of the method are combined and applied.",
-                    CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
-                    builtInRule);
+                "All available contracts of the method are combined and applied.",
+                CHOOSE_AND_APPLY_CONTRACT, "Asks to select the contract to be applied.",
+                builtInRule);
             item.addActionListener(control);
             add(item);
         } else if (builtInRule == MergeRule.INSTANCE) {
@@ -404,11 +414,11 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
     private void addToMenu(ImmutableList<TacletApp> taclets, MenuControl control) {
 
         final InsertHiddenTacletMenuItem insHiddenItem = new InsertHiddenTacletMenuItem(
-                MainWindow.getInstance(), mediator.getNotationInfo(), mediator.getServices());
+            MainWindow.getInstance(), mediator.getNotationInfo(), mediator.getServices());
 
         final InsertionTacletBrowserMenuItem insSystemInvItem =
-                new InsertSystemInvariantTacletMenuItem(MainWindow.getInstance(),
-                        mediator.getNotationInfo(), mediator.getServices());
+            new InsertSystemInvariantTacletMenuItem(MainWindow.getInstance(),
+                mediator.getNotationInfo(), mediator.getServices());
 
         List<TacletApp> normalTaclets = new ArrayList<>();
         List<TacletApp> rareTaclets = new ArrayList<>();
@@ -427,7 +437,7 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
             }
             if (!mediator.getFilterForInteractiveProving().filter(taclet)) {
                 continue;
-        }
+            }
 
             if (isRareRule(taclet)) {
                 rareTaclets.add(app);
@@ -442,7 +452,7 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
         for (TacletApp app : normalTaclets) {
             target.add(createMenuItem(app, control));
             ++currentSize;
-            if(currentSize>= TOO_MANY_TACLETS_THRESHOLD){
+            if (currentSize >= TOO_MANY_TACLETS_THRESHOLD) {
                 JMenu newTarget = new JMenu(MORE_RULES);
                 target.add(newTarget);
                 target = newTarget;
@@ -450,53 +460,57 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
             }
         }
 
-        //add globally
+        // add globally
         if (insHiddenItem.getAppSize() > 0) {
             add(insHiddenItem);
             insHiddenItem.addActionListener(control);
         }
 
-        //add globally
+        // add globally
         if (insSystemInvItem.getAppSize() > 0) {
             add(insSystemInvItem);
             insSystemInvItem.addActionListener(control);
         }
 
-        //JMenu more = new JMenu(MORE_RULES);
+        // JMenu more = new JMenu(MORE_RULES);
 
-        /*for (final TacletApp app : taclets) {
-            final Taclet taclet = app.taclet();
-            if (!mediator.getFilterForInteractiveProving().filter(taclet)) {
-                continue;
-            }
+        /*
+         * for (final TacletApp app : taclets) {
+         * final Taclet taclet = app.taclet();
+         * if (!mediator.getFilterForInteractiveProving().filter(taclet)) {
+         * continue;
+         * }
+         *
+         * if (!insHiddenItem.isResponsible(taclet) && !insSystemInvItem.isResponsible(taclet)) {
+         * final DefaultTacletMenuItem item = new DefaultTacletMenuItem(this, app,
+         * mediator.getNotationInfo(), mediator.getServices());
+         * item.addActionListener(control);
+         * boolean rareRule = false;
+         * for (RuleSet rs : taclet.getRuleSets()) {
+         * if (clutterRuleSets.contains(rs.name())) {
+         * rareRule = true;
+         * }
+         * }
+         * if (clutterRules.contains(taclet.name())) {
+         * rareRule = true;
+         * }
+         *
+         * if (rareRule) {
+         * more.add(item);
+         * } else {
+         * add(item);
+         * }
+         * }
+         * }
+         */
 
-            if (!insHiddenItem.isResponsible(taclet) && !insSystemInvItem.isResponsible(taclet)) {
-                final DefaultTacletMenuItem item = new DefaultTacletMenuItem(this, app,
-                        mediator.getNotationInfo(), mediator.getServices());
-                item.addActionListener(control);
-                boolean rareRule = false;
-                for (RuleSet rs : taclet.getRuleSets()) {
-                    if (clutterRuleSets.contains(rs.name())) {
-                        rareRule = true;
-                    }
-                }
-                if (clutterRules.contains(taclet.name())) {
-                    rareRule = true;
-                }
+        /*
+         * if (more.getItemCount() > 0) {
+         * add(more);
+         * }
+         */
+    }
 
-                if (rareRule) {
-                    more.add(item);
-                } else {
-                    add(item);
-                }
-            }
-        }
-        */
-
-        /*if (more.getItemCount() > 0) {
-            add(more);
-        }*/
-        }
     private boolean isRareRule(Taclet taclet) {
         if (clutterRules.contains(taclet.name().toString())) {
             return true;
@@ -507,8 +521,8 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
 
     private Component createMenuItem(TacletApp app, MenuControl control) {
         final DefaultTacletMenuItem item =
-                new DefaultTacletMenuItem(this, app,
-                        mediator.getNotationInfo(), mediator.getServices());
+            new DefaultTacletMenuItem(this, app,
+                mediator.getNotationInfo(), mediator.getServices());
         item.addActionListener(control);
         return item;
     }
@@ -555,7 +569,8 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
                 assert goal != null;
 
                 Thread thread = new Thread(() -> {
-                    DefaultSMTSettings settings = new DefaultSMTSettings(goal.proof().getSettings().getSMTSettings(),
+                    DefaultSMTSettings settings =
+                        new DefaultSMTSettings(goal.proof().getSettings().getSMTSettings(),
                             ProofIndependentSettings.DEFAULT_INSTANCE.getSMTSettings(),
                             goal.proof().getSettings().getNewSMTSettings(),
                             goal.proof());
@@ -564,8 +579,8 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
                     Collection<SMTProblem> list = new LinkedList<SMTProblem>();
                     list.add(new SMTProblem(goal));
                     launcher.launch(solverUnion.getTypes(),
-                            list,
-                            goal.proof().getServices());
+                        list,
+                        goal.proof().getServices());
                 }, "SMTRunner");
                 thread.start();
             } else if (e.getSource() instanceof BuiltInRuleMenuItem) {
@@ -575,12 +590,12 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
                 // implements the functionality.
                 // No functionality is allowed in this method body!
                 mediator.getUI().getProofControl().selectedBuiltInRule(mediator.getSelectedGoal(),
-                        birmi.connectedTo(), getPos().getPosInOccurrence(),
-                        birmi.forcedApplication(), true);
+                    birmi.connectedTo(), getPos().getPosInOccurrence(),
+                    birmi.forcedApplication(), true);
 
             } else if (e.getSource() instanceof FocussedRuleApplicationMenuItem) {
                 mediator.getUI().getProofControl().startFocussedAutoMode(
-                        getPos().getPosInOccurrence(), mediator.getSelectedGoal());
+                    getPos().getPosInOccurrence(), mediator.getSelectedGoal());
             } else {
                 PosInOccurrence occ = getPos().getPosInOccurrence();
 
@@ -608,25 +623,25 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
                         final String term = oldTerm.length() > 200 ? oldTerm.substring(0, 200)
                                 : oldTerm;
                         String abbreviation = (String) JOptionPane.showInputDialog(new JFrame(),
-                                "Enter abbreviation for term: \n" + term, "New Abbreviation",
-                                JOptionPane.QUESTION_MESSAGE, null, null, "");
+                            "Enter abbreviation for term: \n" + term, "New Abbreviation",
+                            JOptionPane.QUESTION_MESSAGE, null, null, "");
 
                         try {
                             if (abbreviation != null) {
                                 if (!validAbbreviation(abbreviation)) {
                                     JOptionPane.showMessageDialog(new JFrame(),
-                                            "Only letters, numbers and '_' are allowed for Abbreviations",
-                                            "Sorry",
-                                            JOptionPane.INFORMATION_MESSAGE);
+                                        "Only letters, numbers and '_' are allowed for Abbreviations",
+                                        "Sorry",
+                                        JOptionPane.INFORMATION_MESSAGE);
                                 } else {
                                     mediator.getNotationInfo().getAbbrevMap().put(occ.subTerm(),
-                                            abbreviation, true);
+                                        abbreviation, true);
                                     getSequentView().printSequent();
                                 }
                             }
                         } catch (AbbrevException sce) {
                             JOptionPane.showMessageDialog(new JFrame(), sce.getMessage(), "Sorry",
-                                    JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
 
@@ -635,17 +650,17 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
                 case CHANGE_ABBREVIATION:
                     if (occ != null && occ.posInTerm() != null) {
                         String abbreviation = (String) JOptionPane.showInputDialog(new JFrame(),
-                                "Enter abbreviation for term: \n" + occ.subTerm().toString(),
-                                "Change Abbreviation", JOptionPane.QUESTION_MESSAGE, null, null,
-                                mediator.getNotationInfo().getAbbrevMap().getAbbrev(occ.subTerm())
-                                        .substring(1));
+                            "Enter abbreviation for term: \n" + occ.subTerm().toString(),
+                            "Change Abbreviation", JOptionPane.QUESTION_MESSAGE, null, null,
+                            mediator.getNotationInfo().getAbbrevMap().getAbbrev(occ.subTerm())
+                                    .substring(1));
                         try {
                             if (abbreviation != null) {
                                 if (!validAbbreviation(abbreviation)) {
                                     JOptionPane.showMessageDialog(new JFrame(),
-                                            "Only letters, numbers and '_'"
-                                                    + "are allowed for Abbreviations",
-                                            "Sorry", JOptionPane.INFORMATION_MESSAGE);
+                                        "Only letters, numbers and '_'"
+                                            + "are allowed for Abbreviations",
+                                        "Sorry", JOptionPane.INFORMATION_MESSAGE);
                                 } else {
                                     mediator.getNotationInfo().getAbbrevMap()
                                             .changeAbbrev(occ.subTerm(), abbreviation);
@@ -654,7 +669,7 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
                             }
                         } catch (AbbrevException sce) {
                             JOptionPane.showMessageDialog(new JFrame(), sce.getMessage(), "Sorry",
-                                    JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
 
@@ -669,7 +684,7 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
 
     static class FocussedRuleApplicationMenuItem extends JMenuItem {
         private static final String APPLY_RULES_AUTOMATICALLY_HERE =
-                "Apply rules automatically here";
+            "Apply rules automatically here";
         /**
          *
          */
@@ -678,9 +693,9 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
         public FocussedRuleApplicationMenuItem() {
             super(APPLY_RULES_AUTOMATICALLY_HERE);
             setToolTipText("<html>Initiates and restricts automatic rule applications on the "
-                    + "highlighted formula, term or sequent.<br> "
-                    + "'Shift + left mouse click' on the highlighted "
-                    + "entity does the same.</html>");
+                + "highlighted formula, term or sequent.<br> "
+                + "'Shift + left mouse click' on the highlighted "
+                + "entity does the same.</html>");
         }
 
     }
@@ -756,8 +771,8 @@ public final class CurrentGoalViewMenu extends SequentViewMenu<CurrentGoalView> 
                 String s2 = it2.next().getKey();
                 if (!s1.equals(s2)) {
                     throw new IllegalStateException(
-                            "A decision should have been made on a higher level ( " + s1 + "<->"
-                                    + s2 + ")");
+                        "A decision should have been made on a higher level ( " + s1 + "<->"
+                            + s2 + ")");
                 }
                 int v1 = map1.get(s1);
                 int v2 = map2.get(s2);

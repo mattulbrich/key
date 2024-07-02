@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java;
@@ -63,7 +67,7 @@ public class TagInfo {
      * representing a single line.
      *
      * @param line the string representing the line. The line is assumed to be
-     *             non empty.
+     *        non empty.
      * @return the stripped and trimmed string
      */
 

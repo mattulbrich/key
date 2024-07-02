@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -25,37 +35,36 @@ public class ParserConfig {
     private Services services;
     private NamespaceSet nss;
 
-    
-    public ParserConfig(Services services, 
-			NamespaceSet nss) {
-	this.services = services;
-	this.nss      = nss;
+
+    public ParserConfig(Services services,
+            NamespaceSet nss) {
+        this.services = services;
+        this.nss = nss;
     }
 
 
     public Services services() {
-	return services;
+        return services;
     }
 
     public NamespaceSet namespaces() {
-	return nss;
+        return nss;
     }
 
     public JavaInfo javaInfo() {
-	return services.getJavaInfo();
+        return services.getJavaInfo();
     }
 
     public KeYRecoderMapping keyRecoderMapping() {
-	return services.getJavaInfo().rec2key();
+        return services.getJavaInfo().rec2key();
     }
 
     public TypeConverter typeConverter() {
-	return services.getTypeConverter();
+        return services.getTypeConverter();
     }
 
     public KeYCrossReferenceServiceConfiguration serviceConfiguration() {
-	return services.getJavaInfo().
-	    getKeYProgModelInfo().getServConf();
+        return services.getJavaInfo().getKeYProgModelInfo().getServConf();
     }
 
 }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,9 +25,6 @@ package de.uka.ilkd.key.control.instantiation_model;
 
 import java.util.Iterator;
 import java.util.Vector;
-
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Namespace;
@@ -42,6 +49,9 @@ import de.uka.ilkd.key.rule.MatchConditions;
 import de.uka.ilkd.key.rule.Taclet;
 import de.uka.ilkd.key.rule.TacletApp;
 import de.uka.ilkd.key.rule.inst.SortException;
+
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
 
 public class TacletInstantiationModel {
 
@@ -145,9 +155,9 @@ public class TacletInstantiationModel {
 
         if (size > 0) {
             ImmutableList<IfFormulaInstantiation> antecCand = IfFormulaInstSeq.createList(seq, true,
-                    services);
+                services);
             ImmutableList<IfFormulaInstantiation> succCand = IfFormulaInstSeq.createList(seq, false,
-                    services);
+                services);
 
             Iterator<SequentFormula> it = ifseq.iterator();
             Term ifFma;
@@ -159,7 +169,8 @@ public class TacletInstantiationModel {
                 ifFma = it.next().formula();
                 ifChoiceModel[i] = new TacletAssumesModel(ifFma, taclet().getMatcher()
                         .matchIf((i < asize ? antecCand : succCand), ifFma, matchCond, services)
-                        .getFormulas(), app, goal, services, nss, scm);
+                        .getFormulas(),
+                    app, goal, services, nss, scm);
             }
         } else {
             ifChoiceModel = EMPTY_IF_CHOICES;
@@ -184,8 +195,8 @@ public class TacletInstantiationModel {
 
         if (tacletApp == null) {
             throw new IfMismatchException("Mismatch of '\\assumes'-formulas.\n"
-                    + "Reasons may be: ambigous instantiation "
-                    + "of schemavariables or unsatisfiable constraints.");
+                + "Reasons may be: ambigous instantiation "
+                + "of schemavariables or unsatisfiable constraints.");
         }
 
         return tacletApp;

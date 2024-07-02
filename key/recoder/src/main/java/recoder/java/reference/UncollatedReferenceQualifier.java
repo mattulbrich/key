@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.reference;
@@ -16,8 +20,10 @@ import recoder.list.generic.ASTList;
  * @author RN
  */
 
-public class UncollatedReferenceQualifier extends JavaNonTerminalProgramElement implements TypeReferenceInfix,
-        ExpressionContainer, TypeReferenceContainer, PackageReferenceContainer, Reference, Expression {
+public class UncollatedReferenceQualifier extends JavaNonTerminalProgramElement
+        implements TypeReferenceInfix,
+        ExpressionContainer, TypeReferenceContainer, PackageReferenceContainer, Reference,
+        Expression {
 
     /**
      * serialization id
@@ -74,7 +80,7 @@ public class UncollatedReferenceQualifier extends JavaNonTerminalProgramElement 
      * Uncollated reference qualifier.
      *
      * @param prefix a reference prefix.
-     * @param id     an identifier.
+     * @param id an identifier.
      */
 
     public UncollatedReferenceQualifier(ReferencePrefix prefix, Identifier id) {

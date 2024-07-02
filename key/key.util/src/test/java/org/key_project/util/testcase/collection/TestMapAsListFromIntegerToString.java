@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,10 +23,11 @@
 
 package org.key_project.util.testcase.collection;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.key_project.util.collection.DefaultImmutableMap;
 import org.key_project.util.collection.ImmutableMap;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,7 +74,7 @@ public class TestMapAsListFromIntegerToString {
         // assert that all entries are in list
         for (int i = 0; i < entryStr.length; i++) {
             assertEquals(entryStr[i], map.get(entryInt[i]),
-                    "Map does not contain entry(" + entryInt[i] + ", " + entryStr[i] + ")");
+                "Map does not contain entry(" + entryInt[i] + ", " + entryStr[i] + ")");
         }
     }
 
@@ -74,7 +85,8 @@ public class TestMapAsListFromIntegerToString {
         // zero is in list
         assertTrue(map.containsValue("Zero"), "Zero is not in list.");
         // but not so old element Null with same key (0)
-        assertFalse(map.containsValue("Null"), "Null is in list but should have been replaced by Zero");
+        assertFalse(map.containsValue("Null"),
+            "Null is in list but should have been replaced by Zero");
     }
 
     @Test
@@ -84,7 +96,8 @@ public class TestMapAsListFromIntegerToString {
         map = map.put(5, "Fuenf");
         // 5 is in map but not in old
         assertTrue(map.containsValue("Fuenf"), "Fuenf is not in map");
-        assertFalse(old.containsValue("Fuenf"), "Fuenf is in old map, but it should not be there. Map is not immutable.");
+        assertFalse(old.containsValue("Fuenf"),
+            "Fuenf is in old map, but it should not be there. Map is not immutable.");
     }
 
     @Test
@@ -94,8 +107,10 @@ public class TestMapAsListFromIntegerToString {
         // another key before
         Integer hundred = 100;
         map = map.put(hundred, entryStr[1]);
-        assertSame(map.get(hundred), entryStr[1], entryStr[1] + " is not mapped to the newer key 100");
-        assertSame(map.get(entryInt[1]), entryStr[1], entryStr[1] + " is not mapped to the older key " + entryInt[1]);
+        assertSame(map.get(hundred), entryStr[1],
+            entryStr[1] + " is not mapped to the newer key 100");
+        assertSame(map.get(entryInt[1]), entryStr[1],
+            entryStr[1] + " is not mapped to the older key " + entryInt[1]);
     }
 
     @Test
@@ -115,7 +130,8 @@ public class TestMapAsListFromIntegerToString {
         map = map.put(hundred, entryStr[1]);
         // delete map (*,"Eins")
         map = map.removeAll(entryStr[1]);
-        assertFalse(map.containsValue(entryStr[1]), "Value :" + entryStr[1] + " found in map. But I deleted all" +
+        assertFalse(map.containsValue(entryStr[1]),
+            "Value :" + entryStr[1] + " found in map. But I deleted all" +
                 " of these values :-(");
     }
 
@@ -124,20 +140,20 @@ public class TestMapAsListFromIntegerToString {
         ImmutableMap<Integer, String> map = DefaultImmutableMap.nilMap();
         map = map.put(0, "A");
         assertTrue(map.remove(0).isEmpty(),
-                "Map should be empty and therefore equal to the EMPTY_MAP");
+            "Map should be empty and therefore equal to the EMPTY_MAP");
 
         assertTrue(map.remove(0).remove(0).isEmpty(),
-                "Repeated key removal should not change anything");
+            "Repeated key removal should not change anything");
 
 
         map = map.put(0, "B");
         assertTrue(map.size() == 1 && "B".equals(map.get(0)),
-                "Map should have only one element with key 0 and value \"B\" ");
+            "Map should have only one element with key 0 and value \"B\" ");
 
 
         map = map.removeAll("B");
         assertTrue(map.isEmpty(),
-                "Map should be empty");
+            "Map should be empty");
 
 
         map = map.put(0, "B");
@@ -146,11 +162,11 @@ public class TestMapAsListFromIntegerToString {
 
         map = map.removeAll("B");
         assertTrue(map.size() == 1 && !map.containsValue("B"),
-                "Map should not contain value \"B\" any longer ");
+            "Map should not contain value \"B\" any longer ");
 
         map = map.removeAll("B");
         assertTrue(map.size() == 1 && !map.containsValue("B"),
-                "Removing non-existant values should not change anything");
+            "Removing non-existant values should not change anything");
 
     }
 

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -18,7 +28,6 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -55,9 +64,9 @@ public class ShowKnownTypesAction extends MainWindowAction {
 
     private void showTypeHierarchy() {
         Proof currentProof = getMediator().getSelectedProof();
-        if(currentProof == null) {
+        if (currentProof == null) {
             mainWindow.notify(new GeneralInformationEvent("No Type Hierarchy available.",
-                    "If you wish to see the types "
+                "If you wish to see the types "
                     + "for a proof you have to load one first"));
         } else {
             final JDialog dialog = new JDialog(mainWindow, "Known types for this proof", true);
@@ -85,7 +94,7 @@ public class ShowKnownTypesAction extends MainWindowAction {
                     pane.add(panel, BorderLayout.SOUTH);
                     dialog.getRootPane().setDefaultButton(okButton);
                     ActionListener escapeListener = event -> {
-                        if(event.getActionCommand().equals("ESC")) {
+                        if (event.getActionCommand().equals("ESC")) {
                             okButton.doClick();
                         }
                     };

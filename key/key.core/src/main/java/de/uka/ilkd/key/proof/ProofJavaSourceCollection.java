@@ -1,23 +1,38 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.proof;
 
 import java.net.URI;
 
-import org.key_project.util.collection.DefaultImmutableSet;
-import org.key_project.util.collection.ImmutableSet;
-
 import de.uka.ilkd.key.java.PositionInfo;
 import de.uka.ilkd.key.logic.label.OriginTermLabel;
 
+import org.key_project.util.collection.DefaultImmutableSet;
+import org.key_project.util.collection.ImmutableSet;
+
 /**
- * <p> This collection represents the set containing URIs of all Java source files relevant to a given {@link Proof}. </p>
+ * <p>
+ * This collection represents the set containing URIs of all Java source files relevant to a given
+ * {@link Proof}.
+ * </p>
  *
- * <p> This includes the files contained in the {@link PositionInfo} of all modalities
- *  as well as the files in the {@link OriginTermLabel}s of all terms in this node's sequent.
- *  </p>
+ * <p>
+ * This includes the files contained in the {@link PositionInfo} of all modalities
+ * as well as the files in the {@link OriginTermLabel}s of all terms in this node's sequent.
+ * </p>
  *
- * <p> It can be accessed via {@code proof.lookup(ProofJavaSourceCollection)}.
- *  </p>
- * 
+ * <p>
+ * It can be accessed via {@code proof.lookup(ProofJavaSourceCollection)}.
+ * </p>
+ *
  * @author lanzinger
  */
 public class ProofJavaSourceCollection {
@@ -26,11 +41,14 @@ public class ProofJavaSourceCollection {
     private ImmutableSet<URI> relevantFiles = DefaultImmutableSet.nil();
 
     /**
-     * <p> Returns a set containing URIs of all files relevant to this proof. </p>
+     * <p>
+     * Returns a set containing URIs of all files relevant to this proof.
+     * </p>
      *
-     * <p> This includes the files contained in the {@link PositionInfo} of all modalities
-     *  as well as the files in the {@link OriginTermLabel}s of all terms in this node's sequent.
-     *  </p>
+     * <p>
+     * This includes the files contained in the {@link PositionInfo} of all modalities
+     * as well as the files in the {@link OriginTermLabel}s of all terms in this node's sequent.
+     * </p>
      *
      * @return the set of URIs of files relevant to this node.
      */

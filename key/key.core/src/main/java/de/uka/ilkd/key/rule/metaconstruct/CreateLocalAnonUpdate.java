@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.rule.metaconstruct;
-
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.java.ProgramElement;
 import de.uka.ilkd.key.java.Services;
@@ -29,6 +37,8 @@ import de.uka.ilkd.key.logic.op.Modality;
 import de.uka.ilkd.key.logic.op.ProgramVariable;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.util.MiscTools;
+
+import org.key_project.util.collection.ImmutableSet;
 
 /**
  * Expects a loop body and creates the anonymizing update
@@ -60,7 +70,7 @@ public final class CreateLocalAnonUpdate extends AbstractTermTransformer {
         assert pe instanceof StatementBlock;
 
         final ImmutableSet<ProgramVariable> localOuts = //
-                MiscTools.getLocalOuts(pe, services);
+            MiscTools.getLocalOuts(pe, services);
         return createLocalAnonUpdate(localOuts, services);
     }
 
@@ -72,7 +82,7 @@ public final class CreateLocalAnonUpdate extends AbstractTermTransformer {
         for (ProgramVariable pv : localOuts) {
             final Function anonFunc = anonConstForPV(pv, services);
             final Term elemUpd = //
-                    tb.elementary((LocationVariable) pv, tb.func(anonFunc));
+                tb.elementary((LocationVariable) pv, tb.func(anonFunc));
             anonUpdate = tb.parallel(anonUpdate, elemUpd);
         }
 

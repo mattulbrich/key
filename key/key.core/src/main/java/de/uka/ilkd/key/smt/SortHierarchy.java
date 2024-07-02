@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,12 +24,12 @@
 package de.uka.ilkd.key.smt;
 
 
+import java.util.*;
+import java.util.Map.Entry;
+
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.op.Function;
 import de.uka.ilkd.key.logic.sort.Sort;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 
 class SortWrapper {
@@ -56,8 +66,9 @@ class SortWrapper {
         return parentSorts;
     }
 
-    void computeParentSorts(LinkedList<SortWrapper> sorts, boolean explicitNullHierarchy, boolean explicitHierarchy,
-                            Services services) {
+    void computeParentSorts(LinkedList<SortWrapper> sorts, boolean explicitNullHierarchy,
+            boolean explicitHierarchy,
+            Services services) {
         for (SortWrapper sw : sorts) {
             if (this.extendsTrans(sw)) {
                 addParent(sw, explicitNullHierarchy, explicitHierarchy, services);
@@ -75,7 +86,7 @@ class SortWrapper {
     }
 
     private boolean addParent(SortWrapper parent, boolean explicitNullHierarchy,
-                              boolean explicitHierarchy, Services services) {
+            boolean explicitHierarchy, Services services) {
         Function nullOp = services.getTypeConverter().getHeapLDT().getNull();
         if ((explicitNullHierarchy && this.getSort() == nullOp.sort()) || explicitHierarchy) {
             parentSorts.add(parent);
@@ -97,6 +108,7 @@ class SortWrapper {
 
 }
 
+
 /**
  * The SortHierarchy works as a wrapper class for sorts.
  *
@@ -110,15 +122,15 @@ public class SortHierarchy {
      * Create a Sort Hierarchy.
      *
      * @param sortnames a HashMap of sorts mapped to the Strings which is displayed in
-     *                  Formulas
+     *        Formulas
      */
     protected SortHierarchy(Map<Sort, StringBuilder> sortnames,
-                            Map<Sort, StringBuilder> prednames,
-                            boolean explicitNullHierarchy, boolean explicitHierarchy,
-                            Services services) {
+            Map<Sort, StringBuilder> prednames,
+            boolean explicitNullHierarchy, boolean explicitHierarchy,
+            Services services) {
         for (Entry<Sort, StringBuilder> entry : sortnames.entrySet()) {
             sorts.add(new SortWrapper(entry.getKey(), entry.getValue(),
-                    prednames.get(entry.getKey())));
+                prednames.get(entry.getKey())));
         }
 
         for (SortWrapper sw : sorts) {

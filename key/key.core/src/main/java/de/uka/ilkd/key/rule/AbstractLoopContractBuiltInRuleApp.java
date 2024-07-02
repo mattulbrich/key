@@ -1,10 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule;
 
 import java.util.List;
-
-import org.key_project.util.collection.DefaultImmutableSet;
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.statement.JavaStatement;
@@ -14,6 +20,10 @@ import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.speclang.HeapContext;
 import de.uka.ilkd.key.speclang.LoopContract;
 import de.uka.ilkd.key.speclang.LoopContractImpl;
+
+import org.key_project.util.collection.DefaultImmutableSet;
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSet;
 
 /**
  * Application of {@link AbstractLoopContractRule}.
@@ -31,11 +41,11 @@ public abstract class AbstractLoopContractBuiltInRuleApp
     /**
      *
      * @param rule
-     *            the rule being applied.
+     *        the rule being applied.
      * @param occurrence
-     *            the position at which the rule is applied.
+     *        the position at which the rule is applied.
      * @param ifInstantiations
-     *            if instantiations.
+     *        if instantiations.
      */
     public AbstractLoopContractBuiltInRuleApp(BuiltInRule rule, PosInOccurrence occurrence,
             ImmutableList<PosInOccurrence> ifInstantiations) {
@@ -50,9 +60,9 @@ public abstract class AbstractLoopContractBuiltInRuleApp
     /**
      *
      * @param goal
-     *            the current goal.
+     *        the current goal.
      * @param rule
-     *            the rule being applied.
+     *        the rule being applied.
      * @return this.
      */
     public AbstractLoopContractBuiltInRuleApp tryToInstantiate(final Goal goal,
@@ -66,15 +76,15 @@ public abstract class AbstractLoopContractBuiltInRuleApp
         final ImmutableSet<LoopContract> contracts = AbstractLoopContractRule
                 .getApplicableContracts(instantiation, goal, services);
         setStatement(instantiation.statement);
-        ImmutableSet<LoopContract> cons = DefaultImmutableSet.<LoopContract> nil();
+        ImmutableSet<LoopContract> cons = DefaultImmutableSet.<LoopContract>nil();
         for (LoopContract cont : contracts) {
             if (cont.isOnBlock() &&
-                    cont.getBlock().getStartPosition().getLine()
-                        == getStatement().getStartPosition().getLine()) {
+                    cont.getBlock().getStartPosition().getLine() == getStatement()
+                            .getStartPosition().getLine()) {
                 cons = cons.add(cont);
             } else if (!cont.isOnBlock() &&
                     cont.getLoop().getStartPosition().getLine() == getStatement().getStartPosition()
-                    .getLine()) {
+                            .getLine()) {
                 cons = cons.add(cont);
             }
         }
@@ -86,11 +96,11 @@ public abstract class AbstractLoopContractBuiltInRuleApp
     /**
      *
      * @param statement
-     *            the new statement.
+     *        the new statement.
      * @param contract
-     *            the new contract.
+     *        the new contract.
      * @param heaps
-     *            the new heap context.
+     *        the new heap context.
      */
     public void update(final JavaStatement statement, final LoopContract contract,
             final List<LocationVariable> heaps) {

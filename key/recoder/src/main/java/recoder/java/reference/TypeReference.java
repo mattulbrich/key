@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.reference;
@@ -15,7 +19,8 @@ import recoder.list.generic.ASTList;
  * playing the role of a {@link TypeReferenceContainer}.
  */
 
-public class TypeReference extends JavaNonTerminalProgramElement implements TypeReferenceInfix, TypeReferenceContainer,
+public class TypeReference extends JavaNonTerminalProgramElement
+        implements TypeReferenceInfix, TypeReferenceContainer,
         PackageReferenceContainer, MemberReference {
 
     /**
@@ -74,7 +79,7 @@ public class TypeReference extends JavaNonTerminalProgramElement implements Type
      * Type reference.
      *
      * @param prefix a reference prefix.
-     * @param name   an identifier.
+     * @param name an identifier.
      */
 
     public TypeReference(ReferencePrefix prefix, Identifier name) {
@@ -87,7 +92,7 @@ public class TypeReference extends JavaNonTerminalProgramElement implements Type
      * Type reference.
      *
      * @param name an identifier.
-     * @param dim  an int value.
+     * @param dim an int value.
      */
 
     public TypeReference(Identifier name, int dim) {

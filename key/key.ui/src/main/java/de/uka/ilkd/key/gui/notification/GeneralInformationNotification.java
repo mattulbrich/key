@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -22,21 +32,22 @@ import de.uka.ilkd.key.gui.notification.actions.GeneralInformationJTextPaneDispl
 
 /**
  * This notification task is used to inform the user about a non-error
- * situation (e.g. statistics (how many goals have been closed) etc.) 
+ * situation (e.g. statistics (how many goals have been closed) etc.)
+ *
  * @author bubel
  */
 public class GeneralInformationNotification extends NotificationTask {
 
     public GeneralInformationNotification(JFrame comp) {
-       addNotificationAction(new GeneralInformationJTextPaneDisplay(comp));
-   }
+        addNotificationAction(new GeneralInformationJTextPaneDisplay(comp));
+    }
 
-    /** 
+    /**
      * @return the event id of a general information event
      * @see NotificationEventID
      */
     @Override
-   public NotificationEventID getEventID() {
+    public NotificationEventID getEventID() {
         return NotificationEventID.GENERAL_INFORMATION;
     }
 

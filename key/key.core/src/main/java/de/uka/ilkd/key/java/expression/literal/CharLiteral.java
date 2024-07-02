@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,17 +23,18 @@
 
 package de.uka.ilkd.key.java.expression.literal;
 
-import org.key_project.util.ExtList;
-
 import de.uka.ilkd.key.java.PrettyPrinter;
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
 import de.uka.ilkd.key.java.abstraction.PrimitiveType;
 import de.uka.ilkd.key.java.visitor.Visitor;
 
+import org.key_project.util.ExtList;
+
 /**
- *  Char literal.
- *  @author <TT>Wolfram Pfeifer</TT>
+ * Char literal.
+ *
+ * @author <TT>Wolfram Pfeifer</TT>
  */
 public class CharLiteral extends AbstractIntegerLiteral {
 
@@ -34,6 +45,7 @@ public class CharLiteral extends AbstractIntegerLiteral {
 
     /**
      * Creates a new CharLiteral from the given char.
+     *
      * @param charVal a char value.
      */
     public CharLiteral(char charVal) {
@@ -60,6 +72,7 @@ public class CharLiteral extends AbstractIntegerLiteral {
     /**
      * Creates a new CharLiteral from the given String. The String must be of the form
      * <code>'c'</code> (with c being an arbitrary char).
+     *
      * @param valueStr a string.
      */
     public CharLiteral(String valueStr) {
@@ -68,6 +81,7 @@ public class CharLiteral extends AbstractIntegerLiteral {
 
     /**
      * Returns the decimal value of the char.
+     *
      * @return the decimal value of the char as a BigInteger
      */
     public long getValue() {
@@ -98,7 +112,7 @@ public class CharLiteral extends AbstractIntegerLiteral {
     @Override
     public String getValueString() {
         // the char value as a decimal number (without single-quotes)
-        return "" + (int)charVal;
+        return "" + (int) charVal;
     }
 
     /**
@@ -113,9 +127,9 @@ public class CharLiteral extends AbstractIntegerLiteral {
      * @param sourceStr the String containing the literal surrounded by single-quotes
      * @return the parsed value as a char
      * @throws NumberFormatException if the given String does not represent a syntactically valid
-     *          character literal or the literal is not surrounded by single-quotes
+     *         character literal or the literal is not surrounded by single-quotes
      * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.4">
-     *               https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.4</a>
+     *      https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.10.4</a>
      */
     protected char parseFromString(final String sourceStr) {
         if (sourceStr.charAt(0) != '\'' || sourceStr.charAt(sourceStr.length() - 1) != '\'') {
@@ -126,9 +140,9 @@ public class CharLiteral extends AbstractIntegerLiteral {
 
         /*
          * There are three possible cases:
-         *   1. the char is written directly
-         *   2. Java escape like '\n'
-         *   3. octal Unicode escape like '\040'
+         * 1. the char is written directly
+         * 2. Java escape like '\n'
+         * 3. octal Unicode escape like '\040'
          */
         if (valStr.charAt(0) == '\\') {
             switch (valStr.charAt(1)) {

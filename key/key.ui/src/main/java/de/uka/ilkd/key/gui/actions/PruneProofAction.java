@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -18,8 +28,8 @@ import java.awt.event.ActionEvent;
 import de.uka.ilkd.key.control.AutoModeListener;
 import de.uka.ilkd.key.core.KeYSelectionEvent;
 import de.uka.ilkd.key.core.KeYSelectionListener;
-import de.uka.ilkd.key.gui.fonticons.IconFactory;
 import de.uka.ilkd.key.gui.MainWindow;
+import de.uka.ilkd.key.gui.fonticons.IconFactory;
 import de.uka.ilkd.key.proof.Node;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.proof.ProofEvent;
@@ -44,8 +54,9 @@ public final class PruneProofAction extends MainWindowAction {
 
     /**
      * Creates a new PruneProofAction.
+     *
      * @param mainWindow the MainWindow this action belongs to (needed for shortcut and
-     * icon settings)
+     *        icon settings)
      */
     public PruneProofAction(MainWindow mainWindow) {
         super(mainWindow);
@@ -71,14 +82,17 @@ public final class PruneProofAction extends MainWindowAction {
                     final Node selNode = getMediator().getSelectedNode();
 
                     if (selNode != null) {
-                        /* disable pruning for leaves and disable it for closed subtrees
-                         * if the command line option "--no-pruning-closed" is set (saves memory) */
+                        /*
+                         * disable pruning for leaves and disable it for closed subtrees
+                         * if the command line option "--no-pruning-closed" is set (saves memory)
+                         */
                         if (!selNode.leaf()
-                            && (proof.getSubtreeGoals(selNode).size() > 0
-                                || (!GeneralSettings.noPruningClosed
-                                    && proof.getClosedSubtreeGoals(selNode).size() > 0))) {
+                                && (proof.getSubtreeGoals(selNode).size() > 0
+                                        || (!GeneralSettings.noPruningClosed
+                                                && proof.getClosedSubtreeGoals(selNode)
+                                                        .size() > 0))) {
 
-                                enabled = true;
+                            enabled = true;
                         }
                     }
                 }
@@ -93,21 +107,23 @@ public final class PruneProofAction extends MainWindowAction {
 
         getMediator().addKeYSelectionListener(selListener);
 
-        /* This method delegates the request only to the UserInterfaceControl which implements the
-         * functionality. No functionality is allowed in this method body! */
+        /*
+         * This method delegates the request only to the UserInterfaceControl which implements the
+         * functionality. No functionality is allowed in this method body!
+         */
         getMediator().getUI().getProofControl().addAutoModeListener(new AutoModeListener() {
-                @Override
-                public void autoModeStarted(ProofEvent e) {
-                    getMediator().removeKeYSelectionListener(selListener);
-                    setEnabled(false);
-                }
+            @Override
+            public void autoModeStarted(ProofEvent e) {
+                getMediator().removeKeYSelectionListener(selListener);
+                setEnabled(false);
+            }
 
-                @Override
-                public void autoModeStopped(ProofEvent e) {
-                    getMediator().addKeYSelectionListener(selListener);
-                    selListener.selectedNodeChanged(null);
-                }
-            });
+            @Override
+            public void autoModeStopped(ProofEvent e) {
+                getMediator().addKeYSelectionListener(selListener);
+                selListener.selectedNodeChanged(null);
+            }
+        });
         selListener.selectedNodeChanged(new KeYSelectionEvent(getMediator().getSelectionModel()));
     }
 

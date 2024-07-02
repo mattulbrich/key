@@ -1,8 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule.merge;
 
 import java.util.Set;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.logic.PosInOccurrence;
@@ -14,9 +22,11 @@ import de.uka.ilkd.key.rule.BuiltInRule;
 import de.uka.ilkd.key.rule.IBuiltInRuleApp;
 import de.uka.ilkd.key.util.mergerule.SymbolicExecutionState;
 
+import org.key_project.util.collection.ImmutableList;
+
 /**
  * Rule application class for close-after-merge rule applications.
- * 
+ *
  * @author Dominic Scheurer
  */
 public class CloseAfterMergeRuleBuiltInRuleApp extends AbstractBuiltInRuleApp {

@@ -1,11 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.informationflow.po.snippet;
 
 import java.util.EnumMap;
 import java.util.List;
-
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.informationflow.proof.init.StateVars;
 import de.uka.ilkd.key.java.Label;
@@ -26,10 +32,15 @@ import de.uka.ilkd.key.speclang.LoopSpecification;
 import de.uka.ilkd.key.util.InfFlowSpec;
 import de.uka.ilkd.key.util.MiscTools;
 
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
+import org.key_project.util.collection.ImmutableSet;
+
 
 /**
  * Immutable class.
  * <p/>
+ *
  * @author christoph
  */
 class BasicSnippetData {
@@ -55,17 +66,17 @@ class BasicSnippetData {
      * Unified contract content.
      */
     private final EnumMap<Key, Object> contractContents =
-            new EnumMap<Key, Object>(Key.class) {
+        new EnumMap<Key, Object>(Key.class) {
 
-                private static final long serialVersionUID = -8548805965130100236L;
+            private static final long serialVersionUID = -8548805965130100236L;
 
-                @Override
-                public Object put(Key key,
-                                  Object value) {
-                    assert value == null || key.getType().isInstance(value);
-                    return super.put(key, value);
-                }
-            };
+            @Override
+            public Object put(Key key,
+                    Object value) {
+                assert value == null || key.getType().isInstance(value);
+                return super.put(key, value);
+            }
+        };
 
 
     /**
@@ -125,7 +136,7 @@ class BasicSnippetData {
 
 
     BasicSnippetData(FunctionalOperationContract contract,
-                     Services services) {
+            Services services) {
         this.hasMby = contract.hasMby();
         this.services = services;
         this.tb = services.getTermBuilder();
@@ -140,14 +151,14 @@ class BasicSnippetData {
 
         final Term heap = tb.getBaseHeap();
         origVars =
-                new StateVars(contract.getSelf(), contract.getParams(),
-                              contract.getResult(), contract.getExc(), heap);
+            new StateVars(contract.getSelf(), contract.getParams(),
+                contract.getResult(), contract.getExc(), heap);
     }
 
     BasicSnippetData(LoopSpecification invariant,
-                     ExecutionContext context,
-                     Term guardTerm,
-                     Services services) {
+            ExecutionContext context,
+            Term guardTerm,
+            Services services) {
         this.hasMby = false;
         this.services = services;
         this.tb = services.getTermBuilder();
@@ -164,39 +175,40 @@ class BasicSnippetData {
         // add guard term to information flow specs (necessary for soundness)
         // and add the modified specs to the table
         ImmutableList<InfFlowSpec> infFlowSpecs =
-                invariant.getInfFlowSpecs(services);
+            invariant.getInfFlowSpecs(services);
         ImmutableList<InfFlowSpec> modifedSpecs =
-                ImmutableSLList.<InfFlowSpec>nil();
-        for(InfFlowSpec infFlowSpec : infFlowSpecs) {
+            ImmutableSLList.<InfFlowSpec>nil();
+        for (InfFlowSpec infFlowSpec : infFlowSpecs) {
             ImmutableList<Term> modifiedPreExps =
-                    infFlowSpec.preExpressions.append(guardTerm);
+                infFlowSpec.preExpressions.append(guardTerm);
             ImmutableList<Term> modifiedPostExps =
-                    infFlowSpec.postExpressions.append(guardTerm);
+                infFlowSpec.postExpressions.append(guardTerm);
             InfFlowSpec modifiedSpec =
-                    new InfFlowSpec(modifiedPreExps, modifiedPostExps,
-                                    infFlowSpec.newObjects);
+                new InfFlowSpec(modifiedPreExps, modifiedPostExps,
+                    infFlowSpec.newObjects);
             modifedSpecs = modifedSpecs.append(modifiedSpec);
         }
         contractContents.put(Key.INF_FLOW_SPECS, modifedSpecs);
 
         final Term heap = tb.getBaseHeap();
         final ImmutableSet<ProgramVariable> localInVariables =
-                MiscTools.getLocalIns(invariant.getLoop(), services);
+            MiscTools.getLocalIns(invariant.getLoop(), services);
         final ImmutableSet<ProgramVariable> localOutVariables =
-                MiscTools.getLocalOuts(invariant.getLoop(), services);
+            MiscTools.getLocalOuts(invariant.getLoop(), services);
         final ImmutableList<Term> localInTerms = toTermList(localInVariables);
         final ImmutableList<Term> localOutTerms = toTermList(localOutVariables);
         final ImmutableList<Term> localInsWithoutOutDuplicates =
-                    MiscTools.filterOutDuplicates(localInTerms, localOutTerms);
-        final ImmutableList<Term> localVarsTerms = localInsWithoutOutDuplicates.append(localOutTerms);
+            MiscTools.filterOutDuplicates(localInTerms, localOutTerms);
+        final ImmutableList<Term> localVarsTerms =
+            localInsWithoutOutDuplicates.append(localOutTerms);
 
         origVars = new StateVars(invariant.getInternalSelfTerm(),
-                                 guardTerm, localVarsTerms, heap);
+            guardTerm, localVarsTerms, heap);
     }
 
 
     BasicSnippetData(InformationFlowContract contract,
-                     Services services) {
+            Services services) {
         this.hasMby = contract.hasMby();
         this.services = services;
         this.tb = services.getTermBuilder();
@@ -213,14 +225,14 @@ class BasicSnippetData {
 
         final Term heap = tb.getBaseHeap();
         origVars =
-                new StateVars(contract.getSelf(), contract.getParams(),
-                              contract.getResult(), contract.getExc(), heap);
+            new StateVars(contract.getSelf(), contract.getParams(),
+                contract.getResult(), contract.getExc(), heap);
     }
 
 
     BasicSnippetData(BlockContract contract,
-                     ExecutionContext context,
-                     Services services) {
+            ExecutionContext context,
+            Services services) {
         this.hasMby = false; // Mby of block contracts is not further considered
         this.services = services;
         this.tb = services.getTermBuilder();
@@ -237,23 +249,24 @@ class BasicSnippetData {
         contractContents.put(Key.INF_FLOW_SPECS, contract.getInfFlowSpecs());
         List<Label> labels = contract.getLabels();
         contractContents.put(Key.LABELS,
-                             labels.toArray(new Label[labels.size()]));
+            labels.toArray(new Label[labels.size()]));
         contractContents.put(Key.EXECUTION_CONTEXT, context);
 
         final Term heap = tb.getBaseHeap();
         BlockContract.Terms vars = contract.getVariablesAsTerms(services);
         final ImmutableSet<ProgramVariable> localInVariables =
-                MiscTools.getLocalIns(contract.getBlock(), services);
+            MiscTools.getLocalIns(contract.getBlock(), services);
         final ImmutableSet<ProgramVariable> localOutVariables =
-                MiscTools.getLocalOuts(contract.getBlock(), services);
+            MiscTools.getLocalOuts(contract.getBlock(), services);
         final ImmutableList<Term> localInTerms = toTermList(localInVariables);
         final ImmutableList<Term> localOutTerms = toTermList(localOutVariables);
         final ImmutableList<Term> localInsWithoutOutDuplicates =
-                    MiscTools.filterOutDuplicates(localInTerms, localOutTerms);
-        final ImmutableList<Term> localVarsTerms = localInsWithoutOutDuplicates.append(localOutTerms);
+            MiscTools.filterOutDuplicates(localInTerms, localOutTerms);
+        final ImmutableList<Term> localVarsTerms =
+            localInsWithoutOutDuplicates.append(localOutTerms);
 
         origVars = new StateVars(vars.self, localVarsTerms,
-                                 vars.result, vars.exception, heap);
+            vars.result, vars.exception, heap);
     }
 
 

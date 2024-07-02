@@ -1,6 +1,14 @@
-package de.uka.ilkd.key.informationflow.macros;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableList;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.informationflow.macros;
 
 import de.uka.ilkd.key.control.UserInterfaceControl;
 import de.uka.ilkd.key.informationflow.po.IFProofObligationVars;
@@ -21,21 +29,25 @@ import de.uka.ilkd.key.rule.Taclet;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.speclang.LoopSpecification;
 
+import org.key_project.util.collection.ImmutableList;
+
 public class FinishAuxiliaryLoopComputationMacro extends
         AbstractFinishAuxiliaryComputationMacro {
 
     @Override
     public boolean canApplyTo(Proof proof,
-                              ImmutableList<Goal> goals,
-                              PosInOccurrence posInOcc) {
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc) {
         if (proof != null && proof.getServices() != null) {
             final ProofOblInput poForProof =
-                    proof.getServices().getSpecificationRepository().getProofOblInput(proof);
+                proof.getServices().getSpecificationRepository().getProofOblInput(proof);
 
             if (poForProof instanceof LoopInvExecutionPO) {
-                final Node parentOfInitiatingGoal = ((LoopInvExecutionPO) poForProof).getInitiatingGoal().node().parent();
+                final Node parentOfInitiatingGoal =
+                    ((LoopInvExecutionPO) poForProof).getInitiatingGoal().node().parent();
                 if (parentOfInitiatingGoal != null &&
-                        parentOfInitiatingGoal.getAppliedRuleApp() instanceof LoopInvariantBuiltInRuleApp) {
+                        parentOfInitiatingGoal
+                                .getAppliedRuleApp() instanceof LoopInvariantBuiltInRuleApp) {
                     return true;
                 }
             }
@@ -46,12 +58,12 @@ public class FinishAuxiliaryLoopComputationMacro extends
 
     @Override
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          final Proof proof,
-                                          ImmutableList<Goal> goals,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) {
+            final Proof proof,
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) {
         final ProofOblInput poForProof =
-                proof.getServices().getSpecificationRepository().getProofOblInput(proof);
+            proof.getServices().getSpecificationRepository().getProofOblInput(proof);
         final LoopInvExecutionPO loopInvExecPO = (LoopInvExecutionPO) poForProof;
 
         final Goal initiatingGoal = loopInvExecPO.getInitiatingGoal();
@@ -59,7 +71,7 @@ public class FinishAuxiliaryLoopComputationMacro extends
         final Services services = initiatingProof.getServices();
 
         final LoopInvariantBuiltInRuleApp loopInvRuleApp =
-                (LoopInvariantBuiltInRuleApp) initiatingGoal.node().parent().getAppliedRuleApp();
+            (LoopInvariantBuiltInRuleApp) initiatingGoal.node().parent().getAppliedRuleApp();
         LoopSpecification loopInv = loopInvRuleApp.retrieveLoopInvariantFromSpecification(services);
         loopInv = loopInv != null ? loopInv : loopInvRuleApp.getSpec();
         IFProofObligationVars ifVars = loopInvRuleApp.getInformationFlowProofObligationVars();
@@ -70,7 +82,7 @@ public class FinishAuxiliaryLoopComputationMacro extends
         // create and register resulting taclets
         final Term result = calculateResultingTerm(proof, ifVars, initiatingGoal);
         final LoopInfFlowUnfoldTacletBuilder tacletBuilder =
-                new LoopInfFlowUnfoldTacletBuilder(services);
+            new LoopInfFlowUnfoldTacletBuilder(services);
         tacletBuilder.setLoopInv(loopInv);
         tacletBuilder.setExecutionContext(loopInvRuleApp.getExecutionContext());
         tacletBuilder.setInfFlowVars(ifVars);

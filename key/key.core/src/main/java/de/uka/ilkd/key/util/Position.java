@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.util;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -26,8 +36,9 @@ public class Position {
     }
 
     public static Position make(Token ctx) {
-        return new Position(ctx.getTokenSource().getSourceName(), ctx.getLine(), ctx.getCharPositionInLine(), ctx.getStartIndex(),
-                ctx.getStopIndex() - ctx.getStartIndex()/*maybe +1*/);
+        return new Position(ctx.getTokenSource().getSourceName(), ctx.getLine(),
+            ctx.getCharPositionInLine(), ctx.getStartIndex(),
+            ctx.getStopIndex() - ctx.getStartIndex()/* maybe +1 */);
     }
 
 

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule.match.vm.instructions;
 
 import de.uka.ilkd.key.java.ProgramElement;
@@ -10,6 +20,7 @@ import de.uka.ilkd.key.rule.MatchConditions;
 import de.uka.ilkd.key.rule.inst.IllegalInstantiationException;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.rule.match.vm.TermNavigator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +33,7 @@ public class MatchProgramSVInstruction extends MatchSchemaVariableInstruction<Pr
         super(sv);
     }
 
-    
+
     /**
      * tries to add the pair <tt>(this,pe)</tt> to the match conditions. If
      * possible the resulting match conditions are returned, otherwise
@@ -30,13 +41,13 @@ public class MatchProgramSVInstruction extends MatchSchemaVariableInstruction<Pr
      * <tt>(this,x)</tt> exists where <tt>x<>pe</tt>
      */
     protected MatchConditions addInstantiation(ProgramElement pe,
-            MatchConditions matchCond, 
+            MatchConditions matchCond,
             Services services) {
 
         final SVInstantiations instantiations = matchCond.getInstantiations();
         final Object inMap = instantiations.getInstantiation(op);
 
-        if (inMap == null) {            
+        if (inMap == null) {
             try {
                 return matchCond
                         .setInstantiations(instantiations.add(op, pe, services));
@@ -49,9 +60,9 @@ public class MatchProgramSVInstruction extends MatchSchemaVariableInstruction<Pr
                 try {
                     peForCompare = services.getTypeConverter()
                             .convertToLogicElement(
-                                    pe,
-                                    matchCond.getInstantiations()
-                                    .getExecutionContext());                    
+                                pe,
+                                matchCond.getInstantiations()
+                                        .getExecutionContext());
                 } catch (RuntimeException re) {
                     return null;
                 }
@@ -63,7 +74,7 @@ public class MatchProgramSVInstruction extends MatchSchemaVariableInstruction<Pr
         return null;
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
@@ -71,22 +82,23 @@ public class MatchProgramSVInstruction extends MatchSchemaVariableInstruction<Pr
     public MatchConditions match(Operator instantiationCandidate,
             MatchConditions matchConditions, Services services) {
         if (instantiationCandidate instanceof ProgramElement) {
-            return match((ProgramElement)instantiationCandidate, matchConditions, services);
+            return match((ProgramElement) instantiationCandidate, matchConditions, services);
         }
         return null;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public MatchConditions match(Term instantiationCandidate,  MatchConditions matchCond, Services services) {
-        final ProgramSVSort svSort = (ProgramSVSort)op.sort();
+    public MatchConditions match(Term instantiationCandidate, MatchConditions matchCond,
+            Services services) {
+        final ProgramSVSort svSort = (ProgramSVSort) op.sort();
 
         if (svSort.canStandFor(instantiationCandidate)) {
             return addInstantiation(instantiationCandidate, matchCond, services);
         }
-        
+
         return null;
     }
 
@@ -94,18 +106,19 @@ public class MatchProgramSVInstruction extends MatchSchemaVariableInstruction<Pr
      * {@inheritDoc}
      */
     @Override
-    public MatchConditions match(ProgramElement instantiationCandidate,  MatchConditions matchCond, Services services) {
-        final ProgramSVSort svSort = (ProgramSVSort)op.sort();
+    public MatchConditions match(ProgramElement instantiationCandidate, MatchConditions matchCond,
+            Services services) {
+        final ProgramSVSort svSort = (ProgramSVSort) op.sort();
 
-        if (svSort.canStandFor(instantiationCandidate, 
-                matchCond.getInstantiations().getExecutionContext(), services)) {
+        if (svSort.canStandFor(instantiationCandidate,
+            matchCond.getInstantiations().getExecutionContext(), services)) {
             return addInstantiation(instantiationCandidate, matchCond, services);
-        }        
+        }
 
         return null;
     }
 
-    
+
     /**
      * {@inheritDoc}
      */

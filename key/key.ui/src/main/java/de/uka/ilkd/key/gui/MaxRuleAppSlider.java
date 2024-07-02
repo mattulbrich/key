@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,13 +23,13 @@
 
 package de.uka.ilkd.key.gui;
 
-import de.uka.ilkd.key.core.KeYMediator;
-
+import java.util.Hashtable;
+import java.util.LinkedList;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.util.Hashtable;
-import java.util.LinkedList;
+
+import de.uka.ilkd.key.core.KeYMediator;
 
 public class MaxRuleAppSlider extends JSlider {
     /**
@@ -42,7 +52,9 @@ public class MaxRuleAppSlider extends JSlider {
 
         for (int n = 0; n <= MAX_RULE_APPS_LOG10; n++) {
             int val = (int) Math.pow(10, n);
-            String sval = "" + (val >= 10000 ? val >= 1000000 ? (val / 1000000) + "M" : (val / 1000) + "k" : +val);
+            String sval =
+                "" + (val >= 10000 ? val >= 1000000 ? (val / 1000000) + "M" : (val / 1000) + "k"
+                        : +val);
             JLabel l = new JLabel("" + sval);
             l.setFont(l.getFont().deriveFont(9F));
             labelTable.put(Integer.valueOf(n * 9), l);
@@ -84,7 +96,7 @@ public class MaxRuleAppSlider extends JSlider {
             int major = (int) (Math.log(maxRuleApps) / Math.log(10));
             int minor = maxRuleApps / (int) Math.pow(10, major) - 1;
             int initPos = Math.max(0, Math.min(MAX_RULE_APPS_LOG10 * 9,
-                    major * 9 + minor));
+                major * 9 + minor));
             setValue(initPos);
         }
     }

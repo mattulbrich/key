@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -28,7 +38,7 @@ public interface SMTSettings {
     long getTimeout();
 
 
-     long getTimeout(SolverType type);
+    long getTimeout(SolverType type);
 
     /**
      * The path of the folder, where the smt files are stored temporarily.
@@ -42,9 +52,9 @@ public interface SMTSettings {
     int getMaxConcurrentProcesses();
 
     /**
-     *<code>true</code> If the transitive relations in the sort hierarchy
+     * <code>true</code> If the transitive relations in the sort hierarchy
      * should be explicitly modeled by formulas.
-     * */
+     */
     boolean useExplicitTypeHierarchy();
 
     /**
@@ -69,77 +79,82 @@ public interface SMTSettings {
      * ignored.
      */
     Collection<Taclet> getTaclets();
-    
+
     /**
-     * Returns <code>true</code> if the uniqueness property should be translated 
+     * Returns <code>true</code> if the uniqueness property should be translated
      * by using the built-in mechanism of the solver.
      * Has only some effect if the solver supports a built in feature for uniqueness.
      */
     boolean useBuiltInUniqueness();
-    
+
     /**
      * Returns <code>true</code> if a uninterpreted function should be used if the
-     * normal normal multiplication is not supported. In case that such a function 
+     * normal normal multiplication is not supported. In case that such a function
      * should not be used an exception is thrown when a not supported multiplication
      * occurs.
-     * */
+     */
     boolean useUninterpretedMultiplicationIfNecessary();
-    
+
     /**
      * Returns <code>true</code> if for too big respective too small integers (integers that
      * are not supported) a constant should be introduced.
      */
     boolean useAssumptionsForBigSmallIntegers();
-    
+
     /**
      * @return Returns the logic used by solvers using SMT-Lib-Format
      */
     String getLogic();
-   
+
     long getMaximumInteger();
-    
+
     long getMinimumInteger();
-    
+
     /**
      * Returns the bit size used for modelling integers when looking for
      * bounded counter examples.
+     *
      * @return a positive integer indicating the bit-size
      */
     long getIntBound();
-    
+
     /**
      * Returns the bit size used for modelling heaps when looking for
      * bounded counter examples.
+     *
      * @return a positive integer indicating the bit-size
      */
     long getHeapBound();
-    
+
     /**
      * Returns the bit size used for modelling sequences when looking for
      * bounded counter examples.
+     *
      * @return a positive integer indicating the bit-size
      */
     long getSeqBound();
-    
+
     /**
      * Returns the bit size used for modelling objects when looking for
      * bounded counter examples.
+     *
      * @return a positive integer indicating the bit-size
      */
     long getObjectBound();
-    
+
     /**
      * Returns the bit size used for modelling location sets when looking for
      * bounded counter examples.
+     *
      * @return a positive integer indicating the bit-size
      */
     long getLocSetBound();
-    
+
     /**
      * Returns true if and only if the version should be checked each time a solver is started.
      */
     boolean checkForSupport();
-    
+
     boolean invarianForall();
 
     NewSMTTranslationSettings getNewSettings();

@@ -1,10 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.informationflow.po.snippet;
 
 import java.util.Iterator;
-
-import org.key_project.util.collection.ImmutableArray;
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
 
 import de.uka.ilkd.key.java.Label;
 import de.uka.ilkd.key.java.Statement;
@@ -20,6 +26,10 @@ import de.uka.ilkd.key.proof.init.ProofObligationVars;
 import de.uka.ilkd.key.rule.AuxiliaryContractBuilders;
 import de.uka.ilkd.key.speclang.AuxiliaryContract;
 
+import org.key_project.util.collection.ImmutableArray;
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
+
 
 /**
  *
@@ -30,7 +40,7 @@ class BasicBlockExecutionSnippet extends ReplaceAndRegisterMethod
 
     @Override
     public Term produce(BasicSnippetData d,
-                        ProofObligationVars poVars)
+            ProofObligationVars poVars)
             throws UnsupportedOperationException {
         ImmutableList<Term> posts = ImmutableSLList.<Term>nil();
         if (poVars.post.self != null) {
@@ -43,11 +53,11 @@ class BasicBlockExecutionSnippet extends ReplaceAndRegisterMethod
         }
         if (poVars.post.result != null) {
             posts = posts.append(d.tb.equals(poVars.post.result,
-                                             poVars.pre.result));
+                poVars.pre.result));
         }
         if (poVars.pre.exception != null && poVars.post.exception != null) {
             posts = posts.append(d.tb.equals(poVars.post.exception,
-                                             poVars.pre.exception));
+                poVars.pre.exception));
         }
         posts = posts.append(d.tb.equals(poVars.post.heap, d.tb.getBaseHeap()));
         final Term prog = buildProgramTerm(d, poVars, d.tb.and(posts), d.tb);
@@ -55,21 +65,21 @@ class BasicBlockExecutionSnippet extends ReplaceAndRegisterMethod
     }
 
     private Term buildProgramTerm(BasicSnippetData d,
-                                  ProofObligationVars vs,
-                                  Term postTerm,
-                                  TermBuilder tb) {
+            ProofObligationVars vs,
+            Term postTerm,
+            TermBuilder tb) {
         if (d.get(BasicSnippetData.Key.MODALITY) == null) {
             throw new UnsupportedOperationException("Tried to produce a " +
-                                                    "program-term for a " +
-                                                    "contract without modality.");
+                "program-term for a " +
+                "contract without modality.");
         }
 
-        //create java block
+        // create java block
         Modality modality =
-                (Modality) d.get(BasicSnippetData.Key.MODALITY);
+            (Modality) d.get(BasicSnippetData.Key.MODALITY);
         final JavaBlock jb = buildJavaBlock(d, vs);
 
-        //create program term
+        // create program term
         final Modality symbExecMod;
         if (modality == Modality.BOX) {
             symbExecMod = Modality.DIA;
@@ -78,19 +88,19 @@ class BasicBlockExecutionSnippet extends ReplaceAndRegisterMethod
         }
         final Term programTerm = tb.prog(symbExecMod, jb, postTerm);
 
-        //create update
+        // create update
         Term update = tb.skip();
         Iterator<Term> paramIt = vs.pre.localVars.iterator();
         Iterator<Term> origParamIt = d.origVars.localVars.iterator();
         while (paramIt.hasNext()) {
             Term paramUpdate =
-                    d.tb.elementary(origParamIt.next(), paramIt.next());
+                d.tb.elementary(origParamIt.next(), paramIt.next());
             update = tb.parallel(update, paramUpdate);
         }
         if (vs.post.self != null) {
             final Term selfTerm = (Term) d.get(BasicSnippetData.Key.BLOCK_SELF);
             final Term selfUpdate =
-                    d.tb.elementary(selfTerm, vs.pre.self);
+                d.tb.elementary(selfTerm, vs.pre.self);
             update = tb.parallel(selfUpdate, update);
         }
         return tb.apply(update, programTerm);
@@ -98,23 +108,23 @@ class BasicBlockExecutionSnippet extends ReplaceAndRegisterMethod
 
 
     private JavaBlock buildJavaBlock(BasicSnippetData d,
-                                     ProofObligationVars poVars) {
+            ProofObligationVars poVars) {
         final ExecutionContext context =
-                (ExecutionContext) d.get(BasicSnippetData.Key.EXECUTION_CONTEXT);
+            (ExecutionContext) d.get(BasicSnippetData.Key.EXECUTION_CONTEXT);
         final ProgramVariable exceptionParameter =
-                poVars.exceptionParameter.op(ProgramVariable.class);
+            poVars.exceptionParameter.op(ProgramVariable.class);
 
-        //create block call
+        // create block call
         final Label[] labelsArray = (Label[]) d.get(BasicSnippetData.Key.LABELS);
         final ImmutableArray<Label> labels = new ImmutableArray<Label>(labelsArray);
         final AuxiliaryContract.Variables variables =
-                (AuxiliaryContract.Variables) d.get(BasicSnippetData.Key.BLOCK_VARS);
+            (AuxiliaryContract.Variables) d.get(BasicSnippetData.Key.BLOCK_VARS);
         final StatementBlock block = (StatementBlock) d.get(BasicSnippetData.Key.TARGET_BLOCK);
         final StatementBlock sb =
-                new AuxiliaryContractBuilders.ValidityProgramConstructor(labels, block,
-                                                                 variables,
-                                                                 exceptionParameter,
-                                                                 d.services).construct();
+            new AuxiliaryContractBuilders.ValidityProgramConstructor(labels, block,
+                variables,
+                exceptionParameter,
+                d.services).construct();
         final Statement s = new MethodFrame(null, context, sb);
         final JavaBlock result = JavaBlock.createJavaBlock(new StatementBlock(s));
 

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,11 +23,11 @@
 
 package de.uka.ilkd.key.prover;
 
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Node;
 import de.uka.ilkd.key.proof.Proof;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * Interface to be implemented by classes in order to customize the goal selection
@@ -27,8 +37,9 @@ public interface GoalChooser {
 
     /**
      * Initialise this DefaultGoalChooser for use with a given Proof and a list of goals.
+     *
      * @param p_proof
-     * *param p_goals the initial list of goals
+     *        *param p_goals the initial list of goals
      */
     public abstract void init(Proof p_proof, ImmutableList<Goal> p_goals);
 
@@ -46,6 +57,7 @@ public interface GoalChooser {
     /**
      * The given node has become an internal node of the proof tree, and the
      * children of the node are the given goals
+     *
      * @param node
      * @param newGoals
      */

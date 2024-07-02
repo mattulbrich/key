@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2017 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,15 +23,16 @@
 
 package de.uka.ilkd.key.rule.loop;
 
+import java.io.File;
+import java.util.Objects;
+
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.rule.LoopScopeInvariantRule;
 import de.uka.ilkd.key.rule.merge.MergeRuleTests;
 import de.uka.ilkd.key.util.HelperClassForTests;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.util.Objects;
 
 /**
  * Test cases for the {@link LoopScopeInvariantRule}. Should shine a light on
@@ -34,7 +45,8 @@ import java.util.Objects;
  */
 public class LoopScopeInvRuleTests {
 
-    private static final File TEST_RESOURCES_DIR_PREFIX = new File(HelperClassForTests.TESTCASE_DIRECTORY, "loopScopeInvRule/");
+    private static final File TEST_RESOURCES_DIR_PREFIX =
+        new File(HelperClassForTests.TESTCASE_DIRECTORY, "loopScopeInvRule/");
 
     /**
      * Automatic proof of a benchmark with labeled breaks and continues.

@@ -1,4 +1,18 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.testgen;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Set;
 
 import de.uka.ilkd.key.java.PrettyPrinter;
 import de.uka.ilkd.key.java.Services;
@@ -13,12 +27,9 @@ import de.uka.ilkd.key.proof.mgt.SpecificationRepository;
 import de.uka.ilkd.key.speclang.Contract;
 import de.uka.ilkd.key.speclang.Contract.OriginalVariables;
 import de.uka.ilkd.key.speclang.FunctionalOperationContract;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Set;
 
 public class ProofInfo {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProofInfo.class);
@@ -75,10 +86,11 @@ public class ProofInfo {
         if (c instanceof FunctionalOperationContract) {
             FunctionalOperationContract t = (FunctionalOperationContract) c;
             OriginalVariables orig = t.getOrigVars();
-            Term post = t.getPre(services.getTypeConverter().getHeapLDT().getHeap(), orig.self, orig.params, orig.atPres, services);
+            Term post = t.getPre(services.getTypeConverter().getHeapLDT().getHeap(), orig.self,
+                orig.params, orig.atPres, services);
             return post;
         }
-        //no pre <==> false
+        // no pre <==> false
         return services.getTermBuilder().ff();
     }
 
@@ -92,7 +104,7 @@ public class ProofInfo {
         Term f = getPO();
         JavaBlock block = getJavaBlock(f);
 
-        //    getUpdate(f);
+        // getUpdate(f);
         StringWriter sw = new StringWriter();
         sw.write("   " + getUpdate(f) + "\n");
         PrettyPrinter pw = new CustomPrettyPrinter(sw, false);
@@ -174,10 +186,12 @@ public class ProofInfo {
     private String processUpdate(Term update) {
         if (update.op() instanceof ElementaryUpdate) {
             ElementaryUpdate up = (ElementaryUpdate) update.op();
-            if (up.lhs().sort().extendsTrans(services.getTypeConverter().getHeapLDT().targetSort())) {
+            if (up.lhs().sort()
+                    .extendsTrans(services.getTypeConverter().getHeapLDT().targetSort())) {
                 return "";
             }
-            return "   \n" + up.lhs().sort() + " " + up.lhs().toString() + " = " + update.sub(0) + ";";
+            return "   \n" + up.lhs().sort() + " " + up.lhs().toString() + " = " + update.sub(0)
+                + ";";
         }
         StringBuilder result = new StringBuilder();
         for (Term sub : update.subs()) {

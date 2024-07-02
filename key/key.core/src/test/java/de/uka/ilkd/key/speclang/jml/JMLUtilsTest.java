@@ -1,11 +1,21 @@
-package de.uka.ilkd.key.speclang.jml;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.speclang.jml;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static de.uka.ilkd.key.speclang.jml.JMLUtils.isJmlCommentStarter;
 import static de.uka.ilkd.key.speclang.jml.JMLUtils.splitJmlMarker;

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,8 +24,6 @@
 package de.uka.ilkd.key.strategy.feature;
 
 import java.util.List;
-
-import org.key_project.util.collection.ImmutableSLList;
 
 import de.uka.ilkd.key.logic.PosInOccurrence;
 import de.uka.ilkd.key.logic.Term;
@@ -26,6 +34,8 @@ import de.uka.ilkd.key.rule.IBuiltInRuleApp;
 import de.uka.ilkd.key.rule.RuleApp;
 import de.uka.ilkd.key.rule.UseDependencyContractRule;
 import de.uka.ilkd.key.speclang.HeapContext;
+
+import org.key_project.util.collection.ImmutableSLList;
 
 public final class DependencyContractFeature extends BinaryFeature {
 
@@ -54,7 +64,7 @@ public final class DependencyContractFeature extends BinaryFeature {
                 : HeapContext.getModHeaps(goal.proof().getServices(), false);
 
         final List<PosInOccurrence> steps = UseDependencyContractRule.getSteps(
-                heapContext, pos, goal.sequent(), goal.proof().getServices());
+            heapContext, pos, goal.sequent(), goal.proof().getServices());
         if (steps.isEmpty()) {
             return false;
         }
@@ -73,7 +83,7 @@ public final class DependencyContractFeature extends BinaryFeature {
 
         // instantiate with arbitrary remaining step
         bapp = bapp.setIfInsts(
-                ImmutableSLList.<PosInOccurrence> nil().prepend(steps.get(0)));
+            ImmutableSLList.<PosInOccurrence>nil().prepend(steps.get(0)));
         return true;
     }
 }

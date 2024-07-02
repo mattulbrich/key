@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2017 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -48,18 +58,18 @@ public class StoreTermInCondition implements VariableCondition {
         }
 
         final LightweightSyntacticalReplaceVisitor replVisitor = //
-                new LightweightSyntacticalReplaceVisitor(svInst, services);
+            new LightweightSyntacticalReplaceVisitor(svInst, services);
         term.execPostOrder(replVisitor);
         final Term instantiatedTerm = replVisitor.getTerm();
 
         return matchCond.setInstantiations( //
-                svInst.add(storeInSV, instantiatedTerm, services));
+            svInst.add(storeInSV, instantiatedTerm, services));
     }
 
     @Override
     public String toString() {
         return String.format( //
-                "\\varcond (\\storeTermIn(%s, %s))", storeInSV, term);
+            "\\varcond (\\storeTermIn(%s, %s))", storeInSV, term);
     }
 
 }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -16,8 +26,6 @@ package de.uka.ilkd.key.rule.metaconstruct;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.key_project.util.collection.ImmutableArray;
 
 import de.uka.ilkd.key.java.Expression;
 import de.uka.ilkd.key.java.KeYJavaASTFactory;
@@ -41,6 +49,8 @@ import de.uka.ilkd.key.logic.VariableNamer;
 import de.uka.ilkd.key.logic.op.ProgramVariable;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 
+import org.key_project.util.collection.ImmutableArray;
+
 /**
  * TODO
  *
@@ -52,7 +62,7 @@ public class EvaluateArgs extends ProgramTransformer {
      * creates a typeof ProgramTransformer
      *
      * @param pe
-     *            the instance of expression contained by the meta construct
+     *        the instance of expression contained by the meta construct
      */
     public EvaluateArgs(ProgramElement pe) {
         super("#evaluate-arguments", pe);
@@ -62,13 +72,13 @@ public class EvaluateArgs extends ProgramTransformer {
      * TODO Comment.
      *
      * @param e
-     *            TODO
+     *        TODO
      * @param l
-     *            TODO
+     *        TODO
      * @param services
-     *            TODO
+     *        TODO
      * @param ec
-     *            TODO
+     *        TODO
      * @return TODO
      */
     public static ProgramVariable evaluate(Expression e,
@@ -93,8 +103,8 @@ public class EvaluateArgs extends ProgramTransformer {
         final ExecutionContext ec = svInst.getExecutionContext();
 
         MethodOrConstructorReference mr = (MethodOrConstructorReference) //
-            (pe instanceof CopyAssignment ? ((CopyAssignment) pe).getChildAt(1)
-                    : pe);
+        (pe instanceof CopyAssignment ? ((CopyAssignment) pe).getChildAt(1)
+                : pe);
 
         List<Statement> evalstat = new LinkedList<Statement>();
 

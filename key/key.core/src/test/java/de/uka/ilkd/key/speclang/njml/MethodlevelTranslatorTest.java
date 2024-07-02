@@ -1,12 +1,22 @@
-package de.uka.ilkd.key.speclang.njml;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.speclang.njml;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.Stream;
+
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -18,7 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class MethodlevelTranslatorTest {
     @TestFactory
     public Stream<DynamicTest> getFiles() throws IOException {
-        InputStream resourceAsStream = ExpressionTranslatorTest.class.getResourceAsStream("methodlevel.txt");
+        InputStream resourceAsStream =
+            ExpressionTranslatorTest.class.getResourceAsStream("methodlevel.txt");
         return ClasslevelTranslatorTest.readInputs(resourceAsStream, this::parseAndInterpret);
     }
 

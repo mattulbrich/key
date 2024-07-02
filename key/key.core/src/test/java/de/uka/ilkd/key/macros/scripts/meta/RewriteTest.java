@@ -1,4 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.macros.scripts.meta;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.uka.ilkd.key.control.DefaultUserInterfaceControl;
 import de.uka.ilkd.key.control.KeYEnvironment;
@@ -7,10 +20,8 @@ import de.uka.ilkd.key.macros.scripts.ScriptException;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.proof.io.ProblemLoaderException;
 import de.uka.ilkd.key.util.HelperClassForTests;
-import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.IOException;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,9 +34,12 @@ public class RewriteTest {
      * Taclet to be found and applied: eqSymm on `f=x`
      */
     @Test
-    public void testTransitive() throws IOException, ScriptException, InterruptedException, ProblemLoaderException {
-        File script = new File(HelperClassForTests.TESTCASE_DIRECTORY, "scriptCommands/rewrite.script");
-        File keyFile = new File(HelperClassForTests.TESTCASE_DIRECTORY, "scriptCommands/transitive.key");
+    public void testTransitive()
+            throws IOException, ScriptException, InterruptedException, ProblemLoaderException {
+        File script =
+            new File(HelperClassForTests.TESTCASE_DIRECTORY, "scriptCommands/rewrite.script");
+        File keyFile =
+            new File(HelperClassForTests.TESTCASE_DIRECTORY, "scriptCommands/transitive.key");
 
         assumeTrue(script.exists(), "Required script file not found: " + script);
         assumeTrue(keyFile.exists(), "Required KeY file not found: " + keyFile);
@@ -48,9 +62,12 @@ public class RewriteTest {
      * Taclet to be found and applied: lt_to_gt on `f>x`
      */
     @Test
-    public void testLessTransitive() throws IOException, ScriptException, InterruptedException, ProblemLoaderException {
-        File script = new File(HelperClassForTests.TESTCASE_DIRECTORY, "scriptCommands/lesstrans.script");
-        File keyFile = new File(HelperClassForTests.TESTCASE_DIRECTORY, "scriptCommands/less_trans.key");
+    public void testLessTransitive()
+            throws IOException, ScriptException, InterruptedException, ProblemLoaderException {
+        File script =
+            new File(HelperClassForTests.TESTCASE_DIRECTORY, "scriptCommands/lesstrans.script");
+        File keyFile =
+            new File(HelperClassForTests.TESTCASE_DIRECTORY, "scriptCommands/less_trans.key");
 
         assumeTrue(script.exists(), "Required script file not found: " + script);
         assumeTrue(keyFile.exists(), "Required KeY file not found: " + keyFile);

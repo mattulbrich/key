@@ -1,6 +1,13 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.kit.transformation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import recoder.CrossReferenceServiceConfiguration;
 import recoder.ProgramFactory;
@@ -13,9 +20,6 @@ import recoder.java.reference.VariableReference;
 import recoder.kit.*;
 import recoder.service.SourceInfo;
 import recoder.util.Debug;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Transformation that ensures that the given expression is evaluated first
@@ -45,7 +49,12 @@ import java.util.List;
  * <p>
  * or, if <CODE>x</CODE> is a field:
  *
- * <PRE>{ double d = g(); x = f(d); } int x;
+ * <PRE>
+ * {
+ *     double d = g();
+ *     x = f(d);
+ * }
+ * int x;
  *
  * </PRE>
  *
@@ -117,10 +126,11 @@ public class ShiftPreceedingStatementExpressions extends TwoPassTransformation {
      * initializers of new local variables.
      *
      * @param sc the service configuration to use.
-     * @param x  the expression that shall be accessed first in its statement
-     *           or initializer.
+     * @param x the expression that shall be accessed first in its statement
+     *        or initializer.
      */
-    public ShiftPreceedingStatementExpressions(CrossReferenceServiceConfiguration sc, Expression x) {
+    public ShiftPreceedingStatementExpressions(CrossReferenceServiceConfiguration sc,
+            Expression x) {
         super(sc);
         if (x == null) {
             throw new IllegalArgumentException("Missing expression");
@@ -135,8 +145,8 @@ public class ShiftPreceedingStatementExpressions extends TwoPassTransformation {
      * a field specification.
      *
      * @return the problem report, may be
-     * {@link recoder.kit.Transformation#IDENTITY}, or
-     * {@link recoder.kit.Transformation#EQUIVALENCE}.
+     *         {@link recoder.kit.Transformation#IDENTITY}, or
+     *         {@link recoder.kit.Transformation#EQUIVALENCE}.
      */
     public ProblemReport analyze() {
         // get all expressions that are executed before x
@@ -148,7 +158,8 @@ public class ShiftPreceedingStatementExpressions extends TwoPassTransformation {
                 preceeding.remove(i);
             }
         }
-        if ((expression instanceof Statement) && ((Statement) expression).getStatementContainer() != null) {
+        if ((expression instanceof Statement)
+                && ((Statement) expression).getStatementContainer() != null) {
             parent = (NonTerminalProgramElement) expression;
         } else {
             for (ProgramElement pe = expression; pe != null; pe = parent) {
@@ -195,7 +206,7 @@ public class ShiftPreceedingStatementExpressions extends TwoPassTransformation {
                         .createIdentifier(varName));
                 VariableSpecification vspec = vdecl.getVariables().get(0);
                 doAttach(preceeding.get(i).deepClone(), vspec);
-                //vdecl.makeAllParentRolesValid();
+                // vdecl.makeAllParentRolesValid();
                 tempVarDecls.add(vdecl);
 
                 // schedule replacement expressions
@@ -205,7 +216,8 @@ public class ShiftPreceedingStatementExpressions extends TwoPassTransformation {
             }
         }
         if (parent instanceof Statement) {
-            preparer = new PrepareStatementList(getServiceConfiguration(), (Statement) parent, isVisible());
+            preparer = new PrepareStatementList(getServiceConfiguration(), (Statement) parent,
+                isVisible());
             ProblemReport report = preparer.analyze();
             if (report instanceof Problem) {
                 return setProblemReport(report);
@@ -248,7 +260,7 @@ public class ShiftPreceedingStatementExpressions extends TwoPassTransformation {
             }
             // replace expressions by references to local variables
             for (int i = 0; i < exSize; i += 1) {
-                //		Debug.log(">>> Replacing " +
+                // Debug.log(">>> Replacing " +
                 // Format.toString(Formats.ELEMENT_LONG_LOCAL,
                 // preceeding.getExpression(i)) + " by " +
                 // Format.toString(Formats.ELEMENT_LONG_LOCAL,
@@ -275,15 +287,17 @@ public class ShiftPreceedingStatementExpressions extends TwoPassTransformation {
             }
             detach(init);
             // add initialization code to end of body
-            CopyAssignment ca = f.createCopyAssignment(f.createVariableReference(f.createIdentifier(fs.getName())),
+            CopyAssignment ca =
+                f.createCopyAssignment(f.createVariableReference(f.createIdentifier(fs.getName())),
                     init.deepClone());
             newParent = ca; // the new parent of the expression
 
             doAttach(ca, body, tempSize);
             // create class initializer block and add it to the type
             FieldDeclaration fd = (FieldDeclaration) fs.getParent();
-            ClassInitializer ci = fd.isStatic() ? f.createClassInitializer(f.createStatic(), body) : f
-                    .createClassInitializer(body);
+            ClassInitializer ci = fd.isStatic() ? f.createClassInitializer(f.createStatic(), body)
+                    : f
+                            .createClassInitializer(body);
             ci.makeAllParentRolesValid();
             TypeDeclaration tdecl = fd.getMemberParent();
             attach(ci, tdecl, tdecl.getMembers().indexOf(fd) + 1);

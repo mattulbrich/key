@@ -1,10 +1,18 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.speclang;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.java.Expression;
 import de.uka.ilkd.key.java.Label;
@@ -19,6 +27,8 @@ import de.uka.ilkd.key.logic.op.ProgramVariable;
 import de.uka.ilkd.key.rule.LoopContractInternalRule;
 import de.uka.ilkd.key.rule.metaconstruct.EnhancedForElimination;
 import de.uka.ilkd.key.util.InfFlowSpec;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * <p>
@@ -41,21 +51,21 @@ public interface LoopContract extends AuxiliaryContract {
     public Term getDecreases();
 
     /**
-    *
-    * @param heap
-    *            the heap to use.
-    * @param self
-    *            the {@code self} variable to use instead of {@link #getPlaceholderVariables()}.
-    * @param services
-    *            services.
-    * @return this loop contract's decreases clause on the specified heap.
-    */
+     *
+     * @param heap
+     *        the heap to use.
+     * @param self
+     *        the {@code self} variable to use instead of {@link #getPlaceholderVariables()}.
+     * @param services
+     *        services.
+     * @return this loop contract's decreases clause on the specified heap.
+     */
     public Term getDecreases(Term heap, Term self, Services services);
 
     /**
      *
      * @param variables
-     *            the variables to use instead of {@link #getPlaceholderVariables()}.
+     *        the variables to use instead of {@link #getPlaceholderVariables()}.
      * @param services services.
      * @return this loop contract's decreases clause.
      */
@@ -102,7 +112,7 @@ public interface LoopContract extends AuxiliaryContract {
 
     /**
      * @return {@code true} if this contract belongs to a block,
-     *  {@code false} if it belongs to a loop.
+     *         {@code false} if it belongs to a loop.
      */
     public boolean isOnBlock();
 
@@ -128,17 +138,17 @@ public interface LoopContract extends AuxiliaryContract {
             Term newDecreases);
 
     /**
-    *
-    * @param newLoop the new loop.
-    * @param newPreconditions the new preconditions.
-    * @param newPostconditions the new postconditions.
-    * @param newModifiesClauses the new modifies clauses.
-    * @param newinfFlowSpecs the new information flow specifications.
-    * @param newVariables the new variables.
-    * @param newMeasuredBy the new measured-by clause.
-    * @param newDecreases the new decreases clause.
-    * @return a new loop contract with the specified attributes.
-    */
+     *
+     * @param newLoop the new loop.
+     * @param newPreconditions the new preconditions.
+     * @param newPostconditions the new postconditions.
+     * @param newModifiesClauses the new modifies clauses.
+     * @param newinfFlowSpecs the new information flow specifications.
+     * @param newVariables the new variables.
+     * @param newMeasuredBy the new measured-by clause.
+     * @param newDecreases the new decreases clause.
+     * @return a new loop contract with the specified attributes.
+     */
     LoopContract update(LoopStatement newLoop,
             Map<LocationVariable, Term> newPreconditions,
             Map<LocationVariable, Term> newFreePreconditions,
@@ -151,7 +161,7 @@ public interface LoopContract extends AuxiliaryContract {
     /**
      *
      * @return the index variable if {@link #getLoop()} is an enhanced for-loop,
-     *  {@code null} otherwise.
+     *         {@code null} otherwise.
      * @see EnhancedForElimination#getIndexVariable()
      */
     ProgramVariable getIndexVariable();
@@ -159,16 +169,16 @@ public interface LoopContract extends AuxiliaryContract {
     /**
      *
      * @return the values variable if {@link #getLoop()} is an enhanced for-loop,
-     *  {@code null} otherwise.
+     *         {@code null} otherwise.
      * @see EnhancedForElimination#getValuesVariable()
      */
     ProgramVariable getValuesVariable();
 
     /**
      * @param newKJT
-     *            the type containing the new target method.
+     *        the type containing the new target method.
      * @param newPM
-     *            the new target method.
+     *        the new target method.
      * @return a new loop contract equal to this one except that it belongs to a different target.
      */
     @Override
@@ -176,7 +186,7 @@ public interface LoopContract extends AuxiliaryContract {
 
     /**
      * @param newBlock
-     *            the new block.
+     *        the new block.
      * @return a new loop contract equal to this one except that it belongs to a different block.
      */
     @Override
@@ -187,7 +197,7 @@ public interface LoopContract extends AuxiliaryContract {
 
     /**
      * @param newLoop
-     *            the new loop.
+     *        the new loop.
      * @return a new loop contract equal to this one except that it belongs to a different loop.
      */
     public LoopContract setLoop(LoopStatement newLoop);
@@ -199,13 +209,13 @@ public interface LoopContract extends AuxiliaryContract {
      * @param newBlock a new block.
      * @param services services.
      * @return a new loop contract equal to this one except that it belongs to the new block, and
-     *  {@code \index} and {@code \values} are replaced by proper variables in all terms.
+     *         {@code \index} and {@code \values} are replaced by proper variables in all terms.
      */
     public LoopContract replaceEnhancedForVariables(StatementBlock newBlock, Services services);
 
     /**
      * @return {@code true} iff this contract should only be applied using
-     *  {@link LoopContractInternalRule}.
+     *         {@link LoopContractInternalRule}.
      */
     public boolean isInternalOnly();
 

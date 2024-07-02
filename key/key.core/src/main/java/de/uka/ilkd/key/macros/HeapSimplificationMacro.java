@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -19,6 +29,7 @@ import java.util.Set;
  * This macro performs simplification of Heap and LocSet terms.
  * It applies simplification rules (including the "unoptimized" select rules),
  * One Step Simplification, alpha, and delta rules.
+ *
  * @author bruns
  *
  */
@@ -42,12 +53,12 @@ public class HeapSimplificationMacro extends AbstractPropositionalExpansionMacro
     @Override
     public String getDescription() {
         return "This macro performs simplification of Heap and LocSet terms.\n"
-                    +"It applies simplification rules (including the \"unoptimized\" select rules), "
-                    +"One Step Simplification, alpha, and delta rules.";
+            + "It applies simplification rules (including the \"unoptimized\" select rules), "
+            + "One Step Simplification, alpha, and delta rules.";
     }
 
     // note that rules in the 'concrete' rule set are usually not included here
-    private static final Set<String> ADMITTED_RULES_SET = asSet(new String[]{
+    private static final Set<String> ADMITTED_RULES_SET = asSet(new String[] {
         "selectOfStore",
         "selectOfCreate",
         "selectOfAnon",
@@ -174,8 +185,8 @@ public class HeapSimplificationMacro extends AbstractPropositionalExpansionMacro
         // normalization rules are currently not included
 
         // semantics blasting rules
-//        "equalityToElementOfRight",
-//        "subsetToElementOfRight",
+        // "equalityToElementOfRight",
+        // "subsetToElementOfRight",
         "disjointDefinition", // TODO: may have own rules in future
         "definitionAllElementsOfArray",
         "definitionAllElementsOfArrayLocsets",
@@ -189,8 +200,8 @@ public class HeapSimplificationMacro extends AbstractPropositionalExpansionMacro
         "closeFalse",
         "ifthenelse_negated",
         // TODO: those must be more expensive
-//        "replace_known_left",
-//        "replace_known_right",
+        // "replace_known_left",
+        // "replace_known_right",
 
         // others
         "castDel",
@@ -207,7 +218,7 @@ public class HeapSimplificationMacro extends AbstractPropositionalExpansionMacro
     }
 
     @Override
-    protected boolean allowOSS () {
+    protected boolean allowOSS() {
         return true;
     }
 }

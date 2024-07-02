@@ -1,15 +1,26 @@
-package org.key_project.ui.interactionlog.algo;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.java.Services;
-import de.uka.ilkd.key.proof.Node;
-import org.key_project.ui.interactionlog.api.Interaction;
-import org.key_project.ui.interactionlog.model.InteractionLog;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package org.key_project.ui.interactionlog.algo;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
+
+import de.uka.ilkd.key.java.Services;
+import de.uka.ilkd.key.proof.Node;
+
+import org.key_project.ui.interactionlog.api.Interaction;
+import org.key_project.ui.interactionlog.model.InteractionLog;
 
 /**
  * @author weigl
@@ -73,43 +84,43 @@ public class LogPrinter {
 
     private void body() {
         if (state.getInteractions().size() != 0) {
-            //HashMap<Interaction, List<Interaction>> tree = state.getInteractionTree();
-            //body(tree, state.getInteractions().get(0));
+            // HashMap<Interaction, List<Interaction>> tree = state.getInteractionTree();
+            // body(tree, state.getInteractions().get(0));
         }
     }
 
     private void body(HashMap<Interaction, List<Interaction>> tree,
-                      Interaction interaction) {
+            Interaction interaction) {
 
         newline();
-        //TODO out.write(interaction.getProofScriptRepresentation(services));
+        // TODO out.write(interaction.getProofScriptRepresentation(services));
 
         List<Interaction> children = tree.get(interaction);
         if (children != null) {
             switch (children.size()) {
-                case 1:
-                    body(tree, children.get(0));
-                    break;
-                default:
-                    newline();
-                    out.write("cases {");
-                    indent++;
+            case 1:
+                body(tree, children.get(0));
+                break;
+            default:
+                newline();
+                out.write("cases {");
+                indent++;
 
-                    for (Interaction c : children) {
-                        newline();
-                        out.write("case \"");
-                        //TODO out.write(matchExpr.apply(c.getNode()));
-                        out.write("\" {");
-                        indent++;
-                        body(tree, c);
-                        indent--;
-                        newline();
-                        out.write("}");
-                    }
+                for (Interaction c : children) {
+                    newline();
+                    out.write("case \"");
+                    // TODO out.write(matchExpr.apply(c.getNode()));
+                    out.write("\" {");
+                    indent++;
+                    body(tree, c);
                     indent--;
                     newline();
                     out.write("}");
-                    break;
+                }
+                indent--;
+                newline();
+                out.write("}");
+                break;
             }
         }
     }

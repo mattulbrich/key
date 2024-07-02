@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,7 +25,7 @@ package de.uka.ilkd.key.parser;
 
 /**
  * The mode in which the parser is currently running.
- * 
+ *
  * The KeY parser goes over input files more than once. This enum is used to
  * denote the mode of the current run.
  */
@@ -34,7 +44,7 @@ public enum ParserMode {
 
     /**
      * Parse global declarations.
-     * 
+     *
      * Apparently, this mode is only used in test case
      * {@link de.uka.ilkd.key.logic.TestClashFreeSubst}.
      */
@@ -42,7 +52,7 @@ public enum ParserMode {
 
     /**
      * Only parse taclet definitions.
-     * 
+     *
      * Used by
      * {@link KeYParser#parseTaclet(String, de.uka.ilkd.key.java.Services)}
      */
@@ -55,7 +65,7 @@ public enum ParserMode {
 
     /**
      * Get the name of this parser mode.
-     * 
+     *
      * @return the same as {@link #toString()}
      */
     public String getName() {

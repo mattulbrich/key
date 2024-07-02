@@ -1,20 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.java.statement;
-
-import org.key_project.util.ExtList;
-import org.key_project.util.collection.ImmutableArray;
 
 import de.uka.ilkd.key.java.Expression;
 import de.uka.ilkd.key.java.LoopInitializer;
@@ -27,55 +34,59 @@ import de.uka.ilkd.key.java.declaration.LocalVariableDeclaration;
 import de.uka.ilkd.key.java.declaration.VariableSpecification;
 import de.uka.ilkd.key.java.visitor.Visitor;
 
+import org.key_project.util.ExtList;
+import org.key_project.util.collection.ImmutableArray;
+
 /**
- *  For.
- *  
+ * For.
+ *
  */
 
 public class For extends LoopStatement implements VariableScope {
 
-    private static final ImmutableArray<VariableSpecification> EMPTY_VARSPECS=
-            new ImmutableArray<VariableSpecification>(new VariableSpecification[0]);
+    private static final ImmutableArray<VariableSpecification> EMPTY_VARSPECS =
+        new ImmutableArray<VariableSpecification>(new VariableSpecification[0]);
 
     /**
-     *      For.
+     * For.
      */
     public For() {}
 
     /**
-     *      For. Used for the Recoder2KeY transformation
-     *      @param inits a loop initializer mutable list.
-     *      @param guard an expression.
-     *      @param updates an expression mutable list.
-     *      @param body a statement.
+     * For. Used for the Recoder2KeY transformation
+     *
+     * @param inits a loop initializer mutable list.
+     * @param guard an expression.
+     * @param updates an expression mutable list.
+     * @param body a statement.
      */
     public For(LoopInitializer[] inits, Expression guard,
-               Expression[] updates, Statement body) {
+            Expression[] updates, Statement body) {
         super(inits, guard, updates, body);
     }
 
     public For(ILoopInit inits, IGuard guard,
-               IForUpdates updates, Statement body, ExtList comments) {
+            IForUpdates updates, Statement body, ExtList comments) {
         super(inits, guard, updates, body, comments);
     }
 
     public For(ILoopInit inits, IGuard guard,
-               IForUpdates updates, Statement body,
-	       ExtList comments, PositionInfo pos) {
+            IForUpdates updates, Statement body,
+            ExtList comments, PositionInfo pos) {
         super(inits, guard, updates, body, comments, pos);
     }
 
     public For(ILoopInit inits, IGuard guard,
-               IForUpdates updates, Statement body) {
+            IForUpdates updates, Statement body) {
         super(inits, guard, updates, body);
     }
 
     public For(ExtList children) {
-	super(children.get(ILoopInit.class),
-	      children.get(IGuard.class),
-	      children.get(IForUpdates.class),
-	      children.get(Statement.class),
-	      children);
+        super(children.get(ILoopInit.class),
+            children.get(IGuard.class),
+            children.get(IForUpdates.class),
+            children.get(Statement.class),
+            children);
     }
 
     public SourceElement getLastElement() {
@@ -83,8 +94,9 @@ public class For extends LoopStatement implements VariableScope {
     }
 
     /**
-     *      Is checked before iteration.
-     *      @return the boolean value.
+     * Is checked before iteration.
+     *
+     * @return the boolean value.
      */
 
     public boolean isCheckedBeforeIteration() {
@@ -99,7 +111,7 @@ public class For extends LoopStatement implements VariableScope {
         if (inits != null) {
             LoopInitializer li = inits.getInits().get(0);
             if (li instanceof LocalVariableDeclaration) {
-                return ((LocalVariableDeclaration)li).getVariables();
+                return ((LocalVariableDeclaration) li).getVariables();
             }
         }
         return EMPTY_VARSPECS;
@@ -110,7 +122,7 @@ public class For extends LoopStatement implements VariableScope {
             LoopInitializer li = inits.getInits().get(0);
             if (li instanceof LocalVariableDeclaration) {
                 ImmutableArray<VariableSpecification> vars =
-                    ((LocalVariableDeclaration)li).getVariables();
+                    ((LocalVariableDeclaration) li).getVariables();
                 for (int i = 0, s = vars.size(); i < s; i += 1) {
                     VariableSpecification v = vars.get(i);
                     if (name.equals(v.getName())) {
@@ -122,12 +134,14 @@ public class For extends LoopStatement implements VariableScope {
         return null;
     }
 
-    /** calls the corresponding method of a visitor in order to
+    /**
+     * calls the corresponding method of a visitor in order to
      * perform some action/transformation on this element
+     *
      * @param v the Visitor
      */
     public void visit(Visitor v) {
-	v.performActionOnFor(this);
+        v.performActionOnFor(this);
     }
 
     public void prettyPrint(PrettyPrinter p) throws java.io.IOException {

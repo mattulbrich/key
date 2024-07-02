@@ -1,8 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule;
 
 import java.util.List;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.informationflow.po.IFProofObligationVars;
 import de.uka.ilkd.key.java.reference.ExecutionContext;
@@ -11,6 +19,8 @@ import de.uka.ilkd.key.logic.PosInOccurrence;
 import de.uka.ilkd.key.logic.op.LocationVariable;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.speclang.AuxiliaryContract;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * Application for {@link AbstractAuxiliaryContractRule}.
@@ -43,11 +53,11 @@ public abstract class AbstractAuxiliaryContractBuiltInRuleApp
     /**
      *
      * @param rule
-     *            the rule being applied.
+     *        the rule being applied.
      * @param occurrence
-     *            the position at which the rule is applied.
+     *        the position at which the rule is applied.
      * @param ifInstantiations
-     *            if instantiations.
+     *        if instantiations.
      */
     public AbstractAuxiliaryContractBuiltInRuleApp(BuiltInRule rule,
             PosInOccurrence occurrence, ImmutableList<PosInOccurrence> ifInstantiations) {
@@ -119,9 +129,9 @@ public abstract class AbstractAuxiliaryContractBuiltInRuleApp
      * Sets the proof obligation variables and execution context to new values.
      *
      * @param vars
-     *            new proof obligation variables.
+     *        new proof obligation variables.
      * @param context
-     *            new execution context.
+     *        new execution context.
      */
     public void update(IFProofObligationVars vars, ExecutionContext context) {
         this.infFlowVars = vars;

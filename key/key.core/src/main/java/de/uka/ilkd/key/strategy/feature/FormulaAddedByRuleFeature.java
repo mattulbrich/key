@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -30,33 +40,33 @@ import de.uka.ilkd.key.rule.RuleApp;
 public class FormulaAddedByRuleFeature extends BinaryFeature {
 
     private final RuleFilter filter;
-    
-    private FormulaAddedByRuleFeature (RuleFilter p_filter) {
+
+    private FormulaAddedByRuleFeature(RuleFilter p_filter) {
         filter = p_filter;
     }
 
-    public static Feature create (RuleFilter p_filter) {
-        return new FormulaAddedByRuleFeature ( p_filter );
+    public static Feature create(RuleFilter p_filter) {
+        return new FormulaAddedByRuleFeature(p_filter);
     }
 
-    public boolean filter (RuleApp app, PosInOccurrence pos, Goal goal) {
+    public boolean filter(RuleApp app, PosInOccurrence pos, Goal goal) {
         assert pos != null : "Feature is only applicable to rules with find";
 
-        final SequentFormula cfma = pos.sequentFormula ();
-        final boolean antec = pos.isInAntec ();
-        
-        Node node = goal.node ();
-        
-        while ( !node.root () ) {
-            final Node par = node.parent ();
-            final Sequent pseq = par.sequent ();
+        final SequentFormula cfma = pos.sequentFormula();
+        final boolean antec = pos.isInAntec();
 
-            if ( !( antec ? pseq.antecedent () : pseq.succedent () ).contains ( cfma ) )
-                return filter.filter ( par.getAppliedRuleApp ().rule () );
-            
+        Node node = goal.node();
+
+        while (!node.root()) {
+            final Node par = node.parent();
+            final Sequent pseq = par.sequent();
+
+            if (!(antec ? pseq.antecedent() : pseq.succedent()).contains(cfma))
+                return filter.filter(par.getAppliedRuleApp().rule());
+
             node = par;
         }
-        
+
         return false;
     }
 

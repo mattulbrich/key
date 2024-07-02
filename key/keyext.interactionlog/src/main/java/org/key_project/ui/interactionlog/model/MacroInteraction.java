@@ -1,4 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.ui.interactionlog.model;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import de.uka.ilkd.key.api.ProofMacroApi;
 import de.uka.ilkd.key.gui.WindowUserInterfaceControl;
@@ -7,15 +24,9 @@ import de.uka.ilkd.key.macros.ProofMacro;
 import de.uka.ilkd.key.macros.ProofMacroFinishedInfo;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Node;
+
 import org.key_project.util.collection.ImmutableList;
 import org.key_project.util.collection.ImmutableSLList;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Alexander Weigl
@@ -41,17 +52,19 @@ public final class MacroInteraction extends NodeInteraction {
     }
 
     public MacroInteraction(Node node, ProofMacro macro,
-                            PosInOccurrence posInOcc, ProofMacroFinishedInfo info) {
+            PosInOccurrence posInOcc, ProofMacroFinishedInfo info) {
         super(node);
         this.macroName = macro.getScriptCommandName();
         this.pos = posInOcc;
         this.info = info == null ? "" : info.toString();
 
         ImmutableList<Goal> openGoals =
-                info != null && info.getProof() != null ?
-                        info.getProof().openGoals() : ImmutableSLList.<Goal>nil();
-        this.openGoalSerialNumbers = openGoals.stream().map(g -> g.node().serialNr()).collect(Collectors.toList());
-        this.openGoalNodeIds = openGoals.stream().map(g -> NodeIdentifier.get(g.node())).collect(Collectors.toList());
+            info != null && info.getProof() != null ? info.getProof().openGoals()
+                    : ImmutableSLList.<Goal>nil();
+        this.openGoalSerialNumbers =
+            openGoals.stream().map(g -> g.node().serialNr()).collect(Collectors.toList());
+        this.openGoalNodeIds =
+            openGoals.stream().map(g -> NodeIdentifier.get(g.node())).collect(Collectors.toList());
     }
 
     @Override

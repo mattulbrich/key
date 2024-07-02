@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -27,9 +37,9 @@ import de.uka.ilkd.key.taclettranslation.assumptions.TacletSetTranslation;
  * <code>SMTSolver</code> has a specific solver type (<code>SolverType</code>),
  * e.g <code>SolverType.Z3Solver</code>. <br>
  * Note:<br>
- *A class that implements this interface should be thread safe since there
+ * A class that implements this interface should be thread safe since there
  * methods are accessed by different threads concurrently.
- * 
+ *
  */
 public interface SMTSolver {
 
@@ -56,7 +66,7 @@ public interface SMTSolver {
      * Returns the translation of the SMTProblem that is handed over to the
      * solver process. If the solver process is still running the method returns
      * <code>null</code> in order to maintain thread safety.
-     * 
+     *
      * @return String representation of the corresponding problem, if the solver
      *         process is not running, otherwise null.
      */
@@ -84,18 +94,18 @@ public interface SMTSolver {
     /**
      * If there has occurred an exception while executing the solver process,
      * the method returns this exceptions, otherwise <code>null</code>
-     * 
+     *
      */
     Throwable getException();
 
     /**
      * Use this method in order to interrupt a running solver process.
-     * 
+     *
      * @param reasonOfInterruption
-     *            The reason of interruption. Can only be set to
-     *            <code>ReasonOfInterruption.Timeout</code> or
-     *            <code>ReasonOfInterruption.User</code> other wise a
-     *            <code>IllegalArgumentException</code> is thrown.
+     *        The reason of interruption. Can only be set to
+     *        <code>ReasonOfInterruption.Timeout</code> or
+     *        <code>ReasonOfInterruption.User</code> other wise a
+     *        <code>IllegalArgumentException</code> is thrown.
      */
     void interrupt(ReasonOfInterruption reasonOfInterruption);
 
@@ -108,6 +118,7 @@ public interface SMTSolver {
      * Returns the amount of milliseconds after a timeout occurs. (in ms)
      */
     long getTimeout();
+
     void setTimeout(long timeout);
 
 
@@ -115,7 +126,7 @@ public interface SMTSolver {
      * Returns the current state of the solver. Possible values are<br>
      * <code>Waiting<\code>: The solver process is waiting for the start signal<br>
      * <code>Running<\code>: The solver process is running
-     * <code>Stopped<\code>: The solver process was stopped. The reason can be a user interruption, 
+     * <code>Stopped<\code>: The solver process was stopped. The reason can be a user interruption,
      * an exception, a timeout or a successfull run.
      */
     SolverState getState();
@@ -124,7 +135,7 @@ public interface SMTSolver {
      * Returns <code>true</code> if the solver process was interrupted by an
      * user, an exception or a timeout. In all other cases (including that the
      * solver is still running) the method returns <code>true</code>.
-     * */
+     */
     boolean wasInterrupted();
 
     /**
@@ -160,7 +171,8 @@ public interface SMTSolver {
      * Returns the raw solver output. This includes the result (sat/unsat/unknown), possibly
      * error/warning messages, and possibly model/proof as certificate for sat/unsat.
      *
-     * <br><br>
+     * <br>
+     * <br>
      * <b>Note:</b> Since "endmodel" and "success" are used only for steering the interaction
      * between solver and KeY, these are currently filtered out!
      *
@@ -177,13 +189,13 @@ public interface SMTSolver {
     String getRawSolverInput();
 
     /**
-     * Returns the exceptions that has been thrown while translating taclets into assumptions. 
+     * Returns the exceptions that has been thrown while translating taclets into assumptions.
      */
     Collection<Throwable> getExceptionsOfTacletTranslation();
-    
-    
+
+
     AbstractSolverSocket getSocket();
-    
-    
+
+
 
 }

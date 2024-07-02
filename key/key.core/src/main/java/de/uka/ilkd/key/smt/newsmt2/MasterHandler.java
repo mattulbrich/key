@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.smt.newsmt2;
 
 import java.io.IOException;
@@ -50,19 +60,20 @@ public class MasterHandler {
     /** All declarations (declare-fun ...), (declare-const ...) */
     private final List<Writable> declarations = new ArrayList<>();
 
-    /** All axioms (assert ...)*/
+    /** All axioms (assert ...) */
     private final List<Writable> axioms = new ArrayList<>();
 
     /** A list of known symbols */
     private final Set<String> knownSymbols = new HashSet<>();
 
-    /** A list of untranslatable values*/
+    /** A list of untranslatable values */
     private final Map<Term, SExpr> unknownValues = new HashMap<>();
 
     /** The collected set of sorts occurring in the problem */
     private final Set<Sort> sorts = new HashSet<>();
 
-    /** Global state, e.g., a counter for the number of distinct field variables
+    /**
+     * Global state, e.g., a counter for the number of distinct field variables
      * Handlers can make use of this to store translation-specific data.
      */
     private final Map<String, Object> translationState = new HashMap<>();
@@ -94,7 +105,7 @@ public class MasterHandler {
 
         for (Entry<Object, Object> en : snippets.entrySet()) {
             String key = (String) en.getKey();
-            if(key.endsWith(".decls") || key.endsWith(".axioms")) {
+            if (key.endsWith(".decls") || key.endsWith(".axioms")) {
                 translationState.put(key, en.getValue());
             }
         }
@@ -131,7 +142,8 @@ public class MasterHandler {
      * @param settings settings from the proof for the property settings.
      * @throws IOException
      */
-    public MasterHandler(Services services, SMTSettings settings, List<SMTHandler> smtHandlers) throws IOException {
+    public MasterHandler(Services services, SMTSettings settings, List<SMTHandler> smtHandlers)
+            throws IOException {
         this.services = services;
         getTranslationState().putAll(settings.getNewSettings().getMap());
         handlers = SMTHandlerServices.getInstance().getFreshHandlers(services, smtHandlers, this);
@@ -163,19 +175,19 @@ public class MasterHandler {
 
             for (SMTHandler smtHandler : handlers) {
                 Capability response = smtHandler.canHandle(problem);
-                switch(response) {
-                    case YES_THIS_INSTANCE:
-                        // handle this but do not cache.
-                        return smtHandler.handle(this, problem);
-                    case YES_THIS_OPERATOR:
-                        // handle it and cache it for future instances of the op.
-                        handlerMap.put(problem.op(), smtHandler);
-                        return smtHandler.handle(this, problem);
+                switch (response) {
+                case YES_THIS_INSTANCE:
+                    // handle this but do not cache.
+                    return smtHandler.handle(this, problem);
+                case YES_THIS_OPERATOR:
+                    // handle it and cache it for future instances of the op.
+                    handlerMap.put(problem.op(), smtHandler);
+                    return smtHandler.handle(this, problem);
                 }
             }
 
             return handleAsUnknownValue(problem);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             exceptions.add(ex);
             return handleAsUnknownValue(problem);
         }
@@ -199,10 +211,10 @@ public class MasterHandler {
      * @param problem the non-null term to translate
      * @return the S-Expression representing the translation
      */
-    public SExpr translate(Term problem, Type type)  {
+    public SExpr translate(Term problem, Type type) {
         try {
             return SExprs.coerce(translate(problem), type);
-        }  catch(Exception ex) {
+        } catch (Exception ex) {
             // Fall back to an unknown value despite the exception.
             // The result will still be valid SMT code then.
             exceptions.add(ex);
@@ -237,9 +249,11 @@ public class MasterHandler {
      * Treats the given term as a function call.
      *
      * This means that an expression of the form
+     *
      * <pre>
      *     (functionName t1 ... tn)
      * </pre>
+     *
      * is returned where t1, ..., tn are the smt-translations of the subterms of
      * term.
      *
@@ -255,9 +269,11 @@ public class MasterHandler {
      * Treats the given term as a function call.
      *
      * This means that an expression of the form
+     *
      * <pre>
      *     (functionName t1 ... tn)
      * </pre>
+     *
      * is returned where t1, ..., tn are the smt-translations of the subterms of
      * term.
      *
@@ -275,6 +291,7 @@ public class MasterHandler {
 
     /**
      * Decides whether a symbol is already known to the master handler.
+     *
      * @param pr the SMT symbol name to test
      * @return true iff the name is already known
      */
@@ -351,13 +368,13 @@ public class MasterHandler {
 
         if (translationState.containsKey(functionName + ".intro")) {
             SymbolIntroducer introducer =
-                    (SymbolIntroducer) translationState.get(functionName + ".intro");
+                (SymbolIntroducer) translationState.get(functionName + ".intro");
             introducer.introduce(this, functionName);
         }
 
         // Handle it locally.
         // mark it known to avoid cyclic inclusion (if not already registered)
-        if(!isKnownSymbol(functionName)) {
+        if (!isKnownSymbol(functionName)) {
             addKnownSymbol(functionName);
         }
 

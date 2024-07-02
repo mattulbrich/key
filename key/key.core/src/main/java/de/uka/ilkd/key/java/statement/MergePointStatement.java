@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.java.statement;
-
-import org.key_project.util.ExtList;
 
 import de.uka.ilkd.key.java.Comment;
 import de.uka.ilkd.key.java.Expression;
@@ -23,6 +31,8 @@ import de.uka.ilkd.key.java.ProgramElement;
 import de.uka.ilkd.key.java.visitor.Visitor;
 import de.uka.ilkd.key.logic.op.IProgramVariable;
 import de.uka.ilkd.key.logic.op.LocationVariable;
+
+import org.key_project.util.ExtList;
 
 /**
  * A statement indicating a merge point.
@@ -60,7 +70,7 @@ public class MergePointStatement extends JavaStatement
 
     /**
      * Get the number of expressions in this container.
-     * 
+     *
      * @return the number of expressions.
      */
     public int getExpressionCount() {
@@ -70,14 +80,14 @@ public class MergePointStatement extends JavaStatement
     /**
      * Return the expression at the specified index in this node's "virtual"
      * expression array.
-     * 
+     *
      * @param index
-     *            an index for an expression.
-     * 
+     *        an index for an expression.
+     *
      * @return the expression with the given index.
-     * 
+     *
      * @exception ArrayIndexOutOfBoundsException
-     *                if <tt>index</tt> is out of bounds.
+     *            if <tt>index</tt> is out of bounds.
      */
     public Expression getExpressionAt(int index) {
         if (identifier != null && index == 0) {
@@ -88,7 +98,7 @@ public class MergePointStatement extends JavaStatement
 
     /**
      * Get expression.
-     * 
+     *
      * @return the expression.
      */
     public Expression getExpression() {
@@ -97,7 +107,7 @@ public class MergePointStatement extends JavaStatement
 
     /**
      * Returns the number of children of this node.
-     * 
+     *
      * @return an int giving the number of children of this node
      */
     public int getChildCount() {
@@ -110,12 +120,12 @@ public class MergePointStatement extends JavaStatement
     /**
      * Returns the child at the specified index in this node's "virtual" child
      * array
-     * 
+     *
      * @param index
-     *            an index into this node's "virtual" child array
+     *        an index into this node's "virtual" child array
      * @return the program element at the given position
      * @exception ArrayIndexOutOfBoundsException
-     *                if <tt>index</tt> is out of bounds
+     *            if <tt>index</tt> is out of bounds
      */
     public ProgramElement getChildAt(int index) {
         if (identifier != null) {
@@ -129,9 +139,9 @@ public class MergePointStatement extends JavaStatement
     /**
      * calls the corresponding method of a visitor in order to perform some
      * action/transformation on this element
-     * 
+     *
      * @param v
-     *            the Visitor
+     *        the Visitor
      */
     public void visit(Visitor v) {
         v.performActionOnMergePointStatement(this);

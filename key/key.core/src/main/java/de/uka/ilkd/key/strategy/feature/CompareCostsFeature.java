@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -20,37 +30,37 @@ import de.uka.ilkd.key.rule.RuleApp;
 public abstract class CompareCostsFeature extends BinaryFeature {
 
     protected final Feature a, b;
-    
+
     private CompareCostsFeature(Feature a, Feature b) {
         this.a = a;
         this.b = b;
     }
 
-    public static Feature less (Feature a, Feature b) {
-        return new CompareCostsFeature(a,b) {
+    public static Feature less(Feature a, Feature b) {
+        return new CompareCostsFeature(a, b) {
             protected boolean filter(RuleApp app, PosInOccurrence pos, Goal goal) {
-                return a.computeCost ( app, pos, goal ).compareTo (
-                       b.computeCost ( app, pos, goal ) ) < 0;
-            }            
+                return a.computeCost(app, pos, goal).compareTo(
+                    b.computeCost(app, pos, goal)) < 0;
+            }
         };
     }
-    
-    public static Feature leq (Feature a, Feature b) {
-        return new CompareCostsFeature(a,b) {
+
+    public static Feature leq(Feature a, Feature b) {
+        return new CompareCostsFeature(a, b) {
             protected boolean filter(RuleApp app, PosInOccurrence pos, Goal goal) {
-                return a.computeCost ( app, pos, goal ).compareTo (
-                       b.computeCost ( app, pos, goal ) ) <= 0;
-            }            
+                return a.computeCost(app, pos, goal).compareTo(
+                    b.computeCost(app, pos, goal)) <= 0;
+            }
         };
     }
-    
-    public static Feature eq (Feature a, Feature b) {
-        return new CompareCostsFeature(a,b) {
+
+    public static Feature eq(Feature a, Feature b) {
+        return new CompareCostsFeature(a, b) {
             protected boolean filter(RuleApp app, PosInOccurrence pos, Goal goal) {
-                return a.computeCost ( app, pos, goal ).equals (
-                       b.computeCost ( app, pos, goal ) );
-            }            
+                return a.computeCost(app, pos, goal).equals(
+                    b.computeCost(app, pos, goal));
+            }
         };
     }
-    
+
 }

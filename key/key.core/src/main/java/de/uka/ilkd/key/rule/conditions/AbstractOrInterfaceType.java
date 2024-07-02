@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -34,32 +44,32 @@ public final class AbstractOrInterfaceType extends VariableConditionAdapter {
         this.resolver = tr;
         this.negated = negation;
     }
-    
-    public boolean isNegated(){
-	return negated;
+
+    public boolean isNegated() {
+        return negated;
     }
-    
-    public TypeResolver getTypeResolver(){
-	return resolver;
+
+    public TypeResolver getTypeResolver() {
+        return resolver;
     }
-    
+
     @Override
-    public boolean check(SchemaVariable var, 
-	    		 SVSubstitute instCandidate,
-	    		 SVInstantiations instMap, 
-	    		 Services services) {
-        final Sort sort = 
+    public boolean check(SchemaVariable var,
+            SVSubstitute instCandidate,
+            SVInstantiations instMap,
+            Services services) {
+        final Sort sort =
             resolver.resolveSort(var, instCandidate, instMap, services);
-                        
+
         final boolean isAbstractOrInterface = sort.isAbstract();
-        
+
         return negated ? !isAbstractOrInterface : isAbstractOrInterface;
     }
-    
-    
+
+
     @Override
-    public String toString() {      
+    public String toString() {
         String prefix = negated ? "\\not" : "";
-        return prefix+"\\isAbstractOrInterface (" + resolver + ")";
+        return prefix + "\\isAbstractOrInterface (" + resolver + ")";
     }
 }

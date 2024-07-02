@@ -1,4 +1,18 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.ui.interactionlog.model.builtin;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import de.uka.ilkd.key.gui.WindowUserInterfaceControl;
 import de.uka.ilkd.key.logic.PosInOccurrence;
@@ -6,12 +20,9 @@ import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Node;
 import de.uka.ilkd.key.rule.OneStepSimplifier;
 import de.uka.ilkd.key.rule.OneStepSimplifierRuleApp;
+
 import org.key_project.ui.interactionlog.model.NodeIdentifier;
 import org.key_project.ui.interactionlog.model.OccurenceIdentifier;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Alexander Weigl
@@ -37,19 +48,18 @@ public class OSSBuiltInRuleInteraction extends BuiltInRuleInteraction {
     @Override
     public String getMarkdown() {
         return String.format("## One step simplification%n"
-                        + "* applied on %n  * Term:%s%n  * Toplevel %s%n",
-                getOccurenceIdentifier().getTerm(),
-                getOccurenceIdentifier().getToplevelTerm());
+            + "* applied on %n  * Term:%s%n  * Toplevel %s%n",
+            getOccurenceIdentifier().getTerm(),
+            getOccurenceIdentifier().getToplevelTerm());
     }
 
     @Override
     public String getProofScriptRepresentation() {
         return String.format("one_step_simplify %n" +
-                        "\t     on = \"%s\"%n" +
-                        "\tformula = \"%s\"%n;%n",
-                getOccurenceIdentifier().getTerm(),
-                getOccurenceIdentifier().getToplevelTerm()
-        );
+            "\t     on = \"%s\"%n" +
+            "\tformula = \"%s\"%n;%n",
+            getOccurenceIdentifier().getTerm(),
+            getOccurenceIdentifier().getToplevelTerm());
     }
 
     @Override

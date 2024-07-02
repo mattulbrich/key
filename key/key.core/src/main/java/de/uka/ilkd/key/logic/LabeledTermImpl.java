@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,14 +25,14 @@ package de.uka.ilkd.key.logic;
 
 import java.util.stream.Collectors;
 
+import de.uka.ilkd.key.logic.label.TermLabel;
+import de.uka.ilkd.key.logic.op.Operator;
+import de.uka.ilkd.key.logic.op.QuantifiableVariable;
+
 import org.key_project.util.collection.ImmutableArray;
 import org.key_project.util.java.CollectionUtil;
 import org.key_project.util.java.IFilter;
 import org.key_project.util.java.ObjectUtil;
-
-import de.uka.ilkd.key.logic.label.TermLabel;
-import de.uka.ilkd.key.logic.op.Operator;
-import de.uka.ilkd.key.logic.op.QuantifiableVariable;
 
 /**
  * The labeled term class is used for terms that have a label attached.
@@ -44,11 +54,11 @@ class LabeledTermImpl extends TermImpl {
     /**
      * creates an instance of a labeled term.
      *
-     * @param op        the top level operator
-     * @param subs      the Term that are the subterms of this term
+     * @param op the top level operator
+     * @param subs the Term that are the subterms of this term
      * @param boundVars logic variables bound by the operator
      * @param javaBlock contains the program part of the term (if any)
-     * @param labels    the terms labels (must not be null or empty)
+     * @param labels the terms labels (must not be null or empty)
      */
     public LabeledTermImpl(Operator op, ImmutableArray<Term> subs,
             ImmutableArray<QuantifiableVariable> boundVars,
@@ -136,7 +146,7 @@ class LabeledTermImpl extends TermImpl {
         StringBuilder result = new StringBuilder(super.toString());
 
         String labelsStr = labels.stream()
-                //.filter(TermLabel::isProofRelevant)
+                // .filter(TermLabel::isProofRelevant)
                 .map(TermLabel::toString)
                 .collect(Collectors.joining(", "));
 

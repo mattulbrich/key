@@ -1,26 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.util;
-
-import de.uka.ilkd.key.logic.Term;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.key_project.util.java.IOUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -30,6 +31,17 @@ import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import de.uka.ilkd.key.logic.Term;
+
+import org.key_project.util.java.IOUtil;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -46,10 +58,12 @@ public class DesignTests {
         if ("org.key_project.core".equals(projectRoot.getName())) {
             projectRoot = new File(projectRoot, "bin");
         } else if (projectRoot.isFile()) {
-            projectRoot = new File(projectRoot.getParentFile().getParentFile().getParentFile(), "key.core" + File.separator + "bin");
+            projectRoot = new File(projectRoot.getParentFile().getParentFile().getParentFile(),
+                "key.core" + File.separator + "bin");
         }
 
-        binaryPath = new File(projectRoot, "de" + File.separator + "uka" + File.separator + "ilkd" + File.separator + "key");
+        binaryPath = new File(projectRoot,
+            "de" + File.separator + "uka" + File.separator + "ilkd" + File.separator + "key");
     }
 
     private static final FileFilter FILTER = fileName -> {
@@ -71,26 +85,27 @@ public class DesignTests {
     @BeforeEach
     public void setUp() {
         allClasses = getAllClasses(binaryPath);
-        Assertions.assertTrue(allClasses.length >= 1, "No classes found in and below " + binaryPath);
+        Assertions.assertTrue(allClasses.length >= 1,
+            "No classes found in and below " + binaryPath);
     }
 
     /**
      * collects all found in the given directory
      *
      * @param directory a File denoting the directory where to look for
-     *                  the classes
+     *        the classes
      * @return array of found class files
      */
     private static Class<?>[] getClasses(File directory) {
         LOGGER.info(".");
         File[] classFiles = directory.listFiles(FILTER);
 
-        Class<?>[] classes = new Class
-                [(classFiles == null) ? 0 : classFiles.length];
+        Class<?>[] classes = new Class[(classFiles == null) ? 0 : classFiles.length];
         for (int i = 0; i < classes.length; i++) {
             String absoluteName = classFiles[i].getAbsolutePath();
-            String className = absoluteName.substring
-                    (absoluteName.indexOf("de" + File.separatorChar)).replace(File.separatorChar, '.');
+            String className =
+                absoluteName.substring(absoluteName.indexOf("de" + File.separatorChar))
+                        .replace(File.separatorChar, '.');
             className = className.substring(0, className.indexOf(".class"));
 
             try {
@@ -110,7 +125,7 @@ public class DesignTests {
      *
      * @param source the array whose elements have to inserted
      * @param target the LinkedList where to insert the elements of the
-     *               source
+     *        source
      */
     private static void copyToList(Class<?>[] source, LinkedList<Class<?>> target) {
         Collections.addAll(target, source);
@@ -122,16 +137,15 @@ public class DesignTests {
      * classes.
      *
      * @param topDir File giving the directory where to start the
-     *               iteration
+     *        iteration
      * @return all found classes including the ones in
-     * <code>topDir</code>
+     *         <code>topDir</code>
      */
     public static Class<?>[] getAllClasses(File topDir) {
         LinkedList<Class<?>> result = new LinkedList<>();
         copyToList(getClasses(topDir), result);
 
-        File[] subDirectories = topDir.listFiles
-                (File::isDirectory);
+        File[] subDirectories = topDir.listFiles(File::isDirectory);
         if (subDirectories == null) {
             return new Class[0];
         } else {
@@ -193,34 +207,42 @@ public class DesignTests {
                     allClass.getPackage().getName().contains("key.rule") ||
                     allClass.getPackage().getName().contains("key.logic") ||
                     allClass.getPackage().getName().contains("key.proof") ||
-                    allClass.getPackage().getName().contains("de.uka.ilkd.key.smt.counterexample") ||
+                    allClass.getPackage().getName().contains("de.uka.ilkd.key.smt.counterexample")
+                    ||
                     allClass.getPackage().getName().contains("de.uka.ilkd.key.smt.testgen") ||
                     allClass.getPackage().getName().contains("key.java") ||
                     allClass.getPackage().getName().contains("key.core") ||
                     allClass.getPackage().getName().contains("key.settings") ||
-                    allClass.getPackage().getName().contains("key.strategy")
-            ) {
+                    allClass.getPackage().getName().contains("key.strategy")) {
 
                 // exclude KeYMediator for the moment (contains some workarounds)
-                if (allClass.getName().contains("KeYMediator")) continue;
+                if (allClass.getName().contains("KeYMediator"))
+                    continue;
 
                 for (Field f : allClass.getDeclaredFields()) {
-                    if (java.awt.Component.class.isAssignableFrom(f.getType())) { //|| pkgname.contains("key.gui")) { as long as the mediator and settings are in the GUI
+                    if (java.awt.Component.class.isAssignableFrom(f.getType())) { // ||
+                                                                                  // pkgname.contains("key.gui"))
+                                                                                  // { as long as
+                                                                                  // the mediator
+                                                                                  // and settings
+                                                                                  // are in the GUI
                         LOGGER.error("Illegal GUI reference at field {} declared in class {}",
-                                f.getName(), allClass.getName());
+                            f.getName(), allClass.getName());
                         badClasses.add(allClass);
                     }
                 }
 
                 for (Method m : allClass.getDeclaredMethods()) {
                     if (java.awt.Component.class.isAssignableFrom(m.getReturnType())) {
-                        LOGGER.error("Illegal GUI reference as return type of {} declared in class {}",
-                                m.getName(), allClass.getName());
+                        LOGGER.error(
+                            "Illegal GUI reference as return type of {} declared in class {}",
+                            m.getName(), allClass.getName());
                     }
                     for (Class<?> t : m.getParameterTypes())
                         if (java.awt.Component.class.isAssignableFrom(t)) {
-                            LOGGER.error("Illegal GUI reference as parameter type of {} declared in class {}",
-                                    m.getName(), allClass.getName());
+                            LOGGER.error(
+                                "Illegal GUI reference as parameter type of {} declared in class {}",
+                                m.getName(), allClass.getName());
                             badClasses.add(allClass);
                         }
                 }
@@ -298,7 +320,8 @@ public class DesignTests {
                 }
             }
         }
-        LOGGER.info("[Design tests finished. (" + (testcases - failures) + "/" + testcases + ") tests passed.]");
+        LOGGER.info("[Design tests finished. (" + (testcases - failures) + "/" + testcases
+            + ") tests passed.]");
         if (failures > 0) {
             System.exit(1);
         }

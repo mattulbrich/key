@@ -1,4 +1,20 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.api;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import de.uka.ilkd.key.control.KeYEnvironment;
 import de.uka.ilkd.key.proof.Goal;
@@ -8,13 +24,8 @@ import de.uka.ilkd.key.rule.BuiltInRule;
 import de.uka.ilkd.key.rule.NoPosTacletApp;
 import de.uka.ilkd.key.rule.OneStepSimplifier;
 import de.uka.ilkd.key.util.MiscTools;
-import org.key_project.util.collection.ImmutableList;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * @author Alexander Weigl
@@ -37,7 +48,7 @@ public class ProofApi {
      * Save current Proof-> ProofApi
      */
     public void saveProof() throws IOException {
-        //TODO
+        // TODO
     }
 
     public KeYEnvironment<?> getEnv() {
@@ -50,7 +61,8 @@ public class ProofApi {
 
     public List<ProjectedNode> getOpenGoals() {
         ImmutableList<Goal> goals = proof.openGoals();
-        return goals.stream().map(g -> new ProjectedNode(g.node(), null)).collect(Collectors.toList());
+        return goals.stream().map(g -> new ProjectedNode(g.node(), null))
+                .collect(Collectors.toList());
     }
 
     public ProjectedNode getFirstOpenGoal() {
@@ -61,7 +73,8 @@ public class ProofApi {
         Set<String> s = new TreeSet<>();
         Goal goal = proof.getSubtreeGoals(proof.root()).head();
 
-        for (final BuiltInRule br : goal.ruleAppIndex().builtInRuleAppIndex().builtInRuleIndex().rules()) {
+        for (final BuiltInRule br : goal.ruleAppIndex().builtInRuleAppIndex().builtInRuleIndex()
+                .rules()) {
             s.add(br.displayName());
         }
 

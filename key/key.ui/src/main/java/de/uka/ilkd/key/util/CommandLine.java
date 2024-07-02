@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -96,7 +106,7 @@ public final class CommandLine {
         @Override
         protected void print(PrintStream stream, int descriptionCol) {
             String s = image;
-            if(parameter != null) {
+            if (parameter != null) {
                 s += " " + parameter;
             }
 
@@ -105,12 +115,12 @@ public final class CommandLine {
             indent(stream, descriptionCol - s.length());
 
             printIndentedMessage(stream, description,
-                    descriptionCol + indentSize);
+                descriptionCol + indentSize);
         }
 
     }
     /**
-     * Text that should appear in usage pages. If an external help option/command 
+     * Text that should appear in usage pages. If an external help option/command
      * with description should appear in helptext and printed similar to internal options
      */
     private class AdditionalHelpTextParts extends HelpElement {
@@ -122,11 +132,11 @@ public final class CommandLine {
         @Override
         protected void print(PrintStream ps, int descriptionCol) {
             int indent = indentSize;
-            
-         
+
+
             indent(ps, indent);
             printIndentedMessage(ps, command, descriptionCol);
-            indent(ps, descriptionCol-command.length());
+            indent(ps, descriptionCol - command.length());
             printIndentedMessage(ps, description, 0);
         }
     }
@@ -141,7 +151,7 @@ public final class CommandLine {
         @Override
         protected void print(PrintStream ps, int descriptionCol) {
             int indent = indentSize;
-            if(indentToDescriptionColumn) {
+            if (indentToDescriptionColumn) {
                 indent += descriptionCol;
             }
             indent(ps, indent);
@@ -150,12 +160,13 @@ public final class CommandLine {
     }
     /**
      * Prints section-headlines without any indent
+     *
      * @author sarah
      *
      */
     private class AdditionalHelpTextSection extends HelpElement {
         private String text;
-        //private boolean indentToDescriptionColumn;
+        // private boolean indentToDescriptionColumn;
 
         @Override
         protected void print(PrintStream ps, int descriptionCol) {
@@ -164,6 +175,7 @@ public final class CommandLine {
             printIndentedMessage(ps, text, 0);
         }
     }
+
     /**
      * default value for the length of a line for output.
      */
@@ -206,27 +218,28 @@ public final class CommandLine {
      * Adds a command line option to this handler.
      *
      * @param image
-     *            the image of the option (e.g. {@code -help})
+     *        the image of the option (e.g. {@code -help})
      * @param parameter
-     *            simple description/name of the argument, null if there is no
-     *            argument for this option (e.g. {@code <file>, time, path}, ...
+     *        simple description/name of the argument, null if there is no
+     *        argument for this option (e.g. {@code <file>, time, path}, ...
      * @param description
-     *            the description of the option
+     *        the description of the option
      */
     public void addOption(String image, String parameter, String description) {
 
-        if(!image.startsWith(MINUS)) {
-            throw new IllegalArgumentException("Parameters need to start with '" + MINUS + "': " + image);
+        if (!image.startsWith(MINUS)) {
+            throw new IllegalArgumentException(
+                "Parameters need to start with '" + MINUS + "': " + image);
         }
 
-        if(options.containsKey(image)) {
+        if (options.containsKey(image)) {
             throw new IllegalArgumentException(image + " has already been registered");
         }
 
         Option o = new Option();
         o.image = image;
         o.parameter = parameter;
-        o.description = description+"\n";
+        o.description = description + "\n";
         options.put(image, o);
         helpElements.add(o);
     }
@@ -238,10 +251,10 @@ public final class CommandLine {
      * arguments.
      *
      * @param description
-     *            the text to be displayed
+     *        the text to be displayed
      * @param identToDescriptionColumn
-     *            if <code>true</code>, the code is printed underneath the
-     *            remaining descriptions, otherwise it has the full length.
+     *        if <code>true</code>, the code is printed underneath the
+     *        remaining descriptions, otherwise it has the full length.
      */
     public void addText(String description, boolean identToDescriptionColumn) {
         AdditionalHelpText text = new AdditionalHelpText();
@@ -249,8 +262,11 @@ public final class CommandLine {
         text.indentToDescriptionColumn = identToDescriptionColumn;
         helpElements.add(text);
     }
+
     /**
-     * Add help text of a command which is not part of teh KeY prover, but part of the running script
+     * Add help text of a command which is not part of teh KeY prover, but part of the running
+     * script
+     *
      * @param command
      * @param description
      * @param identToDescriptionColumn
@@ -262,13 +278,15 @@ public final class CommandLine {
         text.indentToDescriptionColumn = identToDescriptionColumn;
         helpElements.add(text);
     }
+
     /**
      * Add Section Heading without any indentation
+     *
      * @param text
      */
     public void addSection(String text) {
         AdditionalHelpTextSection head = new AdditionalHelpTextSection();
-        head.text = "\n"+text+"\n\n";
+        head.text = "\n" + text + "\n\n";
 
         helpElements.add(head);
     }
@@ -277,18 +295,18 @@ public final class CommandLine {
      * Parses the command line.
      *
      * @param args
-     *                typically the array of command line arguments passed to
-     *                the main method.
+     *        typically the array of command line arguments passed to
+     *        the main method.
      *
      * @throws CommandLineException
-     *                If a option is unknown or badly formatted.
+     *         If a option is unknown or badly formatted.
      */
     public void parse(String[] args) throws CommandLineException {
         int cnt = 0;
         while (cnt < args.length && args[cnt].startsWith(MINUS)) {
 
-            if("--".equals(args[cnt])) {
-                cnt ++;
+            if ("--".equals(args[cnt])) {
+                cnt++;
                 break;
             }
 
@@ -299,23 +317,23 @@ public final class CommandLine {
                 throw new CommandLineException("Unknown command line option: " + current);
             }
 
-            if(option.parameter != null) {
-                if(cnt == args.length - 1) {
+            if (option.parameter != null) {
+                if (cnt == args.length - 1) {
                     throw new CommandLineException("Command line option " + current +
-                            " expects a parameter but did not receive one");
+                        " expects a parameter but did not receive one");
                 }
-                cnt ++;
+                cnt++;
                 option.value = args[cnt];
             } else {
                 option.value = "true";
             }
 
-            cnt ++;
+            cnt++;
         }
 
-        while(cnt < args.length) {
+        while (cnt < args.length) {
             arguments.add(args[cnt]);
-            cnt ++;
+            cnt++;
         }
     }
 
@@ -347,7 +365,7 @@ public final class CommandLine {
      * Checks if a boolean command line option is set.
      *
      * @param param
-     *                the image of the command line option to be checked
+     *        the image of the command line option to be checked
      *
      * @return true if the option is set, false otherwise
      */
@@ -365,9 +383,9 @@ public final class CommandLine {
      * If the parameter has not been specified, return the default value.
      *
      * @param param
-     *                the command line option. Needs to take an argument
+     *        the command line option. Needs to take an argument
      * @param defaultValue
-     *                the default value to return if option is not set
+     *        the default value to return if option is not set
      *
      * @return either the set option or defaultValue if not set.
      */
@@ -389,21 +407,21 @@ public final class CommandLine {
      * {@link CommandLineException} is thrown.
      *
      * @param param
-     *            the option to retrieve
+     *        the option to retrieve
      * @param defaultValue
-     *            the default value to use if no value specified
+     *        the default value to use if no value specified
      *
      * @return either the set option or defaultValue if not set.
      *
      * @throws CommandLineException
-     *             if the argument is ill-formatted.
+     *         if the argument is ill-formatted.
      */
     public int getInteger(String param, int defaultValue) throws CommandLineException {
         Option option = options.get(param);
         assert option != null : param + " is unknown option";
 
         String value = option.value;
-        if(value == null) {
+        if (value == null) {
             return defaultValue;
         }
 
@@ -411,7 +429,7 @@ public final class CommandLine {
             return Integer.decode(value);
         } catch (NumberFormatException e) {
             throw new CommandLineException(param + " expects an integer argument, but received: "
-                                            + option.value, e);
+                + option.value, e);
         }
     }
 
@@ -423,29 +441,31 @@ public final class CommandLine {
      * {@link CommandLineException} is thrown.
      *
      * @param param
-     *            the option to retrieve
+     *        the option to retrieve
      * @param defaultValue
-     *            the default value to use if no value specified
+     *        the default value to use if no value specified
      *
      * @return either the set option or defaultValue if not set.
      *
      * @throws CommandLineException
-     *             if the argument is ill-formatted.
+     *         if the argument is ill-formatted.
      */
     public long getLong(String param, long defaultValue) throws CommandLineException {
         Option option = options.get(param);
         assert option != null : param + " is unknown option";
 
         String value = option.value;
-        if(value == null) {
+        if (value == null) {
             return defaultValue;
         }
 
         try {
             return Long.decode(value);
         } catch (NumberFormatException e) {
-            throw new CommandLineException(param + " expects a long integer argument, but received: "
-                                            + option.value, e);
+            throw new CommandLineException(
+                param + " expects a long integer argument, but received: "
+                    + option.value,
+                e);
         }
     }
 
@@ -466,14 +486,14 @@ public final class CommandLine {
      * possible).
      *
      * @param stream
-     *            the stream to print to (typically System.out)
+     *        the stream to print to (typically System.out)
      */
     public void printUsage(PrintStream stream) {
         int descriptionCol = 0;
 
         for (Option option : options.values()) {
             int len = option.image.length();
-            if(option.parameter != null) {
+            if (option.parameter != null) {
                 len += 1 + option.parameter.length();
             }
             descriptionCol = Math.max(len, descriptionCol);
@@ -543,7 +563,7 @@ public final class CommandLine {
      * printing the usage page.
      *
      * @param indentSize
-     *            a non-negative number
+     *        a non-negative number
      */
     public void setIndentation(int indentSize) {
         this.indentSize = indentSize;

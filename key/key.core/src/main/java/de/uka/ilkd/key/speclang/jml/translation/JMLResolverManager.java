@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -31,9 +41,9 @@ import de.uka.ilkd.key.speclang.translation.*;
 public final class JMLResolverManager extends SLResolverManager {
 
     public JMLResolverManager(JavaInfo javaInfo,
-                              KeYJavaType specInClass,
-                              ParsableVariable selfVar,
-                              SLExceptionFactory eManager) {
+            KeYJavaType specInClass,
+            ParsableVariable selfVar,
+            SLExceptionFactory eManager) {
         super(eManager, specInClass, selfVar, false, javaInfo.getServices().getTermBuilder());
         addResolver(new JMLBuiltInPropertyResolver(javaInfo, this, specInClass));
         addResolver(new SLAttributeResolver(javaInfo, this, specInClass));
@@ -45,10 +55,10 @@ public final class JMLResolverManager extends SLResolverManager {
     @Override
     public VisibilityModifier getSpecVisibility(MemberDeclaration md) {
         if (JMLInfoExtractor.hasJMLModifier((FieldDeclaration) md,
-                "spec_public")) {
+            "spec_public")) {
             return new Public();
         } else if (JMLInfoExtractor.hasJMLModifier((FieldDeclaration) md,
-                "spec_protected")) {
+            "spec_protected")) {
             return new Protected();
         } else {
             return null;

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -25,6 +35,7 @@ import de.uka.ilkd.key.logic.sort.SortImpl;
 import de.uka.ilkd.key.rule.metaconstruct.*;
 import de.uka.ilkd.key.rule.metaconstruct.arith.*;
 import de.uka.ilkd.key.util.Debug;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import recoder.service.KeYCrossReferenceSourceInfo;
@@ -43,7 +54,7 @@ public abstract class AbstractTermTransformer extends AbstractSortedOperator
 
     /** A map from String names to meta operators **/
     public static final Map<String, AbstractTermTransformer> NAME_TO_META_OP =
-            new LinkedHashMap<String, AbstractTermTransformer>(70);
+        new LinkedHashMap<String, AbstractTermTransformer>(70);
 
     // TODO: This seems to be better handled using a ServiceLoader
 
@@ -87,11 +98,15 @@ public abstract class AbstractTermTransformer extends AbstractSortedOperator
 
     public static final AbstractTermTransformer DIVIDE_LCR_MONOMIALS = new DivideLCRMonomials();
 
-    public static final AbstractTermTransformer INTRODUCE_ATPRE_DEFINITIONS = new IntroAtPreDefsOp();
+    public static final AbstractTermTransformer INTRODUCE_ATPRE_DEFINITIONS =
+        new IntroAtPreDefsOp();
 
-    public static final AbstractTermTransformer CREATE_LOCAL_ANON_UPDATE = new CreateLocalAnonUpdate();
-    public static final AbstractTermTransformer CREATE_HEAP_ANON_UPDATE = new CreateHeapAnonUpdate();
-    public static final AbstractTermTransformer CREATE_BEFORE_LOOP_UPDATE = new CreateBeforeLoopUpdate();
+    public static final AbstractTermTransformer CREATE_LOCAL_ANON_UPDATE =
+        new CreateLocalAnonUpdate();
+    public static final AbstractTermTransformer CREATE_HEAP_ANON_UPDATE =
+        new CreateHeapAnonUpdate();
+    public static final AbstractTermTransformer CREATE_BEFORE_LOOP_UPDATE =
+        new CreateBeforeLoopUpdate();
     public static final AbstractTermTransformer CREATE_FRAME_COND = new CreateFrameCond();
     public static final AbstractTermTransformer CREATE_WELLFORMED_COND = new CreateWellformedCond();
 
@@ -104,7 +119,7 @@ public abstract class AbstractTermTransformer extends AbstractSortedOperator
 
     /** Transformer producing condition for equality of observer terms */
     public static final AbstractTermTransformer OBSERVER_EQUALITY =
-            new ObserverEqualityMetaConstruct();
+        new ObserverEqualityMetaConstruct();
 
     private static Sort[] createMetaSortArray(int arity) {
         Sort[] result = new Sort[arity];
@@ -127,8 +142,9 @@ public abstract class AbstractTermTransformer extends AbstractSortedOperator
         return NAME_TO_META_OP.get(s);
     }
 
-    /** @return String representing a logical integer literal
-     *  in decimal representation
+    /**
+     * @return String representing a logical integer literal
+     *         in decimal representation
      */
     public static String convertToDecimalString(Term term, Services services) {
         StringBuilder result = new StringBuilder();

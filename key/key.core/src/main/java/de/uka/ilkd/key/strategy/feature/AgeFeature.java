@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -25,15 +35,15 @@ import de.uka.ilkd.key.strategy.RuleAppCost;
  * supposed to be applied
  */
 public class AgeFeature implements Feature {
-    
-    public static final Feature INSTANCE = new AgeFeature ();
 
-    private AgeFeature () {}
-    
-    public RuleAppCost computeCost ( RuleApp app, PosInOccurrence pos, Goal goal ) {
-        return NumberRuleAppCost.create ( goal.getTime() );
-//        return LongRuleAppCost.create ( goal.getTime() / goal.sequent ().size () );
-//        return LongRuleAppCost.create ( (long)Math.sqrt ( goal.getTime () ) );
+    public static final Feature INSTANCE = new AgeFeature();
+
+    private AgeFeature() {}
+
+    public RuleAppCost computeCost(RuleApp app, PosInOccurrence pos, Goal goal) {
+        return NumberRuleAppCost.create(goal.getTime());
+        // return LongRuleAppCost.create ( goal.getTime() / goal.sequent ().size () );
+        // return LongRuleAppCost.create ( (long)Math.sqrt ( goal.getTime () ) );
     }
 
 }

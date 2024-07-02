@@ -1,4 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.testcase.smt.testgen;
+
+import java.io.File;
 
 import de.uka.ilkd.key.control.DefaultUserInterfaceControl;
 import de.uka.ilkd.key.control.KeYEnvironment;
@@ -8,11 +20,11 @@ import de.uka.ilkd.key.smt.st.SolverType;
 import de.uka.ilkd.key.smt.st.SolverTypes;
 import de.uka.ilkd.key.suite.util.HelperClassForTestgenTests;
 import de.uka.ilkd.key.testcase.smt.ce.TestCommons;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -20,14 +32,14 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TestTestgen extends TestCommons {
     public static final File testFile = new File(
-            HelperClassForTestgenTests.TESTCASE_DIRECTORY, "smt/tg");
+        HelperClassForTestgenTests.TESTCASE_DIRECTORY, "smt/tg");
     private static final String SYSTEM_PROPERTY_SOLVER_PATH = "z3SolverPath";
     private static final Logger LOGGER = LoggerFactory.getLogger(TestTestgen.class);
     private static boolean isInstalled = false;
     private static boolean installChecked = false;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         assumeFalse(toolNotInstalled());
     }
 
@@ -37,14 +49,17 @@ public class TestTestgen extends TestCommons {
             isInstalled = getSolverType().isInstalled(true);
             installChecked = true;
             if (!isInstalled) {
-                LOGGER.warn("Warning: {} is not installed, tests skipped.", getSolverType().getName());
-                LOGGER.warn("Maybe use JVM system property \"{}\" to define the path to the Z3 command.",
-                        SYSTEM_PROPERTY_SOLVER_PATH);
+                LOGGER.warn("Warning: {} is not installed, tests skipped.",
+                    getSolverType().getName());
+                LOGGER.warn(
+                    "Maybe use JVM system property \"{}\" to define the path to the Z3 command.",
+                    SYSTEM_PROPERTY_SOLVER_PATH);
             }
             if (isInstalled && !getSolverType().supportHasBeenChecked()) {
                 if (!getSolverType().checkForSupport()) {
                     LOGGER.warn("Warning: The version of the solver {} " +
-                            "used for the following tests may not be supported.", getSolverType().getName());
+                        "used for the following tests may not be supported.",
+                        getSolverType().getName());
                 }
             }
         }
@@ -65,7 +80,8 @@ public class TestTestgen extends TestCommons {
     public void testMiddle() throws Exception {
         File file = new File(testFile, "middle.key");
         assertTrue(file.exists(), "File " + file + " does not exists!");
-        KeYEnvironment<DefaultUserInterfaceControl> env = KeYEnvironment.load(file, null, null, null);
+        KeYEnvironment<DefaultUserInterfaceControl> env =
+            KeYEnvironment.load(file, null, null, null);
         try {
             Proof proof = env.getLoadedProof();
             assertNotNull(proof);

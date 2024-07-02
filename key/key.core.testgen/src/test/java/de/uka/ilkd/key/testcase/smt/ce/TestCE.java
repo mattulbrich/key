@@ -1,4 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.testcase.smt.ce;
+
+import java.io.File;
 
 import de.uka.ilkd.key.control.DefaultUserInterfaceControl;
 import de.uka.ilkd.key.control.KeYEnvironment;
@@ -11,17 +23,17 @@ import de.uka.ilkd.key.proof.io.ProblemLoaderException;
 import de.uka.ilkd.key.smt.st.SolverType;
 import de.uka.ilkd.key.smt.st.SolverTypes;
 import de.uka.ilkd.key.suite.util.HelperClassForTestgenTests;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestCE extends TestCommons {
-    public static final File testFile = new File(HelperClassForTestgenTests.TESTCASE_DIRECTORY, "smt/ce/");
+    public static final File testFile =
+        new File(HelperClassForTestgenTests.TESTCASE_DIRECTORY, "smt/ce/");
     private static final String SYSTEM_PROPERTY_SOLVER_PATH = "z3SolverPath";
     private static final Logger LOGGER = LoggerFactory.getLogger(TestCE.class);
     private static boolean isInstalled = false;
@@ -32,14 +44,17 @@ public class TestCE extends TestCommons {
             isInstalled = getSolverType().isInstalled(true);
             installChecked = true;
             if (!isInstalled) {
-                LOGGER.warn("Warning: {} is not installed, tests skipped.", getSolverType().getName());
-                LOGGER.warn("Maybe use JVM system property \"{}\" to define the path to the Z3 command.",
-                        SYSTEM_PROPERTY_SOLVER_PATH);
+                LOGGER.warn("Warning: {} is not installed, tests skipped.",
+                    getSolverType().getName());
+                LOGGER.warn(
+                    "Maybe use JVM system property \"{}\" to define the path to the Z3 command.",
+                    SYSTEM_PROPERTY_SOLVER_PATH);
             }
             if (isInstalled && !getSolverType().supportHasBeenChecked()) {
                 if (!getSolverType().checkForSupport()) {
                     LOGGER.warn("Warning: The version of the solver {} " +
-                            "used for the following tests may not be supported.", getSolverType().getName());
+                        "used for the following tests may not be supported.",
+                        getSolverType().getName());
                 }
             }
         }
@@ -121,7 +136,7 @@ public class TestCE extends TestCommons {
     public void testMiddle() throws Exception {
         File file = new File(testFile, "middle.key");
         KeYEnvironment<DefaultUserInterfaceControl> env =
-                KeYEnvironment.load(file, null, null, null);
+            KeYEnvironment.load(file, null, null, null);
         try {
             Proof proof = env.getLoadedProof();
             Assertions.assertNotNull(proof);

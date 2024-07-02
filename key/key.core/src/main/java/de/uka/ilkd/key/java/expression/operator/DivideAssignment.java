@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,15 +23,16 @@
 
 package de.uka.ilkd.key.java.expression.operator;
 
-import org.key_project.util.ExtList;
-
 import de.uka.ilkd.key.java.PrettyPrinter;
 import de.uka.ilkd.key.java.expression.Assignment;
 import de.uka.ilkd.key.java.visitor.Visitor;
 
+import org.key_project.util.ExtList;
+
 /**
- *  Divide assignment.
- *  @author <TT>AutoDoc</TT>
+ * Divide assignment.
+ *
+ * @author <TT>AutoDoc</TT>
  */
 
 public class DivideAssignment extends Assignment {
@@ -29,10 +40,11 @@ public class DivideAssignment extends Assignment {
 
 
     /**
-     *      Divide assignment.
-     *      @param children an ExtList with all children of this node
-     *      the first children in list will be the one on the left
-     *      side, the second the one on the  right side.
+     * Divide assignment.
+     *
+     * @param children an ExtList with all children of this node
+     *        the first children in list will be the one on the left
+     *        side, the second the one on the right side.
      */
 
     public DivideAssignment(ExtList children) {
@@ -40,8 +52,9 @@ public class DivideAssignment extends Assignment {
     }
 
     /**
- *      Get arity.
- *      @return the int value.
+     * Get arity.
+     *
+     * @return the int value.
      */
 
     public int getArity() {
@@ -49,8 +62,9 @@ public class DivideAssignment extends Assignment {
     }
 
     /**
- *      Get precedence.
- *      @return the int value.
+     * Get precedence.
+     *
+     * @return the int value.
      */
 
     public int getPrecedence() {
@@ -58,20 +72,23 @@ public class DivideAssignment extends Assignment {
     }
 
     /**
- *      Get notation.
- *      @return the int value.
+     * Get notation.
+     *
+     * @return the int value.
      */
 
     public int getNotation() {
         return INFIX;
     }
 
-    /** calls the corresponding method of a visitor in order to
+    /**
+     * calls the corresponding method of a visitor in order to
      * perform some action/transformation on this element
+     *
      * @param v the Visitor
      */
     public void visit(Visitor v) {
-	v.performActionOnDivideAssignment(this);
+        v.performActionOnDivideAssignment(this);
     }
 
     public void prettyPrint(PrettyPrinter p) throws java.io.IOException {

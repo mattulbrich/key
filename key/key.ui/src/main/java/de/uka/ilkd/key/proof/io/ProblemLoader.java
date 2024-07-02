@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,7 +25,6 @@ package de.uka.ilkd.key.proof.io;
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
-
 import javax.swing.SwingWorker;
 
 import de.uka.ilkd.key.core.KeYMediator;
@@ -36,7 +45,11 @@ import de.uka.ilkd.key.prover.impl.DefaultTaskStartedInfo;
  *
  * @author Martin Hentschel
  */
-public final class ProblemLoader extends AbstractProblemLoader { // TODO: Rename in MultiThreadProblemLoader analog to SingleThreadProblemLoader because it uses multiple Threads (UI and SwingWorker)?
+public final class ProblemLoader extends AbstractProblemLoader { // TODO: Rename in
+                                                                 // MultiThreadProblemLoader analog
+                                                                 // to SingleThreadProblemLoader
+                                                                 // because it uses multiple Threads
+                                                                 // (UI and SwingWorker)?
 
     private final ProverTaskListener ptl;
 
@@ -53,8 +66,8 @@ public final class ProblemLoader extends AbstractProblemLoader { // TODO: Rename
             Properties poPropertiesToForce,
             ProverTaskListener ptl) {
         super(file, classPath, bootClassPath, includes, profileOfNewProofs,
-                forceNewProfileOfNewProofs, mediator.getUI(),
-                askUiToSelectAProofObligationIfNotDefinedByLoadedFile, poPropertiesToForce);
+            forceNewProfileOfNewProofs, mediator.getUI(),
+            askUiToSelectAProofObligationIfNotDefinedByLoadedFile, poPropertiesToForce);
         this.mediator = mediator;
         this.ptl = ptl;
     }
@@ -67,7 +80,7 @@ public final class ProblemLoader extends AbstractProblemLoader { // TODO: Rename
         Throwable message;
         try {
             message = doWork();
-        } catch(Throwable ex) {
+        } catch (Throwable ex) {
             message = ex;
         }
 
@@ -81,7 +94,7 @@ public final class ProblemLoader extends AbstractProblemLoader { // TODO: Rename
             return null;
         } catch (Exception exception) {
             final String errorMessage = "Failed to load "
-                    + (getEnvInput() == null ? "problem/proof" : getEnvInput().name());
+                + (getEnvInput() == null ? "problem/proof" : getEnvInput().name());
             mediator.notify(new ExceptionFailureEvent(errorMessage, exception));
             mediator.getUI().reportStatus(this, errorMessage);
             return exception;
@@ -97,10 +110,10 @@ public final class ProblemLoader extends AbstractProblemLoader { // TODO: Rename
     private void fireTaskFinished(long runningTime, final Throwable message) {
         if (ptl != null) {
             final TaskFinishedInfo tfi = new DefaultTaskFinishedInfo(ProblemLoader.this, message,
-                    getProof(), runningTime, (getProof() != null ? getProof().countNodes() : 0),
-                    (getProof() != null
-                                ? getProof().countBranches() - getProof().openGoals().size()
-                                : 0));
+                getProof(), runningTime, (getProof() != null ? getProof().countNodes() : 0),
+                (getProof() != null
+                        ? getProof().countBranches() - getProof().openGoals().size()
+                        : 0));
             ptl.taskFinished(tfi);
         }
     }
@@ -127,32 +140,32 @@ public final class ProblemLoader extends AbstractProblemLoader { // TODO: Rename
      */
     public void runAsynchronously() {
         final SwingWorker<Throwable, Void> worker =
-                new SwingWorker<Throwable, Void>() {
+            new SwingWorker<Throwable, Void>() {
 
-            private long runTime;
+                private long runTime;
 
-            @Override
-            protected Throwable doInBackground() throws Exception {
-                long currentTime = System.currentTimeMillis();
-                final Throwable message = doWork();
-                runTime = System.currentTimeMillis() - currentTime;
-                return message;
-            }
-
-            @Override
-            protected void done() {
-                mediator.startInterface(true);
-                Throwable message = null;
-                try {
-                    message = get();
-                } catch (final Throwable exception) {
-                    // catch exception if something has been thrown in the meantime
-                    message = exception;
-                } finally {
-                    fireTaskFinished(runTime, message);
+                @Override
+                protected Throwable doInBackground() throws Exception {
+                    long currentTime = System.currentTimeMillis();
+                    final Throwable message = doWork();
+                    runTime = System.currentTimeMillis() - currentTime;
+                    return message;
                 }
-            }
-        };
+
+                @Override
+                protected void done() {
+                    mediator.startInterface(true);
+                    Throwable message = null;
+                    try {
+                        message = get();
+                    } catch (final Throwable exception) {
+                        // catch exception if something has been thrown in the meantime
+                        message = exception;
+                    } finally {
+                        fireTaskFinished(runTime, message);
+                    }
+                }
+            };
 
         mediator.stopInterface(true);
         fireTaskStarted();

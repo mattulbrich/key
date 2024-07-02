@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.convenience;
@@ -33,7 +37,7 @@ public interface ASTIteratorListener {
     /**
      * This method is called whenever an AST node is entered.
      *
-     * @param it   the ASTIterator that called this method.
+     * @param it the ASTIterator that called this method.
      * @param node the node that is currently entered.
      */
     void enteringNode(ASTIterator it, ProgramElement node);
@@ -41,7 +45,7 @@ public interface ASTIteratorListener {
     /**
      * This method is called just before an AST node is left.
      *
-     * @param it   the ASTIterator that called this method.
+     * @param it the ASTIterator that called this method.
      * @param node the node that is about to be left.
      */
     void leavingNode(ASTIterator it, ProgramElement node);
@@ -49,7 +53,7 @@ public interface ASTIteratorListener {
     /**
      * Called to determine whether or not children nodes should be visited.
      *
-     * @param it       the ASTIterator that called this method.
+     * @param it the ASTIterator that called this method.
      * @param thisNode the current node.
      * @return either ENTER_NONE, ENTER_SOME or ENTER_ALL.
      */
@@ -58,21 +62,23 @@ public interface ASTIteratorListener {
     /**
      * Determines whether or not a given child node should be visited.
      *
-     * @param it        the ASTIterator that called this method.
-     * @param thisNode  the current node.
+     * @param it the ASTIterator that called this method.
+     * @param thisNode the current node.
      * @param childNode the child node that might be visited next.
      * @return <tt>true</tt> if the iterator should proceed to the given child
-     * node.
+     *         node.
      */
-    boolean enterChildNode(ASTIterator it, NonTerminalProgramElement thisNode, ProgramElement childNode);
+    boolean enterChildNode(ASTIterator it, NonTerminalProgramElement thisNode,
+            ProgramElement childNode);
 
     /**
      * Called immediately after the iterator returned from the child node.
      *
-     * @param it        the ASTIterator that called this method.
-     * @param thisNode  the current node.
+     * @param it the ASTIterator that called this method.
+     * @param thisNode the current node.
      * @param childNode the child node that has just been visited.
      */
-    void returnedFromChildNode(ASTIterator it, NonTerminalProgramElement thisNode, ProgramElement childNode);
+    void returnedFromChildNode(ASTIterator it, NonTerminalProgramElement thisNode,
+            ProgramElement childNode);
 
 }

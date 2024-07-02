@@ -1,11 +1,22 @@
-package de.uka.ilkd.key.macros.scripts.meta;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.macros.scripts.ProofScriptCommand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.macros.scripts.meta;
 
 import java.io.IOException;
 import java.util.Properties;
+
+import de.uka.ilkd.key.macros.scripts.ProofScriptCommand;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This facade is used to load documentation for {@link ProofScriptCommand} and
@@ -43,7 +54,7 @@ public final class DescriptionFacade {
             if (properties == null) {
                 properties = new Properties();
                 properties.loadFromXML(
-                        DescriptionFacade.class.getResourceAsStream(COMMANDS_DESCRIPTION));
+                    DescriptionFacade.class.getResourceAsStream(COMMANDS_DESCRIPTION));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -72,7 +83,7 @@ public final class DescriptionFacade {
      * @see ProofScriptArgument#getDocumentation()
      */
     public static String getDocumentation(ProofScriptArgument<?> arg) {
-        if(arg==null || arg.getCommand() == null) {
+        if (arg == null || arg.getCommand() == null) {
             return null;
         }
         String key = arg.getCommand().getName() + "." + arg.getName();

@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.java.expression.operator;
-
-import org.key_project.util.ExtList;
 
 import de.uka.ilkd.key.java.Expression;
 import de.uka.ilkd.key.java.PrettyPrinter;
@@ -23,18 +31,21 @@ import de.uka.ilkd.key.java.expression.Operator;
 import de.uka.ilkd.key.java.reference.ExecutionContext;
 import de.uka.ilkd.key.java.visitor.Visitor;
 
+import org.key_project.util.ExtList;
+
 /**
- *  Logical and.
+ * Logical and.
  */
 
 public class LogicalAnd extends Operator {
 
 
     /**
-     *      Logical and.
-     *      @param children an ExtList with all children of this node
-     *      the first children in list will be the one on the left
-     *      side, the second the one on the  right side.
+     * Logical and.
+     *
+     * @param children an ExtList with all children of this node
+     *        the first children in list will be the one on the left
+     *        side, the second the one on the right side.
      */
 
     public LogicalAnd(ExtList children) {
@@ -42,21 +53,23 @@ public class LogicalAnd extends Operator {
     }
 
     public LogicalAnd(Expression lhs, Expression rhs) {
-	super(lhs, rhs);
+        super(lhs, rhs);
     }
 
 
     /**
-     *      Get arity.
-     *      @return the int value.
+     * Get arity.
+     *
+     * @return the int value.
      */
     public int getArity() {
         return 2;
     }
 
     /**
-     *      Get precedence.
-     *      @return the int value.
+     * Get precedence.
+     *
+     * @return the int value.
      */
 
     public int getPrecedence() {
@@ -64,20 +77,23 @@ public class LogicalAnd extends Operator {
     }
 
     /**
- *      Get notation.
- *      @return the int value.
+     * Get notation.
+     *
+     * @return the int value.
      */
 
     public int getNotation() {
         return INFIX;
     }
 
-    /** calls the corresponding method of a visitor in order to
+    /**
+     * calls the corresponding method of a visitor in order to
      * perform some action/transformation on this element
+     *
      * @param v the Visitor
      */
     public void visit(Visitor v) {
-	v.performActionOnLogicalAnd(this);
+        v.performActionOnLogicalAnd(this);
     }
 
     public void prettyPrint(PrettyPrinter p) throws java.io.IOException {
@@ -85,7 +101,7 @@ public class LogicalAnd extends Operator {
     }
 
     public KeYJavaType getKeYJavaType(Services services, ExecutionContext ec) {
-	return services.getTypeConverter().getBooleanType();
+        return services.getTypeConverter().getBooleanType();
     }
 
 }

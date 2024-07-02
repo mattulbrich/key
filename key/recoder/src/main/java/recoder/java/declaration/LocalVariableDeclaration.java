@@ -1,14 +1,18 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.declaration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import recoder.java.*;
 import recoder.java.reference.TypeReference;
 import recoder.list.generic.ASTArrayList;
 import recoder.list.generic.ASTList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Local variable declaration.
@@ -47,7 +51,7 @@ public class LocalVariableDeclaration extends VariableDeclaration implements Loo
      * Local variable declaration.
      *
      * @param typeRef a type reference.
-     * @param name    an identifier.
+     * @param name an identifier.
      */
 
     public LocalVariableDeclaration(TypeReference typeRef, Identifier name) {
@@ -61,13 +65,13 @@ public class LocalVariableDeclaration extends VariableDeclaration implements Loo
     /**
      * Local variable declaration.
      *
-     * @param mods    a modifier mutable list.
+     * @param mods a modifier mutable list.
      * @param typeRef a type reference.
-     * @param vars    a variable specification mutable list.
+     * @param vars a variable specification mutable list.
      */
 
     public LocalVariableDeclaration(ASTList<DeclarationSpecifier> mods, TypeReference typeRef,
-                                    ASTList<VariableSpecification> vars) {
+            ASTList<VariableSpecification> vars) {
         setDeclarationSpecifiers(mods);
         setTypeReference(typeRef);
         setVariableSpecifications(vars);
@@ -77,13 +81,14 @@ public class LocalVariableDeclaration extends VariableDeclaration implements Loo
     /**
      * Local variable declaration.
      *
-     * @param mods    a modifier mutable list.
+     * @param mods a modifier mutable list.
      * @param typeRef a type reference.
-     * @param name    an identifier.
-     * @param init    an expression.
+     * @param name an identifier.
+     * @param init an expression.
      */
 
-    public LocalVariableDeclaration(ASTList<DeclarationSpecifier> mods, TypeReference typeRef, Identifier name, Expression init) {
+    public LocalVariableDeclaration(ASTList<DeclarationSpecifier> mods, TypeReference typeRef,
+            Identifier name, Expression init) {
         setDeclarationSpecifiers(mods);
         setTypeReference(typeRef);
         ASTList<VariableSpecification> list = new ASTArrayList<VariableSpecification>(1);

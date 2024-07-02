@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -24,9 +34,9 @@ public class ProgramPrinter extends PrettyPrinter {
 
     /**
      * creates the program printer
-     * 
+     *
      * @param writer
-     *                the Writer to print in, may be <code>null</code>.
+     *        the Writer to print in, may be <code>null</code>.
      */
     public ProgramPrinter(Writer writer) {
         super(writer);
@@ -42,6 +52,6 @@ public class ProgramPrinter extends PrettyPrinter {
 
     public ProgramPrinter(Writer w, boolean b,
             SVInstantiations instantiations) {
-        super(w,b,instantiations);
+        super(w, b, instantiations);
     }
 }

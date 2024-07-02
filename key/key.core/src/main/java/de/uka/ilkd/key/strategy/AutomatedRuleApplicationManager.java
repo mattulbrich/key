@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -22,11 +32,11 @@ import de.uka.ilkd.key.rule.RuleApp;
  *
  */
 public interface AutomatedRuleApplicationManager extends NewRuleListener {
-    
+
     /**
      * Clear existing caches of applicable rules
      */
-    void clearCache ();
+    void clearCache();
 
     /**
      * @return the first applicable rule app, i.e. the least expensive element
@@ -36,7 +46,7 @@ public interface AutomatedRuleApplicationManager extends NewRuleListener {
      *         cache again.
      */
     RuleApp peekNext();
-    
+
     /**
      * @return the next rule that is supposed to be applied
      */
@@ -45,8 +55,8 @@ public interface AutomatedRuleApplicationManager extends NewRuleListener {
     /**
      * Set the goal <code>this</code> is the rule app manager for
      */
-    void setGoal ( Goal p_goal );
+    void setGoal(Goal p_goal);
 
-    AutomatedRuleApplicationManager copy ();
+    AutomatedRuleApplicationManager copy();
 
 }

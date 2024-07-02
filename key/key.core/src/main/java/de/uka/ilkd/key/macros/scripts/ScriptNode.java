@@ -1,12 +1,23 @@
-package de.uka.ilkd.key.macros.scripts;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.proof.Node;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.macros.scripts;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import de.uka.ilkd.key.proof.Node;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ScriptNode {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScriptNode.class);
@@ -29,12 +40,12 @@ public class ScriptNode {
     public void addNode(ScriptNode node) {
         children.add(node);
     }
-    
+
     public void dump(int indent) {
         LOGGER.debug("{} {} {}",
-                " ".repeat(indent),
-                proofNode == null ? "xxx" : proofNode.serialNr(),
-                command);
+            " ".repeat(indent),
+            proofNode == null ? "xxx" : proofNode.serialNr(),
+            command);
         for (ScriptNode child : children) {
             child.dump(indent + 1);
         }
@@ -63,7 +74,7 @@ public class ScriptNode {
     public int getToPos() {
         return toPos;
     }
-    
+
     public void clearChildren() {
         children.clear();
     }
@@ -75,13 +86,14 @@ public class ScriptNode {
     public void setEncounteredException(Throwable encounteredException) {
         this.encounteredException = encounteredException;
     }
-    public ScriptNode getParent(){
+
+    public ScriptNode getParent() {
         return parent;
     }
-    public boolean isRoot(){
+
+    public boolean isRoot() {
         return (parent == null);
     }
 
 
 }
-

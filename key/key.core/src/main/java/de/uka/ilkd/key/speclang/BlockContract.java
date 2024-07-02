@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -16,8 +26,6 @@ package de.uka.ilkd.key.speclang;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.StatementBlock;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -25,6 +33,8 @@ import de.uka.ilkd.key.logic.Term;
 import de.uka.ilkd.key.logic.op.IObserverFunction;
 import de.uka.ilkd.key.logic.op.LocationVariable;
 import de.uka.ilkd.key.util.InfFlowSpec;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * <p>
@@ -42,16 +52,16 @@ import de.uka.ilkd.key.util.InfFlowSpec;
 public interface BlockContract extends AuxiliaryContract {
 
     /**
-    *
-    * @param newBlock the new block.
-    * @param newPreconditions the new preconditions.
-    * @param newPostconditions the new postconditions.
-    * @param newModifiesClauses the new modifies clauses.
-    * @param newInfFlowSpecs the new information flow specifications.
-    * @param newVariables the new variables.
-    * @param newMeasuredBy the new measured-by clause.
-    * @return a new block contract with the specified attributes.
-    */
+     *
+     * @param newBlock the new block.
+     * @param newPreconditions the new preconditions.
+     * @param newPostconditions the new postconditions.
+     * @param newModifiesClauses the new modifies clauses.
+     * @param newInfFlowSpecs the new information flow specifications.
+     * @param newVariables the new variables.
+     * @param newMeasuredBy the new measured-by clause.
+     * @return a new block contract with the specified attributes.
+     */
     public BlockContract update(StatementBlock newBlock,
             Map<LocationVariable, Term> newPreconditions,
             Map<LocationVariable, Term> newFreePreconditions,
@@ -63,9 +73,9 @@ public interface BlockContract extends AuxiliaryContract {
 
     /**
      * @param newKJT
-     *            the type containing the new target method.
+     *        the type containing the new target method.
      * @param newPM
-     *            the new target method.
+     *        the new target method.
      * @return a new block contract equal to this one except that it belongs to a different target.
      */
     @Override
@@ -73,7 +83,7 @@ public interface BlockContract extends AuxiliaryContract {
 
     /**
      * @param newBlock
-     *            the new block.
+     *        the new block.
      * @return a new block contract equal to this one except that it belongs to a different block.
      */
     @Override

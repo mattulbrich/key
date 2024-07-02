@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.originlabels;
 
 import java.awt.event.ActionEvent;
@@ -5,7 +15,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.swing.Action;
 
 import de.uka.ilkd.key.core.KeYMediator;
@@ -28,9 +37,9 @@ import de.uka.ilkd.key.proof.Node;
  * @author lanzinger
  */
 @KeYGuiExtension.Info(name = "Origin Tracking",
-        optional = true,
-        description = "UI support for origin tracking",
-        experimental = false)
+    optional = true,
+    description = "UI support for origin tracking",
+    experimental = false)
 public class OriginTermLabelsExt
         implements KeYGuiExtension,
         KeYGuiExtension.ContextMenu,
@@ -114,13 +123,14 @@ public class OriginTermLabelsExt
 
         PosInOccurrence pio = pos.getPosInOccurrence();
 
-        OriginTermLabel label = pio == null ? null : (OriginTermLabel) pio
-                .subTerm().getLabel(OriginTermLabel.NAME);
+        OriginTermLabel label = pio == null ? null
+                : (OriginTermLabel) pio
+                        .subTerm().getLabel(OriginTermLabel.NAME);
 
         if (label != null && !label.getSubtermOrigins().isEmpty()) {
             result += "<b>Origin of (former) sub-terms:</b><br>" +
-                    label.getSubtermOrigins().stream()
-                    .map(o -> "" + o + "<br>").reduce("", String::concat);
+                label.getSubtermOrigins().stream()
+                        .map(o -> "" + o + "<br>").reduce("", String::concat);
         }
 
         List<String> resultList = new LinkedList<>();

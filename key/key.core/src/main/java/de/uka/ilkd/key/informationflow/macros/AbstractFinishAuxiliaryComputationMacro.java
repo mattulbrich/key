@@ -1,9 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.informationflow.macros;
 
 import java.util.Map;
 import java.util.Set;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.informationflow.po.IFProofObligationVars;
 import de.uka.ilkd.key.java.Services;
@@ -23,6 +31,8 @@ import de.uka.ilkd.key.rule.NoPosTacletApp;
 import de.uka.ilkd.key.rule.Taclet;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.util.InfFlowProgVarRenamer;
+
+import org.key_project.util.collection.ImmutableList;
 
 
 /**
@@ -47,14 +57,14 @@ public abstract class AbstractFinishAuxiliaryComputationMacro extends AbstractPr
     }
 
     static Term calculateResultingTerm(Proof proof,
-                                       IFProofObligationVars ifVars,
-                                       Goal initGoal) {
+            IFProofObligationVars ifVars,
+            Goal initGoal) {
         final Term[] goalFormulas1 =
-                buildExecution(ifVars.c1, ifVars.getMapFor(ifVars.c1),
-                               proof.openGoals(), initGoal);
+            buildExecution(ifVars.c1, ifVars.getMapFor(ifVars.c1),
+                proof.openGoals(), initGoal);
         final Term[] goalFormulas2 =
-                buildExecution(ifVars.c2, ifVars.getMapFor(ifVars.c2),
-                               proof.openGoals(), initGoal);
+            buildExecution(ifVars.c2, ifVars.getMapFor(ifVars.c2),
+                proof.openGoals(), initGoal);
         final TermBuilder tb = proof.getServices().getTermBuilder();
         Term composedStates = tb.ff();
         for (int i = 0; i < goalFormulas1.length; i++) {
@@ -93,22 +103,22 @@ public abstract class AbstractFinishAuxiliaryComputationMacro extends AbstractPr
     }
 
     private static Term[] buildExecution(ProofObligationVars c,
-                                         Map<Term, Term> vsMap,
-                                         ImmutableList<Goal> symbExecGoals,
-                                         Goal initGoal) {
+            Map<Term, Term> vsMap,
+            ImmutableList<Goal> symbExecGoals,
+            Goal initGoal) {
         Services services = initGoal.proof().getServices();
         final Term[] goalFormulas = buildFormulasFromGoals(symbExecGoals);
         final InfFlowProgVarRenamer renamer =
-                        new InfFlowProgVarRenamer(goalFormulas, vsMap,
-                                                  c.postfix, initGoal,
-                                                  services.getOverlay(initGoal.getLocalNamespaces()));
+            new InfFlowProgVarRenamer(goalFormulas, vsMap,
+                c.postfix, initGoal,
+                services.getOverlay(initGoal.getLocalNamespaces()));
         final Term[] renamedGoalFormulas =
-                renamer.renameVariablesAndSkolemConstants();
+            renamer.renameVariablesAndSkolemConstants();
         Term[] result = new Term[renamedGoalFormulas.length];
         final TermBuilder tb = services.getTermBuilder();
         for (int i = 0; i < renamedGoalFormulas.length; i++) {
             result[i] =
-                    tb.applyElementary(c.pre.heap, renamedGoalFormulas[i]);
+                tb.applyElementary(c.pre.heap, renamedGoalFormulas[i]);
         }
         return result;
     }
@@ -138,11 +148,11 @@ public abstract class AbstractFinishAuxiliaryComputationMacro extends AbstractPr
     }
 
     protected static void addContractApplicationTaclets(Goal initiatingGoal,
-                                                        Proof symbExecProof) {
+            Proof symbExecProof) {
         final ImmutableList<Goal> openGoals = symbExecProof.openGoals();
         for (final Goal openGoal : openGoals) {
             final Set<NoPosTacletApp> ruleApps =
-                    openGoal.indexOfTaclets().allNoPosTacletApps();
+                openGoal.indexOfTaclets().allNoPosTacletApps();
             for (final NoPosTacletApp ruleApp : ruleApps) {
                 final Taclet t = ruleApp.taclet();
                 if (t.getSurviveSymbExec()) {

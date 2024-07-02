@@ -1,4 +1,18 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.macros.scripts;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.logic.Semisequent;
@@ -12,16 +26,14 @@ import de.uka.ilkd.key.proof.RuleAppIndex;
 import de.uka.ilkd.key.proof.rulefilter.TacletFilter;
 import de.uka.ilkd.key.rule.NoPosTacletApp;
 import de.uka.ilkd.key.rule.Taclet;
-import org.key_project.util.collection.ImmutableList;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * Proof script command to insert a formula hidden earlier in the proof.
  *
  * Usage:
+ *
  * <pre>
  *     unhide "f1, f2 ==> f3, f4"
  * </pre>
@@ -49,7 +61,7 @@ public class UnhideCommand extends AbstractCommand<UnhideCommand.Parameters> {
     public Parameters evaluateArguments(EngineState state,
             Map<String, String> arguments) throws Exception {
         return state.getValueInjector().inject(this, new Parameters(),
-                arguments);
+            arguments);
     }
 
     @Override
@@ -71,12 +83,12 @@ public class UnhideCommand extends AbstractCommand<UnhideCommand.Parameters> {
             SchemaVariable b = app.instantiations().svIterator().next();
             Object bInst = app.instantiations().getInstantiation(b);
             boolean succApp = app.taclet().goalTemplates().head().sequent().antecedent().isEmpty();
-            if(succApp) {
+            if (succApp) {
                 if (succs.contains(bInst)) {
                     goal.apply(app);
                 }
             } else {
-                if(antes.contains(bInst)) {
+                if (antes.contains(bInst)) {
                     goal.apply(app);
                 }
             }

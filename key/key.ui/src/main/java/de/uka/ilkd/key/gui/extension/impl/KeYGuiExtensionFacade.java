@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.extension.impl;
 
 import java.awt.Component;
@@ -6,7 +16,6 @@ import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -33,20 +42,21 @@ import de.uka.ilkd.key.pp.PosInSequent;
 public final class KeYGuiExtensionFacade {
     private static final Set<String> forbiddenPlugins = new HashSet<>();
     private static List<Extension> extensions = new LinkedList<>();
-    //private static Map<Class<?>, List<Object>> extensionCache = new HashMap<>();
+    // private static Map<Class<?>, List<Object>> extensionCache = new HashMap<>();
 
-    //region panel extension
-    //@SuppressWarnings("todo")
+    // region panel extension
+    // @SuppressWarnings("todo")
     public static Stream<TabPanel> getAllPanels(MainWindow window) {
-        return getLeftPanel().stream().flatMap(it -> it.getPanels(window, window.getMediator()).stream());
+        return getLeftPanel().stream()
+                .flatMap(it -> it.getPanels(window, window.getMediator()).stream());
     }
 
     public static List<KeYGuiExtension.LeftPanel> getLeftPanel() {
         return getExtensionInstances(KeYGuiExtension.LeftPanel.class);
     }
-    //endregion
+    // endregion
 
-    //region main menu extension
+    // region main menu extension
 
     /**
      * Retrieves all known implementation of the {@link KeYGuiExtension.MainMenu}
@@ -80,8 +90,7 @@ public final class KeYGuiExtensionFacade {
      */
     public static void addExtensionsToMainMenu(MainWindow mainWindow, JMenuBar menuBar) {
         JMenu menu = new JMenu("Extensions");
-        getMainMenuActions(mainWindow).forEach(it ->
-                sortActionIntoMenu(it, menuBar, menu));
+        getMainMenuActions(mainWindow).forEach(it -> sortActionIntoMenu(it, menuBar, menu));
 
         if (menu.getMenuComponents().length > 0) {
             menuBar.add(menu);
@@ -90,16 +99,18 @@ public final class KeYGuiExtensionFacade {
     }
 
     /*
-    public static Optional<Action> getMainMenuExtensions(String name) {
-        Spliterator<KeYGuiExtension.MainMenu> iter = ServiceLoader.load(KeYGuiExtension.MainMenu.class).spliterator();
-        return StreamSupport.stream(iter, false)
-                .flatMap(it -> it.getMainMenuActions(mainWindow).stream())
-                .filter(Objects::nonNull)
-                .filter(it -> it.getValue(Action.NAME).equals(name))
-                .findAny();
-    }*/
+     * public static Optional<Action> getMainMenuExtensions(String name) {
+     * Spliterator<KeYGuiExtension.MainMenu> iter =
+     * ServiceLoader.load(KeYGuiExtension.MainMenu.class).spliterator();
+     * return StreamSupport.stream(iter, false)
+     * .flatMap(it -> it.getMainMenuActions(mainWindow).stream())
+     * .filter(Objects::nonNull)
+     * .filter(it -> it.getValue(Action.NAME).equals(name))
+     * .findAny();
+     * }
+     */
 
-    //region Menu Helper
+    // region Menu Helper
     private static void sortActionsIntoMenu(List<Action> actions, JMenuBar menuBar) {
         actions.forEach(act -> sortActionIntoMenu(act, menuBar, new JMenu()));
     }
@@ -210,7 +221,7 @@ public final class KeYGuiExtensionFacade {
             return menu;
         }
     }
-    //endregion
+    // endregion
 
     /**
      * Retrieves all known implementation of the {@link KeYGuiExtension.Toolbar}
@@ -220,7 +231,7 @@ public final class KeYGuiExtensionFacade {
     public static List<KeYGuiExtension.Toolbar> getToolbarExtensions() {
         return getExtensionInstances(KeYGuiExtension.Toolbar.class);
     }
-    //endregion
+    // endregion
 
     /**
      * Creates all toolbars for the known extension.
@@ -244,23 +255,23 @@ public final class KeYGuiExtensionFacade {
     }
 
     public static JPopupMenu createContextMenu(ContextMenuKind kind, Object underlyingObject,
-                                               KeYMediator mediator) {
+            KeYMediator mediator) {
         JPopupMenu menu = new JPopupMenu();
         List<Action> content = getContextMenuItems(
-                kind, underlyingObject, mediator);
+            kind, underlyingObject, mediator);
         content.forEach(menu::add);
         return menu;
     }
 
     public static void addContextMenuItems(ContextMenuKind kind, JPopupMenu menu,
-                                               Object underlyingObject,
-                                               KeYMediator mediator) {
+            Object underlyingObject,
+            KeYMediator mediator) {
         getContextMenuItems(kind, underlyingObject, mediator)
                 .forEach(it -> sortActionIntoMenu(it, menu));
     }
 
     public static List<Action> getContextMenuItems(ContextMenuKind kind, Object underlyingObject,
-                                                   KeYMediator mediator) {
+            KeYMediator mediator) {
         if (!kind.getType().isAssignableFrom(underlyingObject.getClass())) {
             throw new IllegalArgumentException();
         }
@@ -270,7 +281,8 @@ public final class KeYGuiExtensionFacade {
                 .collect(Collectors.toList());
     }
 
-    public static JMenu createTermMenu(ContextMenuKind kind, Object underlyingObject, KeYMediator mediator) {
+    public static JMenu createTermMenu(ContextMenuKind kind, Object underlyingObject,
+            KeYMediator mediator) {
         JMenu menu = new JMenu("Extensions");
         getContextMenuItems(kind, underlyingObject, mediator)
                 .forEach(it -> sortActionIntoMenu(it, menu));
@@ -289,7 +301,7 @@ public final class KeYGuiExtensionFacade {
 
     /**
      * @param clazz the interface class
-     * @param <T>   the interface of the service
+     * @param <T> the interface of the service
      * @return a list of all found and enabled service implementations
      */
     @SuppressWarnings("unchecked")
@@ -321,7 +333,7 @@ public final class KeYGuiExtensionFacade {
         String sys = System.getProperty(a.getName());
         return sys == null || !sys.equalsIgnoreCase("false");
     }
-    //endregion
+    // endregion
 
     public static List<Extension> getExtensions() {
         if (extensions.isEmpty()) {
@@ -350,12 +362,13 @@ public final class KeYGuiExtensionFacade {
     }
 
 
-    //region keyboard shortcuts
+    // region keyboard shortcuts
     public static List<KeYGuiExtension.KeyboardShortcuts> getKeyboardShortcutsExtensions() {
         return getExtensionInstances(KeYGuiExtension.KeyboardShortcuts.class);
     }
 
-    public static Stream<Action> getKeyboardShortcuts(KeYMediator mediator, String componentId, JComponent component) {
+    public static Stream<Action> getKeyboardShortcuts(KeYMediator mediator, String componentId,
+            JComponent component) {
         return getKeyboardShortcutsExtensions().stream()
                 .flatMap(it -> it.getShortcuts(mediator, componentId, component).stream())
                 .sorted(new ActionPriorityComparator());
@@ -366,25 +379,25 @@ public final class KeYGuiExtensionFacade {
      * @param component
      * @param componentId
      */
-    public static void installKeyboardShortcuts(KeYMediator mediator, JComponent component, String componentId) {
+    public static void installKeyboardShortcuts(KeYMediator mediator, JComponent component,
+            String componentId) {
         Stream<Action> provider = getKeyboardShortcuts(mediator, componentId, component);
         provider.forEach(it -> {
             int condition =
-                    it.getValue(KeyAction.SHORTCUT_FOCUSED_CONDITION) != null
-                            ? (int) it.getValue(KeyAction.SHORTCUT_FOCUSED_CONDITION)
-                            : JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
+                it.getValue(KeyAction.SHORTCUT_FOCUSED_CONDITION) != null
+                        ? (int) it.getValue(KeyAction.SHORTCUT_FOCUSED_CONDITION)
+                        : JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
 
-            KeyStroke ks = (KeyStroke)
-                    (it.getValue(KeyAction.LOCAL_ACCELERATOR) != null
-                            ? it.getValue(KeyAction.LOCAL_ACCELERATOR)
-                            : it.getValue(Action.ACCELERATOR_KEY));
+            KeyStroke ks = (KeyStroke) (it.getValue(KeyAction.LOCAL_ACCELERATOR) != null
+                    ? it.getValue(KeyAction.LOCAL_ACCELERATOR)
+                    : it.getValue(Action.ACCELERATOR_KEY));
 
             component.registerKeyboardAction(it, ks, condition);
         });
     }
-    //endregion
+    // endregion
 
-    //region Term tool tip
+    // region Term tool tip
 
     /**
      * Retrieves all known implementations of the {@link KeYStatusBarExtension}.
@@ -403,15 +416,15 @@ public final class KeYGuiExtensionFacade {
      */
     public static List<String> getTooltipStrings(MainWindow window, PosInSequent pos) {
         return getTooltipExtensions().stream().flatMap(
-                it -> it.getTooltipStrings(window, pos).stream()).collect(Collectors.toList());
+            it -> it.getTooltipStrings(window, pos).stream()).collect(Collectors.toList());
     }
-    //endregion
+    // endregion
 
 
     public static Stream<String> getTermInfoStrings(
             MainWindow mainWindow, PosInSequent mousePos) {
         return getExtensionInstances(KeYGuiExtension.TermInfo.class).stream().flatMap(
-                it -> it.getTermInfoStrings(mainWindow, mousePos).stream());
+            it -> it.getTermInfoStrings(mainWindow, mousePos).stream());
     }
 
     /**

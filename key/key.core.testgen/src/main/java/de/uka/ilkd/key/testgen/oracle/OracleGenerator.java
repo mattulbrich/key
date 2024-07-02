@@ -1,4 +1,16 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.testgen.oracle;
+
+import java.util.*;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Name;
@@ -10,11 +22,11 @@ import de.uka.ilkd.key.smt.NumberTranslation;
 import de.uka.ilkd.key.testgen.ReflectionClassCreator;
 import de.uka.ilkd.key.testgen.TestCaseGenerator;
 import de.uka.ilkd.key.testgen.oracle.OracleUnaryTerm.Op;
+
 import org.key_project.util.collection.ImmutableArray;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 public class OracleGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(OracleGenerator.class);
@@ -166,7 +178,7 @@ public class OracleGenerator {
         return constants;
     }
 
-    /* TODO: The argument t is never used?*/
+    /* TODO: The argument t is never used? */
     private List<OracleVariable> getMethodArgs(Term t) {
 
         List<OracleVariable> result = new LinkedList<>();
@@ -224,23 +236,23 @@ public class OracleGenerator {
 
         LOGGER.debug("Translate: {} init: {}", term, initialSelect);
 
-        //binary terms
+        // binary terms
         if (ops.containsKey(op)) {
             OracleTerm left = generateOracle(term.sub(0), initialSelect);
             OracleTerm right = generateOracle(term.sub(1), initialSelect);
             String javaOp = ops.get(op);
 
             switch (javaOp) {
-                case EQUALS:
-                    return eq(left, right);
-                case AND:
-                    return and(left, right);
-                case OR:
-                    return or(left, right);
+            case EQUALS:
+                return eq(left, right);
+            case AND:
+                return and(left, right);
+            case OR:
+                return or(left, right);
             }
 
             return new OracleBinTerm(javaOp, left, right);
-        }//negation
+        } // negation
         else if (op == Junctor.NOT) {
             OracleTerm sub = generateOracle(term.sub(0), initialSelect);
             if (sub instanceof OracleUnaryTerm) {
@@ -249,11 +261,11 @@ public class OracleGenerator {
             }
             return new OracleUnaryTerm(sub, Op.Neg);
         }
-        //true
+        // true
         else if (op == Junctor.TRUE) {
             return OracleConstant.TRUE;
         }
-        //false
+        // false
         else if (op == Junctor.FALSE) {
             return OracleConstant.FALSE;
         } else if (op == Junctor.IMP) {
@@ -262,18 +274,18 @@ public class OracleGenerator {
             OracleTerm notLeft = neg(left);
             return new OracleBinTerm(OR, notLeft, right);
         }
-        //quantifiable variable
+        // quantifiable variable
         else if (op instanceof QuantifiableVariable) {
             QuantifiableVariable qop = (QuantifiableVariable) op;
             return new OracleVariable(qop.name().toString(), qop.sort());
         }
-        //integers
+        // integers
         else if (op == services.getTypeConverter().getIntegerLDT()
                 .getNumberSymbol()) {
             long num = NumberTranslation.translate(term.sub(0)).longValue();
             return new OracleConstant(Long.toString(num), term.sort());
         }
-        //forall
+        // forall
         else if (op == Quantifier.ALL || op == Quantifier.EX) {
             Sort field = services.getTypeConverter().getHeapLDT().getFieldSort();
             Sort heap = services.getTypeConverter().getHeapLDT().targetSort();
@@ -289,7 +301,7 @@ public class OracleGenerator {
             args.addAll(methodArgs);
             return new OracleMethodCall(method, args);
         }
-        //if-then-else
+        // if-then-else
         else if (op == IfThenElse.IF_THEN_ELSE) {
             OracleMethod method = createIfThenElseMethod(term, initialSelect);
             oracleMethods.add(method);
@@ -298,17 +310,18 @@ public class OracleGenerator {
             args.addAll(methodArgs);
             return new OracleMethodCall(method, args);
         }
-        //functions
+        // functions
         else if (op instanceof Function) {
             return translateFunction(term, initialSelect);
         }
-        //program variables
+        // program variables
         else if (op instanceof ProgramVariable) {
             ProgramVariable var = (ProgramVariable) op;
             return new OracleConstant(var.name().toString(), var.sort());
         } else {
             LOGGER.debug("Could not translate: {}", term);
-            throw new RuntimeException("Could not translate oracle for: " + term + " of type " + term.op());
+            throw new RuntimeException(
+                "Could not translate oracle for: " + term + " of type " + term.op());
         }
 
     }
@@ -345,7 +358,7 @@ public class OracleGenerator {
                 if (invariants.containsKey(s)) {
                     m = invariants.get(s);
                 } else {
-                    //needed for recursive invariants
+                    // needed for recursive invariants
                     m = createDummyInvariant(s);
                     invariants.put(s, m);
 
@@ -398,11 +411,12 @@ public class OracleGenerator {
             return new OracleUnaryTerm(sub, Op.Minus);
         }
 
-        throw new RuntimeException("Unsupported function found: " + name + " of type " + fun.getClass().getName());
+        throw new RuntimeException(
+            "Unsupported function found: " + name + " of type " + fun.getClass().getName());
     }
 
     private OracleTerm translateQuery(Term term, boolean initialSelect,
-                                      Operator op) {
+            Operator op) {
 
         ProgramMethod pm = (ProgramMethod) op;
         OracleMethod m = createDummyOracleMethod(pm);
@@ -424,7 +438,10 @@ public class OracleGenerator {
             LOGGER.info(" isstatic ");
             return new OracleMethodCall(m, params);
         } else {
-            OracleTerm caller = generateOracle(term.sub(1), false /*TODO: what does this parameter mean?*/);
+            OracleTerm caller = generateOracle(term.sub(1), false /*
+                                                                   * TODO: what does this parameter
+                                                                   * mean?
+                                                                   */);
             LOGGER.info(" non-static caller= {}", caller);
             return new OracleMethodCall(m, params, caller);
         }
@@ -471,17 +488,20 @@ public class OracleGenerator {
 
         String value;
 
-        value = createLocationString(heapTerm, objTerm, fieldName, object.sort(), term.sort(), initialSelect);
+        value = createLocationString(heapTerm, objTerm, fieldName, object.sort(), term.sort(),
+            initialSelect);
 
         if (!initialSelect && isPreHeap(heapTerm)
                 && term.sort().extendsTrans(services.getJavaInfo().getJavaLangObject().getSort())) {
-            return new OracleConstant(TestCaseGenerator.OLDMap + ".get(" + value + ")", term.sort());
+            return new OracleConstant(TestCaseGenerator.OLDMap + ".get(" + value + ")",
+                term.sort());
         }
 
         return new OracleConstant(value, term.sort());
     }
 
-    private String createLocationString(OracleTerm heapTerm, OracleTerm objTerm, String fieldName, Sort objSort, Sort fieldSort, boolean initialSelect) {
+    private String createLocationString(OracleTerm heapTerm, OracleTerm objTerm, String fieldName,
+            Sort objSort, Sort fieldSort, boolean initialSelect) {
         String value;
 
         String objString = objTerm.toString();
@@ -508,14 +528,14 @@ public class OracleGenerator {
                 rflCreator.addSort(objSort);
 
                 value = ReflectionClassCreator.NAME_OF_CLASS +
-                        "." +
-                        ReflectionClassCreator.GET_PREFIX +
-                        ReflectionClassCreator.cleanTypeName(fieldSort.toString()) +
-                        "(" +
-                        objSort + ".class, " +
-                        objString + ", " +
-                        "\"" + fieldName + "\"" +
-                        ")";
+                    "." +
+                    ReflectionClassCreator.GET_PREFIX +
+                    ReflectionClassCreator.cleanTypeName(fieldSort.toString()) +
+                    "(" +
+                    objSort + ".class, " +
+                    objString + ", " +
+                    "\"" + fieldName + "\"" +
+                    ")";
 
             } else {
                 value = objString + "." + fieldName;
@@ -593,10 +613,10 @@ public class OracleGenerator {
         OracleTerm falseCase = generateOracle(term.sub(2), initialSelect);
 
         String body = "if(" + cond + "){"
-                + "\n   return " + trueCase + ";"
-                + "\n}else{"
-                + "\n   return " + falseCase + ";"
-                + "\n}";
+            + "\n   return " + trueCase + ";"
+            + "\n}else{"
+            + "\n   return " + falseCase + ";"
+            + "\n}";
 
         return new OracleMethod(methodName, args, body, term.sort());
 
@@ -616,16 +636,16 @@ public class OracleGenerator {
             return TestCaseGenerator.ALL_INTS;
         } else if (s.equals(services.getTypeConverter().getLocSetLDT().targetSort())) {
             throw new RuntimeException("Not implemented yet.");
-            //return TestCaseGenerator.ALL_LOCSETS
+            // return TestCaseGenerator.ALL_LOCSETS
         } else if (s.equals(services.getTypeConverter().getHeapLDT().getFieldSort())) {
             throw new RuntimeException("Not implemented yet.");
-            //return TestCaseGenerator.ALL_FIELDS
+            // return TestCaseGenerator.ALL_FIELDS
         } else if (s.equals(services.getTypeConverter().getHeapLDT().targetSort())) {
             throw new RuntimeException("Not implemented yet.");
-            //return TestCaseGenerator.ALL_HEAPS
+            // return TestCaseGenerator.ALL_HEAPS
         } else if (s.equals(services.getTypeConverter().getSeqLDT().targetSort())) {
             throw new RuntimeException("Not implemented yet.");
-            //return TestCaseGenerator.ALL_SEQ
+            // return TestCaseGenerator.ALL_SEQ
         }
 
 
@@ -665,25 +685,25 @@ public class OracleGenerator {
     }
 
     private String createForallBody(QuantifiableVariable qv, String setName,
-                                    OracleUnaryTerm neg) {
+            OracleUnaryTerm neg) {
         String tab = TestCaseGenerator.TAB;
         return "\n" + tab + "for(" + qv.sort().name() + " " + qv.name() + " : " + setName + "){"
-                + "\n" + tab + tab + "if(" + neg.toString() + "){"
-                + "\n" + tab + tab + tab + "return false;"
-                + "\n" + tab + tab + "}"
-                + "\n" + tab + "}"
-                + "\n" + tab + "return true;";
+            + "\n" + tab + tab + "if(" + neg.toString() + "){"
+            + "\n" + tab + tab + tab + "return false;"
+            + "\n" + tab + tab + "}"
+            + "\n" + tab + "}"
+            + "\n" + tab + "return true;";
     }
 
     private String createExistsBody(QuantifiableVariable qv, String setName,
-                                    OracleTerm cond) {
+            OracleTerm cond) {
         String tab = TestCaseGenerator.TAB;
         return "\n" + tab + "for(" + qv.sort().name() + " " + qv.name() + " : " + setName + "){"
-                + "\n" + tab + tab + "if(" + cond.toString() + "){"
-                + "\n" + tab + tab + tab + "return true;"
-                + "\n" + tab + tab + "}"
-                + "\n" + tab + "}"
-                + "\n" + tab + "return false;";
+            + "\n" + tab + tab + "if(" + cond.toString() + "){"
+            + "\n" + tab + tab + tab + "return true;"
+            + "\n" + tab + tab + "}"
+            + "\n" + tab + "}"
+            + "\n" + tab + "return false;";
     }
 
     private static OracleTerm neg(OracleTerm t) {

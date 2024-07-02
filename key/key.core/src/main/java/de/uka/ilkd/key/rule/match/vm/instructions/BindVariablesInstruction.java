@@ -1,6 +1,14 @@
-package de.uka.ilkd.key.rule.match.vm.instructions;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableArray;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.rule.match.vm.instructions;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.RenameTable;
@@ -11,8 +19,10 @@ import de.uka.ilkd.key.logic.op.VariableSV;
 import de.uka.ilkd.key.rule.MatchConditions;
 import de.uka.ilkd.key.rule.match.vm.TermNavigator;
 
+import org.key_project.util.collection.ImmutableArray;
+
 /**
- * This instructions matches the variable below a binder (e.g. a quantifier). 
+ * This instructions matches the variable below a binder (e.g. a quantifier).
  */
 public class BindVariablesInstruction implements MatchInstruction {
 
@@ -21,7 +31,7 @@ public class BindVariablesInstruction implements MatchInstruction {
     public BindVariablesInstruction(ImmutableArray<QuantifiableVariable> boundVars) {
         boundVarBinders = new VariableBinderSubinstruction[boundVars.size()];
         int i = 0;
-        for (QuantifiableVariable boundVar : boundVars) {            
+        for (QuantifiableVariable boundVar : boundVars) {
             if (boundVar instanceof LogicVariable) {
                 boundVarBinders[i] = new LogicVariableBinder((LogicVariable) boundVar);
             } else {
@@ -32,8 +42,9 @@ public class BindVariablesInstruction implements MatchInstruction {
     }
 
 
-    private interface VariableBinderSubinstruction {        
-        public MatchConditions match(LogicVariable instantiationCandidate, MatchConditions matchCond, Services services);
+    private interface VariableBinderSubinstruction {
+        public MatchConditions match(LogicVariable instantiationCandidate,
+                MatchConditions matchCond, Services services);
     }
 
     private static class LogicVariableBinder implements VariableBinderSubinstruction {
@@ -43,41 +54,44 @@ public class BindVariablesInstruction implements MatchInstruction {
             this.templateVar = templateVar;
         }
 
-        /** 
+        /**
          * a match between two logic variables is possible if they have been assigned
          * they are same or have been assigned to the same abstract name and the sorts
-         *  are equal.
+         * are equal.
          */
-        public MatchConditions match(LogicVariable instantiationCandidate, MatchConditions matchCond, Services services) {
-            final RenameTable rt = matchCond.renameTable();                   
-            if (!rt.containsLocally(templateVar) && !rt.containsLocally(instantiationCandidate)) {                           
+        public MatchConditions match(LogicVariable instantiationCandidate,
+                MatchConditions matchCond, Services services) {
+            final RenameTable rt = matchCond.renameTable();
+            if (!rt.containsLocally(templateVar) && !rt.containsLocally(instantiationCandidate)) {
                 matchCond = matchCond.addRenaming(templateVar, instantiationCandidate);
             }
 
             if (templateVar != instantiationCandidate) {
-                if(instantiationCandidate.sort() != templateVar.sort() 
-                        || !matchCond.renameTable().sameAbstractName(templateVar, instantiationCandidate)) {
+                if (instantiationCandidate.sort() != templateVar.sort()
+                        || !matchCond.renameTable().sameAbstractName(templateVar,
+                            instantiationCandidate)) {
                     matchCond = null;
                 }
             }
             return matchCond;
-        }        
+        }
     }
 
-    private static class VariableSVBinder extends MatchSchemaVariableInstruction<VariableSV> 
-                                                          implements VariableBinderSubinstruction {
+    private static class VariableSVBinder extends MatchSchemaVariableInstruction<VariableSV>
+            implements VariableBinderSubinstruction {
 
         public VariableSVBinder(VariableSV templateVar) {
             super(templateVar);
         }
 
-        public MatchConditions match(LogicVariable instantiationCandidate, MatchConditions matchCond, Services services) {
+        public MatchConditions match(LogicVariable instantiationCandidate,
+                MatchConditions matchCond, Services services) {
             final Object foundMapping = matchCond.getInstantiations().getInstantiation(op);
-            if(foundMapping == null) {
+            if (foundMapping == null) {
                 final Term substTerm = services.getTermBuilder().var(instantiationCandidate);
                 matchCond = addInstantiation(substTerm, matchCond, services);
-            } else if (((Term)foundMapping).op() != instantiationCandidate) {
-                matchCond = null;        
+            } else if (((Term) foundMapping).op() != instantiationCandidate) {
+                matchCond = null;
             }
             return matchCond;
         }
@@ -92,7 +106,7 @@ public class BindVariablesInstruction implements MatchInstruction {
         public MatchConditions match(Term instantiationCandidate,
                 MatchConditions matchCond, Services services) {
             throw new UnsupportedOperationException();
-        } 
+        }
 
     }
 
@@ -100,22 +114,22 @@ public class BindVariablesInstruction implements MatchInstruction {
     public MatchConditions match(TermNavigator termPosition,
             MatchConditions matchConditions, Services services) {
 
-        ImmutableArray<QuantifiableVariable> variablesToMatchAndBind = 
-                termPosition.getCurrentSubterm().boundVars();
+        ImmutableArray<QuantifiableVariable> variablesToMatchAndBind =
+            termPosition.getCurrentSubterm().boundVars();
 
         matchConditions = matchConditions.extendRenameTable();
 
         if (variablesToMatchAndBind.size() == boundVarBinders.length) {
-            for (int i = 0; i < boundVarBinders.length && matchConditions != null; i++) {      
+            for (int i = 0; i < boundVarBinders.length && matchConditions != null; i++) {
                 // concrete variables must be logic variables
-                final LogicVariable qVar = (LogicVariable) variablesToMatchAndBind.get(i);               
-                matchConditions = boundVarBinders[i].match(qVar, matchConditions, services);               
+                final LogicVariable qVar = (LogicVariable) variablesToMatchAndBind.get(i);
+                matchConditions = boundVarBinders[i].match(qVar, matchConditions, services);
             }
         } else {
             matchConditions = null;
         }
 
-        return matchConditions;        
+        return matchConditions;
     }
 
 }

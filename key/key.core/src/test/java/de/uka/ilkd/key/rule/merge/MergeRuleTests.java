@@ -1,17 +1,31 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2015 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.rule.merge;
+
+import java.io.File;
+import java.util.Iterator;
+import javax.annotation.Nonnull;
 
 import de.uka.ilkd.key.control.KeYEnvironment;
 import de.uka.ilkd.key.java.Services;
@@ -29,12 +43,9 @@ import de.uka.ilkd.key.rule.merge.procedures.MergeIfThenElseAntecedent;
 import de.uka.ilkd.key.rule.merge.procedures.MergeTotalWeakening;
 import de.uka.ilkd.key.util.HelperClassForTests;
 import de.uka.ilkd.key.util.ProofStarter;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -45,7 +56,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MergeRuleTests {
 
-    private static final File TEST_RESOURCES_DIR_PREFIX = new File(HelperClassForTests.TESTCASE_DIRECTORY, "merge/");
+    private static final File TEST_RESOURCES_DIR_PREFIX =
+        new File(HelperClassForTests.TESTCASE_DIRECTORY, "merge/");
 
     /**
      * Simple regression test case loading an existing closed proof (standard
@@ -83,7 +95,7 @@ public class MergeRuleTests {
     @Test
     public void testLoadGcdProofWithPredAbstrAndUserChoices() {
         Proof proof = loadProof(
-                TEST_RESOURCES_DIR_PREFIX, "gcd.closed.predicateAbstractionWithUserChoices.proof");
+            TEST_RESOURCES_DIR_PREFIX, "gcd.closed.predicateAbstractionWithUserChoices.proof");
         assertTrue(proof.closed());
     }
 
@@ -116,7 +128,8 @@ public class MergeRuleTests {
      */
     @Test
     public void testLoadClosedGcdProofWithMergePointStatements() {
-        final Proof proof = loadProof(TEST_RESOURCES_DIR_PREFIX, "gcd.mergePointStatements.closed.proof");
+        final Proof proof =
+            loadProof(TEST_RESOURCES_DIR_PREFIX, "gcd.mergePointStatements.closed.proof");
 
         assertTrue(proof.closed());
 
@@ -166,7 +179,7 @@ public class MergeRuleTests {
     @Test
     public void testLoadProofWithDiffVarsWithSameNameAndMPS() {
         Proof proof = loadProof(
-                TEST_RESOURCES_DIR_PREFIX, "A.differentVarsWithSameName.MPS.cut.closed.proof");
+            TEST_RESOURCES_DIR_PREFIX, "A.differentVarsWithSameName.MPS.cut.closed.proof");
         assertTrue(proof.closed());
     }
 
@@ -195,7 +208,7 @@ public class MergeRuleTests {
 
         for (int i = 0; i < 2; i++) {
             runMacro(new FinishSymbolicExecutionUntilMergePointMacro(),
-                    proof.openGoals().head().node());
+                proof.openGoals().head().node());
             mergeFirstGoal(proof, MergeIfThenElseAntecedent.instance());
         }
 
@@ -212,7 +225,8 @@ public class MergeRuleTests {
      */
     @Test
     public void testMergeIndistinguishablePathConditionsWithITE() {
-        final Proof proof = loadProof(TEST_RESOURCES_DIR_PREFIX, "IndistinguishablePathConditions.proof");
+        final Proof proof =
+            loadProof(TEST_RESOURCES_DIR_PREFIX, "IndistinguishablePathConditions.proof");
 
         try {
             mergeFirstGoal(proof, MergeIfThenElseAntecedent.instance());
@@ -228,7 +242,7 @@ public class MergeRuleTests {
     @Test
     public void testMergeThreeIndistinguishablePathConditionsWithITE() {
         final Proof proof = loadProof(
-                TEST_RESOURCES_DIR_PREFIX, "IndistinguishablePathConditions.twoJoins.proof");
+            TEST_RESOURCES_DIR_PREFIX, "IndistinguishablePathConditions.twoJoins.proof");
 
         try {
             mergeFirstGoal(proof, MergeIfThenElseAntecedent.instance());
@@ -244,7 +258,8 @@ public class MergeRuleTests {
      */
     @Test
     public void testMergeIndistinguishablePathConditionsWithFullAnonymization() {
-        final Proof proof = loadProof(TEST_RESOURCES_DIR_PREFIX, "IndistinguishablePathConditions.proof");
+        final Proof proof =
+            loadProof(TEST_RESOURCES_DIR_PREFIX, "IndistinguishablePathConditions.proof");
 
         mergeFirstGoal(proof, MergeTotalWeakening.instance());
         startAutomaticStrategy(proof);
@@ -269,7 +284,7 @@ public class MergeRuleTests {
      * constructed merge rule application is complete.
      *
      * @param proof The proof the first goal of which to merge with suitable
-     *              partner(s).
+     *        partner(s).
      */
     private void mergeFirstGoal(final Proof proof, MergeProcedure mergeProc) {
         final Services services = proof.getServices();
@@ -278,13 +293,13 @@ public class MergeRuleTests {
         final Goal mergeGoal = proof.openGoals().head();
         final Node mergeNode = mergeGoal.node();
         final PosInOccurrence mergePio = getPioFirstFormula(
-                mergeNode.sequent());
+            mergeNode.sequent());
         final MergeRuleBuiltInRuleApp mergeApp = (MergeRuleBuiltInRuleApp) mergeRule
                 .createApp(mergePio, services);
 
         {
             mergeApp.setMergePartners(MergeRule.findPotentialMergePartners(
-                    proof.openGoals().head(), mergePio));
+                proof.openGoals().head(), mergePio));
             mergeApp.setConcreteRule(mergeProc);
             mergeApp.setMergeNode(mergeNode);
         }
@@ -302,14 +317,14 @@ public class MergeRuleTests {
      */
     private PosInOccurrence getPioFirstFormula(Sequent sequent) {
         return new PosInOccurrence(sequent.succedent().getFirst(),
-                PosInTerm.getTopLevel(), false);
+            PosInTerm.getTopLevel(), false);
     }
 
     /**
      * Runs the given macro on the given proof node.
      *
      * @param macro The macro to execute.
-     * @param node  The node to execute the macro on.
+     * @param node The node to execute the macro on.
      */
     private void runMacro(AbstractProofMacro macro, Node node) {
         try {
@@ -334,12 +349,13 @@ public class MergeRuleTests {
     @Nonnull
     public static Proof loadProof(File directory, String proofFileName) {
         File proofFile = new File(directory, proofFileName);
-        assertTrue(proofFile.exists(), "Proof file: " + proofFile.getAbsolutePath() + " could not be found!");
+        assertTrue(proofFile.exists(),
+            "Proof file: " + proofFile.getAbsolutePath() + " could not be found!");
 
         try {
             KeYEnvironment<?> environment = KeYEnvironment.load(
-                    JavaProfile.getDefaultInstance(), proofFile, null, null,
-                    null, true);
+                JavaProfile.getDefaultInstance(), proofFile, null, null,
+                null, true);
             Proof proof = environment.getLoadedProof();
             Assertions.assertNotNull(proof);
 

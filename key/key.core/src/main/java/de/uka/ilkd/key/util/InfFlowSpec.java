@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.util;
 
 import java.util.function.UnaryOperator;
 
+import de.uka.ilkd.key.logic.Term;
+
 import org.key_project.util.collection.ImmutableList;
 import org.key_project.util.collection.ImmutableSLList;
-
-import de.uka.ilkd.key.logic.Term;
 
 
 /**
@@ -23,8 +33,8 @@ public class InfFlowSpec {
 
 
     public InfFlowSpec(final ImmutableList<Term> preExpressions,
-                       final ImmutableList<Term> postExpressions,
-                       final ImmutableList<Term> newObjects) {
+            final ImmutableList<Term> postExpressions,
+            final ImmutableList<Term> newObjects) {
         this.preExpressions = preExpressions;
         this.postExpressions = postExpressions;
         this.newObjects = newObjects;
@@ -38,9 +48,9 @@ public class InfFlowSpec {
      */
     public InfFlowSpec map(UnaryOperator<Term> op) {
         return new InfFlowSpec(
-                preExpressions.stream().map(op).collect(ImmutableList.collector()),
-                postExpressions.stream().map(op).collect(ImmutableList.collector()),
-                newObjects.stream().map(op).collect(ImmutableList.collector()));
+            preExpressions.stream().map(op).collect(ImmutableList.collector()),
+            postExpressions.stream().map(op).collect(ImmutableList.collector()),
+            newObjects.stream().map(op).collect(ImmutableList.collector()));
     }
 
     private InfFlowSpec() {

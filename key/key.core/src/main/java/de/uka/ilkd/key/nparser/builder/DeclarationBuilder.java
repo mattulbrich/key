@@ -1,4 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.nparser.builder;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -9,24 +24,21 @@ import de.uka.ilkd.key.logic.sort.*;
 import de.uka.ilkd.key.nparser.KeYParser;
 import de.uka.ilkd.key.nparser.ParsingFacade;
 import de.uka.ilkd.key.rule.RuleSet;
-import org.antlr.v4.runtime.Token;
+
 import org.key_project.util.collection.DefaultImmutableSet;
 import org.key_project.util.collection.ImmutableSet;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import org.antlr.v4.runtime.Token;
 
 /**
  * This visitor evaluates all basic (level 0) declarations.
  * This includes:
  * <ul>
- *     <li>Option Declarations</li>
- *     <li>Sorts</li>
- *     <li>Program variables</li>
- *     <li>Schema variables</li>
- *     <li>Rulesets</li>
+ * <li>Option Declarations</li>
+ * <li>Sorts</li>
+ * <li>Program variables</li>
+ * <li>Schema variables</li>
+ * <li>Rulesets</li>
  * </ul>
  * <p>
  * These information are registered into the given {@link NamespaceSet}.
@@ -45,8 +57,8 @@ public class DeclarationBuilder extends DefaultBuilder {
     @Override
     public Object visitDecls(KeYParser.DeclsContext ctx) {
         mapMapOf(ctx.option_decls(), ctx.options_choice(),
-                ctx.ruleset_decls(), ctx.sort_decls(),
-                ctx.prog_var_decls(), ctx.schema_var_decls());
+            ctx.ruleset_decls(), ctx.sort_decls(),
+            ctx.prog_var_decls(), ctx.schema_var_decls());
         return null;
     }
 
@@ -61,11 +73,11 @@ public class DeclarationBuilder extends DefaultBuilder {
                 Named name = lookup(pvName);
                 if (name != null) {
                     // commented out as pv do not have unique name (at the moment)
-                    //  throw new AmbigiousDeclException(varName, getSourceName(), getLine(), getColumn())
+                    // throw new AmbigiousDeclException(varName, getSourceName(), getLine(),
+                    // getColumn())
                     if (!(name instanceof ProgramVariable) ||
                             !((ProgramVariable) name).getKeYJavaType().equals(kjt)) {
-                        programVariables().add(new LocationVariable
-                                (pvName, kjt));
+                        programVariables().add(new LocationVariable(pvName, kjt));
                     }
                 } else {
                     programVariables()
@@ -120,11 +132,11 @@ public class DeclarationBuilder extends DefaultBuilder {
             Name sortName = new Name(sortId);
 
             ImmutableSet<Sort> ext =
-                    sortExt == null ? ImmutableSet.empty() :
-                            DefaultImmutableSet.fromCollection(sortExt);
+                sortExt == null ? ImmutableSet.empty()
+                        : DefaultImmutableSet.fromCollection(sortExt);
             ImmutableSet<Sort> oneOf =
-                    sortOneOf == null ? ImmutableSet.empty() :
-                            DefaultImmutableSet.fromCollection(sortOneOf);
+                sortOneOf == null ? ImmutableSet.empty()
+                        : DefaultImmutableSet.fromCollection(sortOneOf);
 
             // attention: no expand to java.lang here!
             if (sorts().lookup(sortName) == null) {

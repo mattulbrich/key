@@ -1,14 +1,24 @@
-package de.uka.ilkd.key.smt.newsmt2;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.java.Services;
-import de.uka.ilkd.key.logic.Term;
-import de.uka.ilkd.key.logic.op.Operator;
-import de.uka.ilkd.key.smt.SMTTranslationException;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.smt.newsmt2;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+
+import de.uka.ilkd.key.java.Services;
+import de.uka.ilkd.key.logic.Term;
+import de.uka.ilkd.key.logic.op.Operator;
+import de.uka.ilkd.key.smt.SMTTranslationException;
 
 /**
  * General interface for routines that translate particular KeY data structures
@@ -25,7 +35,8 @@ import java.util.Properties;
  * They are always used within the same proof, but possibly for several proof
  * obligations.
  *
- * After creation, the {@link #init(MasterHandler, Services, Properties)} method is called that injects the
+ * After creation, the {@link #init(MasterHandler, Services, Properties)} method is called that
+ * injects the
  * {@link Services} object belonging to the proof.
  *
  * During translation, an SMT handler can be asked via {@link #canHandle(Term)}
@@ -64,12 +75,13 @@ public interface SMTHandler {
      *
      * @param masterHandler
      * @param services the non-null services object which is relevant for
-     *                 this handler
+     *        this handler
      * @param handlerSnippets the snippets loaded for this handler, null if no
-     *                        snippet property file is available for this handler
+     *        snippet property file is available for this handler
      * @throws IOException if resources cannot be read.
      */
-    void init(MasterHandler masterHandler, Services services, Properties handlerSnippets) throws IOException;
+    void init(MasterHandler masterHandler, Services services, Properties handlerSnippets)
+            throws IOException;
 
     /**
      * Query if this handler can translate a term.
@@ -81,9 +93,9 @@ public interface SMTHandler {
      *
      * @param term a non-null term to translate
      * @return {@link Capability#YES_THIS_OPERATOR} if this handler can successfully translate any
-     *    term with the same toplevel operator, {@link Capability#YES_THIS_INSTANCE} if this
-     *    handler can successfully translate this particular term, {@link Capability#UNABLE}
-     *    if this handler cannot deal with the term.
+     *         term with the same toplevel operator, {@link Capability#YES_THIS_INSTANCE} if this
+     *         handler can successfully translate this particular term, {@link Capability#UNABLE}
+     *         if this handler cannot deal with the term.
      */
     default Capability canHandle(Term term) {
         return canHandle(term.op()) ? Capability.YES_THIS_OPERATOR : Capability.UNABLE;
@@ -97,7 +109,7 @@ public interface SMTHandler {
      *
      * @param op a non-null operator to translate
      * @return true if this handler can successfully translate all terms
-     * with op as toplevel operator
+     *         with op as toplevel operator
      */
     boolean canHandle(Operator op);
 
@@ -125,7 +137,7 @@ public interface SMTHandler {
      * not be modified.
      *
      * @return the non-null list of properties that this handler
-     * supports and reads.
+     *         supports and reads.
      */
     default List<SMTHandlerProperty<?>> getProperties() {
         return Collections.emptyList();

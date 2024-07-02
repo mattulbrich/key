@@ -1,22 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.proof.init;
-
-import de.uka.ilkd.key.smt.newsmt2.DefinedSymbolsHandler;
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.logic.label.OriginTermLabel;
 import de.uka.ilkd.key.logic.label.OriginTermLabelFactory;
@@ -50,8 +55,13 @@ import de.uka.ilkd.key.rule.label.OriginTermLabelRefactoring;
 import de.uka.ilkd.key.rule.label.TermLabelPolicy;
 import de.uka.ilkd.key.rule.label.TermLabelRefactoring;
 import de.uka.ilkd.key.rule.merge.MergeRule;
+import de.uka.ilkd.key.smt.newsmt2.DefinedSymbolsHandler;
 import de.uka.ilkd.key.strategy.JavaCardDLStrategyFactory;
 import de.uka.ilkd.key.strategy.StrategyFactory;
+
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
+import org.key_project.util.collection.ImmutableSet;
 
 /**
  * This profile sets up KeY for verification of JavaCard programs.
@@ -101,76 +111,67 @@ public class JavaProfile extends AbstractProfile {
     @Override
     protected ImmutableList<TermLabelConfiguration> computeTermLabelConfiguration() {
         ImmutableList<TermLabelPolicy> originTermLabelPolicyList =
-                ImmutableSLList.<TermLabelPolicy>nil().append(new OriginTermLabelPolicy());
+            ImmutableSLList.<TermLabelPolicy>nil().append(new OriginTermLabelPolicy());
         ImmutableList<TermLabelRefactoring> originTermLabelRefactorings =
-                ImmutableSLList.<TermLabelRefactoring>nil().append(
-                        new OriginTermLabelRefactoring());
+            ImmutableSLList.<TermLabelRefactoring>nil().append(
+                new OriginTermLabelRefactoring());
 
         ImmutableList<TermLabelConfiguration> result = ImmutableSLList.nil();
         result = result.prepend(
             new TermLabelConfiguration(
-                    ParameterlessTermLabel.ANON_HEAP_LABEL_NAME,
-                    new SingletonLabelFactory<TermLabel>(
-                            ParameterlessTermLabel.ANON_HEAP_LABEL)
-            ));
+                ParameterlessTermLabel.ANON_HEAP_LABEL_NAME,
+                new SingletonLabelFactory<TermLabel>(
+                    ParameterlessTermLabel.ANON_HEAP_LABEL)));
         result = result.prepend(
             new TermLabelConfiguration(
-                    ParameterlessTermLabel.LOOP_SCOPE_INDEX_LABEL_NAME,
-                    new SingletonLabelFactory<TermLabel>(
-                            ParameterlessTermLabel.LOOP_SCOPE_INDEX_LABEL)
-            ));
+                ParameterlessTermLabel.LOOP_SCOPE_INDEX_LABEL_NAME,
+                new SingletonLabelFactory<TermLabel>(
+                    ParameterlessTermLabel.LOOP_SCOPE_INDEX_LABEL)));
         result = result.prepend(
             new TermLabelConfiguration(
-                    ParameterlessTermLabel.SELECT_SKOLEM_LABEL_NAME,
-                    new SingletonLabelFactory<TermLabel>(
-                            ParameterlessTermLabel.SELECT_SKOLEM_LABEL)
-            ));
+                ParameterlessTermLabel.SELECT_SKOLEM_LABEL_NAME,
+                new SingletonLabelFactory<TermLabel>(
+                    ParameterlessTermLabel.SELECT_SKOLEM_LABEL)));
         result = result.prepend(
             new TermLabelConfiguration(
-                    ParameterlessTermLabel.IMPLICIT_SPECIFICATION_LABEL_NAME,
-                    new SingletonLabelFactory<TermLabel>(
-                            ParameterlessTermLabel.IMPLICIT_SPECIFICATION_LABEL)
-            ));
+                ParameterlessTermLabel.IMPLICIT_SPECIFICATION_LABEL_NAME,
+                new SingletonLabelFactory<TermLabel>(
+                    ParameterlessTermLabel.IMPLICIT_SPECIFICATION_LABEL)));
         result = result.prepend(
             new TermLabelConfiguration(
-                    ParameterlessTermLabel.SHORTCUT_EVALUATION_LABEL_NAME,
-                    new SingletonLabelFactory<TermLabel>(
-                            ParameterlessTermLabel.SHORTCUT_EVALUATION_LABEL)
-            ));
+                ParameterlessTermLabel.SHORTCUT_EVALUATION_LABEL_NAME,
+                new SingletonLabelFactory<TermLabel>(
+                    ParameterlessTermLabel.SHORTCUT_EVALUATION_LABEL)));
         result = result.prepend(
             new TermLabelConfiguration(
-                    ParameterlessTermLabel.UNDEFINED_VALUE_LABEL_NAME,
-                    new SingletonLabelFactory<TermLabel>(
-                            ParameterlessTermLabel.UNDEFINED_VALUE_LABEL)
-            ));
+                ParameterlessTermLabel.UNDEFINED_VALUE_LABEL_NAME,
+                new SingletonLabelFactory<TermLabel>(
+                    ParameterlessTermLabel.UNDEFINED_VALUE_LABEL)));
         result = result.prepend(
             new TermLabelConfiguration(
-                    ParameterlessTermLabel.SELF_COMPOSITION_LABEL_NAME,
-                    new SingletonLabelFactory<TermLabel>(
-                            ParameterlessTermLabel.SELF_COMPOSITION_LABEL)
-            ));
+                ParameterlessTermLabel.SELF_COMPOSITION_LABEL_NAME,
+                new SingletonLabelFactory<TermLabel>(
+                    ParameterlessTermLabel.SELF_COMPOSITION_LABEL)));
         result = result.prepend(
-                new TermLabelConfiguration(
-                        ParameterlessTermLabel.POST_CONDITION_LABEL_NAME,
-                        new SingletonLabelFactory<TermLabel>(
-                                ParameterlessTermLabel.POST_CONDITION_LABEL)
-                ));
+            new TermLabelConfiguration(
+                ParameterlessTermLabel.POST_CONDITION_LABEL_NAME,
+                new SingletonLabelFactory<TermLabel>(
+                    ParameterlessTermLabel.POST_CONDITION_LABEL)));
         result = result.prepend(
-                new TermLabelConfiguration(
-                        OriginTermLabel.NAME,
-                        new OriginTermLabelFactory(),
-                        originTermLabelPolicyList,
-                        null,
-                        null,
-                        null,
-                        null,
-                        originTermLabelRefactorings,
-                        null
-                ));
+            new TermLabelConfiguration(
+                OriginTermLabel.NAME,
+                new OriginTermLabelFactory(),
+                originTermLabelPolicyList,
+                null,
+                null,
+                null,
+                null,
+                originTermLabelRefactorings,
+                null));
 
         result = result.prepend(new TermLabelConfiguration(
-                DefinedSymbolsHandler.TRIGGER_LABEL.name(),
-                new SingletonLabelFactory<>(DefinedSymbolsHandler.TRIGGER_LABEL)));
+            DefinedSymbolsHandler.TRIGGER_LABEL.name(),
+            new SingletonLabelFactory<>(DefinedSymbolsHandler.TRIGGER_LABEL)));
 
         return result;
     }
@@ -188,18 +189,18 @@ public class JavaProfile extends AbstractProfile {
         ImmutableList<BuiltInRule> builtInRules = super.initBuiltInRules();
 
         builtInRules = builtInRules.prepend(WhileInvariantRule.INSTANCE)
-                                   .prepend(LoopScopeInvariantRule.INSTANCE)
-                                   .prepend(BlockContractInternalRule.INSTANCE)
-                                   .prepend(BlockContractExternalRule.INSTANCE)
-                                   .prepend(LoopContractInternalRule.INSTANCE)
-                                   .prepend(LoopContractExternalRule.INSTANCE)
-                                   .prepend(UseDependencyContractRule.INSTANCE)
-                                   .prepend(getOneStepSimpilifier())
-                                   .prepend(QueryExpand.INSTANCE)
-                                   .prepend(MergeRule.INSTANCE)
-                                   .prepend(LoopApplyHeadRule.INSTANCE);
+                .prepend(LoopScopeInvariantRule.INSTANCE)
+                .prepend(BlockContractInternalRule.INSTANCE)
+                .prepend(BlockContractExternalRule.INSTANCE)
+                .prepend(LoopContractInternalRule.INSTANCE)
+                .prepend(LoopContractExternalRule.INSTANCE)
+                .prepend(UseDependencyContractRule.INSTANCE)
+                .prepend(getOneStepSimpilifier())
+                .prepend(QueryExpand.INSTANCE)
+                .prepend(MergeRule.INSTANCE)
+                .prepend(LoopApplyHeadRule.INSTANCE);
 
-        //contract insertion rule, ATTENTION: ProofMgt relies on the fact
+        // contract insertion rule, ATTENTION: ProofMgt relies on the fact
         // that Contract insertion rule is the FIRST element of this list!
         builtInRules = builtInRules.prepend(UseOperationContractRule.INSTANCE);
 
@@ -216,6 +217,7 @@ public class JavaProfile extends AbstractProfile {
      * Sub profiles may exchange the {@link OneStepSimplifier} instance,
      * for instance for site proofs used in the symbolic execution tree extraction.
      * </p>
+     *
      * @return The {@link OneStepSimplifier} instance to use.
      */
     public OneStepSimplifier getOneStepSimpilifier() {
@@ -238,16 +240,17 @@ public class JavaProfile extends AbstractProfile {
     @Override
     public RuleJustification getJustification(Rule r) {
         return r == UseOperationContractRule.INSTANCE
-               || r == UseDependencyContractRule.INSTANCE
-               || r == BlockContractExternalRule.INSTANCE
-               || r == LoopContractExternalRule.INSTANCE
-               ? new ComplexRuleJustificationBySpec()
-               : super.getJustification(r);
+                || r == UseDependencyContractRule.INSTANCE
+                || r == BlockContractExternalRule.INSTANCE
+                || r == LoopContractExternalRule.INSTANCE
+                        ? new ComplexRuleJustificationBySpec()
+                        : super.getJustification(r);
     }
 
 
     /**
      * the name of the profile
+     *
      * @return the name
      */
     @Override
@@ -257,6 +260,7 @@ public class JavaProfile extends AbstractProfile {
 
     /**
      * the default strategy factory to be used
+     *
      * @return the default strategy factory
      */
     @Override
@@ -273,6 +277,7 @@ public class JavaProfile extends AbstractProfile {
      * Other instances of this class are typically only required to
      * use them in different {@link Thread}s (not the UI {@link Thread}).
      * </p>
+     *
      * @param perms boolean to decide whether we use permissions
      * @return The default instance for usage in the {@link Thread} of the user interface.
      */

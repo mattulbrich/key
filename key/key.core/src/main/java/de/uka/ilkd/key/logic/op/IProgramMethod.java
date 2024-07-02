@@ -1,20 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.logic.op;
-
-import org.key_project.util.collection.ImmutableArray;
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.java.ProgramElement;
 import de.uka.ilkd.key.java.SourceElement;
@@ -27,6 +34,9 @@ import de.uka.ilkd.key.java.declaration.Throws;
 import de.uka.ilkd.key.java.declaration.VariableSpecification;
 import de.uka.ilkd.key.logic.ProgramElementName;
 
+import org.key_project.util.collection.ImmutableArray;
+import org.key_project.util.collection.ImmutableList;
+
 public interface IProgramMethod extends IObserverFunction, SourceElement,
         ProgramElement, MemberDeclaration {
 
@@ -35,9 +45,9 @@ public interface IProgramMethod extends IObserverFunction, SourceElement,
     /**
      * returns the KeYJavaType of the <tt>i</tt>-th parameter declaration. This
      * method does not care about the invoker as argSort does.
-     * 
+     *
      * @param i
-     *            the int specifying the parameter position
+     *        the int specifying the parameter position
      * @return the KeYJavaType of the <tt>i</tt>-th parameter
      */
     public abstract KeYJavaType getParameterType(int i);

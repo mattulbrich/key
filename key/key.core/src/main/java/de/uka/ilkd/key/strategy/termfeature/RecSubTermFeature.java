@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -25,27 +35,28 @@ import de.uka.ilkd.key.strategy.TopRuleAppCost;
  * feature descends to subterms as long as <code>cond</code> returns zero.
  */
 public class RecSubTermFeature implements TermFeature {
-    
+
     private final TermFeature cond, summand;
 
     private RecSubTermFeature(TermFeature cond, TermFeature summand) {
         this.cond = cond;
         this.summand = summand;
     }
-    
+
     public static TermFeature create(TermFeature cond, TermFeature summand) {
-        return new RecSubTermFeature ( cond, summand );
+        return new RecSubTermFeature(cond, summand);
     }
 
     public RuleAppCost compute(Term term, Services services) {
         RuleAppCost res = summand.compute(term, services);
 
-        if ( res instanceof TopRuleAppCost ||
-             cond.compute ( term, services ) instanceof TopRuleAppCost ) return res;
-        
-        for ( int i = 0; i != term.arity ()
-                         && !( res instanceof TopRuleAppCost ); ++i )
-            res = res.add ( compute ( term.sub ( i ), services ) );
+        if (res instanceof TopRuleAppCost ||
+                cond.compute(term, services) instanceof TopRuleAppCost)
+            return res;
+
+        for (int i = 0; i != term.arity()
+                && !(res instanceof TopRuleAppCost); ++i)
+            res = res.add(compute(term.sub(i), services));
 
         return res;
     }

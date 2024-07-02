@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2015 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -34,7 +44,7 @@ public class ImmutableFixedLengthBitSet {
      * represents the number 0).
      *
      * @param length
-     *            The length of the new {@link ImmutableFixedLengthBitSet}.
+     *        The length of the new {@link ImmutableFixedLengthBitSet}.
      */
     public ImmutableFixedLengthBitSet(int length) {
         this.bitSet = new boolean[length];
@@ -48,9 +58,9 @@ public class ImmutableFixedLengthBitSet {
      * make sure that this property holds.
      *
      * @param bitSet
-     *            The new bit set.
+     *        The new bit set.
      * @param value
-     *            The value for bitSet.
+     *        The value for bitSet.
      */
     private ImmutableFixedLengthBitSet(boolean[] bitSet, int value) {
         this.bitSet = bitSet;
@@ -81,7 +91,7 @@ public class ImmutableFixedLengthBitSet {
      * Sets this {@link ImmutableFixedLengthBitSet} to the given value.
      *
      * @param value
-     *            Value to set the {@link ImmutableFixedLengthBitSet} to.
+     *        Value to set the {@link ImmutableFixedLengthBitSet} to.
      */
     public ImmutableFixedLengthBitSet setToValue(int value) {
         assert value < intPow(2, bitSet.length) : "Value to high for this bit set.";
@@ -137,7 +147,7 @@ public class ImmutableFixedLengthBitSet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -161,9 +171,9 @@ public class ImmutableFixedLengthBitSet {
      * Power function for integers.
      *
      * @param a
-     *            The base.
+     *        The base.
      * @param b
-     *            The exponent.
+     *        The exponent.
      * @return a^b.
      */
     private static int intPow(int a, int b) {

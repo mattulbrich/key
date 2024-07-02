@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.util;
@@ -113,7 +117,7 @@ public interface Order extends Equality {
      * @param x the first object.
      * @param y the second object.
      * @return true if the first object is greater than or equals the second
-     * one.
+     *         one.
      */
     boolean greaterOrEquals(Object x, Object y);
 
@@ -171,7 +175,8 @@ public interface Order extends Equality {
             return System.identityHashCode(x);
         }
 
-        public final boolean isComparable(@SuppressWarnings("unused") Object x, @SuppressWarnings("unused") Object y) {
+        public final boolean isComparable(@SuppressWarnings("unused") Object x,
+                @SuppressWarnings("unused") Object y) {
             return true;
         }
 
@@ -205,7 +210,8 @@ public interface Order extends Equality {
             return toString(x).hashCode();
         }
 
-        public boolean isComparable(@SuppressWarnings("unused") Object x, @SuppressWarnings("unused") Object y) {
+        public boolean isComparable(@SuppressWarnings("unused") Object x,
+                @SuppressWarnings("unused") Object y) {
             return true;
         }
 
@@ -261,4 +267,3 @@ public interface Order extends Equality {
     }
 
 }
-

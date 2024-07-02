@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -24,13 +34,13 @@ import recoder.service.CrossReferenceSourceInfo;
 
 /**
  * Handle a type reference in the generic deletion process.
- * 
+ *
  * If the type reference references a type avar or an array over tv, it must be
  * replaced. if the type var is ("extends"-) bounded than <b>with the first
  * boundary(!)</b> otherwise with java.lang.Object.
- * 
+ *
  * @author MU
- * 
+ *
  */
 
 public class ResolveTypeReference extends GenericResolutionTransformation {
@@ -57,8 +67,8 @@ public class ResolveTypeReference extends GenericResolutionTransformation {
         Type type = sourceInfo.getType(reference);
 
         Type replaceType = targetType(type);
-        
-        if(replaceType != null && !replaceType.equals(type)) {
+
+        if (replaceType != null && !replaceType.equals(type)) {
             replaceWith = TypeKit.createTypeReference(getProgramFactory(), replaceType);
             return EQUIVALENCE;
         }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -33,9 +43,9 @@ public interface PredicateEstimator {
 
     /**
      * @param partner
-     *            Structure comprising the partners of a join.
+     *        Structure comprising the partners of a join.
      * @param proof
-     *            The underlying proof.
+     *        The underlying proof.
      * @return A decision predicate for the two nodes in partner. The predicate
      *         should be true in the sequent of the first node and false in the
      *         sequent of the second node.
@@ -52,6 +62,7 @@ public interface PredicateEstimator {
         Node getCommonParent();
     }
 }
+
 
 /**
  * Tries to determine the decision predicate. The information about the
@@ -107,20 +118,19 @@ class StdPredicateEstimator implements PredicateEstimator {
 
         return new Result() {
 
-            @Override
-            public Term getPredicate() {
-                // The decision predicate has to be specified by the user.
-                return null;
-            }
-
-            @Override
-            public Node getCommonParent() {
-                return node.parent();
-            }
-
-        };
+    @Override
+    public Term getPredicate() {
+        // The decision predicate has to be specified by the user.
+        return null;
     }
-    
+
+    @Override
+    public Node getCommonParent() {
+        return node.parent();
+    }
+
+    };}
+
     /**
      * Goes up to the common node of partner.getNode(0) and partner.getNode(1)
      * and returns the next node on the path to partner.getNode(0).
@@ -170,9 +180,9 @@ class StdPredicateEstimator implements PredicateEstimator {
      * to a term.
      *
      * @param estimation
-     *            The branch label without prefix.
+     *        The branch label without prefix.
      * @param services
-     *            The services object.
+     *        The services object.
      * @return A term corresponding to the branch label.
      */
     private Term translate(String estimation, Services services) {

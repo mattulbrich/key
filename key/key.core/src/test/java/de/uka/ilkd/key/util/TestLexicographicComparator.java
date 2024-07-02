@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -22,13 +32,13 @@ public class TestLexicographicComparator {
 
     @Test
     public void testCompareInt() {
-        Integer[] a = {3, 4};
-        Integer[] b = {1, 7};
+        Integer[] a = { 3, 4 };
+        Integer[] b = { 1, 7 };
         final LexicographicComparator<Integer> lcc = new LexicographicComparator<>();
         assertEquals(-1, lcc.compare(a, b));
-        b = new Integer[]{3, 4, 0};
+        b = new Integer[] { 3, 4, 0 };
         assertEquals(1, lcc.compare(a, b));
-        a = new Integer[]{3, 4, 0};
+        a = new Integer[] { 3, 4, 0 };
         assertEquals(0, lcc.compare(a, b));
     }
 }

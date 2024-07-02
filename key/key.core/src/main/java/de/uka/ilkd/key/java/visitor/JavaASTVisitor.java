@@ -1,18 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.java.visitor;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.java.*;
 import de.uka.ilkd.key.java.declaration.*;
@@ -39,18 +48,22 @@ import de.uka.ilkd.key.speclang.LoopContract;
 import de.uka.ilkd.key.speclang.LoopSpecification;
 import de.uka.ilkd.key.speclang.MergeContract;
 
+import org.key_project.util.collection.ImmutableSet;
+
 /**
  * Extends the JavaASTWalker to use the visitor mechanism. The
  * methods inherited by the Visitor interface are all implemented that
  * they call the method <code> doDefaultAction(ProgramElement) </code>.
  */
 public abstract class JavaASTVisitor extends JavaASTWalker
-    implements Visitor {
+        implements Visitor {
 
     protected final Services services;
 
 
-    /** create the JavaASTVisitor
+    /**
+     * create the JavaASTVisitor
+     *
      * @param root the ProgramElement where to begin
      * @param services the Services object
      */
@@ -63,23 +76,23 @@ public abstract class JavaASTVisitor extends JavaASTWalker
     @Override
     protected void walk(ProgramElement node) {
         super.walk(node);
-        if(node instanceof LoopStatement && services != null) {
+        if (node instanceof LoopStatement && services != null) {
             LoopSpecification li = services.getSpecificationRepository()
-                                       .getLoopSpec((LoopStatement) node);
-            if(li != null) {
+                    .getLoopSpec((LoopStatement) node);
+            if (li != null) {
                 performActionOnLoopInvariant(li);
             }
         } else if (node instanceof StatementBlock && services != null) {
             ImmutableSet<BlockContract> bcs =
                 services.getSpecificationRepository()
-                    .getBlockContracts((StatementBlock) node);
+                        .getBlockContracts((StatementBlock) node);
             for (BlockContract bc : bcs) {
                 performActionOnBlockContract(bc);
             }
 
             ImmutableSet<LoopContract> lcs =
                 services.getSpecificationRepository()
-                    .getLoopContracts((StatementBlock) node);
+                        .getLoopContracts((StatementBlock) node);
             for (LoopContract lc : lcs) {
                 performActionOnLoopContract(lc);
             }
@@ -101,8 +114,10 @@ public abstract class JavaASTVisitor extends JavaASTWalker
     }
 
 
-    /** the action that is performed just before leaving the node the
+    /**
+     * the action that is performed just before leaving the node the
      * last time
+     *
      * @param node the node described above
      */
     protected abstract void doDefaultAction(SourceElement node);
@@ -497,7 +512,7 @@ public abstract class JavaASTVisitor extends JavaASTWalker
     public void performActionOnLocationVariable(LocationVariable x) {
         // TODO: uncomment line below after KeY 1.0 and remove the call
         // to performActionOnProgramVariable
-        //doDefaultAction(x);
+        // doDefaultAction(x);
         performActionOnProgramVariable(x);
     }
 
@@ -670,7 +685,7 @@ public abstract class JavaASTVisitor extends JavaASTWalker
     public void performActionOnProgramConstant(ProgramConstant x) {
         // TODO: uncomment line below after KeY 1.0 and remove the call
         // to performActionOnProgramVariable
-        //doDefaultAction(x);
+        // doDefaultAction(x);
         performActionOnProgramVariable(x);
     }
 
@@ -711,7 +726,7 @@ public abstract class JavaASTVisitor extends JavaASTWalker
 
     @Override
     public void performActionOnSchemaVariable(SchemaVariable x) {
-        doDefaultAction((ProgramSV)x);
+        doDefaultAction((ProgramSV) x);
     }
 
     @Override
@@ -861,7 +876,7 @@ public abstract class JavaASTVisitor extends JavaASTWalker
 
     @Override
     public void performActionOnLoopInvariant(LoopSpecification x) {
-        //do nothing
+        // do nothing
     }
 
     @Override
@@ -876,25 +891,25 @@ public abstract class JavaASTVisitor extends JavaASTWalker
 
     @Override
     public void performActionOnBlockContract(final StatementBlock oldBlock,
-                                             final StatementBlock newBlock) {
+            final StatementBlock newBlock) {
         // do nothing
     }
 
     @Override
     public void performActionOnLoopContract(final StatementBlock oldBlock,
-                                            final StatementBlock newBlock) {
+            final StatementBlock newBlock) {
         // do nothing
     }
 
     @Override
     public void performActionOnLoopContract(final LoopStatement oldLoop,
-                                            final LoopStatement newLoop) {
+            final LoopStatement newLoop) {
         // do nothing
     }
 
     @Override
     public void performActionOnMergeContract(MergeContract x) {
-        //do nothing
+        // do nothing
     }
 
     @Override

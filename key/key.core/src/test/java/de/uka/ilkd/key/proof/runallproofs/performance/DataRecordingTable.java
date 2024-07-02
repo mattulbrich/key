@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.proof.runallproofs.performance;
 
 import java.io.File;
@@ -13,7 +23,7 @@ public class DataRecordingTable implements AutoCloseable {
 
     /**
      * @param description
-     *            A description of the data stored in the table.
+     *        A description of the data stored in the table.
      */
     DataRecordingTable(File location, String[] columns, String description) {
         this.location = location;
@@ -23,7 +33,7 @@ public class DataRecordingTable implements AutoCloseable {
 
         try {
             w = new PrintWriter(
-                    new FileOutputStream(location, true /* append = true */));
+                new FileOutputStream(location, true /* append = true */));
             if (!exists) {
                 // First line will be the table description
                 w.println("# " + description);
@@ -66,7 +76,8 @@ public class DataRecordingTable implements AutoCloseable {
      */
     public void writeRow(Object... lineData) {
         if (lineData.length != columns.length) {
-            throw new RuntimeException("Incorrect number of column values specified.\n" + "Expected: " + columns.length
+            throw new RuntimeException(
+                "Incorrect number of column values specified.\n" + "Expected: " + columns.length
                     + "\n" + "Actual number of columns specified: " + lineData.length);
         }
 

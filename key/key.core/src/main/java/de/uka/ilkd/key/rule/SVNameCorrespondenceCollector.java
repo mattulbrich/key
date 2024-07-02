@@ -1,20 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.rule;
-
-import org.key_project.util.collection.DefaultImmutableMap;
-import org.key_project.util.collection.ImmutableMap;
 
 import de.uka.ilkd.key.ldt.HeapLDT;
 import de.uka.ilkd.key.logic.DefaultVisitor;
@@ -31,6 +38,9 @@ import de.uka.ilkd.key.rule.tacletbuilder.AntecSuccTacletGoalTemplate;
 import de.uka.ilkd.key.rule.tacletbuilder.RewriteTacletGoalTemplate;
 import de.uka.ilkd.key.rule.tacletbuilder.TacletGoalTemplate;
 
+import org.key_project.util.collection.DefaultImmutableMap;
+import org.key_project.util.collection.ImmutableMap;
+
 /**
  * This visitor is used to collect information about schema variable
  * pairs occurring within the same substitution operator within a
@@ -44,8 +54,8 @@ public class SVNameCorrespondenceCollector extends DefaultVisitor {
      * This map contains (a, b) if there is a substitution {b a}
      * somewhere in the taclet
      */
-    private ImmutableMap<SchemaVariable,SchemaVariable> nameCorrespondences =
-	DefaultImmutableMap.<SchemaVariable,SchemaVariable>nilMap();
+    private ImmutableMap<SchemaVariable, SchemaVariable> nameCorrespondences =
+        DefaultImmutableMap.<SchemaVariable, SchemaVariable>nilMap();
 
     private final HeapLDT heapLDT;
 
@@ -55,31 +65,33 @@ public class SVNameCorrespondenceCollector extends DefaultVisitor {
     }
 
 
-    /** is called by the execPostOrder-method of a term 
+    /**
+     * is called by the execPostOrder-method of a term
+     *
      * @param t the Term if the toplevel operator of this term is a
-     * substitution of schema variables, then this pair is added to
-     * the map "nameCorrespondences"
-     */  
-    public void visit ( Term t ) {	
+     *        substitution of schema variables, then this pair is added to
+     *        the map "nameCorrespondences"
+     */
+    public void visit(Term t) {
 
-	final Operator top = t.op ();
-    
-	if ( top instanceof SubstOp ) {
-            final Operator substTermOp = t.sub ( 0 ).op ();
-            final QuantifiableVariable substVar = t.varsBoundHere ( 1 ).get ( 0 );
-            if ( substTermOp instanceof SchemaVariable
-                 && substVar instanceof SchemaVariable )
-            addNameCorrespondence ( (SchemaVariable)substTermOp,
-                                    (SchemaVariable)substVar );
+        final Operator top = t.op();
+
+        if (top instanceof SubstOp) {
+            final Operator substTermOp = t.sub(0).op();
+            final QuantifiableVariable substVar = t.varsBoundHere(1).get(0);
+            if (substTermOp instanceof SchemaVariable
+                    && substVar instanceof SchemaVariable)
+                addNameCorrespondence((SchemaVariable) substTermOp,
+                    (SchemaVariable) substVar);
         }
-             
+
     }
 
-    
-    private void addNameCorrespondence (SchemaVariable nameReceiver,
-                                        SchemaVariable nameProvider) {
-        nameCorrespondences = nameCorrespondences.put ( nameReceiver,
-                                                        nameProvider );
+
+    private void addNameCorrespondence(SchemaVariable nameReceiver,
+            SchemaVariable nameProvider) {
+        nameCorrespondences = nameCorrespondences.put(nameReceiver,
+            nameProvider);
     }
 
 
@@ -88,12 +100,14 @@ public class SVNameCorrespondenceCollector extends DefaultVisitor {
      *         onto schema variables b if b is replaced with a somewhere in this
      *         taclet
      */
-    public ImmutableMap<SchemaVariable,SchemaVariable> getCorrespondences () {
-	return nameCorrespondences;
+    public ImmutableMap<SchemaVariable, SchemaVariable> getCorrespondences() {
+        return nameCorrespondences;
     }
-   
-    
-    /** collects all correspondences in a semisequent 
+
+
+    /**
+     * collects all correspondences in a semisequent
+     *
      * @param semiseq the Semisequent to visit
      */
     private void visit(Semisequent semiseq) {
@@ -102,33 +116,37 @@ public class SVNameCorrespondenceCollector extends DefaultVisitor {
         }
     }
 
-    /** collects all correspondences in a sequent
+    /**
+     * collects all correspondences in a sequent
+     *
      * @param seq the Sequent to visit
      */
     public void visit(Sequent seq) {
-	visit(seq.antecedent());
-	visit(seq.succedent());
+        visit(seq.antecedent());
+        visit(seq.succedent());
     }
 
-    /** collects all correspondences in a taclet
+    /**
+     * collects all correspondences in a taclet
+     *
      * @param taclet the Taclet where the correspondences have to be
-     * collected
+     *        collected
      * @param visitAddrules a boolean that contols if the addrule sections are
-     * to be ignored (iff false) or if the visitor descends into them (iff true) 
+     *        to be ignored (iff false) or if the visitor descends into them (iff true)
      */
     public void visit(Taclet taclet, boolean visitAddrules) {
         SchemaVariable findSV = null;
-	visit(taclet.ifSequent());
-	if (taclet instanceof FindTaclet) {
-	    final Term findTerm = ( (FindTaclet)taclet ).find ();
-            findTerm.execPostOrder ( this );
-            if ( findTerm.op () instanceof SchemaVariable ) {
-                findSV = (SchemaVariable)findTerm.op ();
+        visit(taclet.ifSequent());
+        if (taclet instanceof FindTaclet) {
+            final Term findTerm = ((FindTaclet) taclet).find();
+            findTerm.execPostOrder(this);
+            if (findTerm.op() instanceof SchemaVariable) {
+                findSV = (SchemaVariable) findTerm.op();
             } else if (findTerm.op() instanceof Function &&
-                    heapLDT.containsFunction((Function)findTerm.op())) {
-                findSV = (SchemaVariable)findTerm.sub(2).op();
+                    heapLDT.containsFunction((Function) findTerm.op())) {
+                findSV = (SchemaVariable) findTerm.sub(2).op();
             }
-	}
+        }
         for (TacletGoalTemplate tacletGoalTemplate : taclet.goalTemplates()) {
             TacletGoalTemplate gt = tacletGoalTemplate;
             visit(gt.sequent());
@@ -138,7 +156,7 @@ public class SVNameCorrespondenceCollector extends DefaultVisitor {
                 if (findSV != null
                         && replaceWithTerm.op() instanceof SchemaVariable)
                     addNameCorrespondence((SchemaVariable) replaceWithTerm.op(),
-                            findSV);
+                        findSV);
             } else {
                 if (gt instanceof AntecSuccTacletGoalTemplate) {
                     visit(((AntecSuccTacletGoalTemplate) gt).replaceWith());

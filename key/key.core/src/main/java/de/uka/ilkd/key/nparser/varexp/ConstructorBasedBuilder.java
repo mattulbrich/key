@@ -1,21 +1,33 @@
-package de.uka.ilkd.key.nparser.varexp;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.rule.VariableCondition;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.nparser.varexp;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
+import de.uka.ilkd.key.rule.VariableCondition;
+
 public class ConstructorBasedBuilder extends AbstractConditionBuilder {
     private final Class<? extends VariableCondition> clazz;
     private final boolean negationSupported;
 
-    public ConstructorBasedBuilder(String name, Class<? extends VariableCondition> clazz, ArgumentType... types) {
+    public ConstructorBasedBuilder(String name, Class<? extends VariableCondition> clazz,
+            ArgumentType... types) {
         this(name, lastArgumentOfFirstContructorIsBoolean(clazz), clazz, types);
     }
 
-    private static boolean lastArgumentOfFirstContructorIsBoolean(Class<? extends VariableCondition> clazz) {
+    private static boolean lastArgumentOfFirstContructorIsBoolean(
+            Class<? extends VariableCondition> clazz) {
         try {
             Class<?>[] types = clazz.getConstructors()[0].getParameterTypes();
             return types[types.length - 1] == Boolean.class
@@ -25,7 +37,8 @@ public class ConstructorBasedBuilder extends AbstractConditionBuilder {
         }
     }
 
-    public ConstructorBasedBuilder(String name, boolean negationSupported, Class<? extends VariableCondition> clazz, ArgumentType... types) {
+    public ConstructorBasedBuilder(String name, boolean negationSupported,
+            Class<? extends VariableCondition> clazz, ArgumentType... types) {
         super(name, types);
         this.clazz = clazz;
         this.negationSupported = negationSupported;

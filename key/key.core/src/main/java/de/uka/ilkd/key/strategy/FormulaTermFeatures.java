@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.strategy;
 
 import de.uka.ilkd.key.logic.op.ElementaryUpdate;
@@ -26,30 +36,25 @@ class FormulaTermFeatures extends StaticFeatureCollection {
         ifThenElse = OperatorClassTF.create(IfThenElse.class);
 
         atom = AtomTermFeature.INSTANCE;
-        propJunctor
-                = or(OperatorClassTF.create(Junctor.class), op(Equality.EQV));
+        propJunctor = or(OperatorClassTF.create(Junctor.class), op(Equality.EQV));
         literal = or(atom, opSub(Junctor.NOT, atom));
 
         // left-associatively arranged clauses
         clause = rec(orF, or(opSub(Junctor.OR, any(), not(orF)), literal));
 
         // left-associatively arranged sets of clauses
-        clauseSet
-                = rec(andF, or(opSub(Junctor.AND, any(), not(andF)), clause));
+        clauseSet = rec(andF, or(opSub(Junctor.AND, any(), not(andF)), clause));
 
         quantifiedFor = or(op(Quantifier.ALL), op(Quantifier.EX));
-        quantifiedClauseSet
-                = rec(quantifiedFor, or(quantifiedFor, clauseSet));
+        quantifiedClauseSet = rec(quantifiedFor, or(quantifiedFor, clauseSet));
 
         quantifiedAnd = rec(quantifiedFor, or(quantifiedFor, andF));
         quantifiedOr = rec(quantifiedFor, or(quantifiedFor, orF));
 
-            // conjunction or disjunction of literals, without and-or
+        // conjunction or disjunction of literals, without and-or
         // alternation
-        pureLitConjDisj
-                = or(rec(andF, or(andF, literal)), rec(orF, or(orF, literal)));
-        quantifiedPureLitConjDisj
-                = rec(quantifiedFor, or(quantifiedFor, pureLitConjDisj));
+        pureLitConjDisj = or(rec(andF, or(andF, literal)), rec(orF, or(orF, literal)));
+        quantifiedPureLitConjDisj = rec(quantifiedFor, or(quantifiedFor, pureLitConjDisj));
 
         elemUpdate = OperatorClassTF.create(ElementaryUpdate.class);
         update = OperatorClassTF.create(UpdateApplication.class);
@@ -59,24 +64,20 @@ class FormulaTermFeatures extends StaticFeatureCollection {
         // directCutAllowed = add ( atom, not ( modalOperator ) );
         notExecutable = not(program);
 
-        notContainsExecutable
-                = not(ContainsExecutableCodeTermFeature.PROGRAMS);
+        notContainsExecutable = not(ContainsExecutableCodeTermFeature.PROGRAMS);
 
-        cutAllowed
-                = add(notContainsExecutable,
-                        tf.notContainsProduct,
-                        or(tf.eqF, OperatorClassTF.create(Function.class),
-                                OperatorClassTF
-                                .create(ParsableVariable.class))); // XXX
-        cutAllowedBelowQuantifier
-                = add(not(propJunctor), notContainsExecutable);
-        cutPriority
-                = add(ifZero(
-                                tf.intInEquation,
-                                longTermConst(0),
-                                ifZero(tf.eqF, longTermConst(100),
-                                        longTermConst(200))),
-                        rec(any(), longTermConst(1)));
+        cutAllowed = add(notContainsExecutable,
+            tf.notContainsProduct,
+            or(tf.eqF, OperatorClassTF.create(Function.class),
+                OperatorClassTF
+                        .create(ParsableVariable.class))); // XXX
+        cutAllowedBelowQuantifier = add(not(propJunctor), notContainsExecutable);
+        cutPriority = add(ifZero(
+            tf.intInEquation,
+            longTermConst(0),
+            ifZero(tf.eqF, longTermConst(100),
+                longTermConst(200))),
+            rec(any(), longTermConst(1)));
         // directCutAllowed = add ( tf.intInEquation, notContainsQuery );
 
     }

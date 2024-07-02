@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,16 +23,16 @@
 
 package de.uka.ilkd.key.logic.sort;
 
-import de.uka.ilkd.key.rule.HasOrigin;
-import org.key_project.util.collection.ImmutableSet;
+import javax.annotation.Nullable;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.logic.Named;
 import de.uka.ilkd.key.logic.TermServices;
 import de.uka.ilkd.key.logic.op.SortDependingFunction;
+import de.uka.ilkd.key.rule.HasOrigin;
 
-import javax.annotation.Nullable;
+import org.key_project.util.collection.ImmutableSet;
 
 
 public interface Sort extends Named, HasOrigin {
@@ -77,7 +87,7 @@ public interface Sort extends Named, HasOrigin {
     /**
      * @param s some sort.
      * @return whether the given sort is a reflexive, transitive subsort of this
-     * sort.
+     *         sort.
      */
     boolean extendsTrans(Sort s);
 
@@ -111,5 +121,5 @@ public interface Sort extends Named, HasOrigin {
      * This field is typical set by the parser, who captures the documentation comments.
      */
     @Nullable
-    default String getDocumentation() {return null;}
+    default String getDocumentation() { return null; }
 }

@@ -1,14 +1,25 @@
-package de.uka.ilkd.key.gui.extension.impl;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.settings.AbstractPropertiesSettings;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.gui.extension.impl;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+import de.uka.ilkd.key.settings.AbstractPropertiesSettings;
+
 public class ExtensionSettings extends AbstractPropertiesSettings {
     public final static String KEY_DISABLED = "[Extensions]disabled";
-    private final PropertyEntry<Set<String>> forbiddenClasses = createStringSetProperty(KEY_DISABLED, "");
+    private final PropertyEntry<Set<String>> forbiddenClasses =
+        createStringSetProperty(KEY_DISABLED, "");
 
     public Collection<String> getForbiddenClasses() {
         return forbiddenClasses.get();

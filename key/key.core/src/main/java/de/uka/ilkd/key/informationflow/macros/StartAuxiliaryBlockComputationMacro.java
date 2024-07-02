@@ -1,6 +1,14 @@
-package de.uka.ilkd.key.informationflow.macros;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableList;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.informationflow.macros;
 
 import de.uka.ilkd.key.control.UserInterfaceControl;
 import de.uka.ilkd.key.informationflow.po.BlockExecutionPO;
@@ -21,12 +29,15 @@ import de.uka.ilkd.key.rule.BlockContractInternalBuiltInRuleApp;
 import de.uka.ilkd.key.rule.RuleApp;
 import de.uka.ilkd.key.speclang.BlockContract;
 
+import org.key_project.util.collection.ImmutableList;
+
 
 /**
  *
  * @author christoph
  */
-public class StartAuxiliaryBlockComputationMacro extends AbstractProofMacro implements StartSideProofMacro {
+public class StartAuxiliaryBlockComputationMacro extends AbstractProofMacro
+        implements StartSideProofMacro {
 
     @Override
     public String getName() {
@@ -41,16 +52,16 @@ public class StartAuxiliaryBlockComputationMacro extends AbstractProofMacro impl
     @Override
     public String getDescription() {
         return "In order to increase the efficiency of self-composition " +
-               "proofs, this macro starts a side calculation which does " +
-               "the symbolic execution only once. The result is " +
-               "instantiated twice with the variable to be used in the " +
-               "two executions of the self-composition.";
+            "proofs, this macro starts a side calculation which does " +
+            "the symbolic execution only once. The result is " +
+            "instantiated twice with the variable to be used in the " +
+            "two executions of the self-composition.";
     }
 
     @Override
     public boolean canApplyTo(Proof proof,
-                              ImmutableList<Goal> goals,
-                              PosInOccurrence posInOcc) {
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc) {
         if (goals == null || goals.head() == null
                 || goals.head().node() == null
                 || goals.head().node().parent() == null) {
@@ -68,35 +79,34 @@ public class StartAuxiliaryBlockComputationMacro extends AbstractProofMacro impl
             return false;
         }
         final BlockContractInternalBuiltInRuleApp blockRuleApp =
-                (BlockContractInternalBuiltInRuleApp) app;
+            (BlockContractInternalBuiltInRuleApp) app;
         final BlockContract contract = blockRuleApp.getContract();
         final IFProofObligationVars ifVars =
-                blockRuleApp.getInformationFlowProofObligationVars();
+            blockRuleApp.getInformationFlowProofObligationVars();
         if (ifVars == null) {
             return false;
         }
 
         final InfFlowPOSnippetFactory f =
-                POSnippetFactory.getInfFlowFactory(contract,
-                                                   ifVars.c1,
-                                                   ifVars.c2,
-                                                   blockRuleApp.getExecutionContext(),
-                                                   services);
+            POSnippetFactory.getInfFlowFactory(contract,
+                ifVars.c1,
+                ifVars.c2,
+                blockRuleApp.getExecutionContext(),
+                services);
         final Term selfComposedExec =
-                f.create(InfFlowPOSnippetFactory.Snippet.SELFCOMPOSED_BLOCK_WITH_PRE_RELATION);
+            f.create(InfFlowPOSnippetFactory.Snippet.SELFCOMPOSED_BLOCK_WITH_PRE_RELATION);
 
         return posInOcc.subTerm().equalsModRenaming(selfComposedExec);
     }
 
     @Override
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          Proof proof,
-                                          ImmutableList<Goal> goals,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) throws Exception {
+            Proof proof,
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) throws Exception {
         final BlockContractInternalBuiltInRuleApp blockRuleApp =
-                (BlockContractInternalBuiltInRuleApp)
-                    goals.head().node().parent().getAppliedRuleApp();
+            (BlockContractInternalBuiltInRuleApp) goals.head().node().parent().getAppliedRuleApp();
 
         final InitConfig initConfig = proof.getEnv().getInitConfigForEnvironment();
 
@@ -104,17 +114,17 @@ public class StartAuxiliaryBlockComputationMacro extends AbstractProofMacro impl
         final IFProofObligationVars ifVars = blockRuleApp.getInformationFlowProofObligationVars();
 
         final BlockExecutionPO blockExecPO =
-                new BlockExecutionPO(initConfig, contract,
-                                     ifVars.symbExecVars.labelHeapAtPreAsAnonHeapFunc(),
-                                     goals.head(), blockRuleApp.getExecutionContext(),
-                                     proof.getServices());
+            new BlockExecutionPO(initConfig, contract,
+                ifVars.symbExecVars.labelHeapAtPreAsAnonHeapFunc(),
+                goals.head(), blockRuleApp.getExecutionContext(),
+                proof.getServices());
 
         final InfFlowProof p;
         synchronized (blockExecPO) {
             p = (InfFlowProof) uic.createProof(initConfig, blockExecPO);
         }
         p.unionIFSymbols(((InfFlowProof) proof).getIFSymbols());
-        
+
         ProofMacroFinishedInfo info = new ProofMacroFinishedInfo(this, p);
         info.addInfo(PROOF_MACRO_FINISHED_INFO_KEY_ORIGINAL_PROOF, proof);
         return info;

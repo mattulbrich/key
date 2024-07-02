@@ -1,8 +1,14 @@
-package de.uka.ilkd.key.proof.mgt;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.speclang.Contract;
-import de.uka.ilkd.key.speclang.DependencyContractImpl;
-import de.uka.ilkd.key.speclang.FunctionalOperationContractImpl;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.proof.mgt;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,12 +16,18 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.uka.ilkd.key.speclang.Contract;
+import de.uka.ilkd.key.speclang.DependencyContractImpl;
+import de.uka.ilkd.key.speclang.FunctionalOperationContractImpl;
+
 public class ContractOrderManager {
     public static final String KEY_CONTRACT_ORDER = "key.contractOrder";
     public static final String FILENAME = System.getProperty(KEY_CONTRACT_ORDER);
     private static ContractOrderManager theInstance;
 
-    public enum ContractMode { WITH_MEASURED_BY, UNRESTRICTED, FORBIDDEN }
+    public enum ContractMode {
+        WITH_MEASURED_BY, UNRESTRICTED, FORBIDDEN
+    }
 
     private final Map<String, Integer> map;
     private final int defaultLevel;
@@ -26,7 +38,7 @@ public class ContractOrderManager {
 
     public static ContractOrderManager getInstance() {
         assert isEnabled();
-        if(theInstance == null) {
+        if (theInstance == null) {
             try {
                 theInstance = new ContractOrderManager();
             } catch (IOException e) {
@@ -57,7 +69,7 @@ public class ContractOrderManager {
         // Could be replaced by getOrDefault, keeping the debug output for now
         Integer level = map.get(contract);
         if (level == null) {
-//            System.out.println("Contract " + contract + " w/o level, using highest level");
+            // System.out.println("Contract " + contract + " w/o level, using highest level");
             level = this.defaultLevel;
         }
         return level;
@@ -93,7 +105,8 @@ public class ContractOrderManager {
         }
 
         if (contract instanceof FunctionalOperationContractImpl) {
-            FunctionalOperationContractImpl operationContract = (FunctionalOperationContractImpl) contract;
+            FunctionalOperationContractImpl operationContract =
+                (FunctionalOperationContractImpl) contract;
             return operationContract.getName();
         }
 

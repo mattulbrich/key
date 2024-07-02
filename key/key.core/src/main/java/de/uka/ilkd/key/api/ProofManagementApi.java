@@ -1,4 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.api;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import de.uka.ilkd.key.control.KeYEnvironment;
 import de.uka.ilkd.key.java.Services;
@@ -8,12 +23,8 @@ import de.uka.ilkd.key.proof.init.ProofInputException;
 import de.uka.ilkd.key.proof.init.ProofOblInput;
 import de.uka.ilkd.key.speclang.Contract;
 import de.uka.ilkd.key.util.KeYTypeUtil;
-import org.key_project.util.collection.ImmutableSet;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.key_project.util.collection.ImmutableSet;
 
 /**
  * This class serves as a facade to all functionalities that are needed for
@@ -38,7 +49,7 @@ public class ProofManagementApi {
      * Retrieve a list of all available contracts
      *
      * @return {@link List<Contract>}; can be null if no file was loaded before
-     *                                  (we should throw an exception here)
+     *         (we should throw an exception here)
      */
     public List<Contract> getProofContracts() {
         if (proofContracts.isEmpty())
@@ -86,7 +97,7 @@ public class ProofManagementApi {
      */
     public ProofApi startProof(Contract contract) throws ProofInputException {
         return startProof(
-                contract.createProofObl(currentEnv.getInitConfig(), contract));
+            contract.createProofObl(currentEnv.getInitConfig(), contract));
     }
 
     public ProofApi getLoadedProof() {
@@ -114,25 +125,25 @@ public class ProofManagementApi {
     }
 
     /*
-    public KeYApi.CommandType getCommandType(String identifier) {
-        if (KeYApi.getMacroApi().getMacro(identifier) != null) {
-            return KeYApi.CommandType.MACRO;
-        }
-
-        if (KeYApi.getScriptCommandApi().getScriptCommands(identifier)
-                != null) {
-            return KeYApi.CommandType.SCRIPT;
-        }
-
-        if (getRuleNames().contains(identifier)) {
-            return KeYApi.CommandType.RULE;
-        }
-
-        return KeYApi.CommandType.UNKNOWN;
-    }
-
-    enum CommandType {
-        SCRIPT, RULE, MACRO, UNKNOWN;
-    }
-    */
+     * public KeYApi.CommandType getCommandType(String identifier) {
+     * if (KeYApi.getMacroApi().getMacro(identifier) != null) {
+     * return KeYApi.CommandType.MACRO;
+     * }
+     *
+     * if (KeYApi.getScriptCommandApi().getScriptCommands(identifier)
+     * != null) {
+     * return KeYApi.CommandType.SCRIPT;
+     * }
+     *
+     * if (getRuleNames().contains(identifier)) {
+     * return KeYApi.CommandType.RULE;
+     * }
+     *
+     * return KeYApi.CommandType.UNKNOWN;
+     * }
+     *
+     * enum CommandType {
+     * SCRIPT, RULE, MACRO, UNKNOWN;
+     * }
+     */
 }

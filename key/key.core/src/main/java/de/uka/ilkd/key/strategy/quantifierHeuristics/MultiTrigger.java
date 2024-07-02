@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,16 +25,16 @@ package de.uka.ilkd.key.strategy.quantifierHeuristics;
 
 import java.util.Iterator;
 
+import de.uka.ilkd.key.java.Services;
+import de.uka.ilkd.key.logic.Term;
+import de.uka.ilkd.key.logic.op.QuantifiableVariable;
+
 import org.key_project.util.collection.DefaultImmutableSet;
 import org.key_project.util.collection.ImmutableList;
 import org.key_project.util.collection.ImmutableMap;
 import org.key_project.util.collection.ImmutableMapEntry;
 import org.key_project.util.collection.ImmutableSLList;
 import org.key_project.util.collection.ImmutableSet;
-
-import de.uka.ilkd.key.java.Services;
-import de.uka.ilkd.key.logic.Term;
-import de.uka.ilkd.key.logic.op.QuantifiableVariable;
 
 class MultiTrigger implements Trigger {
 
@@ -47,7 +57,7 @@ class MultiTrigger implements Trigger {
         ImmutableList<Substitution> res = ImmutableSLList.nil();
 
         ImmutableSet<Substitution> mulsubs = setMultiSubstitution(triggers.iterator(),
-                targetTerms, services);
+            targetTerms, services);
 
         for (Substitution sub : mulsubs) {
             if (sub.isTotalOn(qvs)) {
@@ -64,9 +74,9 @@ class MultiTrigger implements Trigger {
         ImmutableList<Substitution> res = ImmutableSLList.nil();
         if (ts.hasNext()) {
             ImmutableSet<Substitution> subi = ts.next().getSubstitutionsFromTerms(
-                    terms, services);
+                terms, services);
             ImmutableSet<Substitution> nextSubs = setMultiSubstitution(ts, terms,
-                    services);
+                services);
             if (nextSubs.isEmpty()) {
                 return subi;
             } else if (subi.isEmpty()) {

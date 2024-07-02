@@ -1,17 +1,32 @@
-    // This file is part of KeY - Integrated Deductive Software Design
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+// This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.control.instantiation_model;
+
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.table.AbstractTableModel;
 
 import de.uka.ilkd.key.java.ProgramElement;
 import de.uka.ilkd.key.java.Services;
@@ -34,15 +49,12 @@ import de.uka.ilkd.key.rule.TacletApp;
 import de.uka.ilkd.key.rule.inst.*;
 import de.uka.ilkd.key.settings.ProofIndependentSettings;
 import de.uka.ilkd.key.util.Pair;
-import org.antlr.v4.runtime.CharStreams;
+
 import org.key_project.util.collection.ImmutableList;
 import org.key_project.util.collection.ImmutableMapEntry;
 import org.key_project.util.collection.ImmutableSLList;
 
-import javax.swing.table.AbstractTableModel;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Iterator;
+import org.antlr.v4.runtime.CharStreams;
 
 public class TacletFindModel extends AbstractTableModel {
 
@@ -114,7 +126,7 @@ public class TacletFindModel extends AbstractTableModel {
         while (it.hasNext()) {
             final ImmutableMapEntry<SchemaVariable, InstantiationEntry<?>> entry = it.next();
             rowVec.add(new Pair<SchemaVariable, String>(entry.key(),
-                    ProofSaver.printAnything(entry.value(), services)));
+                ProofSaver.printAnything(entry.value(), services)));
             count++;
         }
 
@@ -127,7 +139,7 @@ public class TacletFindModel extends AbstractTableModel {
             if (!tacletApp.taclet().getIfFindVariables().contains(var)) {
                 // create an appropriate and unique proposal for the name ...
                 String proposal = instantiationProposers.getProposal(tacletApp, var, services,
-                        goal.node(), proposals);
+                    goal.node(), proposals);
 
                 Pair<SchemaVariable, String> pair = new Pair<>(var, proposal);
 
@@ -178,8 +190,8 @@ public class TacletFindModel extends AbstractTableModel {
      * variable namespace and the given namespace for functions and default
      * namespaces for the others
      *
-     * @param s       the String to parse
-     * @param varNS   the variable namespace
+     * @param s the String to parse
+     * @param varNS the variable namespace
      * @param functNS the function namespace
      */
     private Term parseTerm(String s, Namespace<QuantifiableVariable> varNS,
@@ -196,7 +208,8 @@ public class TacletFindModel extends AbstractTableModel {
      * skolem function)
      */
     private IdDeclaration parseIdDeclaration(String s) throws ParserException {
-        KeYParser.Id_declarationContext ctx = ParsingFacade.parseIdDeclaration(CharStreams.fromString(s));
+        KeYParser.Id_declarationContext ctx =
+            ParsingFacade.parseIdDeclaration(CharStreams.fromString(s));
         Sort sort = ctx.s != null ? services.getNamespaces().sorts().lookup(ctx.s.getText()) : null;
         return new IdDeclaration(ctx.id.getText(), sort);
     }
@@ -228,8 +241,8 @@ public class TacletFindModel extends AbstractTableModel {
      * parses the indicated row and returns a Term corresponding to the entry in the
      * row
      *
-     * @param irow    the row to be parsed
-     * @param varNS   the variable namespace that will be passed to parseTerm
+     * @param irow the row to be parsed
+     * @param varNS the variable namespace that will be passed to parseTerm
      * @param functNS the function namespace that will be passed to parseTerm
      * @return the parsed term
      */
@@ -249,11 +262,11 @@ public class TacletFindModel extends AbstractTableModel {
             Location loc = pe.getLocation();
             if (loc != null) {
                 throw new SVInstantiationParserException(instantiation,
-                        (loc.getLine() <= 0 ? 0 : loc.getLine()), loc.getColumn(), pe.getMessage(),
-                        false).initCause(pe);
+                    (loc.getLine() <= 0 ? 0 : loc.getLine()), loc.getColumn(), pe.getMessage(),
+                    false).initCause(pe);
             } else {
                 throw new SVInstantiationParserException(instantiation, -1, -1, pe.getMessage(),
-                        false).initCause(pe);
+                    false).initCause(pe);
             }
         }
     }
@@ -280,11 +293,11 @@ public class TacletFindModel extends AbstractTableModel {
             Location loc = pe.getLocation();
             if (loc != null) {
                 throw new SVInstantiationParserException(instantiation,
-                        irow + (loc.getLine() <= 0 ? 0 : loc.getLine()), loc.getColumn(),
-                        pe.getMessage(), false).initCause(pe);
+                    irow + (loc.getLine() <= 0 ? 0 : loc.getLine()), loc.getColumn(),
+                    pe.getMessage(), false).initCause(pe);
             } else {
                 throw new SVInstantiationParserException(instantiation, irow, -1, pe.getMessage(),
-                        false).initCause(pe);
+                    false).initCause(pe);
             }
         }
     }
@@ -292,11 +305,11 @@ public class TacletFindModel extends AbstractTableModel {
     private Term addOrigin(Term term) {
         if (ProofIndependentSettings.DEFAULT_INSTANCE.getTermLabelSettings().getUseOriginLabels()) {
             return services.getTermBuilder().addLabelToAllSubs(
-                    OriginTermLabel.removeOriginLabels(term, services),
-                    new OriginTermLabel(new NodeOrigin(
-                            SpecType.USER_INTERACTION,
-                            originalApp.rule().displayName(),
-                            goal.node().serialNr())));
+                OriginTermLabel.removeOriginLabels(term, services),
+                new OriginTermLabel(new NodeOrigin(
+                    SpecType.USER_INTERACTION,
+                    originalApp.rule().displayName(),
+                    goal.node().serialNr())));
         } else {
             return term;
         }
@@ -325,17 +338,17 @@ public class TacletFindModel extends AbstractTableModel {
         }
 
         if (!varNamer.isUniqueNameForSchemaVariable(instantiation, sv,
-                originalApp.posInOccurrence(), prefix)) {
+            originalApp.posInOccurrence(), prefix)) {
             throw new SVInstantiationParserException(instantiation, irow, 0,
-                    "Name is already in use.", false);
+                "Name is already in use.", false);
         }
 
         ProgramElement pe = originalApp.getProgramElement(instantiation, sv, services);
         if (pe == null) {
             throw new SVInstantiationParserException(instantiation, irow, -1,
-                    "Unexpected sort: " + sv.sort() + "."
-                            + "Label SV or a program variable SV expected" + " declared as new.",
-                    false);
+                "Unexpected sort: " + sv.sort() + "."
+                    + "Label SV or a program variable SV expected" + " declared as new.",
+                false);
         }
         return pe;
     }
@@ -373,16 +386,16 @@ public class TacletFindModel extends AbstractTableModel {
                     if (sv instanceof VariableSV) {
                         LogicVariable lv = new LogicVariable(new Name(idd.getName()), sort);
                         result = result.addCheckedInstantiation(sv, addOrigin(tb.var(lv)), services,
-                                true);
+                            true);
                     } else {
                         // sv instanceof SkolemTermSV
                         final Named n = namespaces().lookupLogicSymbol(new Name(idd.getName()));
                         if (n == null) {
                             result = result.createSkolemConstant(idd.getName(), sv, sort, true,
-                                    services);
+                                services);
                         } else {
                             throw new SVInstantiationParserException(idd.getName(), irow, 1,
-                                    "Name already in use.", false);
+                                "Name already in use.", false);
                         }
                     }
                 } else if (sv instanceof ProgramSV) {
@@ -394,7 +407,7 @@ public class TacletFindModel extends AbstractTableModel {
 
             if (problemVarSV != null) {
                 throw new SVInstantiationParserException("", getSVRow(problemVarSV), 0,
-                        "Ambiguous instantiation of schema variable " + problemVarSV, false);
+                    "Ambiguous instantiation of schema variable " + problemVarSV, false);
             }
 
             for (irow = noEditRow + 1; irow < entries.size(); irow++) {
@@ -428,12 +441,12 @@ public class TacletFindModel extends AbstractTableModel {
 
                         try {
                             result = result.addCheckedInstantiation(sv, addOrigin(instance),
-                                    services, true);
+                                services, true);
                         } catch (RigidnessException e) {
                             throw new SVRigidnessException("" + sv, irow, 0);
                         } catch (IllegalInstantiationException iae) {
                             throw new SVInstantiationParserException((String) getValueAt(irow, 1),
-                                    irow, -1, iae.getMessage(), false);
+                                irow, -1, iae.getMessage(), false);
                         }
                     }
                 }
@@ -451,7 +464,7 @@ public class TacletFindModel extends AbstractTableModel {
     public void setValueAt(Object instantiation, int rowIndex, int columnIndex) {
         if (columnIndex == 0) {
             entries.set(rowIndex,
-                    new Pair<>((SchemaVariable) instantiation, entries.get(rowIndex).second));
+                new Pair<>((SchemaVariable) instantiation, entries.get(rowIndex).second));
         } else {
             entries.set(rowIndex, new Pair<>(entries.get(rowIndex).first, (String) instantiation));
         }

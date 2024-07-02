@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -27,32 +37,33 @@ import java.util.zip.ZipFile;
 
 import de.uka.ilkd.key.java.recoderext.URLDataLocation;
 import de.uka.ilkd.key.proof.io.consistency.FileRepo;
+
 import recoder.io.DataLocation;
 
 
 /**
  * Allows to iterate a zip file to return all matching entries
  * as InpuStreams.
- * 
+ *
  * @author MU
  */
 
 
 public class ZipFileCollection implements FileCollection {
-    
+
     File file;
     ZipFile zipFile;
-    
-    public ZipFileCollection(File file)  {
+
+    public ZipFileCollection(File file) {
         this.file = file;
     }
 
 
     public Walker createWalker(String[] extensions) throws IOException {
-        if(zipFile == null)
+        if (zipFile == null)
             try {
                 zipFile = new ZipFile(file);
-            } catch(ZipException ex) {
+            } catch (ZipException ex) {
                 IOException iox = new IOException("can't open " + file + ": " + ex.getMessage());
                 iox.initCause(ex);
                 throw iox;
@@ -73,20 +84,20 @@ public class ZipFileCollection implements FileCollection {
         public Walker(String[] extensions) {
             this.enumeration = zipFile.entries();
             this.extensions = new ArrayList<String>();
-            for(String extension : extensions) {
-              this.extensions.add(extension.toLowerCase());
+            for (String extension : extensions) {
+                this.extensions.add(extension.toLowerCase());
             }
         }
 
         public String getCurrentName() {
-            if(currentEntry == null)
+            if (currentEntry == null)
                 throw new NoSuchElementException();
             else
-                return file.getAbsolutePath() + File.separatorChar +  currentEntry.getName();
+                return file.getAbsolutePath() + File.separatorChar + currentEntry.getName();
         }
 
         public InputStream openCurrent() throws IOException {
-            if(currentEntry == null)
+            if (currentEntry == null)
                 throw new NoSuchElementException();
             else
                 return zipFile.getInputStream(currentEntry);
@@ -101,24 +112,25 @@ public class ZipFileCollection implements FileCollection {
                 URI uri = MiscTools.getZipEntryURI(zipFile, currentEntry.getName());
                 return fileRepo.getInputStream(uri.toURL());
             } else {
-                return openCurrent();       // fallback without FileRepo
+                return openCurrent(); // fallback without FileRepo
             }
         }
 
         public boolean step() {
             currentEntry = null;
-            while(enumeration.hasMoreElements() && currentEntry == null) {
+            while (enumeration.hasMoreElements() && currentEntry == null) {
                 currentEntry = enumeration.nextElement();
-                for(String extension : extensions) {
-                  if(extension != null && !currentEntry.getName().toLowerCase().endsWith(extension))
-                     currentEntry = null;
-                  else
-                     break;
+                for (String extension : extensions) {
+                    if (extension != null
+                            && !currentEntry.getName().toLowerCase().endsWith(extension))
+                        currentEntry = null;
+                    else
+                        break;
                 }
             }
             return currentEntry != null;
         }
-        
+
         public String getType() {
             return "zip";
         }
@@ -132,12 +144,12 @@ public class ZipFileCollection implements FileCollection {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return SpecDataLocation.UNKNOWN_LOCATION;       // fallback
+            return SpecDataLocation.UNKNOWN_LOCATION; // fallback
         }
     }
-    
+
     @Override
     public String toString() {
-        return "ZipFileCollection["+ file + "]";
+        return "ZipFileCollection[" + file + "]";
     }
 }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -39,10 +49,10 @@ public class JoinIsApplicable {
 
     /**
      * @param goal
-     *            The goal to join.
+     *        The goal to join.
      * @param pio
-     *            Selected formula (symblic state - program counter part) for
-     *            the join.
+     *        Selected formula (symblic state - program counter part) for
+     *        the join.
      * @return The list of possible join partner objects -- may be empty (then,
      *         the join is not applicable).
      */
@@ -57,10 +67,10 @@ public class JoinIsApplicable {
      * Computes the partners for the given selection.
      *
      * @param goal
-     *            Goal which should be joined.
+     *        Goal which should be joined.
      * @param pio
-     *            Selected formula (symblic state - program counter part) for
-     *            the join.
+     *        Selected formula (symblic state - program counter part) for
+     *        the join.
      * @return The list of possible join partners.
      */
     public List<ProspectivePartner> computeProspecitvePartner(Goal goal,
@@ -86,12 +96,12 @@ public class JoinIsApplicable {
      * this is the case and null otherwise.
      *
      * @param g1
-     *            Goal for the first node to join.
+     *        Goal for the first node to join.
      * @param pio
-     *            Selected formula (symbolic state - program counter part) for
-     *            the join.
+     *        Selected formula (symbolic state - program counter part) for
+     *        the join.
      * @param g2
-     *            Second goal for the join.
+     *        Second goal for the join.
      * @return A ProspectivePartner object if the given goals may be joined or
      *         null otherwise.
      */
@@ -120,8 +130,8 @@ public class JoinIsApplicable {
             }
             if (formula.equalsModRenaming(referenceFormula)) {
                 return new ProspectivePartner(referenceFormula, g1.node(),
-                        pio.sequentFormula(), update1, g2.node(), sf,
-                        update2);
+                    pio.sequentFormula(), update1, g2.node(), sf,
+                    update2);
             }
         }
         return null;

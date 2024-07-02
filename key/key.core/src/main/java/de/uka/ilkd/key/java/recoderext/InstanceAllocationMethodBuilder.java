@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -43,16 +53,15 @@ public class InstanceAllocationMethodBuilder extends RecoderModelTransformer {
     private MethodDeclaration createAllocateMethod(ClassDeclaration type) {
         ASTList<DeclarationSpecifier> modifiers = new ASTArrayList<>(2);
         modifiers.add(new Public());
-        modifiers.add(new Static());    
-        
+        modifiers.add(new Static());
+
         ASTArrayList<ParameterDeclaration> pdal = new ASTArrayList<>(1);
-        
-        MethodDeclaration md =  new MethodDeclaration
-            (modifiers, 
-             new TypeReference(getId(type)), 
-             new ImplicitIdentifier(IMPLICIT_INSTANCE_ALLOCATE), 
-             pdal, 
-             null, null);
+
+        MethodDeclaration md = new MethodDeclaration(modifiers,
+            new TypeReference(getId(type)),
+            new ImplicitIdentifier(IMPLICIT_INSTANCE_ALLOCATE),
+            pdal,
+            null, null);
         md.makeAllParentRolesValid();
         return md;
     }
@@ -60,8 +69,8 @@ public class InstanceAllocationMethodBuilder extends RecoderModelTransformer {
 
     protected void makeExplicit(TypeDeclaration td) {
         if (td instanceof ClassDeclaration) {
-            attach(createAllocateMethod((ClassDeclaration)td), td, 
-                    td.getMembers().size());
+            attach(createAllocateMethod((ClassDeclaration) td), td,
+                td.getMembers().size());
         }
     }
 

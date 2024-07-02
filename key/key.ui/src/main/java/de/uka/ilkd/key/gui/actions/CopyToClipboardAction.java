@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -24,7 +34,7 @@ import de.uka.ilkd.key.pp.PosInSequent;
 /**
  * Copy a term that is currently selected (i.e., under the mouse cursor) in the
  * current goal view to the default system clip board.
- * 
+ *
  * @author bruns
  */
 public class CopyToClipboardAction extends MainWindowAction {
@@ -35,8 +45,8 @@ public class CopyToClipboardAction extends MainWindowAction {
         super(mainWindow);
         setName("Copy to clipboard");
         setTooltip("Copy a selected sequent term into your default clipboard.\n"
-                + "This functionality may depend on your window manager or installed clipboard managers.\n"
-                + "The default clipboard is not the 'middle click clipboard' on X window systems.");
+            + "This functionality may depend on your window manager or installed clipboard managers.\n"
+            + "The default clipboard is not the 'middle click clipboard' on X window systems.");
     }
 
     @Override

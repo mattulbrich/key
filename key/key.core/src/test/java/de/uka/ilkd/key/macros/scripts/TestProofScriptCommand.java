@@ -1,17 +1,14 @@
-package de.uka.ilkd.key.macros.scripts;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.control.DefaultUserInterfaceControl;
-import de.uka.ilkd.key.control.KeYEnvironment;
-import de.uka.ilkd.key.parser.Location;
-import de.uka.ilkd.key.proof.Goal;
-import de.uka.ilkd.key.proof.Proof;
-import de.uka.ilkd.key.smt.newsmt2.MasterHandlerTest;
-import de.uka.ilkd.key.util.LineProperties;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.key_project.util.collection.ImmutableList;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.macros.scripts;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -24,6 +21,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import de.uka.ilkd.key.control.DefaultUserInterfaceControl;
+import de.uka.ilkd.key.control.KeYEnvironment;
+import de.uka.ilkd.key.parser.Location;
+import de.uka.ilkd.key.proof.Goal;
+import de.uka.ilkd.key.proof.Proof;
+import de.uka.ilkd.key.smt.newsmt2.MasterHandlerTest;
+import de.uka.ilkd.key.util.LineProperties;
+
+import org.key_project.util.collection.ImmutableList;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -60,12 +72,13 @@ public class TestProofScriptCommand {
         Files.write(tmpKey, lines);
 
         KeYEnvironment<DefaultUserInterfaceControl> env =
-                KeYEnvironment.load(tmpKey.toFile());
+            KeYEnvironment.load(tmpKey.toFile());
 
         Proof proof = env.getLoadedProof();
 
         String script = props.get("script");
-        ProofScriptEngine pse = new ProofScriptEngine(script, new Location(path.toUri().toURL(), 0, 0));
+        ProofScriptEngine pse =
+            new ProofScriptEngine(script, new Location(path.toUri().toURL(), 0, 0));
 
         try {
             pse.execute(env.getUi(), proof);
@@ -75,7 +88,8 @@ public class TestProofScriptCommand {
             return;
         }
 
-        Assertions.assertFalse(props.containsKey("exception"), "exception would have been expected");
+        Assertions.assertFalse(props.containsKey("exception"),
+            "exception would have been expected");
 
         ImmutableList<Goal> goals = proof.openGoals();
         if (props.containsKey("goals")) {

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -18,7 +28,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.AncestorEvent;
@@ -98,18 +107,18 @@ public final class MainFrame extends JPanel {
             }
 
             @Override
-            public void ancestorMoved(AncestorEvent event) { }
+            public void ancestorMoved(AncestorEvent event) {}
 
             @Override
-            public void ancestorAdded(AncestorEvent event) { }
+            public void ancestorAdded(AncestorEvent event) {}
         });
 
         // FIXME put this somewhere descent
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                KeyStroke.getKeyStroke(
-                        KeyEvent.VK_C,
-                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
-                        "copy");
+            KeyStroke.getKeyStroke(
+                KeyEvent.VK_C,
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
+            "copy");
         getActionMap().put("copy", new CopyToClipboardAction(mainWindow));
         setLayout(new BorderLayout());
         add(scrollPane);

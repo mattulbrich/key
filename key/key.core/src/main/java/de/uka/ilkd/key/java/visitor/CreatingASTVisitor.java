@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,9 +25,6 @@ package de.uka.ilkd.key.java.visitor;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-
-import org.key_project.util.ExtList;
-import org.key_project.util.collection.ImmutableArray;
 
 import de.uka.ilkd.key.java.*;
 import de.uka.ilkd.key.java.declaration.ClassInitializer;
@@ -42,6 +49,9 @@ import de.uka.ilkd.key.java.statement.*;
 import de.uka.ilkd.key.logic.op.IProgramVariable;
 import de.uka.ilkd.key.logic.op.ProgramVariable;
 
+import org.key_project.util.ExtList;
+import org.key_project.util.collection.ImmutableArray;
+
 /**
  * Walks through a java AST in depth-left-fist-order.
  */
@@ -58,11 +68,11 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
      * create the CreatingASTVisitor
      *
      * @param root
-     *            the ProgramElement where to begin
+     *        the ProgramElement where to begin
      * @param preservesPos
-     *            whether the position should be preserved
+     *        whether the position should be preserved
      * @param services
-     *            the services instance
+     *        the services instance
      */
     public CreatingASTVisitor(ProgramElement root, boolean preservesPos,
             Services services) {
@@ -89,6 +99,7 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
 
     /**
      * called if the program element x is unchanged
+     *
      * @param x The {@link SourceElement}.
      */
     @Override
@@ -263,7 +274,7 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
             }
             IProgramVariable pv = (IProgramVariable) changeList.get(0);
             addChild(new VariableSpecification(pv, x.getDimensions(), expr,
-                    pv.getKeYJavaType(), pi));
+                pv.getKeYJavaType(), pi));
             changed();
         } else {
             doDefaultAction(x);
@@ -289,15 +300,15 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
                 final Expression field = (Expression) changeList.get(1);
                 if (field instanceof ProgramVariable) {
                     addChild(new FieldReference((ProgramVariable) field,
-                            (ReferencePrefix) changeList.get(0), pi));
+                        (ReferencePrefix) changeList.get(0), pi));
                 } else {
                     addChild(new FieldReference(
-                            ((FieldReference) field).getProgramVariable(),
-                            (ReferencePrefix) changeList.get(0), pi));
+                        ((FieldReference) field).getProgramVariable(),
+                        (ReferencePrefix) changeList.get(0), pi));
                 }
             } else {
                 addChild(new FieldReference((ProgramVariable) changeList.get(0),
-                        null, pi));
+                    null, pi));
             }
             changed();
         } else {
@@ -346,7 +357,7 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
             @Override
             ProgramElement createNewElement(ExtList changeList) {
                 return new TypeRef(changeList, x.getKeYJavaType(),
-                        x.getDimensions());
+                    x.getDimensions());
             }
         };
         def.doAction(x);
@@ -568,16 +579,16 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
 
             if (x.getChildCount() == 3) {
                 addChild(new MethodFrame((IProgramVariable) changeList.get(0),
-                        (IExecutionContext) changeList.get(1),
-                        (StatementBlock) changeList.get(2), pi));
+                    (IExecutionContext) changeList.get(1),
+                    (StatementBlock) changeList.get(2), pi));
 
             } else if (x.getChildCount() == 2) {
                 addChild(new MethodFrame(null,
-                        (IExecutionContext) changeList.get(0),
-                        (StatementBlock) changeList.get(1), pi));
+                    (IExecutionContext) changeList.get(0),
+                    (StatementBlock) changeList.get(1), pi));
             } else {
                 throw new IllegalStateException(
-                        "Methodframe has not allowed number of children.");
+                    "Methodframe has not allowed number of children.");
             }
             changed();
         } else {
@@ -994,7 +1005,7 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
                 ArrayInitializer arrInit = children.get(ArrayInitializer.class);
                 children.remove(arrInit);
                 return new NewArray(children, y.getKeYJavaType(), arrInit,
-                        y.getDimensions());
+                    y.getDimensions());
             }
         };
         def.doAction(x);
@@ -1269,7 +1280,7 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
             @Override
             ProgramElement createNewElement(ExtList changeList) {
                 return new ArrayInitializer(changeList,
-                        x.getKeYJavaType(services, null));
+                    x.getKeYJavaType(services, null));
             }
         };
         def.doAction(x);
@@ -1348,7 +1359,7 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
         @Override
         ProgramElement createNewElement(ExtList changeList) {
             return new ParameterDeclaration(changeList,
-                    x.parentIsInterfaceDeclaration(), x.isVarArg());
+                x.parentIsInterfaceDeclaration(), x.isVarArg());
         }
     }
 
@@ -1493,7 +1504,7 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
             @Override
             ProgramElement createNewElement(ExtList changeList) {
                 return new DLEmbeddedExpression(x.getFunctionSymbol(),
-                        changeList);
+                    changeList);
             }
         };
         def.doAction(x);
@@ -1523,6 +1534,7 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
 
     /**
      * returns the position of pe2 in the virtual child array of pe1
+     *
      * @param pe1 A {@link NonTerminalProgramElement}
      * @param pe2 A {@link ProgramElement}
      * @return pe2's position in pe1

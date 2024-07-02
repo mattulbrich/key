@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.axiom_abstraction.boollattice;
 
 import java.util.Iterator;
@@ -7,7 +17,7 @@ import de.uka.ilkd.key.axiom_abstraction.AbstractDomainLattice;
 
 /**
  * A simple lattice for booleans.
- * 
+ *
  * @author Dominic Scheurer
  */
 public class BooleanLattice extends AbstractDomainLattice {
@@ -16,8 +26,8 @@ public class BooleanLattice extends AbstractDomainLattice {
      * All elements of this abstract domain.
      */
     public static final AbstractDomainElement[] ABSTRACT_DOMAIN_ELEMS = {
-            Bottom.getInstance(), False.getInstance(), True.getInstance(),
-            Top.getInstance() };
+        Bottom.getInstance(), False.getInstance(), True.getInstance(),
+        Top.getInstance() };
 
     /**
      * The singleton instance of the lattice.
@@ -44,7 +54,7 @@ public class BooleanLattice extends AbstractDomainLattice {
         if (!(elem1 instanceof BooleanDomainElem)
                 || !(elem2 instanceof BooleanDomainElem)) {
             throw new IllegalArgumentException(
-                    "Expected arguments of the abstract domain of sign analysis.");
+                "Expected arguments of the abstract domain of sign analysis.");
         }
 
         BooleanDomainElem a = (BooleanDomainElem) elem1;
@@ -57,8 +67,7 @@ public class BooleanLattice extends AbstractDomainLattice {
         if (a.isTrue()) {
             if (b.isFalse()) {
                 return Top.getInstance();
-            }
-            else {
+            } else {
                 return True.getInstance();
             }
         }
@@ -66,8 +75,7 @@ public class BooleanLattice extends AbstractDomainLattice {
         if (a.isFalse()) {
             if (b.isTrue()) {
                 return Top.getInstance();
-            }
-            else {
+            } else {
                 return False.getInstance();
             }
         }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -42,24 +52,24 @@ public class AbbrevMap {
      * Associates a Term and its abbreviation in this map.
      *
      * @param t
-     *            a term
+     *        a term
      * @param abbreviation
-     *            the abbreviation for of this term
+     *        the abbreviation for of this term
      * @param enabled
-     *            true if the abbreviation should be used (e.g. when printing
-     *            the term), false otherwise.
+     *        true if the abbreviation should be used (e.g. when printing
+     *        the term), false otherwise.
      */
     public void put(Term t, String abbreviation, boolean enabled)
             throws AbbrevException {
         AbbrevWrapper scw;
         if (containsTerm(t)) {
             throw new AbbrevException(
-                    "A abbreviation for " + t + " already exists", true);
+                "A abbreviation for " + t + " already exists", true);
         }
         if (containsAbbreviation(abbreviation)) {
             throw new AbbrevException("The abbreviation " + abbreviation
-                    + " is already" + " in use for: " + getTerm(abbreviation),
-                    false);
+                + " is already" + " in use for: " + getTerm(abbreviation),
+                false);
         }
         scw = new AbbrevWrapper(t);
         termstring.put(scw, abbreviation);
@@ -72,7 +82,7 @@ public class AbbrevMap {
      * contain t nothing happens.
      *
      * @throws AbbrevException
-     *             if the abbreviation is already in use.
+     *         if the abbreviation is already in use.
      */
     public void changeAbbrev(Term t, String abbreviation)
             throws AbbrevException {
@@ -80,9 +90,9 @@ public class AbbrevMap {
             AbbrevWrapper scw;
             if (containsAbbreviation(abbreviation)) {
                 throw new AbbrevException(
-                        "The abbreviation " + abbreviation + " is already"
-                                + " in use for: " + getTerm(abbreviation),
-                        false);
+                    "The abbreviation " + abbreviation + " is already"
+                        + " in use for: " + getTerm(abbreviation),
+                    false);
             }
             scw = new AbbrevWrapper(t);
             stringterm.remove(termstring.get(scw));
@@ -96,7 +106,7 @@ public class AbbrevMap {
      * the AbbrevMap doesn't contain <code>abbreviation</code> nothing happens.
      *
      * @throws AbbrevException
-     *             If an abbreviation for t already exists.
+     *         If an abbreviation for t already exists.
      */
     public void changeAbbrev(String abbreviation, Term t, boolean enabled)
             throws AbbrevException {
@@ -104,7 +114,7 @@ public class AbbrevMap {
             AbbrevWrapper scw;
             if (containsTerm(t)) {
                 throw new AbbrevException(
-                        "A abbreviation for " + t + " already exists", true);
+                    "A abbreviation for " + t + " already exists", true);
             }
             scw = new AbbrevWrapper(t);
             stringterm.remove(termstring.get(scw));
@@ -160,13 +170,13 @@ public class AbbrevMap {
      * Sets the mapping of the term t to its abbreviation enabled or disabled
      *
      * @param t
-     *            a Term
+     *        a Term
      * @param enabled
-     *            true if the abbreviation of t may be used.
+     *        true if the abbreviation of t may be used.
      */
     public void setEnabled(Term t, boolean enabled) {
         termenabled.put(new AbbrevWrapper(t),
-                enabled ? Boolean.TRUE : Boolean.FALSE);
+            enabled ? Boolean.TRUE : Boolean.FALSE);
     }
 
     public static class AbbrevWrapper {

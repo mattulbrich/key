@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -24,34 +34,36 @@ import de.uka.ilkd.key.logic.op.LocationVariable;
 
 public class TermProgramVariableCollector extends DefaultVisitor {
 
-    private final HashSet<LocationVariable> result = new LinkedHashSet<LocationVariable> ();
+    private final HashSet<LocationVariable> result = new LinkedHashSet<LocationVariable>();
     private final Services services;
 
-    
+
     public TermProgramVariableCollector(Services services) {
         this.services = services;
     }
-        
-    
 
-    /** is called by the execPostOrder-method of a term 
+
+
+    /**
+     * is called by the execPostOrder-method of a term
+     *
      * @param t the Term to checked if it is a program variable and if true the
-     * variable is added to the list of found variables
-     */  
+     *        variable is added to the list of found variables
+     */
     public void visit(Term t) {
-	if ( t.op() instanceof LocationVariable ) {
-	    result.add ( (LocationVariable) t.op() );
-	} 
-	
-	if ( !t.javaBlock ().isEmpty() ) {
-	    ProgramVariableCollector pvc
-		= new ProgramVariableCollector ( t.javaBlock ().program (), services );
-	    pvc.start();
-	    result.addAll ( pvc.result () );
-	}
+        if (t.op() instanceof LocationVariable) {
+            result.add((LocationVariable) t.op());
+        }
+
+        if (!t.javaBlock().isEmpty()) {
+            ProgramVariableCollector pvc =
+                new ProgramVariableCollector(t.javaBlock().program(), services);
+            pvc.start();
+            result.addAll(pvc.result());
+        }
     }
 
-    public HashSet<LocationVariable> result() { 
-	return result;
-    }    
+    public HashSet<LocationVariable> result() {
+        return result;
+    }
 }

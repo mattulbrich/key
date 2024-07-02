@@ -1,4 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.actions;
+
+import java.awt.event.ActionEvent;
+import java.util.EventObject;
 
 import de.uka.ilkd.key.core.KeYSelectionEvent;
 import de.uka.ilkd.key.core.KeYSelectionListener;
@@ -8,9 +21,6 @@ import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.settings.GeneralSettings;
 import de.uka.ilkd.key.settings.ProofIndependentSettings;
 import de.uka.ilkd.key.settings.SettingsListener;
-
-import java.awt.event.ActionEvent;
-import java.util.EventObject;
 
 /**
  * Saves the currently selected proof as a zip archive with file extension "zproof".
@@ -24,6 +34,7 @@ public final class SaveBundleAction extends MainWindowAction {
 
     /**
      * Creates a new SaveBundleAction with the required listeners.
+     *
      * @param mainWindow the main window of the program
      */
     public SaveBundleAction(MainWindow mainWindow) {
@@ -31,7 +42,7 @@ public final class SaveBundleAction extends MainWindowAction {
         setName("Save Proof as Bundle...");
         setIcon(IconFactory.saveBundle(MainWindow.TOOLBAR_ICON_SIZE));
         setTooltip("Save current proof as a bundle containing all files to successfully reload "
-                 + "the proof (disabled when option \"Allow proof bundle saving\" is set).");
+            + "the proof (disabled when option \"Allow proof bundle saving\" is set).");
 
         // react to setting changes
         GeneralSettings settings = ProofIndependentSettings.DEFAULT_INSTANCE.getGeneralSettings();
@@ -45,7 +56,7 @@ public final class SaveBundleAction extends MainWindowAction {
         // react to changes of proof selection
         mainWindow.getMediator().addKeYSelectionListener(new KeYSelectionListener() {
             @Override
-            public void selectedNodeChanged(KeYSelectionEvent e) { }
+            public void selectedNodeChanged(KeYSelectionEvent e) {}
 
             @Override
             public void selectedProofChanged(KeYSelectionEvent e) {

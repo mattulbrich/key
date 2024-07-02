@@ -1,7 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 // Copyright (C) 2001-2011 Universitaet Karlsruhe, Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General Public License.
 // See LICENSE.TXT for details.
@@ -11,8 +21,6 @@ package de.uka.ilkd.key.speclang;
 
 import java.util.function.UnaryOperator;
 
-import org.key_project.util.collection.ImmutableList;
-
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
 import de.uka.ilkd.key.logic.Term;
@@ -20,6 +28,8 @@ import de.uka.ilkd.key.logic.op.IObserverFunction;
 import de.uka.ilkd.key.logic.op.IProgramMethod;
 import de.uka.ilkd.key.logic.op.Modality;
 import de.uka.ilkd.key.util.InfFlowSpec;
+
+import org.key_project.util.collection.ImmutableList;
 
 
 
@@ -77,6 +87,7 @@ public interface InformationFlowContract extends Contract {
 
     /**
      * Get the exception-variable which is used in this contract.
+     *
      * @return used exception-variable
      */
     public Term getExc();
@@ -112,6 +123,7 @@ public interface InformationFlowContract extends Contract {
 
     /**
      * Get the self-variable which is used in this contract.
+     *
      * @return originally used self-variable
      */
     Term getSelf();
@@ -119,6 +131,7 @@ public interface InformationFlowContract extends Contract {
 
     /**
      * Get the parameter-variables which is used in this contract.
+     *
      * @return originally used parameter-variables
      */
     ImmutableList<Term> getParams();
@@ -130,11 +143,12 @@ public interface InformationFlowContract extends Contract {
      */
     @Override
     public InformationFlowContract setTarget(KeYJavaType newKJT,
-                                             IObserverFunction newPM);
+            IObserverFunction newPM);
 
 
     /**
      * Get the result-variable which is used in this contract.
+     *
      * @return used result-variable
      */
     Term getResult();
@@ -145,6 +159,7 @@ public interface InformationFlowContract extends Contract {
 
     /**
      * For generating contract name of SymbolicExecutionPO
+     *
      * @return String "Method Contract"
      */
     public String getPODisplayName();

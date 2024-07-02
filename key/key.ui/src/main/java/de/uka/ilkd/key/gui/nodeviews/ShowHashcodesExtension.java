@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.nodeviews;
 
 import java.util.Collections;
@@ -15,10 +25,10 @@ import de.uka.ilkd.key.pp.PosInSequent;
  * @author Dominic Steinhoefel
  */
 @KeYGuiExtension.Info( //
-        name = "Show Hashcodes", //
-        optional = true, //
-        description = "GUI Extension for showing hash codes in tooltips", //
-        experimental = false)
+    name = "Show Hashcodes", //
+    optional = true, //
+    description = "GUI Extension for showing hash codes in tooltips", //
+    experimental = false)
 public class ShowHashcodesExtension implements KeYGuiExtension, KeYGuiExtension.Tooltip {
 
     @Override
@@ -35,7 +45,7 @@ public class ShowHashcodesExtension implements KeYGuiExtension, KeYGuiExtension.
         if (term.op() instanceof ElementaryUpdate) {
             result += "<br><b>LHS Hash:</b> " + ((ElementaryUpdate) term.op()).lhs().hashCode();
             result += "<br><b>LHS Sort:</b> "
-                    + ((ElementaryUpdate) term.op()).lhs().sort().toString();
+                + ((ElementaryUpdate) term.op()).lhs().sort().toString();
         }
 
         return Collections.singletonList(result);

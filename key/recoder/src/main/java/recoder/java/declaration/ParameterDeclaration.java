@@ -1,13 +1,17 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.declaration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import recoder.java.*;
 import recoder.java.reference.TypeReference;
 import recoder.list.generic.ASTList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Formal parameters require a VariableSpecificationList of size() <= 1 (size() ==
@@ -47,7 +51,7 @@ public class ParameterDeclaration extends VariableDeclaration {
      * Parameter declaration.
      *
      * @param typeRef a type reference.
-     * @param name    an identifier.
+     * @param name an identifier.
      */
 
     public ParameterDeclaration(TypeReference typeRef, Identifier name) {
@@ -59,12 +63,13 @@ public class ParameterDeclaration extends VariableDeclaration {
     /**
      * Parameter declaration.
      *
-     * @param mods    a modifier mutable list.
+     * @param mods a modifier mutable list.
      * @param typeRef a type reference.
-     * @param name    an identifier.
+     * @param name an identifier.
      */
 
-    public ParameterDeclaration(ASTList<DeclarationSpecifier> mods, TypeReference typeRef, Identifier name) {
+    public ParameterDeclaration(ASTList<DeclarationSpecifier> mods, TypeReference typeRef,
+            Identifier name) {
         setDeclarationSpecifiers(mods);
         setTypeReference(typeRef);
         setVariableSpecification(getFactory().createVariableSpecification(name));

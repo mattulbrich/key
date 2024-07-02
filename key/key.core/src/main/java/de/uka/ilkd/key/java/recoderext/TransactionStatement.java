@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -21,22 +31,22 @@ public class TransactionStatement extends JavaStatement {
 
     private static final long serialVersionUID = -4470827742145010769L;
 
-    public static final int BEGIN = 1; 
-    public static final int COMMIT = 2; 
-    public static final int FINISH = 3; 
+    public static final int BEGIN = 1;
+    public static final int COMMIT = 2;
+    public static final int FINISH = 3;
     public static final int ABORT = 4;
-    
+
     private int type;
-    
+
     public TransactionStatement(int type) {
         super();
-        if(type != BEGIN && type != COMMIT && type != FINISH && type != ABORT) {
-            throw new IllegalArgumentException("Wrong transaction statement type "+type);
+        if (type != BEGIN && type != COMMIT && type != FINISH && type != ABORT) {
+            throw new IllegalArgumentException("Wrong transaction statement type " + type);
         }
         this.type = type;
         makeParentRoleValid();
     }
-    
+
     protected TransactionStatement(TransactionStatement proto) {
         this(proto.type);
     }
@@ -44,7 +54,7 @@ public class TransactionStatement extends JavaStatement {
     public int getType() {
         return type;
     }
-    
+
     public recoder.java.ProgramElement getChildAt(int index) {
         return null;
     }
@@ -54,7 +64,7 @@ public class TransactionStatement extends JavaStatement {
     public Statement deepClone() {
         return new TransactionStatement(this);
     }
-    
+
     @Override
     public void accept(SourceVisitor sourceVisitor) {
     }
@@ -76,14 +86,14 @@ public class TransactionStatement extends JavaStatement {
             recoder.java.ProgramElement arg1) {
         return false;
     }
-    
+
     public boolean equals(Object o) {
         if (o != null && o instanceof TransactionStatement) {
-            return ((TransactionStatement)o).type == this.type;
+            return ((TransactionStatement) o).type == this.type;
         }
         return false;
     }
-    
+
     public int hashCode() {
         return type;
     }

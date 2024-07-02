@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,9 +24,6 @@
 package de.uka.ilkd.key.strategy.feature.instantiator;
 
 import java.util.Iterator;
-
-import org.key_project.util.collection.ImmutableSLList;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.logic.PosInOccurrence;
@@ -30,6 +37,9 @@ import de.uka.ilkd.key.strategy.RuleAppCost;
 import de.uka.ilkd.key.strategy.feature.Feature;
 import de.uka.ilkd.key.strategy.termProjection.ProjectionToTerm;
 import de.uka.ilkd.key.util.Debug;
+
+import org.key_project.util.collection.ImmutableSLList;
+import org.key_project.util.collection.ImmutableSet;
 
 
 /**
@@ -47,57 +57,58 @@ public class SVInstantiationCP implements Feature {
     private final ProjectionToTerm value;
 
     public static Feature create(Name svToInstantiate,
-                                 ProjectionToTerm value,
-                                 BackTrackingManager manager) {
-        return new SVInstantiationCP ( svToInstantiate, value, manager );
+            ProjectionToTerm value,
+            BackTrackingManager manager) {
+        return new SVInstantiationCP(svToInstantiate, value, manager);
     }
 
     public static Feature createTriggeredVarCP(ProjectionToTerm value,
-                                               BackTrackingManager manager) {
-        return new SVInstantiationCP ( null, value, manager );
+            BackTrackingManager manager) {
+        return new SVInstantiationCP(null, value, manager);
     }
 
-    
+
     private SVInstantiationCP(Name svToInstantiate,
-                              ProjectionToTerm value,
-                              BackTrackingManager manager) {
+            ProjectionToTerm value,
+            BackTrackingManager manager) {
         this.svToInstantiate = svToInstantiate;
         this.value = value;
         this.manager = manager;
     }
 
     public RuleAppCost computeCost(RuleApp app, PosInOccurrence pos, Goal goal) {
-        manager.passChoicePoint ( new CP (app, pos, goal), this );
+        manager.passChoicePoint(new CP(app, pos, goal), this);
         return NumberRuleAppCost.getZeroCost();
     }
 
     private SchemaVariable findSVWithName(TacletApp app) {
-        
+
         if (svToInstantiate == null) {
             return app.taclet().getTrigger().getTriggerVar();
         }
-        
-        final ImmutableSet<SchemaVariable> vars = app.uninstantiatedVars ();
+
+        final ImmutableSet<SchemaVariable> vars = app.uninstantiatedVars();
         for (SchemaVariable var : vars) {
             final SchemaVariable svt = var;
-            if (svt.name().equals(svToInstantiate)) return svt;
+            if (svt.name().equals(svToInstantiate))
+                return svt;
         }
-        
-        Debug.fail ( "Did not find schema variable "
-                     + svToInstantiate + " that I was supposed to instantiate\n" +
-                     "(taclet " + app.taclet().name() + ")\n" +
-                     "Either the name of the variable is wrong, or the variable\n" +
-                     "has already been instantiated." );
+
+        Debug.fail("Did not find schema variable "
+            + svToInstantiate + " that I was supposed to instantiate\n" +
+            "(taclet " + app.taclet().name() + ")\n" +
+            "Either the name of the variable is wrong, or the variable\n" +
+            "has already been instantiated.");
         return null;
     }
 
-    
+
     private class CP implements ChoicePoint {
-        
+
         private final PosInOccurrence pos;
-        private final RuleApp         app;
-        private final Goal            goal;
-    
+        private final RuleApp app;
+        private final Goal goal;
+
         private CP(RuleApp app, PosInOccurrence pos, Goal goal) {
             this.pos = pos;
             this.app = app;
@@ -105,27 +116,28 @@ public class SVInstantiationCP implements Feature {
         }
 
         public Iterator<CPBranch> getBranches(RuleApp oldApp) {
-            if ( ! ( oldApp instanceof TacletApp ) )
-                Debug.fail ( "Instantiation feature is only applicable to " +
-                             "taclet apps, but got " + oldApp );
-            final TacletApp tapp = (TacletApp)oldApp;
-            
-            final SchemaVariable sv = findSVWithName ( tapp );
-            final Term instTerm = value.toTerm ( app, pos, goal );
+            if (!(oldApp instanceof TacletApp))
+                Debug.fail("Instantiation feature is only applicable to " +
+                    "taclet apps, but got " + oldApp);
+            final TacletApp tapp = (TacletApp) oldApp;
+
+            final SchemaVariable sv = findSVWithName(tapp);
+            final Term instTerm = value.toTerm(app, pos, goal);
 
             final RuleApp newApp =
-                tapp.addCheckedInstantiation ( sv,
-                                               instTerm,
-                                               goal.proof ().getServices (),
-                                               true );
+                tapp.addCheckedInstantiation(sv,
+                    instTerm,
+                    goal.proof().getServices(),
+                    true);
 
-            final CPBranch branch = new CPBranch () {
+            final CPBranch branch = new CPBranch() {
                 public void choose() {}
+
                 public RuleApp getRuleAppForBranch() { return newApp; }
             };
-            
-            return ImmutableSLList.<CPBranch>nil().prepend ( branch ).iterator ();
+
+            return ImmutableSLList.<CPBranch>nil().prepend(branch).iterator();
         }
-        
+
     }
 }

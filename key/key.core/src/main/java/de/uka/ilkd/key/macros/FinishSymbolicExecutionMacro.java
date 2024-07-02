@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -66,13 +76,13 @@ public class FinishSymbolicExecutionMacro extends StrategyProofMacro {
      * find a modality term in a node
      *
      * @param node
-     *            TODO
+     *        TODO
      * @return TODO
      */
     static boolean hasModality(Node node) {
         Sequent sequent = node.sequent();
         for (SequentFormula sequentFormula : sequent) {
-            if(hasModality(sequentFormula.formula())) {
+            if (hasModality(sequentFormula.formula())) {
                 return true;
             }
         }
@@ -84,17 +94,17 @@ public class FinishSymbolicExecutionMacro extends StrategyProofMacro {
      * recursively descent into the term to detect a modality.
      */
     private static boolean hasModality(Term term) {
-        if(term.containsLabel(ParameterlessTermLabel.SELF_COMPOSITION_LABEL)) {
+        if (term.containsLabel(ParameterlessTermLabel.SELF_COMPOSITION_LABEL)) {
             // ignore self composition terms
             return false;
         }
 
-        if(term.op() instanceof Modality) {
+        if (term.op() instanceof Modality) {
             return true;
         }
 
         for (Term sub : term.subs()) {
-            if(hasModality(sub)) {
+            if (hasModality(sub)) {
                 return true;
             }
         }
@@ -106,7 +116,7 @@ public class FinishSymbolicExecutionMacro extends StrategyProofMacro {
      * Checks if a rule is marked as not suited for interaction.
      *
      * @param rule
-     *            TODO
+     *        TODO
      * @return TODO
      */
     static boolean isNonHumanInteractionTagged(Rule rule) {
@@ -127,7 +137,7 @@ public class FinishSymbolicExecutionMacro extends StrategyProofMacro {
     @Override
     protected Strategy createStrategy(Proof proof, PosInOccurrence posInOcc) {
         return new FilterSymbexStrategy(
-                proof.getActiveStrategy());
+            proof.getActiveStrategy());
     }
 
     /**
@@ -149,20 +159,20 @@ public class FinishSymbolicExecutionMacro extends StrategyProofMacro {
 
         @Override
         public boolean isApprovedApp(RuleApp app, PosInOccurrence pio, Goal goal) {
-            if(!hasModality(goal.node())) {
+            if (!hasModality(goal.node())) {
                 return false;
             }
-            if(isNonHumanInteractionTagged(app.rule())) {
+            if (isNonHumanInteractionTagged(app.rule())) {
                 return false;
             }
 
             return super.isApprovedApp(app, pio, goal);
         }
 
-      @Override
-      public boolean isStopAtFirstNonCloseableGoal() {
-         return false;
-      }
+        @Override
+        public boolean isStopAtFirstNonCloseableGoal() {
+            return false;
+        }
 
     }
 

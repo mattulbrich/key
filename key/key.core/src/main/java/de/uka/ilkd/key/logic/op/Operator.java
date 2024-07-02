@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -17,6 +27,7 @@ import de.uka.ilkd.key.logic.Named;
 import de.uka.ilkd.key.logic.Term;
 import de.uka.ilkd.key.logic.TermCreationException;
 import de.uka.ilkd.key.logic.sort.Sort;
+
 import org.key_project.util.collection.ImmutableArray;
 
 
@@ -38,9 +49,9 @@ public interface Operator extends Named, SVSubstitute {
      * assumption that the constructed term would be allowed is not checked.
      *
      * @param terms an array of Term containing the subterms of a (potential)
-     *              term with this operator as top level operator
+     *        term with this operator as top level operator
      * @return sort of the term with this operator as top level operator of the
-     * given substerms
+     *         given substerms
      */
     Sort sort(ImmutableArray<Term> terms);
 
@@ -71,7 +82,7 @@ public interface Operator extends Named, SVSubstitute {
 
     /**
      * @return true iff the top level structure of
-     * the {@link Term} is valid, i.e. its parameters and types are correct.
+     *         the {@link Term} is valid, i.e. its parameters and types are correct.
      */
     default boolean validTopLevel(Term term) {
         try {

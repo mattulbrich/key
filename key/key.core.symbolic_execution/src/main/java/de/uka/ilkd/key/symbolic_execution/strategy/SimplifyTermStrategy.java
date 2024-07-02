@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.symbolic_execution.strategy;
 
 import de.uka.ilkd.key.logic.Name;
@@ -22,89 +32,95 @@ import de.uka.ilkd.key.symbolic_execution.util.SymbolicExecutionUtil;
 
 /**
  * {@link Strategy} used to simplify {@link Term}s in side proofs.
+ *
  * @author Martin Hentschel
  */
 public class SimplifyTermStrategy extends JavaCardDLStrategy {
-   /**
-    * The {@link Name} of the side proof {@link Strategy}.
-    */
-   public static final Name name = new Name("Simplify Term Strategy");
-   
-   /**
-    * Constructor.
-    * @param proof The proof.
-    * @param sp The {@link StrategyProperties} to use.
-    */
-   private SimplifyTermStrategy(Proof proof, StrategyProperties sp) {
-      super(proof, sp);
-   }
+    /**
+     * The {@link Name} of the side proof {@link Strategy}.
+     */
+    public static final Name name = new Name("Simplify Term Strategy");
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Name name() {
-      return name;
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected Feature setupApprovalF() {
-      Feature superFeature = super.setupApprovalF();
-      Feature labelFeature = new Feature() {
-         @Override
-         public RuleAppCost computeCost(RuleApp app, PosInOccurrence pos, Goal goal) {
-            boolean hasLabel = false;
-            if (pos != null && app instanceof TacletApp) {
-               Term findTerm = pos.subTerm();
-               if (!findTerm.containsLabel(SymbolicExecutionUtil.RESULT_LABEL)) {
-                  // Term with result label is not used in find term and thus is not allowed to be used in an assumes clause
-                  TacletApp ta = (TacletApp)app;
-                  if (ta.ifFormulaInstantiations() != null) {
-                     for (IfFormulaInstantiation ifi : ta.ifFormulaInstantiations()) {
-                        if (ifi.getConstrainedFormula().formula().containsLabel(SymbolicExecutionUtil.RESULT_LABEL)) {
-                           hasLabel = true;
+    /**
+     * Constructor.
+     *
+     * @param proof The proof.
+     * @param sp The {@link StrategyProperties} to use.
+     */
+    private SimplifyTermStrategy(Proof proof, StrategyProperties sp) {
+        super(proof, sp);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Name name() {
+        return name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Feature setupApprovalF() {
+        Feature superFeature = super.setupApprovalF();
+        Feature labelFeature = new Feature() {
+            @Override
+            public RuleAppCost computeCost(RuleApp app, PosInOccurrence pos, Goal goal) {
+                boolean hasLabel = false;
+                if (pos != null && app instanceof TacletApp) {
+                    Term findTerm = pos.subTerm();
+                    if (!findTerm.containsLabel(SymbolicExecutionUtil.RESULT_LABEL)) {
+                        // Term with result label is not used in find term and thus is not allowed
+                        // to be used in an assumes clause
+                        TacletApp ta = (TacletApp) app;
+                        if (ta.ifFormulaInstantiations() != null) {
+                            for (IfFormulaInstantiation ifi : ta.ifFormulaInstantiations()) {
+                                if (ifi.getConstrainedFormula().formula()
+                                        .containsLabel(SymbolicExecutionUtil.RESULT_LABEL)) {
+                                    hasLabel = true;
+                                }
+                            }
                         }
-                     }
-                  }
-               }
+                    }
+                }
+                return hasLabel ? TopRuleAppCost.INSTANCE : NumberRuleAppCost.create(0);
             }
-            return hasLabel ? TopRuleAppCost.INSTANCE : NumberRuleAppCost.create(0);
-         }
-      };
-      // The label feature ensures that Taclets mapping an assumes to a Term with a result label are only applicable if also a Term with the result label is used in the find clause
-      return add(labelFeature, superFeature);
-   }
+        };
+        // The label feature ensures that Taclets mapping an assumes to a Term with a result label
+        // are only applicable if also a Term with the result label is used in the find clause
+        return add(labelFeature, superFeature);
+    }
 
-   /**
-    * The {@link StrategyFactory} to create instances of {@link SimplifyTermStrategy}.
-    * @author Martin Hentschel
-    */
-   public static class Factory implements StrategyFactory {
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public Strategy create(Proof proof, StrategyProperties sp) {
-         return new SimplifyTermStrategy(proof, sp);
-      }
+    /**
+     * The {@link StrategyFactory} to create instances of {@link SimplifyTermStrategy}.
+     *
+     * @author Martin Hentschel
+     */
+    public static class Factory implements StrategyFactory {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Strategy create(Proof proof, StrategyProperties sp) {
+            return new SimplifyTermStrategy(proof, sp);
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public Name name() {
-         return name;
-      }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Name name() {
+            return name;
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public StrategySettingsDefinition getSettingsDefinition() {
-         return JavaProfile.DEFAULT.getSettingsDefinition();
-      }
-   }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public StrategySettingsDefinition getSettingsDefinition() {
+            return JavaProfile.DEFAULT.getSettingsDefinition();
+        }
+    }
 }

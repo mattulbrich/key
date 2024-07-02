@@ -1,4 +1,23 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.actions;
+
+import java.awt.event.ActionEvent;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import de.uka.ilkd.key.core.KeYMediator;
 import de.uka.ilkd.key.core.Main;
@@ -7,25 +26,19 @@ import de.uka.ilkd.key.gui.WindowUserInterfaceControl;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.proof.io.ProblemLoader;
 import de.uka.ilkd.key.ui.MediatorProofControl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.awt.event.ActionEvent;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * This class provides an action for KeY UI which runs a set of specified proof files automatically.
- * The intent of this class is to have a massive test feature for the quality assurance of the KeY during the
+ * The intent of this class is to have a massive test feature for the quality assurance of the KeY
+ * during the
  * release preparation.
  * <p>
  * The used proofs can be given by the environment {@link #ENV_VARIABLE}.
- * If this variable is not set, this class use the default {@code de/uka/ilkd/key/gui/actions/runallproofsui.txt}.
+ * If this variable is not set, this class use the default
+ * {@code de/uka/ilkd/key/gui/actions/runallproofsui.txt}.
  * See method {@link #loadFiles()} for more details.
  *
  * @author weigl
@@ -68,7 +81,7 @@ public class RunAllProofsAction extends MainWindowAction {
     @Nonnull
     private List<File> loadFiles() throws IOException {
         LOGGER.info("Use 'export {}=<...>' to set the input file for {}.",
-                ENV_VARIABLE, getClass().getSimpleName());
+            ENV_VARIABLE, getClass().getSimpleName());
 
         InputStream stream;
         if (RUN_ALL_PROOFS_UI == null) {
@@ -84,7 +97,8 @@ public class RunAllProofsAction extends MainWindowAction {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(stream))) {
             return in.lines()
                     .filter(it -> !it.startsWith("#") && !it.trim().isEmpty())
-                    .map(it -> (it.startsWith("/") ? new File(it) : new File(exampleDir, it)).getAbsoluteFile())
+                    .map(it -> (it.startsWith("/") ? new File(it) : new File(exampleDir, it))
+                            .getAbsoluteFile())
                     .collect(Collectors.toList());
         }
     }
@@ -103,7 +117,8 @@ public class RunAllProofsAction extends MainWindowAction {
         }
 
         setName("Run all proofs");
-        setTooltip("Open and run a pre-defined set of proofs for GUI testing. Enabled with KeY debug flag");
+        setTooltip(
+            "Open and run a pre-defined set of proofs for GUI testing. Enabled with KeY debug flag");
     }
 
     @Override
@@ -118,7 +133,8 @@ public class RunAllProofsAction extends MainWindowAction {
             for (File absFile : files) {
                 ui.reportStatus(this, "Run: " + absFile);
                 LOGGER.info("Run: {}", absFile);
-                ProblemLoader problemLoader = ui.getProblemLoader(absFile, null, null, null, getMediator());
+                ProblemLoader problemLoader =
+                    ui.getProblemLoader(absFile, null, null, null, getMediator());
                 problemLoader.runSynchronously();
                 LOGGER.info("Loaded: {}", absFile);
 

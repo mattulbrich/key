@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,14 +23,12 @@
 
 package org.key_project.util.collection;
 
-import javax.annotation.Nonnull;
-
 import java.util.*;
-
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collector.Characteristics;
 import java.util.stream.Stream;
+import javax.annotation.Nonnull;
 
 /**
  * interface implemented by non-destructive Sets. CONVENTION: Each SetOf<T> implementation has to
@@ -36,13 +44,14 @@ public interface ImmutableSet<T> extends Iterable<T>, java.io.Serializable {
      */
     public static <T> Collector<T, Set<T>, ImmutableSet<T>> collector() {
         return Collector.of(
-                HashSet<T>::new,
-                (set, el) -> set.add(el),
-                (set1, set2) -> {
-                    set1.addAll(set2);
-                    return set1; },
-                ImmutableSet::<T>fromSet,
-                Characteristics.UNORDERED);
+            HashSet<T>::new,
+            (set, el) -> set.add(el),
+            (set1, set2) -> {
+                set1.addAll(set2);
+                return set1;
+            },
+            ImmutableSet::<T>fromSet,
+            Characteristics.UNORDERED);
     }
 
     /**
@@ -85,6 +94,7 @@ public interface ImmutableSet<T> extends Iterable<T>, java.io.Serializable {
 
     /**
      * Adds an element
+     *
      * @return a set containing all elements of this one and the specified element.
      */
     ImmutableSet<T> add(T element);

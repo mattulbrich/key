@@ -1,4 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.actions;
+
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 import de.uka.ilkd.key.core.KeYSelectionEvent;
 import de.uka.ilkd.key.core.KeYSelectionListener;
@@ -8,9 +21,6 @@ import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.settings.ProofIndependentSettings;
 import de.uka.ilkd.key.settings.SettingsListener;
 import de.uka.ilkd.key.settings.ViewSettings;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 public class HeatmapToggleAction extends MainWindowAction {
     private static final long serialVersionUID = 1L;
@@ -62,6 +72,6 @@ public class HeatmapToggleAction extends MainWindowAction {
     public void actionPerformed(ActionEvent e) {
         ViewSettings vs = ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings();
         vs.setHeatmapOptions(!vs.isShowHeatmap(), vs.isHeatmapSF(),
-                vs.isHeatmapNewest(), vs.getMaxAgeForHeatmap());
+            vs.isHeatmapNewest(), vs.getMaxAgeForHeatmap());
     }
 }

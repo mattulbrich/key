@@ -1,9 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.testgen.oracle;
+
+import java.util.List;
 
 import de.uka.ilkd.key.logic.sort.Sort;
 import de.uka.ilkd.key.testgen.TestCaseGenerator;
-
-import java.util.List;
 
 public class OracleMethod {
 
@@ -16,7 +26,7 @@ public class OracleMethod {
     private Sort returnType;
 
     public OracleMethod(String methodName, List<OracleVariable> args,
-                        String body) {
+            String body) {
         super();
         this.methodName = methodName;
         this.args = args;
@@ -24,7 +34,7 @@ public class OracleMethod {
     }
 
     public OracleMethod(String methodName, List<OracleVariable> args,
-                        String body, Sort sort) {
+            String body, Sort sort) {
         super();
         this.methodName = methodName;
         this.args = args;
@@ -61,8 +71,8 @@ public class OracleMethod {
             retType = returnType.name().toString();
         }
         return tab + "public " + retType + " " + methodName + "(" + argString + "){\n"
-                + tab + tab + body + "\n"
-                + tab + "}";
+            + tab + tab + body + "\n"
+            + tab + "}";
 
     }
 }

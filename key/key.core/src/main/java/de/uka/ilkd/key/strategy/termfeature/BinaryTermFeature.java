@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -24,17 +34,17 @@ import de.uka.ilkd.key.strategy.TopRuleAppCost;
  */
 public abstract class BinaryTermFeature implements TermFeature {
 
-    protected BinaryTermFeature () {}
-    
+    protected BinaryTermFeature() {}
+
     /** Constant that represents the boolean value true */
     public static final RuleAppCost ZERO_COST = NumberRuleAppCost.getZeroCost();
     /** Constant that represents the boolean value false */
-    public static final RuleAppCost TOP_COST  = TopRuleAppCost.INSTANCE;
-    
-    final public RuleAppCost compute ( Term term, Services services ) {
-        return filter ( term, services ) ? ZERO_COST : TOP_COST; 
+    public static final RuleAppCost TOP_COST = TopRuleAppCost.INSTANCE;
+
+    final public RuleAppCost compute(Term term, Services services) {
+        return filter(term, services) ? ZERO_COST : TOP_COST;
     }
-    
-    protected abstract boolean filter ( Term term, Services services );
+
+    protected abstract boolean filter(Term term, Services services);
 
 }

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -34,18 +44,17 @@ public class SearchModeChangeAction extends MainWindowAction {
         setName(mode.toString());
 
         setIcon(
-            mode.icon
-        );
+            mode.icon);
         setTooltip("Find the next occurence of current search term in sequent.");
         getMediator().enableWhenProofLoaded(this);
-	    if(mode == SequentViewSearchBar.SearchMode.HIGHLIGHT) {
+        if (mode == SequentViewSearchBar.SearchMode.HIGHLIGHT) {
             setAcceleratorLetter(KeyEvent.VK_H);
         } else if (mode == SequentViewSearchBar.SearchMode.HIDE) {
             setAcceleratorLetter(KeyEvent.VK_ESCAPE);
         } else if (mode == SequentViewSearchBar.SearchMode.REGROUP) {
             setAcceleratorLetter(KeyEvent.VK_I);
         }
-        
+
         this.mode = mode;
     }
 

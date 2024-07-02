@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -21,12 +31,13 @@ import de.uka.ilkd.key.logic.op.SchemaVariable;
 import de.uka.ilkd.key.logic.sort.Sort;
 import de.uka.ilkd.key.rule.VariableConditionAdapter;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This variable condition checks if a type is an enum type.
- * 
+ *
  * @author mulbrich
  * @since 2006-12-14
  */
@@ -38,18 +49,18 @@ public final class EnumTypeCondition extends VariableConditionAdapter {
 
     /**
      * creates a condition that checks if a type is a EnumDeclaration
-     * 
+     *
      * @param resolver
-     *            the type resolver to be checked
+     *        the type resolver to be checked
      * @param negated
-     *            should the result be negated
+     *        should the result be negated
      */
     public EnumTypeCondition(TypeResolver resolver, boolean negated) {
         this.resolver = resolver;
         this.negated = negated;
     }
 
-    
+
     @Override
     public boolean check(SchemaVariable var, SVSubstitute candidate,
             SVInstantiations svInst, Services services) {
@@ -66,9 +77,9 @@ public final class EnumTypeCondition extends VariableConditionAdapter {
         }
     }
 
-    
-    @Override    
+
+    @Override
     public String toString() {
-        return (negated ? "\\not":"") + "\\isEnumType(" + resolver + ")";
+        return (negated ? "\\not" : "") + "\\isEnumType(" + resolver + ")";
     }
 }

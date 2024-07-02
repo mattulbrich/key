@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,7 +23,11 @@
 
 package de.uka.ilkd.key.java.recoderext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.uka.ilkd.key.java.ConvertException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import recoder.ParserException;
@@ -33,9 +47,6 @@ import recoder.kit.TypeKit;
 import recoder.list.generic.ASTArrayList;
 import recoder.list.generic.ASTList;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Make a ClassDeclaration out of a class file.
  *
@@ -54,7 +65,7 @@ import java.util.List;
  *
  * TODO Recoder does not allow to detect if an inner class is static or not because
  * it discards the information about inner classes all to early. That is why all inner
- * classes are non-static. Does this matter?  Patch is on the way
+ * classes are non-static. Does this matter? Patch is on the way
  *
  * TODO inner classes are not detected to be "private". A combination of private and
  * static seems impossible with recoder
@@ -92,7 +103,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
     // the manager to which this builder belongs
     private ClassFileDeclarationManager manager;
 
-    // store all type parameters of this class and potentially 
+    // store all type parameters of this class and potentially
     // all enclosing classes
     private List<TypeParameterInfo> typeParameters;
 
@@ -169,14 +180,14 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
      */
     public TypeDeclaration makeTypeDeclaration() {
 
-        if(typeDecl == null) {
+        if (typeDecl == null) {
             createTypeDeclaration();
             setNameAndMods();
             setInheritance();
             memberDecls = new ASTArrayList<MemberDeclaration>();
             if (typeDecl instanceof EnumDeclaration) {
                 for (FieldInfo field : classFile.getFieldInfos()) {
-                    if(isEnumConstant(field))
+                    if (isEnumConstant(field))
                         addEnumConstant(field);
                 }
                 // create a default constructor for the enum constants
@@ -186,7 +197,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
                 addConstructor(constr);
             }
             for (FieldInfo field : classFile.getFieldInfos()) {
-                if(!isEnumConstant(field))
+                if (!isEnumConstant(field))
                     addField(field);
             }
             for (MethodInfo method : classFile.getMethodInfos()) {
@@ -217,7 +228,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
      * @return true iff the classFile under inspection is an inner class
      */
     public boolean isInnerClass() {
-        if(physicalName.contains("$")) {
+        if (physicalName.contains("$")) {
             String trailing = physicalName.substring(physicalName.lastIndexOf('$') + 1);
             return !startsWithADigit(trailing);
         }
@@ -233,7 +244,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
      * @return true iff the classFile under inspection is an anon. or in-code-class
      */
     public boolean isAnonymousClass() {
-        if(physicalName.contains("$")) {
+        if (physicalName.contains("$")) {
             String trailing = physicalName.substring(physicalName.lastIndexOf('$') + 1);
             return startsWithADigit(trailing);
         }
@@ -249,8 +260,9 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
      *
      */
     public void attachToEnclosingDeclaration() {
-        if(!isInnerClass())
-            throw new IllegalStateException("only inner classes can be attached to enclosing classes");
+        if (!isInnerClass())
+            throw new IllegalStateException(
+                "only inner classes can be attached to enclosing classes");
 
         // this builder must not yet have built:
         assert typeDecl == null;
@@ -266,10 +278,11 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
 
     /**
      * get the fully qualified name of the enclosing class of an inner class
+     *
      * @return class name, not null
      */
     public String getEnclosingName() {
-        if(!isInnerClass() && !isAnonymousClass())
+        if (!isInnerClass() && !isAnonymousClass())
             throw new IllegalStateException("only inner classes have an enclosing class");
         return physicalName.substring(0, physicalName.lastIndexOf('$'));
     }
@@ -282,36 +295,35 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
      *
      *
      * @param programFactory
-     *                factory to use as parser
+     *        factory to use as parser
      * @param fullClassName
-     *                the fully qualified type name
+     *        the fully qualified type name
      * @return a compilation unit that has not been added to a source repository
      *         yet
      * @throws ParserException
-     *                 thrown by the parser
+     *         thrown by the parser
      */
     public static CompilationUnit makeEmptyClassDeclaration(
             ProgramFactory programFactory,
             String fullClassName)
-                      throws ParserException {
+            throws ParserException {
 
-        while(fullClassName.endsWith("[]"))
-            fullClassName = fullClassName.substring(0, fullClassName.length()-2);
+        while (fullClassName.endsWith("[]"))
+            fullClassName = fullClassName.substring(0, fullClassName.length() - 2);
 
         String cuString = "";
         int lastdot = fullClassName.lastIndexOf('.');
-        if(lastdot != -1) {
+        if (lastdot != -1) {
             // there is a package
             cuString = "package " + fullClassName.substring(0, lastdot) + "; ";
         }
 
-        cuString += "public class " + fullClassName.substring(lastdot+1) + " { }";
+        cuString += "public class " + fullClassName.substring(lastdot + 1) + " { }";
 
         LOGGER.debug("Parsing: " + cuString);
 
         return programFactory.parseCompilationUnit(cuString);
     }
-
 
 
 
@@ -327,11 +339,12 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
             typeDecl = factory.createInterfaceDeclaration();
         } else if (classFile.isOrdinaryClass()) {
             typeDecl = factory.createClassDeclaration();
-        } else if (classFile.isEnumType()){
+        } else if (classFile.isEnumType()) {
             // there is no factory.createEnumDeclaration()
             typeDecl = new EnumDeclaration();
         } else {
-            throw new ConvertException("Only Interfaces, enums and classes are allowed as byte code files");
+            throw new ConvertException(
+                "Only Interfaces, enums and classes are allowed as byte code files");
         }
     }
 
@@ -373,7 +386,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
     private void setInheritance() {
 
         // do not inherit Object from itself!
-        if("java.lang.Object".equals(physicalName))
+        if ("java.lang.Object".equals(physicalName))
             return;
 
         String superClassName = classFile.getSuperClassName();
@@ -389,26 +402,26 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
             for (String intf : interfaceNames) {
                 implList.add(createTypeReference(intf));
             }
-            if(implList.size() > 0)
+            if (implList.size() > 0)
                 classDecl.setImplementedTypes(factory.createImplements(implList));
-        } else if(typeDecl instanceof EnumDeclaration) {
+        } else if (typeDecl instanceof EnumDeclaration) {
             EnumDeclaration enDecl = (EnumDeclaration) typeDecl;
             ASTList<TypeReference> implList = new ASTArrayList<TypeReference>();
             for (String intf : interfaceNames) {
                 implList.add(createTypeReference(intf));
             }
-            if(implList.size() > 0)
+            if (implList.size() > 0)
                 enDecl.setImplementedTypes(factory.createImplements(implList));
-        } else if(typeDecl instanceof InterfaceDeclaration){
+        } else if (typeDecl instanceof InterfaceDeclaration) {
             InterfaceDeclaration intfDecl = (InterfaceDeclaration) typeDecl;
             ASTList<TypeReference> implList = new ASTArrayList<TypeReference>();
             for (String intf : interfaceNames) {
                 implList.add(createTypeReference(intf));
             }
-            if(implList.size() > 0)
+            if (implList.size() > 0)
                 intfDecl.setExtendedTypes(factory.createExtends(implList));
         } else
-           throw new Error("unknown declaration type: " + typeDecl.getClass().getName());
+            throw new Error("unknown declaration type: " + typeDecl.getClass().getName());
 
     }
 
@@ -464,7 +477,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
 
         // ignore internal fields.
         String name = field.getName();
-        if(isInternal(name))
+        if (isInternal(name))
             return;
 
         String typename = field.getTypeName();
@@ -489,7 +502,8 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
         Identifier id = factory.createIdentifier(field.getName());
         EnumConstructorReference ecr = new EnumConstructorReference();
         EnumConstantSpecification ecs = new EnumConstantSpecification(id, ecr);
-        EnumConstantDeclaration ecd = new EnumConstantDeclaration(ecs, new ASTArrayList<DeclarationSpecifier>());
+        EnumConstantDeclaration ecd =
+            new EnumConstantDeclaration(ecs, new ASTArrayList<DeclarationSpecifier>());
         memberDecls.add(ecd);
     }
 
@@ -525,7 +539,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
         // feature: ignore access functions which should not ne visible on
         // source code level
         String methodName = method.getName();
-        if(isInternal(methodName))
+        if (isInternal(methodName))
             return;
 
         String returntype = method.getTypeName();
@@ -546,8 +560,8 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
         }
 
         // modify last argument to vararg if method is vararg (#1664)
-        if(method.isVarArgMethod()) {
-            ParameterDeclaration lastParam = params.get(params.size()-1);
+        if (method.isVarArgMethod()) {
+            ParameterDeclaration lastParam = params.get(params.size() - 1);
             lastParam.setVarArg(true);
             TypeReference tyref = lastParam.getTypeReference();
             tyref.setDimensions(tyref.getDimensions() - 1);
@@ -581,7 +595,8 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
         Identifier id = factory.createIdentifier(getClassName());
         Private priv = factory.createPrivate();
         ASTList<ParameterDeclaration> params = new ASTArrayList<ParameterDeclaration>();
-        ConstructorDeclaration decl = factory.createConstructorDeclaration(priv, id, params, null, null);
+        ConstructorDeclaration decl =
+            factory.createConstructorDeclaration(priv, id, params, null, null);
         memberDecls.add(decl);
     }
 
@@ -602,7 +617,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
             tys = resolveTypeVariable(tys, constr.getTypeParameters());
             // filter out those constructors with a Classname$1 argument
             // that are only introduced for technical reasons
-            if(ClassFileDeclarationBuilder.isAnononymous(tys))
+            if (ClassFileDeclarationBuilder.isAnononymous(tys))
                 return;
             type = createTypeReference(tys);
             String name = "arg" + (index++);
@@ -655,10 +670,11 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
      * <li> additional parameters (from constr/methdo decl)
      * </ol>
      */
-    private String resolveTypeVariable(String typename, List<? extends TypeParameter> additionalTypeParameters) {
+    private String resolveTypeVariable(String typename,
+            List<? extends TypeParameter> additionalTypeParameters) {
 
         int dim = 0;
-        while(typename.endsWith("[]")) {
+        while (typename.endsWith("[]")) {
             typename = typename.substring(0, typename.length() - 2);
             dim++;
         }
@@ -668,7 +684,7 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
                 return tp.getBoundName(0);
             }
         }
-        if(additionalTypeParameters != null) {
+        if (additionalTypeParameters != null) {
             for (TypeParameter tp : additionalTypeParameters) {
                 if (typename.equals(tp.getName())) {
                     return tp.getBoundName(0);
@@ -690,10 +706,10 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
      * this class, not null.
      */
     private List<TypeParameterInfo> getAllTypeParameters() {
-        if(typeParameters == null) {
+        if (typeParameters == null) {
             typeParameters = new ArrayList<TypeParameterInfo>(0);
             typeParameters.addAll(classFile.getTypeParameters());
-            if(isInnerClass() || isAnonymousClass()) {
+            if (isInnerClass() || isAnonymousClass()) {
                 ClassFileDeclarationBuilder encl = manager.getBuilder(getEnclosingName());
                 typeParameters.addAll(encl.getAllTypeParameters());
             }
@@ -712,20 +728,20 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
     private TypeReference createTypeReference(String typename) {
 
         int dimension = 0;
-        while(typename.endsWith("[]")) {
-            dimension ++;
-            typename = typename.substring(0, typename.length()-2);
+        while (typename.endsWith("[]")) {
+            dimension++;
+            typename = typename.substring(0, typename.length() - 2);
         }
 
         // rare occasion where an anonymous class is used as a marker.
         // happens only in methods not present in source code.
         // bugfix: treatment to the situations:
-        //    CN.1.1  -->  CN$1$1
-        //    CN.1.D  -->  CD$1.D  etc.
+        // CN.1.1 --> CN$1$1
+        // CN.1.D --> CD$1.D etc.
         String[] parts = typename.split("(\\.|\\$)");
         typename = parts[0];
         for (int i = 1; i < parts.length; i++) {
-            if(startsWithADigit(parts[i])) {
+            if (startsWithADigit(parts[i])) {
                 typename += "$" + parts[i];
             } else {
                 typename += "." + parts[i];
@@ -743,12 +759,14 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
      * The argument must contain "." not "$"
      */
     private static boolean isAnononymous(String tys) {
-        return startsWithADigit(tys.substring(tys.lastIndexOf('.')+1));
+        return startsWithADigit(tys.substring(tys.lastIndexOf('.') + 1));
     }
 
     /*
      * check if a string starts with a decimal digit.
+     *
      * @param string to check
+     *
      * @return true iff string denotes a decimal number
      */
     private static boolean startsWithADigit(String string) {
@@ -779,14 +797,14 @@ public class ClassFileDeclarationBuilder implements Comparable<ClassFileDeclarat
 
     @Override
     public boolean equals(Object o) {
-	if(! (o instanceof ClassFileDeclarationBuilder)) {
-	    return false;
-	}
-	return compareTo((ClassFileDeclarationBuilder) o) == 0;
+        if (!(o instanceof ClassFileDeclarationBuilder)) {
+            return false;
+        }
+        return compareTo((ClassFileDeclarationBuilder) o) == 0;
     }
 
     @Override
     public int hashCode() {
-	return getFullClassname().hashCode();
+        return getFullClassname().hashCode();
     }
 }

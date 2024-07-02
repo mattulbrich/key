@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -26,18 +36,20 @@ import de.uka.ilkd.key.rule.UseDependencyContractRule;
 import de.uka.ilkd.key.rule.VariableCondition;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 import de.uka.ilkd.key.speclang.Contract;
+
 import org.key_project.util.collection.ImmutableSet;
 
 /**
  *
  * A variable condition that is satisfied if the two arguments are
  * <ul>
- *     <li>schema variables,</li>
- *     <li>their instantiations are terms of observer functions,</li>
- *     <li>with the same function,</li>
- *     <li>which as exactly one heap argument</li>
- *     <li>and has got a dependency contract</li>
- * </ul>,
+ * <li>schema variables,</li>
+ * <li>their instantiations are terms of observer functions,</li>
+ * <li>with the same function,</li>
+ * <li>which as exactly one heap argument</li>
+ * <li>and has got a dependency contract</li>
+ * </ul>
+ * ,
  *
  * <h3>Limitations</h3>
  *
@@ -63,6 +75,7 @@ public final class SameObserverCondition implements VariableCondition {
 
     /**
      * Create a new condition
+     *
      * @param schema1 first argument, must be schema variable
      * @param schema2 2nd argument, must be schema variable
      * @throws IllegalArgumentException if the args are not schema variables.
@@ -73,7 +86,7 @@ public final class SameObserverCondition implements VariableCondition {
             this.schema2 = (SchemaVariable) schema2;
         } catch (ClassCastException e) {
             throw new IllegalArgumentException(
-                    "Arguments to \\sameObserver must be term SV", e);
+                "Arguments to \\sameObserver must be term SV", e);
         }
     }
 
@@ -81,16 +94,16 @@ public final class SameObserverCondition implements VariableCondition {
     // explanation see class javadoc.
     @Override
     public MatchConditions check(SchemaVariable var,
-                                 SVSubstitute instCandidate,
-                                 MatchConditions mc,
-                                 Services services) {
+            SVSubstitute instCandidate,
+            MatchConditions mc,
+            Services services) {
         SVInstantiations svInst = mc.getInstantiations();
         final Term term1 = (Term) svInst.getInstantiation(schema1);
         final Term term2 = (Term) svInst.getInstantiation(schema2);
 
         if ((term1 != null && !(term1.op() instanceof IObserverFunction)) ||
-            (term2 != null && !(term2.op() instanceof IObserverFunction))) {
-              // if terms are present, they must be observer calls.
+                (term2 != null && !(term2.op() instanceof IObserverFunction))) {
+            // if terms are present, they must be observer calls.
             return null;
         }
 
@@ -109,12 +122,11 @@ public final class SameObserverCondition implements VariableCondition {
             return null;
         }
 
-        KeYJavaType kjt = obs1.isStatic() ?
-                obs1.getContainerType() :
-                services.getTypeConverter().getKeYJavaType(term1.sub(1));
+        KeYJavaType kjt = obs1.isStatic() ? obs1.getContainerType()
+                : services.getTypeConverter().getKeYJavaType(term1.sub(1));
 
         ImmutableSet<Contract> contracts =
-                UseDependencyContractRule.getApplicableContracts(services, kjt, obs1);
+            UseDependencyContractRule.getApplicableContracts(services, kjt, obs1);
 
         if (contracts == null || contracts.isEmpty()) {
             return null;
@@ -124,7 +136,7 @@ public final class SameObserverCondition implements VariableCondition {
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "\\sameObserver (" + schema1 + ", " + schema2 + ")";
     }
 }

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.pp;
 
 import de.uka.ilkd.key.java.JavaInfo;
@@ -85,7 +95,8 @@ class FieldPrinter {
         /*
          * Compare originTypeAndName and pvTypeAndName based on their String
          * representation. I did not find a better solution to this yet.
-         * But it seems to be standard, as it is done similary in method HeapLDT.getPrettyFieldName().
+         * But it seems to be standard, as it is done similary in method
+         * HeapLDT.getPrettyFieldName().
          * (Kai Wallisch 09/2014)
          */
         String[] originTypeAndName = fieldTerm.toString().split("::\\$");
@@ -119,9 +130,10 @@ class FieldPrinter {
      * @return Returns true iff the given parameter represents a field constant.
      * @param fieldTerm The target field.
      */
-    protected static boolean isJavaFieldConstant(Term fieldTerm, HeapLDT heapLDT, Services services) {
+    protected static boolean isJavaFieldConstant(Term fieldTerm, HeapLDT heapLDT,
+            Services services) {
         String name = fieldTerm.op().name().toString();
-        if(name.contains("::$") && isFieldConstant(fieldTerm, heapLDT)) {
+        if (name.contains("::$") && isFieldConstant(fieldTerm, heapLDT)) {
             String pvName = name.replace("::$", "::");
             try {
                 return services.getJavaInfo().getAttribute(pvName) != null;

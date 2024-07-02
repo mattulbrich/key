@@ -1,11 +1,22 @@
-package de.uka.ilkd.key.macros.scripts.meta;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import de.uka.ilkd.key.macros.scripts.LetCommand;
-import org.junit.jupiter.api.Test;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.macros.scripts.meta;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.uka.ilkd.key.macros.scripts.LetCommand;
+
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,8 +47,8 @@ public class ValueInjectorTest {
         Map<String, String> args = new HashMap<>();
         args.put("b", "true");
         args.put("s", "blubb");
-        assertThrows(ArgumentRequiredException.class, () ->
-                ValueInjector.injection(new LetCommand(), pp, args));
+        assertThrows(ArgumentRequiredException.class,
+            () -> ValueInjector.injection(new LetCommand(), pp, args));
     }
 
     @Test

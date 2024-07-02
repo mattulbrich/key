@@ -1,8 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui.actions;
 
 import java.awt.event.ActionEvent;
 import java.util.EventObject;
-
 import javax.swing.JCheckBoxMenuItem;
 
 import de.uka.ilkd.key.gui.MainWindow;
@@ -25,7 +34,7 @@ public class ToggleSequentViewTooltipAction extends MainWindowAction {
 
     /** This action's tooltip. */
     public static final String TOOL_TIP = "If ticked, moving the mouse over a term in the"
-            + " sequent view will show a tooltip with additional information.";
+        + " sequent view will show a tooltip with additional information.";
 
     private static final long serialVersionUID = -3352122484627890921L;
 
@@ -47,7 +56,7 @@ public class ToggleSequentViewTooltipAction extends MainWindowAction {
         setName(NAME);
         setTooltip(TOOL_TIP);
         ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings()
-            .addSettingsListener(viewSettingsListener);
+                .addSettingsListener(viewSettingsListener);
         updateSelectedState();
     }
 
@@ -65,6 +74,6 @@ public class ToggleSequentViewTooltipAction extends MainWindowAction {
     public void actionPerformed(ActionEvent e) {
         boolean selected = ((JCheckBoxMenuItem) e.getSource()).isSelected();
         ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings()
-            .setShowSequentViewTooltips(selected);
+                .setShowSequentViewTooltips(selected);
     }
 }

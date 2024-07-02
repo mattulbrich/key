@@ -1,9 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.nparser.varexp;
+
+import java.util.List;
 
 import de.uka.ilkd.key.rule.VariableCondition;
 import de.uka.ilkd.key.rule.tacletbuilder.TacletBuilder;
-
-import java.util.List;
 
 /**
  * A specilized {@link TacletBuilderCommand} for handling {@code \varcond}s.
@@ -27,7 +37,8 @@ public interface ConditionBuilder extends TacletBuilderCommand {
      * @see TacletBuilderCommand#apply(TacletBuilder, Object[], List, boolean)
      */
     @Override
-    default void apply(TacletBuilder<?> tacletBuilder, Object[] arguments, List<String> parameters, boolean negated) {
+    default void apply(TacletBuilder<?> tacletBuilder, Object[] arguments, List<String> parameters,
+            boolean negated) {
         VariableCondition condition = build(arguments, parameters, negated);
         tacletBuilder.addVariableCondition(condition);
     }

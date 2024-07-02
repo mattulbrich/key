@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -21,7 +31,9 @@ import de.uka.ilkd.key.logic.ProgramElementName;
 import de.uka.ilkd.key.logic.op.IProgramVariable;
 import de.uka.ilkd.key.rule.MatchConditions;
 import de.uka.ilkd.key.util.Debug;
+
 import org.key_project.util.ExtList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,17 +84,17 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
 
 
     public VariableSpecification(IProgramVariable var, Expression init,
-                                 Type type) {
+            Type type) {
         this(var, 0, init, type, null);
     }
 
     public VariableSpecification(IProgramVariable var, int dim,
-                                 Expression init, Type type) {
+            Expression init, Type type) {
         this(var, dim, init, type, PositionInfo.UNDEFINED);
     }
 
     public VariableSpecification(IProgramVariable var, int dim,
-                                 Expression init, Type type, PositionInfo pi) {
+            Expression init, Type type, PositionInfo pi) {
         super(pi);
         this.var = var;
         this.initializer = init;
@@ -95,13 +107,13 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
      * Constructor for the transformation of RECODER ASTs to KeY.
      *
      * @param children the children of this AST element as KeY classes.
-     *                 May contain:
-     *                 an Expression (as initializer of the variable)
-     *                 a Comment
-     * @param dim      the dimension of this type
+     *        May contain:
+     *        an Expression (as initializer of the variable)
+     *        a Comment
+     * @param dim the dimension of this type
      */
     public VariableSpecification(ExtList children, IProgramVariable var,
-                                 int dim, Type type) {
+            int dim, Type type) {
         super(children);
         this.var = var;
         initializer = children.get(Expression.class);
@@ -117,8 +129,10 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
      */
     public int getChildCount() {
         int result = 0;
-        if (var != null) result++;
-        if (initializer != null) result++;
+        if (var != null)
+            result++;
+        if (initializer != null)
+            result++;
         return result;
     }
 
@@ -129,11 +143,12 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
      * @param index an index into this node's "virtual" child array
      * @return the program element at the given position
      * @throws ArrayIndexOutOfBoundsException if <tt>index</tt> is out
-     *                                        of bounds
+     *         of bounds
      */
     public ProgramElement getChildAt(int index) {
         if (var != null) {
-            if (index == 0) return var;
+            if (index == 0)
+                return var;
             index--;
         }
         if (initializer != null && index == 0) {
@@ -144,7 +159,8 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
 
     @Override
     protected int computeHashCode() {
-        return 37 * super.computeHashCode() + 31 * ((type == null) ? 0 : type.hashCode()) + dimensions;
+        return 37 * super.computeHashCode() + 31 * ((type == null) ? 0 : type.hashCode())
+                + dimensions;
     }
 
     /**
@@ -158,13 +174,16 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
     }
 
     /*
-      Return the expression at the specified index in this node's
-      "virtual" expression array.
-      @param index an index for an expression.
-      @return the expression with the given index.
-      @exception ArrayIndexOutOfBoundsException if <tt>index</tt> is out
-      of bounds.
-    */
+     * Return the expression at the specified index in this node's
+     * "virtual" expression array.
+     *
+     * @param index an index for an expression.
+     *
+     * @return the expression with the given index.
+     *
+     * @exception ArrayIndexOutOfBoundsException if <tt>index</tt> is out
+     * of bounds.
+     */
     public Expression getExpressionAt(int index) {
         if (initializer != null && index == 0) {
             return initializer;
@@ -190,7 +209,7 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
         if (var.name() instanceof ProgramElementName) {
             return (ProgramElementName) var.name();
         } else {
-            return new ProgramElementName(var.name().toString()); //only with SVs
+            return new ProgramElementName(var.name().toString()); // only with SVs
         }
     }
 
@@ -300,8 +319,7 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
             return false;
         }
         for (int i = 0, cc = getChildCount(); i < cc; i++) {
-            if (!getChildAt(i).equalsModRenaming
-                    (vs.getChildAt(i), nat)) {
+            if (!getChildAt(i).equalsModRenaming(vs.getChildAt(i), nat)) {
                 return false;
             }
         }
@@ -314,7 +332,7 @@ public class VariableSpecification extends JavaNonTerminalProgramElement
         matchCond = super.match(source, matchCond);
         if (matchCond != null && getDimensions() != ((VariableSpecification) pe).getDimensions()) {
             LOGGER.debug("Program match. Variables have different dimension " +
-                    "(template {}, source {})", this, pe);
+                "(template {}, source {})", this, pe);
             return null;
         }
         return matchCond;

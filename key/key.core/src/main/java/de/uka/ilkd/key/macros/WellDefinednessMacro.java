@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.macros;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.logic.PosInOccurrence;
@@ -30,6 +38,8 @@ import de.uka.ilkd.key.strategy.RuleAppCost;
 import de.uka.ilkd.key.strategy.RuleAppCostCollector;
 import de.uka.ilkd.key.strategy.Strategy;
 import de.uka.ilkd.key.strategy.TopRuleAppCost;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * This macro resolves the well-definedness transformer, i.e. it applies exactly
@@ -62,7 +72,7 @@ public class WellDefinednessMacro extends StrategyProofMacro {
 
     @Override
     protected Strategy createStrategy(Proof proof,
-                                      PosInOccurrence posInOcc) {
+            PosInOccurrence posInOcc) {
         return new WellDefinednessStrategy();
     }
 
@@ -80,17 +90,18 @@ public class WellDefinednessMacro extends StrategyProofMacro {
         if (!(po instanceof FunctionalOperationContractPO)) {
             return false;
         }
-        for (Goal goal: goals) {
+        for (Goal goal : goals) {
             Node n = goal.node();
             while (n != null) {
-                // Applicable in a well-definedness branch (e.g. of a loop statement or a block contract)
+                // Applicable in a well-definedness branch (e.g. of a loop statement or a block
+                // contract)
                 if (n.getNodeInfo().getBranchLabel() != null
                         && n.getNodeInfo().getBranchLabel().equals(WD_BRANCH)) {
                     return true;
                 }
                 n = n.parent();
             }
-        }        
+        }
         return false;
     }
 
@@ -113,7 +124,7 @@ public class WellDefinednessMacro extends StrategyProofMacro {
         @Override
         public RuleAppCost computeCost(RuleApp ruleApp, PosInOccurrence pio, Goal goal) {
             String name = ruleApp.rule().name().toString();
-            if(name.startsWith(WD_PREFIX)) {
+            if (name.startsWith(WD_PREFIX)) {
                 return NumberRuleAppCost.getZeroCost();
             } else {
                 return TopRuleAppCost.INSTANCE;
@@ -132,7 +143,7 @@ public class WellDefinednessMacro extends StrategyProofMacro {
 
         @Override
         public boolean isStopAtFirstNonCloseableGoal() {
-           return false;
+            return false;
         }
     }
 }

@@ -1,7 +1,17 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 // Copyright (C) 2001-2011 Universitaet Karlsruhe, Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General Public License.
 // See LICENSE.TXT for details.
@@ -11,9 +21,6 @@ package de.uka.ilkd.key.informationflow.rule.tacletbuilder;
 
 import java.util.Iterator;
 import java.util.Map;
-
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
 
 import de.uka.ilkd.key.informationflow.proof.init.StateVars;
 import de.uka.ilkd.key.informationflow.rule.InfFlowContractAppTaclet;
@@ -37,6 +44,9 @@ import de.uka.ilkd.key.rule.tacletbuilder.RewriteTacletBuilder;
 import de.uka.ilkd.key.rule.tacletbuilder.RewriteTacletGoalTemplate;
 import de.uka.ilkd.key.rule.tacletbuilder.TacletBuilder;
 import de.uka.ilkd.key.rule.tacletbuilder.TacletPrefixBuilder;
+
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
 
 /**
  * Builds the rule which inserts information flow contract applications.
@@ -176,12 +186,12 @@ abstract class AbstractInfFlowContractAppTacletBuilder extends AbstractInfFlowTa
      * @return the proof obligation variables
      */
     ProofObligationVars generateApplicationDataSVs(String schemaPrefix,
-                                                   ProofObligationVars appData,
-                                                   Services services) {
+            ProofObligationVars appData,
+            Services services) {
         // generate a new schema variable for any pre variable
         Term selfAtPreSV = createTermSV(appData.pre.self, schemaPrefix, services);
         ImmutableList<Term> localVarsAtPreSVs =
-                createTermSV(appData.pre.localVars, schemaPrefix, services);
+            createTermSV(appData.pre.localVars, schemaPrefix, services);
         Term guardAtPreSV = createTermSV(appData.pre.guard, schemaPrefix, services);
         Term resAtPreSV = createTermSV(appData.pre.result, schemaPrefix, services);
         Term excAtPreSV = createTermSV(appData.pre.exception, schemaPrefix, services);
@@ -219,13 +229,13 @@ abstract class AbstractInfFlowContractAppTacletBuilder extends AbstractInfFlowTa
 
         // build state vararibale container for pre and post state
         StateVars pre = new StateVars(selfAtPreSV, guardAtPreSV, localVarsAtPreSVs, resAtPreSV,
-                excAtPreSV, heapAtPreSV, mbyAtPreSV);
+            excAtPreSV, heapAtPreSV, mbyAtPreSV);
         StateVars post = new StateVars(selfAtPostSV, guardAtPostSV, localVarsAtPostSVs, resAtPostSV,
-                excAtPostSV, heapAtPostSV, null);
+            excAtPostSV, heapAtPostSV, null);
 
         // return proof obligation schema variables
         return new ProofObligationVars(pre, post, poVars.exceptionParameter, poVars.formalParams,
-                services);
+            services);
     }
 
     private Taclet genInfFlowContractApplTaclet(Goal goal, ProofObligationVars appData,
@@ -235,22 +245,22 @@ abstract class AbstractInfFlowContractAppTacletBuilder extends AbstractInfFlowTa
         ProofObligationVars schemaDataFind = generateApplicationDataSVs("find_", appData, services);
         Term schemaFind = generateSchemaFind(schemaDataFind, services);
         ProofObligationVars schemaDataAssumes = generateApplicationDataSVs("assumes_", appData,
-                services);
+            services);
         Term schemaAssumes = generateSchemaAssumes(schemaDataAssumes, services);
 
         // generate post term
         Term replaceWithTerm = buildContractApplications(schemaDataFind, schemaDataAssumes,
-                services);
+            services);
 
         // collect quantifiable variables of the post term and replace them
         // by schema variables
         Map<QuantifiableVariable, SchemaVariable> quantifiableVarsToSchemaVars =
-                collectQuantifiableVariables(schemaFind, services);
+            collectQuantifiableVariables(schemaFind, services);
         quantifiableVarsToSchemaVars.putAll(collectQuantifiableVariables(schemaAssumes, services));
         quantifiableVarsToSchemaVars
                 .putAll(collectQuantifiableVariables(replaceWithTerm, services));
         final OpReplacer or = new OpReplacer(quantifiableVarsToSchemaVars,
-                services.getTermFactory(), services.getProof());
+            services.getTermFactory(), services.getProof());
         schemaFind = or.replace(schemaFind);
         schemaAssumes = or.replace(schemaAssumes);
         replaceWithTerm = or.replace(replaceWithTerm);
@@ -263,13 +273,13 @@ abstract class AbstractInfFlowContractAppTacletBuilder extends AbstractInfFlowTa
 
         // create taclet
         InfFlowContractAppRewriteTacletBuilder tacletBuilder =
-                new InfFlowContractAppRewriteTacletBuilder();
+            new InfFlowContractAppRewriteTacletBuilder();
         tacletBuilder.setName(tacletName);
         tacletBuilder.setFind(schemaFind);
         tacletBuilder.setApplicationRestriction(RewriteTaclet.ANTECEDENT_POLARITY);
         tacletBuilder.setIfSequent(assumesSeq);
         RewriteTacletGoalTemplate goalTemplate = new RewriteTacletGoalTemplate(replaceWithSeq,
-                ImmutableSLList.<Taclet>nil(), schemaFind);
+            ImmutableSLList.<Taclet>nil(), schemaFind);
         tacletBuilder.addTacletGoalTemplate(goalTemplate);
         tacletBuilder.addRuleSet(new RuleSet(new Name(IF_CONTRACT_APPLICATION)));
         tacletBuilder.setSurviveSmbExec(true);
@@ -306,10 +316,10 @@ abstract class AbstractInfFlowContractAppTacletBuilder extends AbstractInfFlowTa
             TacletPrefixBuilder prefixBuilder = new TacletPrefixBuilder(this);
             prefixBuilder.build();
             return new InfFlowContractAppTaclet(name,
-                    new TacletApplPart(ifseq, varsNew, varsNotFreeIn, varsNewDependingOn,
-                            variableConditions),
-                    goals, ruleSets, attrs, find, prefixBuilder.getPrefixMap(),
-                    applicationRestriction, choices, surviveSmbExec, tacletAnnotations);
+                new TacletApplPart(ifseq, varsNew, varsNotFreeIn, varsNewDependingOn,
+                    variableConditions),
+                goals, ruleSets, attrs, find, prefixBuilder.getPrefixMap(),
+                applicationRestriction, choices, surviveSmbExec, tacletAnnotations);
 
         }
     }

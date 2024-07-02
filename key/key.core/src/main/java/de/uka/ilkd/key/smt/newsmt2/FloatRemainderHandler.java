@@ -1,4 +1,19 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.smt.newsmt2;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.Term;
@@ -10,11 +25,6 @@ import de.uka.ilkd.key.logic.op.SortedOperator;
 import de.uka.ilkd.key.logic.sort.Sort;
 import de.uka.ilkd.key.smt.SMTTranslationException;
 import de.uka.ilkd.key.smt.newsmt2.SExpr.Type;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 import static de.uka.ilkd.key.smt.newsmt2.SExpr.Type.BOOL;
 import static de.uka.ilkd.key.smt.newsmt2.SExpr.Type.UNIVERSE;
@@ -49,7 +59,7 @@ public class FloatRemainderHandler implements SMTHandler {
 
     @Override
     public Capability canHandle(Term term) {
-        if(term.sort() == floatSort || term.sort() == doubleSort) {
+        if (term.sort() == floatSort || term.sort() == doubleSort) {
             return Capability.YES_THIS_INSTANCE;
         }
         return Capability.UNABLE;
@@ -70,13 +80,13 @@ public class FloatRemainderHandler implements SMTHandler {
         }
 
         SExpr alreadySeen = map.get(term);
-        if(alreadySeen != null) {
+        if (alreadySeen != null) {
             return alreadySeen;
         }
 
         Type type;
         String smtType;
-        if(term.sort() == floatSort) {
+        if (term.sort() == floatSort) {
             type = FloatHandler.FLOAT;
             smtType = "Float32";
         } else {

@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,11 +23,11 @@
 
 package de.uka.ilkd.key.smt.communication;
 
-import org.key_project.util.java.IOUtil;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
+
+import org.key_project.util.java.IOUtil;
 
 /**
  * Wraps BufferedReader in order to provide different message delimiters.
@@ -26,6 +36,7 @@ import java.io.StringWriter;
  * delimiters.
  *
  * For example:
+ *
  * <pre>
  *     delims = { "X", "Y" };
  *     br = new BufferedMessageReader(new StringReader("aXbYc"), delims);
@@ -54,6 +65,7 @@ class BufferedMessageReader {
 
     /**
      * Creates a new BufferedMessageReader wrapping the given Reader.
+     *
      * @param reader the Reader to wrap
      * @param delimiters the delimiters, where incoming messages should be split
      */
@@ -65,6 +77,7 @@ class BufferedMessageReader {
     /**
      * Call this method in order to read the next message from the given input stream. If there is
      * no message, it blocks until there is a further message or the stream has been closed.
+     *
      * @return a string between two delimiters or until the EOF.
      * @throws IOException if reading fails
      */
@@ -73,12 +86,12 @@ class BufferedMessageReader {
         StringBuilder sb = new StringBuilder();
         int c;
         while ((c = reader.read()) != -1) {
-            sb.append((char)c);
+            sb.append((char) c);
             for (String delim : delimiters) {
-                if(endsWith(sb, delim)) {
+                if (endsWith(sb, delim)) {
                     String result = sb.substring(0, sb.length() - delim.length());
 
-                    if(!result.isEmpty()) {
+                    if (!result.isEmpty()) {
                         return result;
                     }
 
@@ -116,7 +129,7 @@ class BufferedMessageReader {
         }
 
         for (int i = len - dlen, j = 0; i < len; i++, j++) {
-            if(sb.charAt(i) != s.charAt(j)) {
+            if (sb.charAt(i) != s.charAt(j)) {
                 return false;
             }
         }

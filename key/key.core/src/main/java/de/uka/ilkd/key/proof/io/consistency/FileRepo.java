@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.proof.io.consistency;
 
 import java.io.File;
@@ -24,6 +34,7 @@ public interface FileRepo extends ProofDisposedListener {
      * Provides access to a file on disk.
      *
      * May return <code>null</code> if the path cannot be handled by this repository.
+     *
      * @param path the path of the file
      * @return an InputStream of the requested file, or <code>null</code>
      * @throws FileNotFoundException if the file does not exist
@@ -36,6 +47,7 @@ public interface FileRepo extends ProofDisposedListener {
      * is registered to the FileRepo.
      *
      * May return <code>null</code> if the source cannot be handled by this repository.
+     *
      * @param ruleSource the RuleSource
      * @return an InputStream of the RuleSource, or <code>null</code>
      * @throws IOException on IO errors
@@ -47,6 +59,7 @@ public interface FileRepo extends ProofDisposedListener {
      * the FileRepo.
      *
      * May return <code>null</code> if the url cannot be handled by this repository.
+     *
      * @param url the URL of the file
      * @return an InputStream to the file identified by the URL, or <code>null</code>
      * @throws IOException on IO errors
@@ -55,8 +68,9 @@ public interface FileRepo extends ProofDisposedListener {
 
     /**
      * This method can be used to write a file that has no counterpart outside to the FileRepo.
+     *
      * @param path the path of the file to store. The path must be relative to the base directory
-     *      of the proof package.
+     *        of the proof package.
      * @return an OutputStream to the file in the FileRepo
      * @throws FileNotFoundException if a file with the given path exists
      */
@@ -64,12 +78,14 @@ public interface FileRepo extends ProofDisposedListener {
 
     /**
      * Register the proof in the FileRepo.
+     *
      * @param proof the proof to register
      */
     public void registerProof(Proof proof);
 
     /**
      * Sets the bootclasspath (containing available classes from the Java Class Library).
+     *
      * @param path the bootclasspath to set (the method does nothing if null is given)
      * @throws IllegalStateException if the java path is already set
      */
@@ -77,6 +93,7 @@ public interface FileRepo extends ProofDisposedListener {
 
     /**
      * Sets the classpath.
+     *
      * @param classPath the classpath to set (the method does nothing if null is given)
      * @throws IllegalStateException if the java path is already set
      */
@@ -84,6 +101,7 @@ public interface FileRepo extends ProofDisposedListener {
 
     /**
      * Sets the java path (where the source files are located).
+     *
      * @param javaPath the java path to set (the method does nothing if null is given)
      * @throws IllegalStateException if the java path is already set
      */
@@ -98,7 +116,7 @@ public interface FileRepo extends ProofDisposedListener {
      * This is needed by the FileRepo for resolving pathnames.
      *
      * @param path The path of the base directory. If a file is given, then its parent directory is
-     *             set as base path.
+     *        set as base path.
      */
     public void setBaseDir(Path path);
 }

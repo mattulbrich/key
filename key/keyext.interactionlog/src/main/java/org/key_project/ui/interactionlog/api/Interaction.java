@@ -1,17 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.ui.interactionlog.api;
 
-import org.key_project.ui.interactionlog.api.Markdownable;
-import org.key_project.ui.interactionlog.api.Reapplicable;
-import org.key_project.ui.interactionlog.api.Scriptable;
-
+import java.awt.*;
+import java.io.Serializable;
+import java.util.Date;
 import javax.swing.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
-import java.awt.*;
-import java.io.Serializable;
-import java.util.Date;
+
+import org.key_project.ui.interactionlog.api.Markdownable;
+import org.key_project.ui.interactionlog.api.Reapplicable;
+import org.key_project.ui.interactionlog.api.Scriptable;
 
 /**
  * @author weigl

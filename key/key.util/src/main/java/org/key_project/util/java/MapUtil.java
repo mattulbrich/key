@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.util.java;
 
 import java.util.HashMap;
@@ -14,13 +24,17 @@ import java.util.stream.Collectors;
  */
 public final class MapUtil {
 
-    private MapUtil() { }
+    private MapUtil() {}
 
     /**
-     * <p> Custom collector for maps. </p>
+     * <p>
+     * Custom collector for maps.
+     * </p>
      *
-     * <p> This collector behaves like {@link Collectors#toMap(Function, Function)}
-     *  except that it allows {@code null} values. </p>
+     * <p>
+     * This collector behaves like {@link Collectors#toMap(Function, Function)}
+     * except that it allows {@code null} values.
+     * </p>
      *
      * @param keyMapper map function for the key set.
      * @param valueMapper map function for the value set.
@@ -30,10 +44,13 @@ public final class MapUtil {
             Function<? super E, ? extends K> keyMapper,
             Function<? super E, ? extends V> valueMapper) {
         return Collector.of(
-                HashMap::new,
-                (map, entry) -> map.put(
-                        keyMapper.apply(entry), valueMapper.apply(entry)),
-                (map1, map2) -> { map1.putAll(map2); return map1; },
-                Characteristics.UNORDERED);
+            HashMap::new,
+            (map, entry) -> map.put(
+                keyMapper.apply(entry), valueMapper.apply(entry)),
+            (map1, map2) -> {
+                map1.putAll(map2);
+                return map1;
+            },
+            Characteristics.UNORDERED);
     }
 }

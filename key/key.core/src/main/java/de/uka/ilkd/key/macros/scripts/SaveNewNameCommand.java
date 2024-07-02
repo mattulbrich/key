@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.macros.scripts;
 
 import java.util.List;
@@ -39,7 +49,7 @@ public class SaveNewNameCommand
     public Parameters evaluateArguments(EngineState state,
             Map<String, String> arguments) throws Exception {
         return state.getValueInjector().inject(this, new Parameters(),
-                arguments);
+            arguments);
     }
 
     @Override
@@ -49,8 +59,8 @@ public class SaveNewNameCommand
 
         if (!params.abbreviation.startsWith("@")) {
             throw new ScriptException(
-                    "Unexpected parameter to saveNewName, only @var allowed: "
-                            + params.abbreviation);
+                "Unexpected parameter to saveNewName, only @var allowed: "
+                    + params.abbreviation);
         }
 
         final AbbrevMap abbrMap = stateMap.getAbbreviations();
@@ -67,8 +77,8 @@ public class SaveNewNameCommand
 
             if (matches.size() != 1) {
                 throw new ScriptException(String.format(
-                        "Found %d matches for expression %s in new names, expected 1",
-                        matches.size(), stringToMatch));
+                    "Found %d matches for expression %s in new names, expected 1",
+                    matches.size(), stringToMatch));
             }
 
             final Named lookupResult = goal.getLocalNamespaces()
@@ -78,7 +88,7 @@ public class SaveNewNameCommand
 
             // Should be a function or program variable
             final TermBuilder tb = //
-                    stateMap.getProof().getServices().getTermBuilder();
+                stateMap.getProof().getServices().getTermBuilder();
             final Term t;
             if (lookupResult instanceof Function) {
                 t = tb.func((Function) lookupResult);
@@ -86,8 +96,8 @@ public class SaveNewNameCommand
                 t = tb.var((ProgramVariable) lookupResult);
             } else {
                 throw new ScriptException(String.format(
-                        "Unexpected instantiation type in SaveNewName: %s",
-                        lookupResult.getClass().getSimpleName()));
+                    "Unexpected instantiation type in SaveNewName: %s",
+                    lookupResult.getClass().getSimpleName()));
             }
 
             if (abbrMap.containsAbbreviation(key)) {

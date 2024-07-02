@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.strategy.termgenerator;
 
 import java.util.Iterator;
@@ -13,12 +23,12 @@ import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.rule.RuleApp;
 
 /**
- * The heap generator returns an iterator over all terms of sort heap 
- * that 
- * <ol> 
+ * The heap generator returns an iterator over all terms of sort heap
+ * that
+ * <ol>
  * <li>can be found in the sequent</li>
  * <li>are top level in the sense that they are not part of a larger term expression</li>
- * <li>depending on the mode: heaps just occurring in updates are included or ignored</li>  
+ * <li>depending on the mode: heaps just occurring in updates are included or ignored</li>
  * </ol>
  */
 public class HeapGenerator implements TermGenerator {
@@ -27,11 +37,11 @@ public class HeapGenerator implements TermGenerator {
     public static final TermGenerator INSTANCE_EXCLUDE_UPDATES = new HeapGenerator(false);
 
     private final boolean includeUpdates;
-    
+
     private HeapGenerator(boolean includeUpdates) {
-        this.includeUpdates = includeUpdates;        
+        this.includeUpdates = includeUpdates;
     }
-    
+
     @Override
     public Iterator<Term> generate(RuleApp app, PosInOccurrence pos, Goal goal) {
         LinkedHashSet<Term> heaps = new LinkedHashSet<>();

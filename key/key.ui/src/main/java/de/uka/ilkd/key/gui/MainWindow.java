@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,20 +23,29 @@
 
 package de.uka.ilkd.key.gui;
 
-import bibliothek.gui.dock.StackDockStation;
-import bibliothek.gui.dock.common.CControl;
-import bibliothek.gui.dock.common.SingleCDockable;
-import bibliothek.gui.dock.common.intern.CDockable;
-import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.List;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import javax.swing.event.MouseInputAdapter;
+
 import de.uka.ilkd.key.control.AutoModeListener;
 import de.uka.ilkd.key.control.TermLabelVisibilityManager;
 import de.uka.ilkd.key.core.KeYMediator;
 import de.uka.ilkd.key.core.KeYSelectionEvent;
 import de.uka.ilkd.key.core.KeYSelectionListener;
 import de.uka.ilkd.key.core.Main;
-
 import de.uka.ilkd.key.gui.actions.*;
-
 import de.uka.ilkd.key.gui.configuration.Config;
 import de.uka.ilkd.key.gui.docking.DockingHelper;
 import de.uka.ilkd.key.gui.extension.api.KeYGuiExtension;
@@ -50,34 +69,23 @@ import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.proof.ProofEvent;
+import de.uka.ilkd.key.settings.DefaultSMTSettings;
 import de.uka.ilkd.key.settings.GeneralSettings;
 import de.uka.ilkd.key.settings.ProofIndependentSettings;
-import de.uka.ilkd.key.settings.DefaultSMTSettings;
 import de.uka.ilkd.key.settings.SettingsListener;
 import de.uka.ilkd.key.smt.SMTProblem;
 import de.uka.ilkd.key.smt.SolverLauncher;
 import de.uka.ilkd.key.smt.SolverTypeCollection;
 import de.uka.ilkd.key.ui.AbstractMediatorUserInterfaceControl;
 import de.uka.ilkd.key.util.*;
+
+import bibliothek.gui.dock.StackDockStation;
+import bibliothek.gui.dock.common.CControl;
+import bibliothek.gui.dock.common.SingleCDockable;
+import bibliothek.gui.dock.common.intern.CDockable;
+import bibliothek.gui.dock.station.stack.tab.layouting.TabPlacement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
-
-import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import javax.swing.event.MouseInputAdapter;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.*;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
-import java.util.stream.Stream;
 
 @HelpInfo()
 public final class MainWindow extends JFrame {
@@ -89,7 +97,7 @@ public final class MainWindow extends JFrame {
     public static final String AUTO_MODE_TEXT = "Start/stop automated proof search";
     private static final long serialVersionUID = 5853419918923902636L;
     private static final String PARA =
-            "<p style=\"font-family: lucida;font-size: 12pt;font-weight: bold\">";
+        "<p style=\"font-family: lucida;font-size: 12pt;font-weight: bold\">";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainWindow.class);
 
@@ -110,7 +118,7 @@ public final class MainWindow extends JFrame {
     /**
      * the tab bar at the left
      */
-    //private final MainWindowTabbedPane mainWindowTabbedPane;
+    // private final MainWindowTabbedPane mainWindowTabbedPane;
     private final GoalList openGoalsView;
     private final ProofTreeView proofTreeView;
     private final InfoView infoView;
@@ -152,13 +160,13 @@ public final class MainWindow extends JFrame {
     private final AutoModeAction autoModeAction;
     private final NotificationManager notificationManager;
     private final PreferenceSaver prefSaver =
-            new PreferenceSaver(Preferences.userNodeForPackage(MainWindow.class));
+        new PreferenceSaver(Preferences.userNodeForPackage(MainWindow.class));
     private final HidePackagePrefixToggleAction hidePackagePrefixToggleAction =
-            new HidePackagePrefixToggleAction(this);
+        new HidePackagePrefixToggleAction(this);
     private final ToggleSequentViewTooltipAction toggleSequentViewTooltipAction =
-            new ToggleSequentViewTooltipAction(this);
+        new ToggleSequentViewTooltipAction(this);
     private final ToggleSourceViewTooltipAction toggleSourceViewTooltipAction =
-            new ToggleSourceViewTooltipAction(this);
+        new ToggleSourceViewTooltipAction(this);
     private final TermLabelMenu termLabelMenu;
     public boolean frozen = false;
     JCheckBoxMenuItem saveSMTFile;
@@ -244,9 +252,9 @@ public final class MainWindow extends JFrame {
      */
     private MainWindow() {
         getRootPane().getInputMap().put(HelpFacade.ACTION_OPEN_HELP.getAcceleratorKey(),
-                HelpFacade.ACTION_OPEN_HELP);
+            HelpFacade.ACTION_OPEN_HELP);
         getRootPane().getActionMap().put(HelpFacade.ACTION_OPEN_HELP,
-                HelpFacade.ACTION_OPEN_HELP);
+            HelpFacade.ACTION_OPEN_HELP);
 
         setTitle(KeYResourceManager.getManager().getUserInterfaceTitle());
         setLocationByPlatform(true);
@@ -268,7 +276,7 @@ public final class MainWindow extends JFrame {
         sequentViewSearchBar = new SequentViewSearchBar(emptySequent);
         proofListView = new JScrollPane();
         autoModeAction = new AutoModeAction(this);
-        //mainWindowTabbedPane = new MainWindowTabbedPane(this, mediator, autoModeAction);
+        // mainWindowTabbedPane = new MainWindowTabbedPane(this, mediator, autoModeAction);
         mainFrame = new MainFrame(this, emptySequent);
         sourceViewFrame = new SourceViewFrame(this);
         proofList = new TaskTree(mediator);
@@ -287,7 +295,7 @@ public final class MainWindow extends JFrame {
         MacroKeyBinding.registerMacroKeyBindings(mediator, currentGoalView, getRootPane());
 
         KeYGuiExtensionFacade.installKeyboardShortcuts(mediator, (JComponent) getContentPane(),
-                KeYGuiExtension.KeyboardShortcuts.MAIN_WINDOW);
+            KeYGuiExtension.KeyboardShortcuts.MAIN_WINDOW);
 
         KeYGuiExtensionFacade.getStartupExtensions()
                 .forEach(it -> it.init(this, mediator));
@@ -297,13 +305,13 @@ public final class MainWindow extends JFrame {
      *
      */
     private boolean applyTaskbarIcon() {
-        //https://stackoverflow.com/questions/50403677/changing-the-default-java-coffee-dock-icon-to-something-else
+        // https://stackoverflow.com/questions/50403677/changing-the-default-java-coffee-dock-icon-to-something-else
         try {
             Image image = IconFactory.keyLogo();
             Class<?> appClass = Class.forName("java.awt.Taskbar");
             Method getTaskbar = appClass.getMethod("getTaskbar");
             Method setIconImage = appClass.getMethod("setIconImage", Image.class);
-            Object taskbar = getTaskbar.invoke(null);//static method
+            Object taskbar = getTaskbar.invoke(null);// static method
             setIconImage.invoke(taskbar, image);
             return true;
         } catch (ClassNotFoundException | NoSuchMethodException
@@ -316,16 +324,17 @@ public final class MainWindow extends JFrame {
      * Set the dock image on MacOS <=10.6.
      */
     private boolean applyMacOsWorkaround() {
-        //https://stackoverflow.com/questions/50403677/changing-the-default-java-coffee-dock-icon-to-something-else
+        // https://stackoverflow.com/questions/50403677/changing-the-default-java-coffee-dock-icon-to-something-else
         try {
             Class<?> appClass = Class.forName("com.apple.eawt.Application");
-            Class<?>[] params = new Class[]{Image.class};
+            Class<?>[] params = new Class[] { Image.class };
             Method getApplication = appClass.getMethod("getApplication");
             Object application = getApplication.invoke(appClass);
             Method setDockIconImage = appClass.getMethod("setDockIconImage", params);
             setDockIconImage.invoke(application, IconFactory.keyLogo());
             return true;
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException
+                | IllegalArgumentException
                 | InvocationTargetException | ClassNotFoundException ignored) {
             return false;
         }
@@ -337,7 +346,8 @@ public final class MainWindow extends JFrame {
 
     public static MainWindow getInstance(boolean ensureIsVisible) {
         if (GraphicsEnvironment.isHeadless()) {
-            LOGGER.error("Error: KeY started in graphical mode, but no graphical environment present.");
+            LOGGER.error(
+                "Error: KeY started in graphical mode, but no graphical environment present.");
             LOGGER.error("Please use the --auto option to start KeY in batch mode.");
             LOGGER.error("Use the --help option for more command line options.");
             System.exit(-1);
@@ -360,7 +370,9 @@ public final class MainWindow extends JFrame {
      * to do some cleanup only if a {@link MainWindow} instance exists.</b>
      * </p>
      *
-     * @return {@code true} {@link MainWindow} exists and is available via {@link #getInstance()}, {@code false} {@link MainWindow} is not instantiated and will be instantiated via {@link #getInstance()}.
+     * @return {@code true} {@link MainWindow} exists and is available via {@link #getInstance()},
+     *         {@code false} {@link MainWindow} is not instantiated and will be instantiated via
+     *         {@link #getInstance()}.
      */
     public static boolean hasInstance() {
         return instance != null;
@@ -417,9 +429,11 @@ public final class MainWindow extends JFrame {
     private KeYMediator getMainWindowMediator(AbstractMediatorUserInterfaceControl userInterface) {
         KeYMediator result = new KeYMediator(userInterface);
         // Not sure if this is needed.
-        // Automode stopped is always fired next and sets it as well (does not cause a duplicate listener).
+        // Automode stopped is always fired next and sets it as well (does not cause a duplicate
+        // listener).
         result.addKeYSelectionListener(proofListener);
-        // This method delegates the request only to the UserInterfaceControl which implements the functionality.
+        // This method delegates the request only to the UserInterfaceControl which implements the
+        // functionality.
         // No functionality is allowed in this method body!
         result.getUI().getProofControl().addAutoModeListener(proofListener);
         result.addGUIListener(new MainGUIListener());
@@ -455,8 +469,8 @@ public final class MainWindow extends JFrame {
         // FIXME do this NOT in layout of GUI
         // minimize interaction
         final boolean stupidMode =
-                ProofIndependentSettings.DEFAULT_INSTANCE
-                        .getGeneralSettings().tacletFilter();
+            ProofIndependentSettings.DEFAULT_INSTANCE
+                    .getGeneralSettings().tacletFilter();
         userInterface.getProofControl().setMinimizeInteraction(stupidMode);
 
         // set up actions
@@ -474,7 +488,7 @@ public final class MainWindow extends JFrame {
         showActiveSettingsAction = new ShowActiveSettingsAction(this);
         loadUserDefinedTacletsAction = new LemmaGenerationAction.ProveAndAddTaclets(this);
         loadUserDefinedTacletsForProvingAction =
-                new LemmaGenerationAction.ProveUserDefinedTaclets(this);
+            new LemmaGenerationAction.ProveUserDefinedTaclets(this);
         loadKeYTaclets = new LemmaGenerationAction.ProveKeYTaclets(this);
         lemmaGenerationBatchModeAction = new LemmaGenerationBatchModeAction(this);
         unicodeToggleAction = new UnicodeToggleAction(this);
@@ -503,38 +517,39 @@ public final class MainWindow extends JFrame {
         proofListView.setPreferredSize(new java.awt.Dimension(350, 100));
         GuiUtilities.paintEmptyViewComponent(proofListView, "Proofs");
 
-        //JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, proofListView, mainWindowTabbedPane);
-        //leftPane.setName("leftPane");
-        //leftPane.setOneTouchExpandable(true);
+        // JSplitPane leftPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, proofListView,
+        // mainWindowTabbedPane);
+        // leftPane.setName("leftPane");
+        // leftPane.setOneTouchExpandable(true);
 
-        //JPanel rightPane = new JPanel();
-        //rightPane.setLayout(new BorderLayout());
-        //rightPane.add(mainFrame, BorderLayout.CENTER);
+        // JPanel rightPane = new JPanel();
+        // rightPane.setLayout(new BorderLayout());
+        // rightPane.add(mainFrame, BorderLayout.CENTER);
         mainFrame.add(sequentViewSearchBar, BorderLayout.SOUTH);
 
-        //JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, rightPane, sourceView);
-        //pane.setResizeWeight(0.5);
-        //pane.setOneTouchExpandable(true);
-        //pane.setName("split2");
+        // JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, rightPane, sourceView);
+        // pane.setResizeWeight(0.5);
+        // pane.setOneTouchExpandable(true);
+        // pane.setName("split2");
 
-        //JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane, pane);
-        //splitPane.setResizeWeight(0); // the right pane is more important
-        //splitPane.setOneTouchExpandable(true);
-        //splitPane.setName("splitPane");
-        //getContentPane().add(splitPane, BorderLayout.CENTER);
+        // JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane, pane);
+        // splitPane.setResizeWeight(0); // the right pane is more important
+        // splitPane.setOneTouchExpandable(true);
+        // splitPane.setName("splitPane");
+        // getContentPane().add(splitPane, BorderLayout.CENTER);
 
         dockControl.putProperty(StackDockStation.TAB_PLACEMENT, TabPlacement.TOP_OF_DOCKABLE);
 
         getContentPane().add(dockControl.getContentArea());
 
         dockProofListView = DockingHelper.createSingleDock("Loaded Proofs", proofListView,
-                TaskTree.class.getName());
+            TaskTree.class.getName());
         dockSequent = DockingHelper.createSingleDock("Sequent", mainFrame);
         dockSourceView = DockingHelper.createSingleDock("Source", sourceViewFrame);
 
         Stream<TabPanel> extensionPanels = KeYGuiExtensionFacade.getAllPanels(this);
         Stream<TabPanel> defaultPanels = Stream.of(proofTreeView, infoView,
-                strategySelectionView, openGoalsView);
+            strategySelectionView, openGoalsView);
         Stream.concat(defaultPanels, extensionPanels)
                 .map(DockingHelper::createSingleDock)
                 .forEach(it -> dockControl.addDockable(it));
@@ -550,8 +565,8 @@ public final class MainWindow extends JFrame {
         DockingHelper.restoreFactoryDefault(this);
 
         statusLine = new MainStatusLine("<html>" + PARA + KeYConstants.COPYRIGHT + PARA
-                + "KeY is free software and comes with ABSOLUTELY NO WARRANTY."
-                + " See About | License.", getFont());
+            + "KeY is free software and comes with ABSOLUTELY NO WARRANTY."
+            + " See About | License.", getFont());
         getContentPane().add(statusLine, BorderLayout.SOUTH);
 
         // load preferred sizes from system preferences
@@ -603,8 +618,8 @@ public final class MainWindow extends JFrame {
         toolBar.add(new GoalBackAction(this, false));
         toolBar.add(new PruneProofAction(this));
         toolBar.addSeparator();
-        //toolBar.add(createHeatmapToggle());
-        //toolBar.add(createHeatmapMenuOpener());
+        // toolBar.add(createHeatmapToggle());
+        // toolBar.add(createHeatmapMenuOpener());
 
         return toolBar;
     }
@@ -612,10 +627,10 @@ public final class MainWindow extends JFrame {
     private ComplexButton createSMTComponent() {
         smtComponent = new ComplexButton(TOOLBAR_ICON_SIZE);
         smtComponent.setEmptyItem("No solver available",
-                "<html>No SMT solver is applicable for KeY.<br>" +
-                        "<br>If a solver is installed on your system," +
-                        "<br>please configure the KeY-System accordingly:\n" +
-                        "<br>Options | SMT Solvers</html>");
+            "<html>No SMT solver is applicable for KeY.<br>" +
+                "<br>If a solver is installed on your system," +
+                "<br>please configure the KeY-System accordingly:\n" +
+                "<br>Options | SMT Solvers</html>");
 
         smtComponent.setPrefix("Run ");
 
@@ -637,7 +652,7 @@ public final class MainWindow extends JFrame {
     private JComponent createWiderAutoModeButton() {
         JButton b = new JButton(autoModeAction);
         b.putClientProperty("hideActionText", Boolean.TRUE);
-        //the following rigmarole is to make the button slightly wider
+        // the following rigmarole is to make the button slightly wider
         JPanel p = new JPanel();
         p.setLayout(new GridBagLayout());
         p.add(b);
@@ -672,7 +687,7 @@ public final class MainWindow extends JFrame {
     }
 
     private void setStatusLineImmediately(String str, int max) {
-        //statusLine.reset();
+        // statusLine.reset();
         statusLine.setStatusText(str);
         if (max > 0) {
             getStatusLine().setProgressBarMaximum(max);
@@ -694,7 +709,7 @@ public final class MainWindow extends JFrame {
 
     @Deprecated
     public void selectFirstTab() {
-        //weigl disable: this.mainWindowTabbedPane.setSelectedIndex(0);
+        // weigl disable: this.mainWindowTabbedPane.setSelectedIndex(0);
     }
 
     /**
@@ -770,7 +785,7 @@ public final class MainWindow extends JFrame {
         submenu.add(loadUserDefinedTacletsForProvingAction);
         submenu.add(loadKeYTaclets);
         submenu.add(lemmaGenerationBatchModeAction);
-        if(Main.isExperimentalMode()) {
+        if (Main.isExperimentalMode()) {
             RunAllProofsAction runAllProofsAction = new RunAllProofsAction(this);
             submenu.add(runAllProofsAction);
         }
@@ -787,20 +802,19 @@ public final class MainWindow extends JFrame {
 
         JMenuItem laf = new JCheckBoxMenuItem("Use system look and feel (experimental)");
         laf.setToolTipText("If checked KeY tries to appear in the look and feel of your " +
-                "window manager, if not in the default Java LaF (aka Metal).");
+            "window manager, if not in the default Java LaF (aka Metal).");
         final de.uka.ilkd.key.settings.ViewSettings vs =
-                ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings();
+            ProofIndependentSettings.DEFAULT_INSTANCE.getViewSettings();
         laf.setSelected(vs.useSystemLaF());
         laf.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                vs.setUseSystemLaF(((JCheckBoxMenuItem) e.getSource()).
-                        isSelected());
+                vs.setUseSystemLaF(((JCheckBoxMenuItem) e.getSource()).isSelected());
                 // TODO: inform that this requires a restart
                 LOGGER.warn("Info: Look and feel changed for next start of KeY.");
             }
         });
-//        view.add(laf); // uncomment this line to include the option in the menu
+        // view.add(laf); // uncomment this line to include the option in the menu
 
 
         view.add(new JCheckBoxMenuItem(new PrettyPrintToggleAction(this)));
@@ -849,7 +863,8 @@ public final class MainWindow extends JFrame {
         proof.addMenuListener(new MenuListener() {
             @Override
             public void menuSelected(MenuEvent e) {
-                /* we use this MenuListener to update the name only if the menu is shown since it
+                /*
+                 * we use this MenuListener to update the name only if the menu is shown since it
                  * would be slower to update the name (which means scanning all open and closed
                  * goals) at every selection change (via the KeYSelectionListener in GoalBackAction)
                  */
@@ -898,7 +913,7 @@ public final class MainWindow extends JFrame {
 
         options.add(new TacletOptionsAction(this));
         options.add(new SMTOptionsAction(this));
-//	options.add(setupSpeclangMenu()); // legacy since only JML supported
+        // options.add(setupSpeclangMenu()); // legacy since only JML supported
         options.addSeparator();
         options.add(new JCheckBoxMenuItem(new ToggleConfirmExitAction(this)));
         options.add(new JCheckBoxMenuItem(new AutoSave(this)));
@@ -916,7 +931,7 @@ public final class MainWindow extends JFrame {
 
         help.add(new AboutAction(this));
         help.add(new KeYProjectHomepageAction(this));
-//        help.add(new SystemInfoAction(this));
+        // help.add(new SystemInfoAction(this));
         help.add(new MenuSendFeedackAction(this));
         help.add(new LicenseAction(this));
         return help;
@@ -927,8 +942,8 @@ public final class MainWindow extends JFrame {
      * Remove those, that are not installed anymore, add those, that got installed.
      */
     public void updateSMTSelectMenu() {
-        Collection<SolverTypeCollection> solverUnions = ProofIndependentSettings.DEFAULT_INSTANCE.
-                getSMTSettings().getUsableSolverUnions(Main.isExperimentalMode());
+        Collection<SolverTypeCollection> solverUnions = ProofIndependentSettings.DEFAULT_INSTANCE
+                .getSMTSettings().getUsableSolverUnions(Main.isExperimentalMode());
 
         if (solverUnions == null || solverUnions.isEmpty()) {
             updateDPSelectionMenu();
@@ -963,8 +978,8 @@ public final class MainWindow extends JFrame {
 
         smtComponent.setItems(actions);
 
-        SolverTypeCollection active = ProofIndependentSettings
-                .DEFAULT_INSTANCE.getSMTSettings().computeActiveSolverUnion();
+        SolverTypeCollection active =
+            ProofIndependentSettings.DEFAULT_INSTANCE.getSMTSettings().computeActiveSolverUnion();
 
         SMTInvokeAction activeAction = findAction(actions, active);
 
@@ -988,11 +1003,10 @@ public final class MainWindow extends JFrame {
     private JMenuItem setupSpeclangMenu() {
         JMenu result = new JMenu("Specification Parser");
         ButtonGroup group = new ButtonGroup();
-        GeneralSettings gs
-                = ProofIndependentSettings.DEFAULT_INSTANCE.getGeneralSettings();
+        GeneralSettings gs = ProofIndependentSettings.DEFAULT_INSTANCE.getGeneralSettings();
 
-        JRadioButtonMenuItem jmlButton
-                = new JRadioButtonMenuItem("Source File Comments Are JML", gs.useJML());
+        JRadioButtonMenuItem jmlButton =
+            new JRadioButtonMenuItem("Source File Comments Are JML", gs.useJML());
         result.add(jmlButton);
         group.add(jmlButton);
         jmlButton.setIcon(IconFactory.jmlLogo(15));
@@ -1004,8 +1018,8 @@ public final class MainWindow extends JFrame {
             }
         });
 
-        JRadioButtonMenuItem noneButton
-                = new JRadioButtonMenuItem("Source File Comments Are Ignored", !gs.useJML());
+        JRadioButtonMenuItem noneButton =
+            new JRadioButtonMenuItem("Source File Comments Are Ignored", !gs.useJML());
         result.add(noneButton);
         group.add(noneButton);
         noneButton.addActionListener(new ActionListener() {
@@ -1060,7 +1074,8 @@ public final class MainWindow extends JFrame {
 
         final SequentView newSequentView;
 
-        // if this is set we can skip calls to printSequent, since it is invoked in setSequentView immediately anyways
+        // if this is set we can skip calls to printSequent, since it is invoked in setSequentView
+        // immediately anyways
         final boolean isPrintRunImmediately = SwingUtilities.isEventDispatchThread();
         if (getMediator().getSelectedProof() == null) {
             newSequentView = emptySequent;
@@ -1239,7 +1254,8 @@ public final class MainWindow extends JFrame {
         getUserInterface().loadProblem(file);
     }
 
-    public void loadProblem(File file, List<File> classPath, File bootClassPath, List<File> includes) {
+    public void loadProblem(File file, List<File> classPath, File bootClassPath,
+            List<File> includes) {
         getUserInterface().loadProblem(file, classPath, bootClassPath, includes);
     }
 
@@ -1247,8 +1263,8 @@ public final class MainWindow extends JFrame {
      * Loads the proof with the given path from the proof bundle.
      *
      * @param proofBundle the path of the proof bundle
-     * @param proofPath   the path of the proof to load
-     *                    (relative to the root of the bundle -> filename only)
+     * @param proofPath the path of the proof to load
+     *        (relative to the root of the bundle -> filename only)
      */
     public void loadProofFromBundle(File proofBundle, File proofPath) {
         getUserInterface().loadProofFromBundle(proofBundle, proofPath);
@@ -1360,7 +1376,7 @@ public final class MainWindow extends JFrame {
         Container contentPane;
 
         public GlassPaneListener(Component glassPane,
-                                 Container contentPane) {
+                Container contentPane) {
             this.glassPane = glassPane;
             this.contentPane = contentPane;
         }
@@ -1371,8 +1387,10 @@ public final class MainWindow extends JFrame {
         }
 
         /*
-         * We must forward at least the mouse drags that started with mouse presses over the check box.
-         * Otherwise, when the user presses the check box then drags off, the check box isn't disarmed --
+         * We must forward at least the mouse drags that started with mouse presses over the check
+         * box.
+         * Otherwise, when the user presses the check box then drags off, the check box isn't
+         * disarmed --
          * it keeps its dark gray background or whatever its L&F uses to indicate that the button is
          * currently being pressed.
          */
@@ -1415,13 +1433,13 @@ public final class MainWindow extends JFrame {
                 Point glassPanePoint = e.getPoint();
 
                 Point containerPoint =
-                        SwingUtilities.convertPoint(glassPane,
-                                glassPanePoint,
-                                contentPane);
+                    SwingUtilities.convertPoint(glassPane,
+                        glassPanePoint,
+                        contentPane);
                 Component component =
-                        SwingUtilities.getDeepestComponentAt(contentPane,
-                                containerPoint.x,
-                                containerPoint.y);
+                    SwingUtilities.getDeepestComponentAt(contentPane,
+                        containerPoint.x,
+                        containerPoint.y);
 
                 if (eventID == MouseEvent.MOUSE_PRESSED &&
                         isLiveComponent(component)) {
@@ -1448,18 +1466,18 @@ public final class MainWindow extends JFrame {
         private void dispatchForCurrentComponent(MouseEvent e) {
             Point glassPanePoint = e.getPoint();
             Point componentPoint =
-                    SwingUtilities.convertPoint(glassPane,
-                            glassPanePoint,
-                            currentComponent);
+                SwingUtilities.convertPoint(glassPane,
+                    glassPanePoint,
+                    currentComponent);
             currentComponent.dispatchEvent(new MouseEvent(currentComponent,
-                    e.getID(),
-                    e.getWhen(),
-                    // do not use as it freezes the stop button: e.getModifiersEx(),
-                    e.getModifiers(),
-                    componentPoint.x,
-                    componentPoint.y,
-                    e.getClickCount(),
-                    e.isPopupTrigger()));
+                e.getID(),
+                e.getWhen(),
+                // do not use as it freezes the stop button: e.getModifiersEx(),
+                e.getModifiers(),
+                componentPoint.x,
+                componentPoint.y,
+                e.getClickCount(),
+                e.isPopupTrigger()));
         }
     }
 
@@ -1530,7 +1548,7 @@ public final class MainWindow extends JFrame {
                 // disable all elements except the sequent window (drag'n'drop !) ...
                 enableMenuBar(MainWindow.this.getJMenuBar(), false);
                 MainWindow.this.mainFrame.setEnabled(false);
-                //mainWindowTabbedPane.setEnabledForAllTabs(false);
+                // mainWindowTabbedPane.setEnabledForAllTabs(false);
                 setToolBarDisabled();
             } else {
                 // disable the whole main window ...
@@ -1547,7 +1565,7 @@ public final class MainWindow extends JFrame {
                 // enable all previously disabled elements ...
                 enableMenuBar(MainWindow.this.getJMenuBar(), true);
                 MainWindow.this.mainFrame.setEnabled(true);
-                //mainWindowTabbedPane.setEnabledForAllTabs(true);
+                // mainWindowTabbedPane.setEnabledForAllTabs(true);
                 setToolBarEnabled();
             } else {
                 // enable the whole main window ...
@@ -1691,7 +1709,8 @@ public final class MainWindow extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!mediator.ensureProofLoaded() || solverUnion == SolverTypeCollection.EMPTY_COLLECTION) {
+            if (!mediator.ensureProofLoaded()
+                    || solverUnion == SolverTypeCollection.EMPTY_COLLECTION) {
                 MainWindow.this.popupWarning("No proof loaded or no solvers selected.", "Oops...");
                 return;
             }
@@ -1701,14 +1720,15 @@ public final class MainWindow extends JFrame {
                 @Override
                 public void run() {
 
-                    DefaultSMTSettings settings = new DefaultSMTSettings(proof.getSettings().getSMTSettings(),
+                    DefaultSMTSettings settings =
+                        new DefaultSMTSettings(proof.getSettings().getSMTSettings(),
                             ProofIndependentSettings.DEFAULT_INSTANCE.getSMTSettings(),
                             proof.getSettings().getNewSMTSettings(), proof);
                     SolverLauncher launcher = new SolverLauncher(settings);
                     launcher.addListener(new SolverListener(settings, proof));
                     launcher.launch(solverUnion.getTypes(),
-                            SMTProblem.createSMTProblems(proof),
-                            proof.getServices());
+                        SMTProblem.createSMTProblems(proof),
+                        proof.getServices());
 
                 }
             }, "SMTRunner");

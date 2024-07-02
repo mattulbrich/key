@@ -1,6 +1,15 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import recoder.abstraction.ClassType;
 import recoder.io.DataLocation;
@@ -8,11 +17,6 @@ import recoder.java.declaration.TypeDeclaration;
 import recoder.java.declaration.TypeDeclarationContainer;
 import recoder.list.generic.ASTList;
 import recoder.util.Debug;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A node representing a single source file containing {@link TypeDeclaration}s
@@ -24,7 +28,8 @@ import java.util.Map;
  * @author <TT>AutoDoc</TT>
  */
 
-public class CompilationUnit extends JavaNonTerminalProgramElement implements TypeDeclarationContainer, TypeScope {
+public class CompilationUnit extends JavaNonTerminalProgramElement
+        implements TypeDeclarationContainer, TypeScope {
 
     /**
      * Undefined scope tag.
@@ -78,13 +83,13 @@ public class CompilationUnit extends JavaNonTerminalProgramElement implements Ty
     /**
      * Compilation unit.
      *
-     * @param pkg              a package specification.
-     * @param imports          an import mutable list.
+     * @param pkg a package specification.
+     * @param imports an import mutable list.
      * @param typeDeclarations a type declaration mutable list.
      */
 
     public CompilationUnit(PackageSpecification pkg, ASTList<Import> imports,
-                           ASTList<TypeDeclaration> typeDeclarations) {
+            ASTList<TypeDeclaration> typeDeclarations) {
         setPackageSpecification(pkg);
         setImports(imports);
         setDeclarations(typeDeclarations);
@@ -203,7 +208,7 @@ public class CompilationUnit extends JavaNonTerminalProgramElement implements Ty
 
     public SourceElement getLastElement() {
         return (typeDeclarations != null && !typeDeclarations.isEmpty()) ? typeDeclarations.get(
-                typeDeclarations.size() - 1).getLastElement() : this;
+            typeDeclarations.size() - 1).getLastElement() : this;
     }
 
     /**
@@ -382,6 +387,7 @@ public class CompilationUnit extends JavaNonTerminalProgramElement implements Ty
      * Return the type declaration at the specified index in this node's
      * "virtual" type declaration array. @param index an index for a type
      * declaration. @return the type declaration with the given index.
+     *
      * @exception ArrayIndexOutOfBoundsException if <tt> index </tt> is out of
      * bounds.
      */

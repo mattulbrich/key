@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -53,11 +63,12 @@ public class CreateBuilder extends RecoderModelTransformer {
     private StatementBlock createBody() {
         ASTList<Statement> result = new ASTArrayList<>(10);
         result.add(assign(
-                attribute(new ThisReference(), new ImplicitIdentifier(ImplicitFieldAdder.IMPLICIT_INITIALIZED)),
-                new BooleanLiteral(false)));
+            attribute(new ThisReference(),
+                new ImplicitIdentifier(ImplicitFieldAdder.IMPLICIT_INITIALIZED)),
+            new BooleanLiteral(false)));
 
         result.add(new MethodReference(null,
-                new ImplicitIdentifier(PrepareObjectBuilder.IMPLICIT_OBJECT_PREPARE_ENTER)));
+            new ImplicitIdentifier(PrepareObjectBuilder.IMPLICIT_OBJECT_PREPARE_ENTER)));
 
         result.add(new Return(new ThisReference()));
 
@@ -70,7 +81,7 @@ public class CreateBuilder extends RecoderModelTransformer {
      * method that takes the object to be created out of the pool
      *
      * @param type the TypeDeclaration for which the
-     *             <code>&lt;prepare&gt;</code> is created
+     *        <code>&lt;prepare&gt;</code> is created
      * @return the implicit <code>&lt;prepare&gt;</code> method
      */
     public MethodDeclaration createMethod(ClassDeclaration type) {
@@ -78,11 +89,11 @@ public class CreateBuilder extends RecoderModelTransformer {
         modifiers.add(new Public());
 
         MethodDeclaration md = new MethodDeclaration(modifiers,
-                new TypeReference(getId(type)),
-                new ImplicitIdentifier(IMPLICIT_CREATE),
-                new ASTArrayList<>(0),
-                null,
-                createBody());
+            new TypeReference(getId(type)),
+            new ImplicitIdentifier(IMPLICIT_CREATE),
+            new ASTArrayList<>(0),
+            null,
+            createBody());
         md.makeAllParentRolesValid();
         return md;
     }
@@ -96,7 +107,7 @@ public class CreateBuilder extends RecoderModelTransformer {
     protected void makeExplicit(TypeDeclaration td) {
         if (td instanceof ClassDeclaration) {
             attach(createMethod((ClassDeclaration) td),
-                    td, td.getMembers().size());
+                td, td.getMembers().size());
         }
     }
 }

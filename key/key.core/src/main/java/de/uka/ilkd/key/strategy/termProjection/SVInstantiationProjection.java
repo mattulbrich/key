@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -31,32 +41,32 @@ public class SVInstantiationProjection implements ProjectionToTerm {
 
     private final Name svName;
     private final boolean demandInst;
-    
+
     private SVInstantiationProjection(Name svName, boolean demandInst) {
         this.svName = svName;
         this.demandInst = demandInst;
     }
 
     public static SVInstantiationProjection create(Name svName, boolean demandInst) {
-        return new SVInstantiationProjection ( svName, demandInst );
+        return new SVInstantiationProjection(svName, demandInst);
     }
-    
+
     @Override
     public Term toTerm(RuleApp app, PosInOccurrence pos, Goal goal) {
-        if ( ! ( app instanceof TacletApp ) )
-            Debug.fail ( "Projection is only applicable to taclet apps," +
-                         " but got " + app );
-       
-        final TacletApp tapp = (TacletApp)app;
-        final Object instObj = tapp.instantiations ().lookupValue ( svName );
-        if ( ! ( instObj instanceof Term ) ) {
-            Debug.assertFalse ( demandInst,
-                                "Did not find schema variable "
-                                + svName + " that I was supposed to examine" +
-                                " (taclet " + tapp.taclet().name() + ")" );
+        if (!(app instanceof TacletApp))
+            Debug.fail("Projection is only applicable to taclet apps," +
+                " but got " + app);
+
+        final TacletApp tapp = (TacletApp) app;
+        final Object instObj = tapp.instantiations().lookupValue(svName);
+        if (!(instObj instanceof Term)) {
+            Debug.assertFalse(demandInst,
+                "Did not find schema variable "
+                    + svName + " that I was supposed to examine" +
+                    " (taclet " + tapp.taclet().name() + ")");
             return null;
         }
-        return (Term)instObj;
+        return (Term) instObj;
     }
 
 

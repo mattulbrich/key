@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,11 +23,12 @@
 
 package org.key_project.util.testcase.collection;
 
-import org.junit.jupiter.api.Test;
+import java.util.Iterator;
+
 import org.key_project.util.collection.DefaultImmutableSet;
 import org.key_project.util.collection.ImmutableSet;
 
-import java.util.Iterator;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestSetAsListOfString {
 
-    String[] str = new String[]{"Dies", "ist", "ein", "Test"};
+    String[] str = new String[] { "Dies", "ist", "ein", "Test" };
 
     // test if String is SAME as one in the array arr
     private boolean isInArray(String str, String[] arr) {
@@ -72,7 +83,7 @@ public class TestSetAsListOfString {
 
         // add existing element, has to be SAME set
         assertSame(newSet[str.length], newSet[str.length].add(str[0]),
-                "Element found 2 times in set or set is not the same.");
+            "Element found 2 times in set or set is not the same.");
     }
 
     // tests unify
@@ -86,7 +97,7 @@ public class TestSetAsListOfString {
         // appearance of str[1] == 1
         ImmutableSet<String> union = newSet[1].union(newSet[0]);
         assertEquals(3, union.size());
-        //test if set has all elements
+        // test if set has all elements
         for (int i = 0; i < 3; i++) {
             assertTrue(union.contains(str[0]));
         }
@@ -123,8 +134,10 @@ public class TestSetAsListOfString {
         superSet = subSet.add(str[2]);
         assertTrue(subSet.subset(superSet), "Failure: in subset relation (!sub<super)");
         assertFalse(superSet.subset(subSet), "Failure: in subset relation (super<sub)");
-        assertTrue(DefaultImmutableSet.<String>nil().subset(superSet), "EmptySet is not part of another Set");
-        assertFalse(subSet.subset(DefaultImmutableSet.nil()), "A non empty set is subset of the empty set");
+        assertTrue(DefaultImmutableSet.<String>nil().subset(superSet),
+            "EmptySet is not part of another Set");
+        assertFalse(subSet.subset(DefaultImmutableSet.nil()),
+            "A non empty set is subset of the empty set");
     }
 
     @Test

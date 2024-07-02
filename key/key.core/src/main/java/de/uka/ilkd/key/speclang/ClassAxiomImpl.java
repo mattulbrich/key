@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,11 +25,6 @@ package de.uka.ilkd.key.speclang;
 
 
 import java.util.function.UnaryOperator;
-
-import org.key_project.util.collection.DefaultImmutableSet;
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -36,8 +41,14 @@ import de.uka.ilkd.key.rule.tacletbuilder.TacletGenerator;
 import de.uka.ilkd.key.util.MiscTools;
 import de.uka.ilkd.key.util.Pair;
 
+import org.key_project.util.collection.DefaultImmutableSet;
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
+import org.key_project.util.collection.ImmutableSet;
+
 /**
  * Represents an axiom specified in a class.
+ *
  * @author bruns
  *
  */
@@ -50,43 +61,44 @@ public final class ClassAxiomImpl extends ClassAxiom {
     private final Term originalRep;
     private final ProgramVariable originalSelfVar;
 
-    /** JML axioms may not be declared static, but they may be used like static specifications.
+    /**
+     * JML axioms may not be declared static, but they may be used like static specifications.
      * This is the case when it does not refer to an instance.
      */
     private final boolean isStatic;
 
 
     public ClassAxiomImpl(String name,
-	    KeYJavaType kjt,
-	    VisibilityModifier visibility,
-	    Term rep,
-	    ProgramVariable selfVar) {
-	assert name != null;
-	assert kjt != null;
-	this.name = name;
-	this.kjt = kjt;
-	this.visibility = visibility;
-	this.originalRep = rep;
-	this.originalSelfVar = selfVar;
-	final OpCollector oc = new OpCollector();
-	originalRep.execPostOrder(oc);
-	this.isStatic        = !oc.contains(originalSelfVar);
+            KeYJavaType kjt,
+            VisibilityModifier visibility,
+            Term rep,
+            ProgramVariable selfVar) {
+        assert name != null;
+        assert kjt != null;
+        this.name = name;
+        this.kjt = kjt;
+        this.visibility = visibility;
+        this.originalRep = rep;
+        this.originalSelfVar = selfVar;
+        final OpCollector oc = new OpCollector();
+        originalRep.execPostOrder(oc);
+        this.isStatic = !oc.contains(originalSelfVar);
     }
 
 
     public ClassAxiomImpl(String name, String displayName,
-        KeYJavaType kjt,
-        VisibilityModifier visibility,
-        Term rep,
-        ProgramVariable selfVar) {
-        this(name,kjt,visibility,rep,selfVar);
+            KeYJavaType kjt,
+            VisibilityModifier visibility,
+            Term rep,
+            ProgramVariable selfVar) {
+        this(name, kjt, visibility, rep, selfVar);
         this.displayName = displayName;
     }
 
     @Override
     public ClassAxiomImpl map(UnaryOperator<Term> op, Services services) {
         return new ClassAxiomImpl(
-                name, name, kjt, visibility, op.apply(originalRep), originalSelfVar);
+            name, name, kjt, visibility, op.apply(originalRep), originalSelfVar);
     }
 
 
@@ -120,25 +132,25 @@ public final class ClassAxiomImpl extends ClassAxiom {
 
     @Override
     public int hashCode() {
-       return 17*(name.hashCode() + 17 * kjt.hashCode()) + (isStatic ? 13 : 7);
+        return 17 * (name.hashCode() + 17 * kjt.hashCode()) + (isStatic ? 13 : 7);
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 
 
 
     @Override
     public KeYJavaType getKJT() {
-	return kjt;
+        return kjt;
     }
 
 
     @Override
     public VisibilityModifier getVisibility() {
-	return visibility;
+        return visibility;
     }
 
 
@@ -147,9 +159,9 @@ public final class ClassAxiomImpl extends ClassAxiom {
             ImmutableSet<Pair<Sort, IObserverFunction>> toLimit,
             Services services) {
         ImmutableList<ProgramVariable> replaceVars =
-                ImmutableSLList.<ProgramVariable>nil();
+            ImmutableSLList.<ProgramVariable>nil();
         replaceVars = replaceVars.append(
-                services.getTypeConverter().getHeapLDT().getHeap());
+            services.getTypeConverter().getHeapLDT().getHeap());
         if (!isStatic) {
             replaceVars = replaceVars.append(originalSelfVar);
         }
@@ -161,23 +173,22 @@ public final class ClassAxiomImpl extends ClassAxiom {
         final Name tacletName = MiscTools.toValidTacletName(namePP);
         final RuleSet ruleSet = new RuleSet(new Name("classAxiom"));
         return taclets.add(TG.generateAxiomTaclet(tacletName, rep,
-                                                       replaceVars, kjt, ruleSet,
-                                                       services));
+            replaceVars, kjt, ruleSet,
+            services));
     }
 
 
     @Override
     public ImmutableSet<Pair<Sort, IObserverFunction>> getUsedObservers(
-	    Services services) {
-	return DefaultImmutableSet.nil();
+            Services services) {
+        return DefaultImmutableSet.nil();
     }
 
 
     @Override
     public String toString() {
-	return "axiom "+originalRep.toString();
+        return "axiom " + originalRep.toString();
     }
-
 
 
 
@@ -186,7 +197,7 @@ public final class ClassAxiomImpl extends ClassAxiom {
      */
     @Override
     public IObserverFunction getTarget() {
-	return null;
+        return null;
     }
 
 }

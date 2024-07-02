@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -16,8 +26,6 @@ package de.uka.ilkd.key.speclang;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
-
-import org.key_project.util.collection.ImmutableSLList;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -32,6 +40,8 @@ import de.uka.ilkd.key.logic.op.ParsableVariable;
 import de.uka.ilkd.key.logic.op.ProgramVariable;
 import de.uka.ilkd.key.proof.OpReplacer;
 import de.uka.ilkd.key.speclang.Contract.OriginalVariables;
+
+import org.key_project.util.collection.ImmutableSLList;
 
 
 /**
@@ -71,12 +81,13 @@ public final class ClassInvariantImpl implements ClassInvariant {
     private final boolean isStatic;
 
 
-    //-------------------------------------------------------------------------
-    //constructors
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // constructors
+    // -------------------------------------------------------------------------
 
     /**
      * Creates a class invariant.
+     *
      * @param name the unique internal name of the invariant
      * @param displayName the displayed name of the invariant
      * @param kjt the KeYJavaType to which the invariant belongs
@@ -86,38 +97,38 @@ public final class ClassInvariantImpl implements ClassInvariant {
      * @param selfVar the variable used for the receiver object
      */
     public ClassInvariantImpl(String name,
-                              String displayName,
-                              KeYJavaType kjt,
-                              VisibilityModifier visibility,
-                              Term inv,
-                              ParsableVariable selfVar) {
+            String displayName,
+            KeYJavaType kjt,
+            VisibilityModifier visibility,
+            Term inv,
+            ParsableVariable selfVar) {
         assert name != null && !name.equals("");
         assert displayName != null && !displayName.equals("");
-	assert kjt != null;
+        assert kjt != null;
         assert inv != null;
-        this.name            = name;
-        this.displayName     = displayName;
-	this.kjt             = kjt;
-        this.visibility      = visibility;
-        this.originalInv     = inv;
+        this.name = name;
+        this.displayName = displayName;
+        this.kjt = kjt;
+        this.visibility = visibility;
+        this.originalInv = inv;
         this.originalSelfVar = selfVar;
         final OpCollector oc = new OpCollector();
         originalInv.execPostOrder(oc);
-        this.isStatic        = selfVar == null;
-//        assert isStatic == !oc.contains(originalSelfVar);
+        this.isStatic = selfVar == null;
+        // assert isStatic == !oc.contains(originalSelfVar);
     }
 
 
-    //-------------------------------------------------------------------------
-    //internal methods
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // internal methods
+    // -------------------------------------------------------------------------
 
     private Map<Operator, Operator> getReplaceMap(
-                ParsableVariable selfVar,
-                TermServices services) {
+            ParsableVariable selfVar,
+            TermServices services) {
         Map<Operator, Operator> result = new LinkedHashMap<Operator, Operator>();
 
-        if(selfVar != null && originalSelfVar != null) {
+        if (selfVar != null && originalSelfVar != null) {
             assert selfVar.sort().extendsTrans(originalSelfVar.sort());
             result.put(originalSelfVar, selfVar);
         }
@@ -127,14 +138,14 @@ public final class ClassInvariantImpl implements ClassInvariant {
 
 
 
-    //-------------------------------------------------------------------------
-    //public interface
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // public interface
+    // -------------------------------------------------------------------------
 
     @Override
     public ClassInvariant map(UnaryOperator<Term> op, Services services) {
         return new ClassInvariantImpl(
-                name, displayName, kjt, visibility, op.apply(originalInv), originalSelfVar);
+            name, displayName, kjt, visibility, op.apply(originalInv), originalSelfVar);
     }
 
     @Override
@@ -151,14 +162,13 @@ public final class ClassInvariantImpl implements ClassInvariant {
 
     @Override
     public KeYJavaType getKJT() {
-	return kjt;
+        return kjt;
     }
 
 
     @Override
     public Term getInv(ParsableVariable selfVar, TermServices services) {
-        final Map<Operator, Operator> replaceMap
-        	= getReplaceMap(selfVar, services);
+        final Map<Operator, Operator> replaceMap = getReplaceMap(selfVar, services);
         final OpReplacer or = new OpReplacer(replaceMap, services.getTermFactory());
         Term res = or.replace(originalInv);
         res = services.getTermBuilder().convertToFormula(res);
@@ -174,13 +184,13 @@ public final class ClassInvariantImpl implements ClassInvariant {
 
     @Override
     public boolean isStatic() {
-	return isStatic;
+        return isStatic;
     }
 
 
     @Override
     public VisibilityModifier getVisibility() {
-	return visibility;
+        return visibility;
     }
 
 
@@ -188,11 +198,11 @@ public final class ClassInvariantImpl implements ClassInvariant {
     public ClassInvariant setKJT(KeYJavaType newKjt) {
         String newName = name.replaceFirst(kjt.getName(), newKjt.getName());
         return new ClassInvariantImpl(newName,
-                                      displayName,
-                                      newKjt,
-                                      visibility,
-                                      originalInv,
-                                      originalSelfVar);
+            displayName,
+            newKjt,
+            visibility,
+            originalInv,
+            originalSelfVar);
     }
 
 
@@ -205,15 +215,15 @@ public final class ClassInvariantImpl implements ClassInvariant {
     public OriginalVariables getOrigVars() {
         final ProgramVariable self;
         if (this.originalSelfVar instanceof ProgramVariable) {
-            self = (ProgramVariable)this.originalSelfVar;
-        } else if(this.originalSelfVar != null) {
+            self = (ProgramVariable) this.originalSelfVar;
+        } else if (this.originalSelfVar != null) {
             self = new LocationVariable(
-                    new ProgramElementName(originalSelfVar.toString()), kjt);
+                new ProgramElementName(originalSelfVar.toString()), kjt);
         } else {
             self = null;
         }
         return new OriginalVariables(self, null, null,
-                new LinkedHashMap<LocationVariable, ProgramVariable>(),
-                ImmutableSLList.<ProgramVariable>nil());
+            new LinkedHashMap<LocationVariable, ProgramVariable>(),
+            ImmutableSLList.<ProgramVariable>nil());
     }
 }

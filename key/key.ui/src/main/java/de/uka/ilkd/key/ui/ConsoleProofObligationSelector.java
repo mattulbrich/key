@@ -1,4 +1,20 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.ui;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.uka.ilkd.key.core.KeYMediator;
 import de.uka.ilkd.key.proof.Proof;
@@ -9,18 +25,15 @@ import de.uka.ilkd.key.proof.init.ProofInputException;
 import de.uka.ilkd.key.proof.init.ProofOblInput;
 import de.uka.ilkd.key.speclang.Contract;
 import de.uka.ilkd.key.util.KeYTypeUtil;
+
 import org.key_project.util.collection.ImmutableSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 public class ConsoleProofObligationSelector implements ProofObligationSelector {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConsoleProofObligationSelector.class);
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(ConsoleProofObligationSelector.class);
 
     public static final String TAB = "   ";
 
@@ -39,9 +52,10 @@ public class ConsoleProofObligationSelector implements ProofObligationSelector {
     }
 
     private void initializeContractsArray() {
-        ImmutableSet<Contract> contracts = initConfig.getServices().getSpecificationRepository().getAllContracts();
+        ImmutableSet<Contract> contracts =
+            initConfig.getServices().getSpecificationRepository().getAllContracts();
         this.contracts = new ArrayList<>();
-        //int i = 0;
+        // int i = 0;
 
         for (Contract c : contracts) {
 
@@ -80,10 +94,10 @@ public class ConsoleProofObligationSelector implements ProofObligationSelector {
 
         Proof proof = findPreferablyClosedProof(po);
 
-        //LOGGER.info("Proof: "+proof);
+        // LOGGER.info("Proof: "+proof);
         if (proof == null) {
             ProblemInitializer pi =
-                    new ProblemInitializer(ui, initConfig.getServices(), ui);
+                new ProblemInitializer(ui, initConfig.getServices(), ui);
             try {
 
                 final ProofAggregate pl = pi.startProver(initConfig, po);
@@ -103,27 +117,28 @@ public class ConsoleProofObligationSelector implements ProofObligationSelector {
     }
 
     private Proof findPreferablyClosedProof(ProofOblInput po) {
-        ImmutableSet<Proof> proofs = initConfig.getServices().getSpecificationRepository().getProofs(po);
+        ImmutableSet<Proof> proofs =
+            initConfig.getServices().getSpecificationRepository().getProofs(po);
 
-        //no proofs?
+        // no proofs?
         if (proofs.isEmpty()) {
             return null;
         }
 
-        //try to find closed proof
+        // try to find closed proof
         for (Proof proof : proofs) {
             if (proof.mgt().getStatus().getProofClosed()) {
                 return proof;
             }
         }
 
-        //just take any proof
+        // just take any proof
         return proofs.iterator().next();
     }
 
     public boolean selectProofObligation() {
         ProofOblInput po = createPOForSelectedContract();
-        //LOGGER.info("PO: "+po.getPO().getProofs().length);
+        // LOGGER.info("PO: "+po.getPO().getProofs().length);
         findOrStartProof(po);
         return true;
     }

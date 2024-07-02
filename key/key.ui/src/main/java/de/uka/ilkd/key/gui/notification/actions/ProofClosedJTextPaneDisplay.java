@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -19,7 +29,6 @@ package de.uka.ilkd.key.gui.notification.actions;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
@@ -34,12 +43,14 @@ import de.uka.ilkd.key.gui.notification.events.ProofClosedNotificationEvent;
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.proof.io.consistency.DiskFileRepo;
 import de.uka.ilkd.key.util.Debug;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Displays a JOptionPane informing about a closed proof
  * and gives some statistics.
+ *
  * @author bubel
  */
 public class ProofClosedJTextPaneDisplay extends ShowDisplayPane {
@@ -48,17 +59,18 @@ public class ProofClosedJTextPaneDisplay extends ShowDisplayPane {
     public ProofClosedJTextPaneDisplay(Frame parentComponent) {
         super(parentComponent);
     }
+
     /**
      * Displays a JOptionPane informing the user about a closed proof.
      * If available some statistics are displayed as well.
      */
     @Override
-   public synchronized boolean execute(NotificationEvent pcne) {
+    public synchronized boolean execute(NotificationEvent pcne) {
         if (pcne instanceof ProofClosedNotificationEvent) {
-            Proof proof = ((ProofClosedNotificationEvent)pcne).getProof();
+            Proof proof = ((ProofClosedNotificationEvent) pcne).getProof();
             if (proof != null) {
                 ShowProofStatistics.Window win = new ShowProofStatistics.Window(
-                        MainWindow.getInstance(), proof);
+                    MainWindow.getInstance(), proof);
                 win.setVisible(true);
             }
         } else {
@@ -71,8 +83,7 @@ public class ProofClosedJTextPaneDisplay extends ShowDisplayPane {
             contentPane.setBackground(MainWindow.getInstance().getBackground());
             contentPane.setSize(new Dimension(10, 360));
             contentPane.setPreferredSize(
-                    new Dimension(contentPane.getPreferredSize().width + 15, 360)
-            );
+                new Dimension(contentPane.getPreferredSize().width + 15, 360));
 
             JScrollPane scrollPane = new JScrollPane(contentPane);
             scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -86,7 +97,7 @@ public class ProofClosedJTextPaneDisplay extends ShowDisplayPane {
             }
 
             JOptionPane.showMessageDialog(parentComponent, scrollPane,
-                                          "Proof closed", JOptionPane.INFORMATION_MESSAGE);
+                "Proof closed", JOptionPane.INFORMATION_MESSAGE);
         }
 
         return true;

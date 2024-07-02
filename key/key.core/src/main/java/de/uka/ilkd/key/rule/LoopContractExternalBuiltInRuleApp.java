@@ -1,14 +1,24 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule;
 
 import java.util.List;
-
-import org.key_project.util.collection.ImmutableList;
 
 import de.uka.ilkd.key.java.statement.JavaStatement;
 import de.uka.ilkd.key.logic.PosInOccurrence;
 import de.uka.ilkd.key.logic.op.LocationVariable;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.speclang.LoopContract;
+
+import org.key_project.util.collection.ImmutableList;
 
 /**
  * Application of {@link LoopContractExternalRule}.
@@ -20,9 +30,9 @@ public class LoopContractExternalBuiltInRuleApp extends AbstractLoopContractBuil
     /**
      *
      * @param rule
-     *            the rule being applied.
+     *        the rule being applied.
      * @param occurrence
-     *            the position at which the rule is applied.
+     *        the position at which the rule is applied.
      */
     public LoopContractExternalBuiltInRuleApp(final BuiltInRule rule,
             final PosInOccurrence occurrence) {
@@ -32,17 +42,17 @@ public class LoopContractExternalBuiltInRuleApp extends AbstractLoopContractBuil
     /**
      *
      * @param rule
-     *            the rule being applied.
+     *        the rule being applied.
      * @param occurrence
-     *            the position at which the rule is applied.
+     *        the position at which the rule is applied.
      * @param ifInstantiations
-     *            if instantiations.
+     *        if instantiations.
      * @param statement
-     *            the statement which the applied contract belongs to.
+     *        the statement which the applied contract belongs to.
      * @param contract
-     *            the contract being applied.
+     *        the contract being applied.
      * @param heaps
-     *            the heap context.
+     *        the heap context.
      */
     public LoopContractExternalBuiltInRuleApp(final BuiltInRule rule,
             final PosInOccurrence occurrence, final ImmutableList<PosInOccurrence> ifInstantiations,
@@ -60,7 +70,7 @@ public class LoopContractExternalBuiltInRuleApp extends AbstractLoopContractBuil
     @Override
     public LoopContractExternalBuiltInRuleApp replacePos(final PosInOccurrence newOccurrence) {
         return new LoopContractExternalBuiltInRuleApp(builtInRule, newOccurrence, ifInsts,
-                getStatement(), contract, heaps);
+            getStatement(), contract, heaps);
     }
 
     @Override
@@ -73,6 +83,6 @@ public class LoopContractExternalBuiltInRuleApp extends AbstractLoopContractBuil
     @Override
     public LoopContractExternalBuiltInRuleApp tryToInstantiate(final Goal goal) {
         return (LoopContractExternalBuiltInRuleApp) super.tryToInstantiate(goal,
-                LoopContractExternalRule.INSTANCE);
+            LoopContractExternalRule.INSTANCE);
     }
 }

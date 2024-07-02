@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.smt.newsmt2;
 
 import java.util.List;
@@ -37,7 +47,7 @@ public class UninterpretedSymbolsHandler implements SMTHandler {
     @Override
     public boolean canHandle(Operator op) {
         return (op instanceof Function && !bindsVars(op))
-            || op instanceof ProgramVariable;
+                || op instanceof ProgramVariable;
     }
 
     /*
@@ -56,10 +66,10 @@ public class UninterpretedSymbolsHandler implements SMTHandler {
     public SExpr handle(MasterHandler trans, Term term) throws SMTTranslationException {
         SortedOperator op = (SortedOperator) term.op();
         String name = PREFIX + op.name().toString();
-        if(!trans.isKnownSymbol(name)) {
+        if (!trans.isKnownSymbol(name)) {
             trans.addDeclaration(HandlerUtil.funDeclaration(op, name));
-            if(op.sort() != Sort.FORMULA &&
-              (enableQuantifiers || op.arity() == 0)) {
+            if (op.sort() != Sort.FORMULA &&
+                    (enableQuantifiers || op.arity() == 0)) {
                 trans.addAxiom(HandlerUtil.funTypeAxiom(op, name, trans));
             }
             trans.addKnownSymbol(name);

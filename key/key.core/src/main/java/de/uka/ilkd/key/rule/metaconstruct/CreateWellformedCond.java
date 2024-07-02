@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -47,25 +57,25 @@ public final class CreateWellformedCond extends AbstractTermTransformer {
         assert op instanceof Modality;
 
         return createWellformedCond(MiscTools.isTransaction((Modality) op),
-                MiscTools.isPermissions(services), anonHeapTerm,
-                anonSavedHeapTerm, anonPermissionsHeapTerm, services);
+            MiscTools.isPermissions(services), anonHeapTerm,
+            anonSavedHeapTerm, anonPermissionsHeapTerm, services);
     }
 
     /**
      * Creates a wellformedness condition containing the applicable heaps.
      *
      * @param isTransaction
-     *            Signals a transaction modality.
+     *        Signals a transaction modality.
      * @param isPermissions
-     *            Signals the permission profile.
+     *        Signals the permission profile.
      * @param anonHeapTerm
-     *            The Skolem term for the standard heap.
+     *        The Skolem term for the standard heap.
      * @param anonSavedHeapTerm
-     *            The Skolem term for the saved (transaction) heap.
+     *        The Skolem term for the saved (transaction) heap.
      * @param anonPermissionsHeapTerm
-     *            The Skolem term for the permissions heap.
+     *        The Skolem term for the permissions heap.
      * @param services
-     *            The {@link Services} object.
+     *        The {@link Services} object.
      * @return The wellformedness condition.
      */
     private Term createWellformedCond(boolean isTransaction,
@@ -74,7 +84,7 @@ public final class CreateWellformedCond extends AbstractTermTransformer {
         final TermBuilder tb = services.getTermBuilder();
 
         Term result = tb.label(tb.wellFormed(anonHeapTerm),
-                ParameterlessTermLabel.ANON_HEAP_LABEL);
+            ParameterlessTermLabel.ANON_HEAP_LABEL);
 
         if (isTransaction) {
             result = tb.and(result, tb.wellFormed(anonSavedHeapTerm));

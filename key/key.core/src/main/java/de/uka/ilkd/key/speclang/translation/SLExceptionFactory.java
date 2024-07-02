@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,19 +23,19 @@
 
 package de.uka.ilkd.key.speclang.translation;
 
+import java.util.LinkedList;
+import java.util.List;
+import javax.annotation.Nonnull;
+
 import de.uka.ilkd.key.java.Position;
 import de.uka.ilkd.key.speclang.PositionedString;
 import de.uka.ilkd.key.util.Debug;
+
 import org.antlr.runtime.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import recoder.service.KeYCrossReferenceSourceInfo;
-
-import javax.annotation.Nonnull;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import static java.text.MessageFormat.format;
 
@@ -47,9 +57,9 @@ public class SLExceptionFactory {
 
     private List<PositionedString> warnings = new LinkedList<>();
 
-    //-------------------------------------------------------------------------
-    //constructors
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // constructors
+    // -------------------------------------------------------------------------
 
     public SLExceptionFactory(@Nonnull Parser parser, String fileName, Position offsetPos) {
         this.line = parser.input.LT(1).getLine();
@@ -88,9 +98,9 @@ public class SLExceptionFactory {
         return this;
     }
 
-    //-------------------------------------------------------------------------
-    //internal methods
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // internal methods
+    // -------------------------------------------------------------------------
     private Position createAbsolutePosition(int relativeLine, int relativeColumn) {
         int absoluteLine = offsetLine + relativeLine - 1;
         int absoluteColumn = (relativeLine == 1 ? offsetColumn : 1) + relativeColumn - 1;
@@ -101,11 +111,11 @@ public class SLExceptionFactory {
         return this.createAbsolutePosition(pos.getLine(), pos.getColumn());
     }
 
-    //-------------------------------------------------------------------------
-    //public interface
-    //-------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // public interface
+    // -------------------------------------------------------------------------
 
-    //region warnings
+    // region warnings
 
     /**
      * This is used for features without semantics such as labels or annotations.
@@ -131,12 +141,15 @@ public class SLExceptionFactory {
      * Used for features with semantics (currently) not supported in KeY/DL.
      */
     public void addUnderspecifiedWarning(String feature) {
-        String msg = format("{0} is not supported and translated to an underspecified term or formula.", feature);
+        String msg = format(
+            "{0} is not supported and translated to an underspecified term or formula.", feature);
         addWarning(msg);
     }
 
     public void addUnderspecifiedWarning(org.antlr.v4.runtime.Token t) {
-        String msg = format("{0} is not supported and translated to an underspecified term or formula.", t.getText());
+        String msg =
+            format("{0} is not supported and translated to an underspecified term or formula.",
+                t.getText());
         addWarning(msg, t);
     }
 
@@ -157,23 +170,23 @@ public class SLExceptionFactory {
     public List<PositionedString> getWarnings() {
         return warnings;
     }
-    //endregion
+    // endregion
 
     /**
      * Creates a string with the position information of the passed token.
      */
     public PositionedString createPositionedString(String text, Token t) {
         return new PositionedString(text,
-                fileName,
-                createAbsolutePosition(t.getLine(),
-                        t.getCharPositionInLine()));
+            fileName,
+            createAbsolutePosition(t.getLine(),
+                t.getCharPositionInLine()));
     }
 
     public PositionedString createPositionedString(String msg, org.antlr.v4.runtime.Token t) {
         return new PositionedString(msg,
-                fileName,
-                createAbsolutePosition(t.getLine(),
-                        t.getCharPositionInLine()));
+            fileName,
+            createAbsolutePosition(t.getLine(),
+                t.getCharPositionInLine()));
     }
 
     /**
@@ -181,12 +194,12 @@ public class SLExceptionFactory {
      * position.
      *
      * @param text the {@link String}
-     * @param pos  the {@link Position}
+     * @param pos the {@link Position}
      * @return <code>text</code> as {@link PositionedString} with absolute
-     * position in the current file
+     *         position in the current file
      */
     public PositionedString createPositionedString(final String text,
-                                                   final Position pos) {
+            final Position pos) {
         return new PositionedString(text, fileName, createAbsolutePosition(pos));
     }
 
@@ -195,8 +208,8 @@ public class SLExceptionFactory {
      */
     public PositionedString createPositionedString(String text) {
         return new PositionedString(text,
-                fileName,
-                createAbsolutePosition(this.line, this.column));
+            fileName,
+            createAbsolutePosition(this.line, this.column));
     }
 
 
@@ -206,7 +219,7 @@ public class SLExceptionFactory {
      */
     public SLTranslationException createException(String message) {
         return new SLTranslationException(message,
-                fileName, createAbsolutePosition(this.line, this.column));
+            fileName, createAbsolutePosition(this.line, this.column));
     }
 
 
@@ -216,9 +229,9 @@ public class SLExceptionFactory {
      */
     public SLTranslationException createException(String message, Token t) {
         return new SLTranslationException(message,
-                fileName,
-                createAbsolutePosition(t.getLine(),
-                        t.getCharPositionInLine()));
+            fileName,
+            createAbsolutePosition(t.getLine(),
+                t.getCharPositionInLine()));
     }
 
     /**
@@ -266,8 +279,8 @@ public class SLExceptionFactory {
      */
     public SLTranslationException createWarningException(String message) {
         return new SLWarningException(message,
-                fileName,
-                createAbsolutePosition(this.line, this.column));
+            fileName,
+            createAbsolutePosition(this.line, this.column));
     }
 
     public SLTranslationException createWarningException(String message, Token t) {
@@ -296,14 +309,14 @@ public class SLExceptionFactory {
 
             if (e instanceof NoViableAltException) {
                 return "No viable alternative at line " + errorPosition + " "
-                        + token;
+                    + token;
             }
             if (e instanceof MismatchedTokenException) {
                 return "Mismatched token at line " + errorPosition + " " + token;
             }
             return "[" + e.getClass().getName()
-                    + "] Unspecified syntax error at line " + errorPosition + " "
-                    + token;
+                + "] Unspecified syntax error at line " + errorPosition + " "
+                + token;
         }
     }
 
@@ -327,6 +340,6 @@ public class SLExceptionFactory {
         pos = createAbsolutePosition(e.line, e.charPositionInLine);
 
         return new SLTranslationException(
-                String.format("%s (%s)", message, e.getClass().getName()), fileName, pos, e);
+            String.format("%s (%s)", message, e.getClass().getName()), fileName, pos, e);
     }
 }

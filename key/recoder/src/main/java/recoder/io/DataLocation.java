@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.io;
@@ -42,7 +46,7 @@ public interface DataLocation {
      *
      * @return the according input stream
      * @throws IOException thrown if an error occurs with retrieving the input stream
-     *                     from the according data object.
+     *         from the according data object.
      */
     InputStream getInputStream() throws IOException;
 
@@ -58,8 +62,8 @@ public interface DataLocation {
      *
      * @return the according reader
      * @throws IOException thrown if an error occurs with retrieving the reader or
-     *                     the underlying input stream from the according data
-     *                     object.
+     *         the underlying input stream from the according data
+     *         object.
      */
     Reader getReader() throws IOException;
 
@@ -89,7 +93,7 @@ public interface DataLocation {
      *
      * @return the according output stream
      * @throws IOException thrown if an error occurs with retrieving the output
-     *                     stream from the according data object.
+     *         stream from the according data object.
      */
     OutputStream getOutputStream() throws IOException;
 
@@ -106,8 +110,8 @@ public interface DataLocation {
      *
      * @return the according writer
      * @throws IOException thrown if an error occurs with retrieving the writer or
-     *                     the underlying output stream from the according data
-     *                     object.
+     *         the underlying output stream from the according data
+     *         object.
      */
     Writer getWriter() throws IOException;
 

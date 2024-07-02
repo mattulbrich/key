@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -21,52 +31,51 @@ import de.uka.ilkd.key.logic.sort.Sort;
 
 
 /**
- * Class of operators for elementary updates, i.e., updates of the form 
+ * Class of operators for elementary updates, i.e., updates of the form
  * "x := t". There is one such operator for every left hand side "x".
  * Each of these operator is unary, accepting a single argument "t".
  */
 public final class ElementaryUpdate extends AbstractSortedOperator {
-    
-    private static final WeakHashMap<UpdateableOperator, 
-                                     WeakReference<ElementaryUpdate>> instances 
-    	= new WeakHashMap<UpdateableOperator, WeakReference<ElementaryUpdate>>();
-    
-    
+
+    private static final WeakHashMap<UpdateableOperator, WeakReference<ElementaryUpdate>> instances =
+        new WeakHashMap<UpdateableOperator, WeakReference<ElementaryUpdate>>();
+
+
     private final UpdateableOperator lhs;
 
-    
+
     private ElementaryUpdate(UpdateableOperator lhs) {
-	super(new Name("elem-update(" + lhs + ")"), 
-	      new Sort[]{lhs.sort()}, 
-	      Sort.UPDATE,
-	      false);
-	this.lhs = lhs;
-	assert lhs.arity() == 0;
+        super(new Name("elem-update(" + lhs + ")"),
+            new Sort[] { lhs.sort() },
+            Sort.UPDATE,
+            false);
+        this.lhs = lhs;
+        assert lhs.arity() == 0;
     }
-    
-    
+
+
     /**
      * Returns the elementary update operator for the passed left hand side.
      */
     public static ElementaryUpdate getInstance(UpdateableOperator lhs) {
         WeakReference<ElementaryUpdate> ref = instances.get(lhs);
         ElementaryUpdate result = null;
-        if(ref != null) {
+        if (ref != null) {
             result = ref.get();
         }
-        if(result == null) {
+        if (result == null) {
             result = new ElementaryUpdate(lhs);
             ref = new WeakReference<ElementaryUpdate>(result);
             instances.put(lhs, ref);
         }
         return result;
     }
-    
-    
+
+
     /**
      * Returns the left hand side of this elementary update operator.
      */
     public UpdateableOperator lhs() {
-	return lhs;
+        return lhs;
     }
 }

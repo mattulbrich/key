@@ -1,12 +1,22 @@
-package de.uka.ilkd.key.rule;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSet;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.rule;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.logic.PosInOccurrence;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.speclang.LoopContract;
+
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSet;
 
 /**
  * Rule application for {@link LoopApplyHeadRule}.
@@ -33,9 +43,9 @@ public class LoopApplyHeadBuiltInRuleApp extends AbstractBuiltInRuleApp {
     /**
      *
      * @param rule
-     *            the rule being applied.
+     *        the rule being applied.
      * @param pio
-     *            the position at which the rule is applied.
+     *        the position at which the rule is applied.
      */
     public LoopApplyHeadBuiltInRuleApp(BuiltInRule rule, PosInOccurrence pio) {
         this(rule, pio, null);
@@ -44,11 +54,11 @@ public class LoopApplyHeadBuiltInRuleApp extends AbstractBuiltInRuleApp {
     /**
      *
      * @param rule
-     *            the rule being applied.
+     *        the rule being applied.
      * @param pio
-     *            the position at which the rule is applied.
+     *        the position at which the rule is applied.
      * @param contracts
-     *            the contracts on which the rule is applied.
+     *        the contracts on which the rule is applied.
      */
     public LoopApplyHeadBuiltInRuleApp(BuiltInRule rule, PosInOccurrence pio,
             ImmutableSet<LoopContract> contracts) {
@@ -89,7 +99,7 @@ public class LoopApplyHeadBuiltInRuleApp extends AbstractBuiltInRuleApp {
     @Override
     public AbstractBuiltInRuleApp tryToInstantiate(Goal goal) {
         instantiation = new AbstractLoopContractRule.Instantiator(pio.subTerm(), goal,
-                goal.proof().getServices()).instantiate();
+            goal.proof().getServices()).instantiate();
 
         Services services = goal.proof().getServices();
 

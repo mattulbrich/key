@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.smt.newsmt2;
 
 import java.util.ArrayList;
@@ -14,6 +24,7 @@ import de.uka.ilkd.key.logic.op.Quantifier;
 import de.uka.ilkd.key.logic.sort.Sort;
 import de.uka.ilkd.key.smt.SMTTranslationException;
 import de.uka.ilkd.key.smt.newsmt2.SExpr.Type;
+
 import org.key_project.util.collection.ImmutableArray;
 
 /**
@@ -56,26 +67,26 @@ public class QuantifierHandler implements SMTHandler {
         SExpr matrix = trans.translate(term.sub(0), Type.BOOL);
         List<SExpr> vars = new ArrayList<>();
         List<SExpr> typeGuards = new ArrayList<>();
-        for(QuantifiableVariable bv : term.boundVars()) {
+        for (QuantifiableVariable bv : term.boundVars()) {
             Sort sort = bv.sort();
             String name = bv.name().toString();
             vars.add(LogicalVariableHandler.makeVarDecl(name, sort));
-            if(!sort.equals(services.getTypeConverter().getIntegerLDT().targetSort())) {
+            if (!sort.equals(services.getTypeConverter().getIntegerLDT().targetSort())) {
                 // Special casing integer quantification: Avoid conversion to "U".
                 // Caution: Must be in sync with logical variable treatment.
                 trans.addSort(sort);
                 typeGuards.add(SExprs.instanceOf(
-                        new SExpr(LogicalVariableHandler.VAR_PREFIX + name),
-                                SExprs.sortExpr(sort)));
+                    new SExpr(LogicalVariableHandler.VAR_PREFIX + name),
+                    SExprs.sortExpr(sort)));
             }
         }
         SExpr typeGuard = SExprs.and(typeGuards);
         String smtOp;
         Operator op = term.op();
-        if(op == Quantifier.ALL) {
+        if (op == Quantifier.ALL) {
             smtOp = "forall";
             matrix = SExprs.imp(typeGuard, matrix);
-        } else if(op == Quantifier.EX) {
+        } else if (op == Quantifier.EX) {
             smtOp = "exists";
             typeGuards.add(matrix);
             matrix = SExprs.and(typeGuards);
@@ -89,7 +100,7 @@ public class QuantifierHandler implements SMTHandler {
     }
 
     private void collectTriggers(Term term, Set<Term> triggers) {
-        if(term.containsLabel(DefinedSymbolsHandler.TRIGGER_LABEL)) {
+        if (term.containsLabel(DefinedSymbolsHandler.TRIGGER_LABEL)) {
             triggers.add(term);
         }
         term.subs().forEach(x -> collectTriggers(x, triggers));
@@ -104,7 +115,7 @@ public class QuantifierHandler implements SMTHandler {
         }
 
         List<QuantifiableVariable> boundVars = term.boundVars().toList();
-        while(current.op() == type) {
+        while (current.op() == type) {
             boundVars.addAll(current.boundVars().toList());
             current = current.sub(0);
         }

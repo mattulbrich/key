@@ -1,6 +1,14 @@
-package de.uka.ilkd.key.informationflow.macros;
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
 
-import org.key_project.util.collection.ImmutableList;
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+package de.uka.ilkd.key.informationflow.macros;
 
 import de.uka.ilkd.key.control.UserInterfaceControl;
 import de.uka.ilkd.key.informationflow.po.IFProofObligationVars;
@@ -22,7 +30,10 @@ import de.uka.ilkd.key.rule.LoopInvariantBuiltInRuleApp;
 import de.uka.ilkd.key.rule.RuleApp;
 import de.uka.ilkd.key.speclang.LoopSpecification;
 
-public class StartAuxiliaryLoopComputationMacro extends AbstractProofMacro implements StartSideProofMacro {
+import org.key_project.util.collection.ImmutableList;
+
+public class StartAuxiliaryLoopComputationMacro extends AbstractProofMacro
+        implements StartSideProofMacro {
 
     @Override
     public String getName() {
@@ -37,16 +48,16 @@ public class StartAuxiliaryLoopComputationMacro extends AbstractProofMacro imple
     @Override
     public String getDescription() {
         return "In order to increase the efficiency of self-composition " +
-                "proofs, this macro starts a side calculation which does " +
-                "the symbolic execution only once. The result is " +
-                "instantiated twice with the variable to be used in the " +
-                "two executions of the self-composition.";
+            "proofs, this macro starts a side calculation which does " +
+            "the symbolic execution only once. The result is " +
+            "instantiated twice with the variable to be used in the " +
+            "two executions of the self-composition.";
     }
 
     @Override
     public boolean canApplyTo(Proof proof,
-                              ImmutableList<Goal> goals,
-                              PosInOccurrence posInOcc) {
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc) {
         if (goals == null || goals.head() == null
                 || goals.head().node() == null
                 || goals.head().node().parent() == null) {
@@ -63,58 +74,58 @@ public class StartAuxiliaryLoopComputationMacro extends AbstractProofMacro imple
             return false;
         }
         final LoopInvariantBuiltInRuleApp loopInvRuleApp =
-                (LoopInvariantBuiltInRuleApp) app;
+            (LoopInvariantBuiltInRuleApp) app;
         final LoopSpecification loopInv = loopInvRuleApp.getSpec();
         final IFProofObligationVars ifVars =
-                loopInvRuleApp.getInformationFlowProofObligationVars();
+            loopInvRuleApp.getInformationFlowProofObligationVars();
         if (ifVars == null) {
             return false;
         }
         final ExecutionContext executionContext =
-                loopInvRuleApp.getExecutionContext();
+            loopInvRuleApp.getExecutionContext();
         final Term guardTerm = loopInvRuleApp.getGuard();
 
         final InfFlowPOSnippetFactory f =
-                POSnippetFactory.getInfFlowFactory(loopInv, ifVars.c1,
-                                                   ifVars.c2, executionContext,
-                                                   guardTerm, services);
+            POSnippetFactory.getInfFlowFactory(loopInv, ifVars.c1,
+                ifVars.c2, executionContext,
+                guardTerm, services);
         final Term selfComposedExec =
-                f.create(InfFlowPOSnippetFactory.Snippet.SELFCOMPOSED_LOOP_WITH_INV_RELATION);
+            f.create(InfFlowPOSnippetFactory.Snippet.SELFCOMPOSED_LOOP_WITH_INV_RELATION);
 
         return posInOcc.subTerm().equalsModRenaming(selfComposedExec);
     }
 
     @Override
     public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic,
-                                          Proof proof,
-                                          ImmutableList<Goal> goals,
-                                          PosInOccurrence posInOcc,
-                                          ProverTaskListener listener) throws Exception {
-        final LoopInvariantBuiltInRuleApp loopInvRuleApp = (LoopInvariantBuiltInRuleApp) 
-                goals.head().node().parent().getAppliedRuleApp();
+            Proof proof,
+            ImmutableList<Goal> goals,
+            PosInOccurrence posInOcc,
+            ProverTaskListener listener) throws Exception {
+        final LoopInvariantBuiltInRuleApp loopInvRuleApp =
+            (LoopInvariantBuiltInRuleApp) goals.head().node().parent().getAppliedRuleApp();
 
         final InitConfig initConfig = proof.getEnv().getInitConfigForEnvironment();
 
         final LoopSpecification loopInv = loopInvRuleApp.getSpec();
         final IFProofObligationVars ifVars =
-                loopInvRuleApp.getInformationFlowProofObligationVars();
+            loopInvRuleApp.getInformationFlowProofObligationVars();
         final ExecutionContext executionContext =
-                loopInvRuleApp.getExecutionContext();
+            loopInvRuleApp.getExecutionContext();
         final Term guardTerm = loopInvRuleApp.getGuard();
 
         final LoopInvExecutionPO loopInvExecPO =
-                new LoopInvExecutionPO(initConfig, loopInv,
-                                       ifVars.symbExecVars.labelHeapAtPreAsAnonHeapFunc(),
-                                       goals.head(), executionContext,
-                                       guardTerm,
-                                       proof.getServices());
-        
+            new LoopInvExecutionPO(initConfig, loopInv,
+                ifVars.symbExecVars.labelHeapAtPreAsAnonHeapFunc(),
+                goals.head(), executionContext,
+                guardTerm,
+                proof.getServices());
+
         final InfFlowProof p;
         synchronized (loopInvExecPO) {
             p = (InfFlowProof) uic.createProof(initConfig, loopInvExecPO);
         }
         p.unionIFSymbols(((InfFlowProof) proof).getIFSymbols());
-       
+
         ProofMacroFinishedInfo info = new ProofMacroFinishedInfo(this, p);
         info.addInfo(PROOF_MACRO_FINISHED_INFO_KEY_ORIGINAL_PROOF, proof);
         return info;

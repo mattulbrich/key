@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,8 +24,6 @@
 package de.uka.ilkd.key.rule.metaconstruct;
 
 import java.util.LinkedList;
-
-import org.key_project.util.collection.ImmutableArray;
 
 import de.uka.ilkd.key.java.Expression;
 import de.uka.ilkd.key.java.KeYJavaASTFactory;
@@ -42,6 +50,8 @@ import de.uka.ilkd.key.logic.op.ProgramVariable;
 import de.uka.ilkd.key.logic.op.SchemaVariable;
 import de.uka.ilkd.key.rule.inst.SVInstantiations;
 
+import org.key_project.util.collection.ImmutableArray;
+
 /**
  * Split an array creation expression with explicit array initializer, creating
  * a creation expression with dimension expression and a list of assignments (->
@@ -66,10 +76,10 @@ public class InitArrayCreation extends InitArray {
      * statement implementing this behaviour is created by this method.
      *
      * @param cond
-     *            the Expression representing the guard checking if the given
-     *            length is negative or not
+     *        the Expression representing the guard checking if the given
+     *        length is negative or not
      * @param services
-     *            the Services offering access to the type model
+     *        the Services offering access to the type model
      * @return an if statement throwing a NegativeArraySizeException if cond is
      *         evaluated to false
      */
@@ -94,12 +104,12 @@ public class InitArrayCreation extends InitArray {
      * are returned
      *
      * @param bodyStmnts
-     *            the LinkedList of statements where the new statements are
-     *            inserted
+     *        the LinkedList of statements where the new statements are
+     *        inserted
      * @param dimExpr
-     *            the ArrayOf<Expression> which describe the array's dimensions
+     *        the ArrayOf<Expression> which describe the array's dimensions
      * @param services
-     *            the Services object
+     *        the Services object
      */
     private ProgramVariable[] evaluateAndCheckDimensionExpressions(
             LinkedList<Statement> bodyStmnts,

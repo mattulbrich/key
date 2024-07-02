@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -29,18 +39,18 @@ import de.uka.ilkd.key.rule.Taclet;
 public interface TacletFormula {
 
     /**
-     * 
+     *
      * @return the taclet of the instance.
      */
     Taclet getTaclet();
 
     /**
-     * 
+     *
      * @param services TODO
-    * @return the formula of the instance if the taclet is translatable
+     * @return the formula of the instance if the taclet is translatable
      *         otherwise <code>null</code>. If the translation of the taclet
      *         consists of several instantiations (e.g. the taclet has some
-     *         generic sorts) the returned term is a conjunction of these 
+     *         generic sorts) the returned term is a conjunction of these
      *         instantiations.
      */
     Term getFormula(TermServices services);
@@ -50,12 +60,12 @@ public interface TacletFormula {
      *         empty string.
      */
     String getStatus();
-    
+
 
     /**
      * It can be that a taclet is translated into several formulas, i.e. in the case
-     * that the generics are instantiated. This method returns the set of resulting formulas. 
+     * that the generics are instantiated. This method returns the set of resulting formulas.
      */
     Collection<Term> getInstantiations();
-    
+
 }

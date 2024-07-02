@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.ldt;
-
-import org.key_project.util.ExtList;
 
 import de.uka.ilkd.key.java.Expression;
 import de.uka.ilkd.key.java.Services;
@@ -37,6 +45,8 @@ import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.logic.Term;
 import de.uka.ilkd.key.logic.TermServices;
 import de.uka.ilkd.key.logic.op.Function;
+
+import org.key_project.util.ExtList;
 
 public final class FloatLDT extends LDT implements FloatingPointLDT {
 
@@ -81,44 +91,44 @@ public final class FloatLDT extends LDT implements FloatingPointLDT {
     public FloatLDT(TermServices services) {
         super(NAME, services);
 
-        floatLit            = addFunction(services, FLOATLIT_NAME.toString());
+        floatLit = addFunction(services, FLOATLIT_NAME.toString());
         javaUnaryMinusFloat = addFunction(services, NEGATIVE_LITERAL.toString());
-        lessThan            = addFunction(services, "ltFloat");
-        greaterThan         = addFunction(services, "gtFloat");
-        lessOrEquals        = addFunction(services, "leqFloat");
-        greaterOrEquals     = addFunction(services, "geqFloat");
-        eqFloat             = addFunction(services, "eqFloat");
+        lessThan = addFunction(services, "ltFloat");
+        greaterThan = addFunction(services, "gtFloat");
+        lessOrEquals = addFunction(services, "leqFloat");
+        greaterOrEquals = addFunction(services, "geqFloat");
+        eqFloat = addFunction(services, "eqFloat");
 
-        javaAddFloat        = addFunction(services, "javaAddFloat");
-        javaSubFloat        = addFunction(services, "javaSubFloat");
-        javaMulFloat        = addFunction(services, "javaMulFloat");
-        javaDivFloat        = addFunction(services, "javaDivFloat");
-        javaModFloat        = addFunction(services, "javaModFloat");
-        javaMaxFloat        = addFunction(services, "javaMaxFloat");
-        javaMinFloat        = addFunction(services, "javaMinFloat");
+        javaAddFloat = addFunction(services, "javaAddFloat");
+        javaSubFloat = addFunction(services, "javaSubFloat");
+        javaMulFloat = addFunction(services, "javaMulFloat");
+        javaDivFloat = addFunction(services, "javaDivFloat");
+        javaModFloat = addFunction(services, "javaModFloat");
+        javaMaxFloat = addFunction(services, "javaMaxFloat");
+        javaMinFloat = addFunction(services, "javaMinFloat");
 
-        addFloatIEEE        = addFunction(services, "addFloat");
-        subFloatIEEE        = addFunction(services, "subFloat");
-        mulFloatIEEE        = addFunction(services, "mulFloat");
-        divFloatIEEE        = addFunction(services, "divFloat");
-        absFloat            = addFunction(services, "absFloat");
-        negFloat            = addFunction(services, "negFloat");
+        addFloatIEEE = addFunction(services, "addFloat");
+        subFloatIEEE = addFunction(services, "subFloat");
+        mulFloatIEEE = addFunction(services, "mulFloat");
+        divFloatIEEE = addFunction(services, "divFloat");
+        absFloat = addFunction(services, "absFloat");
+        negFloat = addFunction(services, "negFloat");
 
-        isNormal            = addFunction(services, "floatIsNormal");
-        isSubnormal         = addFunction(services, "floatIsSubnormal");
-        isNaN               = addFunction(services, "floatIsNaN");
-        isZero              = addFunction(services, "floatIsZero");
-        isNice              = addFunction(services, "floatIsNice");
-        isInfinite          = addFunction(services, "floatIsInfinite");
-        isPositive          = addFunction(services, "floatIsPositive");
-        isNegative          = addFunction(services, "floatIsNegative");
+        isNormal = addFunction(services, "floatIsNormal");
+        isSubnormal = addFunction(services, "floatIsSubnormal");
+        isNaN = addFunction(services, "floatIsNaN");
+        isZero = addFunction(services, "floatIsZero");
+        isNice = addFunction(services, "floatIsNice");
+        isInfinite = addFunction(services, "floatIsInfinite");
+        isPositive = addFunction(services, "floatIsPositive");
+        isNegative = addFunction(services, "floatIsNegative");
     }
 
     @Override
     public boolean isResponsible(de.uka.ilkd.key.java.expression.Operator op,
-                                 Term[] subs,
-                                 Services services,
-                                 ExecutionContext ec) {
+            Term[] subs,
+            Services services,
+            ExecutionContext ec) {
         if (subs.length == 1) {
             return isResponsible(op, subs[0], services, ec);
         } else if (subs.length == 2) {
@@ -129,10 +139,10 @@ public final class FloatLDT extends LDT implements FloatingPointLDT {
 
     @Override
     public boolean isResponsible(de.uka.ilkd.key.java.expression.Operator op,
-                                 Term left,
-                                 Term right,
-                                 Services services,
-                                 ExecutionContext ec) {
+            Term left,
+            Term right,
+            Services services,
+            ExecutionContext ec) {
         return left != null
                 && left.sort().extendsTrans(targetSort())
                 && right != null
@@ -142,9 +152,9 @@ public final class FloatLDT extends LDT implements FloatingPointLDT {
 
     @Override
     public boolean isResponsible(de.uka.ilkd.key.java.expression.Operator op,
-                                 Term sub,
-                                 TermServices services,
-                                 ExecutionContext ec) {
+            Term sub,
+            TermServices services,
+            ExecutionContext ec) {
         return sub != null
                 && sub.sort().extendsTrans(targetSort())
                 && op instanceof Negative;
@@ -152,16 +162,16 @@ public final class FloatLDT extends LDT implements FloatingPointLDT {
 
     @Override
     public Term translateLiteral(Literal lit, Services services) {
-        assert lit instanceof FloatLiteral : "Literal '"+lit+"' is not a float literal.";
-        String s = ((FloatLiteral)lit).getValue();
+        assert lit instanceof FloatLiteral : "Literal '" + lit + "' is not a float literal.";
+        String s = ((FloatLiteral) lit).getValue();
         Float flValue = Float.parseFloat(s);
         return services.getTermBuilder().fpTerm(flValue);
     }
 
     @Override
     public Function getFunctionFor(de.uka.ilkd.key.java.expression.Operator op,
-                                   Services services,
-                                   ExecutionContext ec) {
+            Services services,
+            ExecutionContext ec) {
         if (op instanceof GreaterThan) {
             return getGreaterThan();
         } else if (op instanceof LessThan) {
@@ -190,58 +200,76 @@ public final class FloatLDT extends LDT implements FloatingPointLDT {
     @Override
     public Function getFunctionFor(String op, Services services) {
         switch (op) {
-            case "gt": return getGreaterThan();
-            case "geq": return getGreaterOrEquals();
-            case "lt": return getLessThan();
-            case "leq": return getLessOrEquals();
-            case "div": return getDiv();
-            case "mul": return getMul();
-            case "add": return getAdd();
-            case "sub": return getSub();
-            case "neg": return getNeg();
-            // Floating point extensions with "\fp_"
-            case "nan": return getIsNaN();
-            case "zero": return getIsZero();
-            case "infinite": return getIsInfinite();
-            case "nice": return getIsNice();
-            case "abs": return getAbs();
-            case "negative": return getIsNegative();
-            case "positive": return getIsPositive();
-            case "subnormal": return getIsSubnormal();
-            case "normal": return getIsNormal();
+        case "gt":
+            return getGreaterThan();
+        case "geq":
+            return getGreaterOrEquals();
+        case "lt":
+            return getLessThan();
+        case "leq":
+            return getLessOrEquals();
+        case "div":
+            return getDiv();
+        case "mul":
+            return getMul();
+        case "add":
+            return getAdd();
+        case "sub":
+            return getSub();
+        case "neg":
+            return getNeg();
+        // Floating point extensions with "\fp_"
+        case "nan":
+            return getIsNaN();
+        case "zero":
+            return getIsZero();
+        case "infinite":
+            return getIsInfinite();
+        case "nice":
+            return getIsNice();
+        case "abs":
+            return getAbs();
+        case "negative":
+            return getIsNegative();
+        case "positive":
+            return getIsPositive();
+        case "subnormal":
+            return getIsSubnormal();
+        case "normal":
+            return getIsNormal();
         }
         return null;
     }
 
     @Override
     public boolean hasLiteralFunction(Function f) {
-        return containsFunction(f) && (f.arity()==0);
+        return containsFunction(f) && (f.arity() == 0);
     }
 
 
     @Override
     public FloatLiteral translateTerm(Term t, ExtList children, Services services) {
-        if(!containsFunction((Function) t.op())) {
+        if (!containsFunction((Function) t.op())) {
             return null;
         }
 
-        Function f = (Function)t.op();
+        Function f = (Function) t.op();
         IntegerLDT intLDT = services.getTypeConverter().getIntegerLDT();
 
-        if(f == floatLit) {
+        if (f == floatLit) {
             // Use IntegerLDT to translate to literals
             String digits = intLDT.toNumberString(t.sub(0));
             int bits = Integer.parseUnsignedInt(digits);
             float f1 = Float.intBitsToFloat(bits);
             return new FloatLiteral(Float.toString(f1));
         }
-        throw new RuntimeException("FloatLDT: Cannot convert term to program: "+t);
+        throw new RuntimeException("FloatLDT: Cannot convert term to program: " + t);
     }
 
 
     @Override
     public final Type getType(Term t) {
-        if(t.sort() == targetSort()) {
+        if (t.sort() == targetSort()) {
             return PrimitiveType.JAVA_FLOAT;
         } else {
             return null;

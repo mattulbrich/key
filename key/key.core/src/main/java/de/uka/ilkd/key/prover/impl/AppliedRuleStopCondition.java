@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.prover.impl;
 
 import de.uka.ilkd.key.proof.Goal;
@@ -12,6 +22,7 @@ import de.uka.ilkd.key.prover.StopCondition;
  * <p>
  * This is the default {@link StopCondition} used during verification.
  * </p>
+ *
  * @author Martin Hentschel
  */
 public final class AppliedRuleStopCondition implements StopCondition {
@@ -20,8 +31,8 @@ public final class AppliedRuleStopCondition implements StopCondition {
      */
     @Override
     public int getMaximalWork(int maxApplications,
-                              long timeout,
-                              Proof proof) {
+            long timeout,
+            Proof proof) {
         return maxApplications;
     }
 
@@ -30,11 +41,11 @@ public final class AppliedRuleStopCondition implements StopCondition {
      */
     @Override
     public boolean isGoalAllowed(int maxApplications,
-                                 long timeout,
-                                 Proof proof,
-                                 long startTime,
-                                 int countApplied,
-                                 Goal goal) {
+            long timeout,
+            Proof proof,
+            long startTime,
+            int countApplied,
+            Goal goal) {
         return true; // Default behavior is to accept all rules.
     }
 
@@ -43,11 +54,11 @@ public final class AppliedRuleStopCondition implements StopCondition {
      */
     @Override
     public String getGoalNotAllowedMessage(int maxApplications,
-                                           long timeout,
-                                           Proof proof,
-                                           long startTime,
-                                           int countApplied,
-                                           Goal goal) {
+            long timeout,
+            Proof proof,
+            long startTime,
+            int countApplied,
+            Goal goal) {
         return null;
     }
 
@@ -56,13 +67,13 @@ public final class AppliedRuleStopCondition implements StopCondition {
      */
     @Override
     public boolean shouldStop(int maxApplications,
-                              long timeout,
-                              Proof proof,
-                              long startTime,
-                              int countApplied,
-                              SingleRuleApplicationInfo singleRuleApplicationInfo) {
+            long timeout,
+            Proof proof,
+            long startTime,
+            int countApplied,
+            SingleRuleApplicationInfo singleRuleApplicationInfo) {
         return countApplied >= maxApplications ||
-               timeout >= 0 && System.currentTimeMillis() - startTime >= timeout;
+                timeout >= 0 && System.currentTimeMillis() - startTime >= timeout;
     }
 
     /**
@@ -70,11 +81,11 @@ public final class AppliedRuleStopCondition implements StopCondition {
      */
     @Override
     public String getStopMessage(int maxApplications,
-                                 long timeout,
-                                 Proof proof,
-                                 long startTime,
-                                 int countApplied,
-                                 SingleRuleApplicationInfo singleRuleApplicationInfo) {
+            long timeout,
+            Proof proof,
+            long startTime,
+            int countApplied,
+            SingleRuleApplicationInfo singleRuleApplicationInfo) {
         return "Maximal number of rule applications reached or timed out.";
     }
 }

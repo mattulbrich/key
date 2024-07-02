@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -33,28 +43,29 @@ public class SubTermFeature implements TermFeature {
         this.features = features;
         this.arityMismatchCost = arityMismatchCost;
     }
-    
-    public static TermFeature create (TermFeature[] fs, RuleAppCost arityMismatchCost) {
-        final TermFeature[] fsCopy = new TermFeature [ fs.length ];
-        System.arraycopy ( fs, 0, fsCopy, 0, fs.length );
-        return new SubTermFeature ( fsCopy, arityMismatchCost );
+
+    public static TermFeature create(TermFeature[] fs, RuleAppCost arityMismatchCost) {
+        final TermFeature[] fsCopy = new TermFeature[fs.length];
+        System.arraycopy(fs, 0, fsCopy, 0, fs.length);
+        return new SubTermFeature(fsCopy, arityMismatchCost);
     }
 
     public static TermFeature create(TermFeature[] fs) {
-        return create ( fs, TopRuleAppCost.INSTANCE );
+        return create(fs, TopRuleAppCost.INSTANCE);
     }
-    
+
     private final TermFeature[] features;
     private final RuleAppCost arityMismatchCost;
-    
+
     public RuleAppCost compute(Term term, Services services) {
-        if ( term.arity () != features.length ) return arityMismatchCost;
-        
+        if (term.arity() != features.length)
+            return arityMismatchCost;
+
         RuleAppCost res = NumberRuleAppCost.getZeroCost();
 
-        for ( int i = 0; i < features.length
-                         && !( res instanceof TopRuleAppCost ); i++ )
-            res = res.add ( features[i].compute ( term.sub(i), services ) );
+        for (int i = 0; i < features.length
+                && !(res instanceof TopRuleAppCost); i++)
+            res = res.add(features[i].compute(term.sub(i), services));
 
         return res;
     }

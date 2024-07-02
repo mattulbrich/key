@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java.declaration;
@@ -13,7 +17,8 @@ import recoder.java.TerminalProgramElement;
  * @author <TT>AutoDoc</TT>
  */
 
-public abstract class Modifier extends JavaProgramElement implements DeclarationSpecifier, TerminalProgramElement {
+public abstract class Modifier extends JavaProgramElement
+        implements DeclarationSpecifier, TerminalProgramElement {
 
     /**
      * Parent.
@@ -70,4 +75,3 @@ public abstract class Modifier extends JavaProgramElement implements Declaration
     }
 
 }
-

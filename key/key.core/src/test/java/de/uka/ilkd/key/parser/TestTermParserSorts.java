@@ -1,10 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.parser;
 
+import java.io.IOException;
+
 import de.uka.ilkd.key.logic.Term;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,13 +30,13 @@ public class TestTermParserSorts extends AbstractTestTermParser {
         parseDecls("\\programVariables {Seq s;}");
         parseDecls("\\programVariables {int i;}");
         parseDecls("\\programVariables {"
-                + "testTermParserSorts.IntegerMethods a;"
-                + "byte[] ba;"
-                + "char[] ca;"
-                + "short[] sa;"
-                + "int[] ia;"
-                + "long[] la;"
-                + "}");
+            + "testTermParserSorts.IntegerMethods a;"
+            + "byte[] ba;"
+            + "char[] ca;"
+            + "short[] sa;"
+            + "int[] ia;"
+            + "long[] la;"
+            + "}");
     }
 
     /*
@@ -51,7 +62,8 @@ public class TestTermParserSorts extends AbstractTestTermParser {
         expected = parseTerm("int::cast(any::seqGet(s,i))");
         actual = parseTerm(pp);
         assertEquals(expected, actual); // test parsing
-        assertEqualsIgnoreWhitespaces(printTerm(parseTerm("int::seqGet(s,i)")), pp); // test pretty-printing
+        assertEqualsIgnoreWhitespaces(printTerm(parseTerm("int::seqGet(s,i)")), pp); // test
+                                                                                     // pretty-printing
 
         // test parsing of pretty-printed seqLen
         comparePrettySyntaxAgainstVerboseSyntax("s.length", "seqLen(s)");
@@ -60,7 +72,7 @@ public class TestTermParserSorts extends AbstractTestTermParser {
     /*
      * The KeY type int has several possible corresponding KeYJavaTypes.
      * Those types are: char, byte, short, int, long
-     * 
+     *
      * This test checks if the parser finds a suitable function,
      * if a query with integer arguments is provided.
      *
@@ -68,8 +80,8 @@ public class TestTermParserSorts extends AbstractTestTermParser {
      * For example a query of the form "a.query(0)" with Java functions
      * available that have the following signatures:
      *
-     *      public int query(int i);
-     *      public int query(byte b);
+     * public int query(int i);
+     * public int query(byte b);
      *
      * Such a case is not considered here.
      */

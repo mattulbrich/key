@@ -1,17 +1,28 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.exploration.actions;
 
 import java.awt.event.ActionEvent;
-
-import org.key_project.exploration.ExplorationModeModel;
-import org.key_project.exploration.Icons;
 
 import de.uka.ilkd.key.core.KeYSelectionEvent;
 import de.uka.ilkd.key.core.KeYSelectionListener;
 import de.uka.ilkd.key.gui.MainWindow;
 import de.uka.ilkd.key.gui.actions.KeyAction;
 
+import org.key_project.exploration.ExplorationModeModel;
+import org.key_project.exploration.Icons;
+
 /**
  * Toggles the Exploration Mode.
+ *
  * @author Alexander Weigl
  * @version 1 (22.07.19)
  */
@@ -29,19 +40,20 @@ public class ToggleExplorationAction extends KeyAction {
         setMenuPath(MENU_PATH);
         putValue(CHECKBOX, true);
         model.addPropertyChangeListener(ExplorationModeModel.PROP_EXPLORE_MODE,
-                e -> setSelected(model.isExplorationModeSelected()));
-        
-        mainWindow.getMediator().getSelectionModel().addKeYSelectionListener(new KeYSelectionListener() {
-            
-            @Override
-            public void selectedProofChanged(KeYSelectionEvent e) {
-                updateEnable(mainWindow);
-            }
-            
-            @Override
-            public void selectedNodeChanged(KeYSelectionEvent e) { }
-        });
-        
+            e -> setSelected(model.isExplorationModeSelected()));
+
+        mainWindow.getMediator().getSelectionModel()
+                .addKeYSelectionListener(new KeYSelectionListener() {
+
+                    @Override
+                    public void selectedProofChanged(KeYSelectionEvent e) {
+                        updateEnable(mainWindow);
+                    }
+
+                    @Override
+                    public void selectedNodeChanged(KeYSelectionEvent e) {}
+                });
+
         updateEnable(mainWindow);
     }
 

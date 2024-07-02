@@ -1,3 +1,7 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.java;
@@ -18,7 +22,7 @@ public interface SourceElement {
      * Finds the source element that occurs first in the source.
      *
      * @return the first source element in the syntactical representation of
-     * this element, may be equals to this element.
+     *         this element, may be equals to this element.
      * @see #toSource()
      * @see #getStartPosition()
      */
@@ -28,7 +32,7 @@ public interface SourceElement {
      * Finds the source element that occurs last in the source.
      *
      * @return the last source element in the syntactical representation of this
-     * element, may be equals to this element.
+     *         element, may be equals to this element.
      * @see #toSource()
      * @see #getEndPosition()
      */
@@ -143,7 +147,7 @@ public interface SourceElement {
             }
 
             public void setPosition(@SuppressWarnings("unused") int line,
-                                    @SuppressWarnings("unused") int column) {
+                    @SuppressWarnings("unused") int column) {
                 throw new RuntimeException("Bad idea to redefine UNDEFINED Position");
             }
         };
@@ -169,7 +173,7 @@ public interface SourceElement {
         /**
          * Constructs a new source code position object.
          *
-         * @param line   the line number.
+         * @param line the line number.
          * @param column the column number.
          */
 
@@ -191,7 +195,7 @@ public interface SourceElement {
          * Sets the line number of this position.
          *
          * @param line the future line number for this position (may not be
-         *             negative).
+         *        negative).
          */
 
         public void setLine(int line) {
@@ -218,7 +222,7 @@ public interface SourceElement {
          * Sets the column number of this position.
          *
          * @param column the future column number for this position (may not be
-         *               negative).
+         *        negative).
          */
 
         public void setColumn(int column) {
@@ -234,10 +238,10 @@ public interface SourceElement {
         /**
          * Sets the line and column number of this position.
          *
-         * @param line   the future lkine number for this position (may not be
-         *               negative).
+         * @param line the future lkine number for this position (may not be
+         *        negative).
          * @param column the future column number for this position (may not be
-         *               negative).
+         *        negative).
          */
 
         public void setPosition(int line, int column) {
@@ -265,7 +269,7 @@ public interface SourceElement {
          * Compares this position with the given object for equality.
          *
          * @return <CODE>true</CODE>, if the given object is a position
-         * equals to this position, <CODE>false</CODE> otherwise.
+         *         equals to this position, <CODE>false</CODE> otherwise.
          */
 
         public boolean equals(Object x) {
@@ -285,8 +289,8 @@ public interface SourceElement {
          *
          * @param x the position object to compare with.
          * @return a negative number, zero, or a positive number, if this
-         * position is lower than, equals to, or higher than the given
-         * one.
+         *         position is lower than, equals to, or higher than the given
+         *         one.
          */
 
         public int compareTo(Object x) {
@@ -299,8 +303,8 @@ public interface SourceElement {
          *
          * @param p the position to compare with.
          * @return a negative number, zero, or a positive number, if this
-         * position is lower than, equals to, or higher than the given
-         * one.
+         *         position is lower than, equals to, or higher than the given
+         *         one.
          */
 
         public int compareTo(Position p) {

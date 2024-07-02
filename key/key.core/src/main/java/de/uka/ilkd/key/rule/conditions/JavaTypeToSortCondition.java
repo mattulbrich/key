@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -38,83 +48,82 @@ import de.uka.ilkd.key.util.Debug;
 public final class JavaTypeToSortCondition implements VariableCondition {
 
     private final SchemaVariable exprOrTypeSV;
-    private final GenericSort    sort;
+    private final GenericSort sort;
     private final boolean elemSort;
-    
-    
+
+
     public JavaTypeToSortCondition(final SchemaVariable exprOrTypeSV,
-                                   final GenericSort sort,
-                                   final boolean elemSort) {
+            final GenericSort sort,
+            final boolean elemSort) {
         this.exprOrTypeSV = exprOrTypeSV;
         this.sort = sort;
         this.elemSort = elemSort;
-        
+
         if (!checkSortedSV(exprOrTypeSV)) {
-            throw new RuntimeException
-            ( "Expected a program schemavariable for expressions" );
+            throw new RuntimeException("Expected a program schemavariable for expressions");
         }
     }
 
 
     public static boolean checkSortedSV(final SchemaVariable exprOrTypeSV) {
-        final Sort svSort = exprOrTypeSV.sort ();
+        final Sort svSort = exprOrTypeSV.sort();
         if (svSort == ProgramSVSort.EXPRESSION
-             || svSort == ProgramSVSort.SIMPLEEXPRESSION
-             || svSort == ProgramSVSort.NONSIMPLEEXPRESSION
-             || svSort == ProgramSVSort.TYPE
-             || exprOrTypeSV.arity() == 0)  {
+                || svSort == ProgramSVSort.SIMPLEEXPRESSION
+                || svSort == ProgramSVSort.NONSIMPLEEXPRESSION
+                || svSort == ProgramSVSort.TYPE
+                || exprOrTypeSV.arity() == 0) {
             return true;
         }
         return false;
     }
-  
-    
+
+
     @Override
     public MatchConditions check(SchemaVariable var,
-                                 SVSubstitute svSubst,
-                                 MatchConditions matchCond,
-                                 Services services) {
-        if ( var != exprOrTypeSV ) {
+            SVSubstitute svSubst,
+            MatchConditions matchCond,
+            Services services) {
+        if (var != exprOrTypeSV) {
             return matchCond;
         }
-        
-        Debug.assertTrue ( svSubst instanceof Expression || 
+
+        Debug.assertTrue(svSubst instanceof Expression ||
                 svSubst instanceof TypeReference ||
                 svSubst instanceof Term);
-        
-        final SVInstantiations inst = matchCond.getInstantiations ();
+
+        final SVInstantiations inst = matchCond.getInstantiations();
         Sort type;
         if (svSubst instanceof Term) {
-            type = ((Term)svSubst).sort();
+            type = ((Term) svSubst).sort();
         } else if (svSubst instanceof TypeReference) {
-            type = ((TypeReference)svSubst).getKeYJavaType().getSort();
+            type = ((TypeReference) svSubst).getKeYJavaType().getSort();
         } else {
-            final Expression expr = (Expression)svSubst;          
-            type = expr.getKeYJavaType ( services, inst.getExecutionContext () ).getSort();
+            final Expression expr = (Expression) svSubst;
+            type = expr.getKeYJavaType(services, inst.getExecutionContext()).getSort();
         }
-        if(elemSort) {
-            if(type instanceof ArraySort) {
-        	type = ((ArraySort)type).elementSort();
+        if (elemSort) {
+            if (type instanceof ArraySort) {
+                type = ((ArraySort) type).elementSort();
             } else {
-        	return null;
+                return null;
             }
         }
         try {
-            return matchCond.setInstantiations ( inst.add( 
-        	    GenericSortCondition.createIdentityCondition(sort, type),
-        	    services) );
-        } catch ( SortException e ) {
+            return matchCond.setInstantiations(inst.add(
+                GenericSortCondition.createIdentityCondition(sort, type),
+                services));
+        } catch (SortException e) {
             return null;
-        }        
+        }
     }
 
-    
+
     @Override
-    public String toString () {
-        return "\\hasSort(" 
-               + (elemSort ? "\\elemSort(" + exprOrTypeSV + ")" : exprOrTypeSV)
-               + ", " 
-               + sort 
-               + ")";
+    public String toString() {
+        return "\\hasSort("
+            + (elemSort ? "\\elemSort(" + exprOrTypeSV + ")" : exprOrTypeSV)
+            + ", "
+            + sort
+            + ")";
     }
 }

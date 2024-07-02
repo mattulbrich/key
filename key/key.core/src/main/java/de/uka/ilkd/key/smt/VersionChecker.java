@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -35,13 +45,13 @@ public class VersionChecker {
             p.waitFor(MAX_DELAY, TimeUnit.MILLISECONDS);
             try (BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
                 String line = r.readLine();
-                // TODO weigl for Java 11 use "p.destroyForcibly();"                
+                // TODO weigl for Java 11 use "p.destroyForcibly();"
                 return line;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally{
-            if( p != null && p.isAlive() ) {
+        } finally {
+            if (p != null && p.isAlive()) {
                 p.destroy();
             }
         }

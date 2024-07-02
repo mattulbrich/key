@@ -1,19 +1,27 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.java.expression;
-
-import org.key_project.util.ExtList;
 
 import de.uka.ilkd.key.java.Expression;
 import de.uka.ilkd.key.java.JavaProgramElement;
@@ -28,32 +36,38 @@ import de.uka.ilkd.key.logic.Name;
 import de.uka.ilkd.key.rule.MatchConditions;
 import de.uka.ilkd.key.util.Debug;
 
+import org.key_project.util.ExtList;
+
 /**
- *  Literal.
- *  @author <TT>AutoDoc</TT>
+ * Literal.
+ *
+ * @author <TT>AutoDoc</TT>
  */
 
-public abstract class Literal extends JavaProgramElement implements Expression, TerminalProgramElement {
+public abstract class Literal extends JavaProgramElement
+        implements Expression, TerminalProgramElement {
 
 
     /**
      * Constructor for the transformation of COMPOST ASTs to KeY.
+     *
      * @param children the children of this AST element as KeY classes.
-     *     May contain: Comments
+     *        May contain: Comments
      */
     public Literal(ExtList children) {
-	super(children);
+        super(children);
     }
 
     /**
      * Literal
      */
     public Literal() {
-	
+
     }
 
     /**
      * Literal with specific source code position.
+     *
      * @param children the children of this AST element as KeY classes. May contain: Comments
      * @param pos The specific source code position.
      */
@@ -63,31 +77,36 @@ public abstract class Literal extends JavaProgramElement implements Expression, 
 
     /**
      * Literal with specific source code position.
+     *
      * @param pos The specific source code position.
      */
     public Literal(PositionInfo pos) {
         super(pos);
     }
 
-   /** retrieves the literal's type (as it is independant of the
+    /**
+     * retrieves the literal's type (as it is independant of the
      * execution context, it is same as using {@link #getKeYJavaType(Services)})
-     * @param javaServ the Services offering access to the Java model 
-     * @param ec the ExecutionContext in which the expression is evaluated 
+     *
+     * @param javaServ the Services offering access to the Java model
+     * @param ec the ExecutionContext in which the expression is evaluated
      * @return the literal's type
      */
     @Override
-    public KeYJavaType getKeYJavaType(Services javaServ, 
-				      ExecutionContext ec) {
-	return getKeYJavaType(javaServ);
+    public KeYJavaType getKeYJavaType(Services javaServ,
+            ExecutionContext ec) {
+        return getKeYJavaType(javaServ);
     }
-    
-    /** retrieves the literal's type 
-     * @param javaServ the Services offering access to the Java model 
+
+    /**
+     * retrieves the literal's type
+     *
+     * @param javaServ the Services offering access to the Java model
      * @return the literal's type
      */
     public abstract KeYJavaType getKeYJavaType(Services javaServ);
-    
-    
+
+
     @Override
     public MatchConditions match(SourceData source, MatchConditions matchCond) {
         final ProgramElement src = source.getSource();
@@ -97,12 +116,12 @@ public abstract class Literal extends JavaProgramElement implements Expression, 
         } else {
             LOGGER.debug("Program match failed (pattern {}, source {})", this, src);
             return null;
-        }        
+        }
     }
-    
+
     /*
-    * Return the Name of the LDT, which this Literal belongs to.
-    */
+     * Return the Name of the LDT, which this Literal belongs to.
+     */
     public abstract Name getLDTName();
 
 }

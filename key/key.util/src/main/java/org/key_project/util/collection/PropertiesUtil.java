@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.util.collection;
 
 import java.io.BufferedReader;
@@ -19,15 +29,15 @@ public class PropertiesUtil {
         StringBuilder sb = new StringBuilder();
 
         while ((line = br.readLine()) != null) {
-            if(line.startsWith("#")) {
+            if (line.startsWith("#")) {
                 continue;
-            } else if(line.startsWith(" ") || line.startsWith("\t")) {
-                if(sb.length() > 0) {
+            } else if (line.startsWith(" ") || line.startsWith("\t")) {
+                if (sb.length() > 0) {
                     sb.append("\n");
                 }
                 sb.append(line.trim());
             } else {
-                if(sb.length() > 0) {
+                if (sb.length() > 0) {
                     if (currentKey == null) {
                         throw new IOException("No key defined");
                     }
@@ -36,7 +46,7 @@ public class PropertiesUtil {
                 }
             }
         }
-        if(sb.length() > 0) {
+        if (sb.length() > 0) {
             if (currentKey == null) {
                 throw new IOException("No key defined");
             }

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.rule.conditions;
 
 import java.util.Optional;
@@ -52,7 +62,7 @@ public class LoopInvariantCondition implements VariableCondition {
         final LoopStatement loop = (LoopStatement) svInst
                 .getInstantiation(loopStmtSV);
         final LoopSpecification loopSpec = //
-               services.getSpecificationRepository().getLoopSpec(loop);
+            services.getSpecificationRepository().getLoopSpec(loop);
 
         if (loopSpec == null) {
             return null;
@@ -63,9 +73,9 @@ public class LoopInvariantCondition implements VariableCondition {
                         .getContextInstantiation().contextProgram());
 
         final MethodFrame mf = //
-                JavaTools.getInnermostMethodFrame(javaBlock, services);
+            JavaTools.getInnermostMethodFrame(javaBlock, services);
         final Term selfTerm = Optional.ofNullable(mf).map(
-                methodFrame -> MiscTools.getSelfTerm(methodFrame, services))
+            methodFrame -> MiscTools.getSelfTerm(methodFrame, services))
                 .orElse(null);
 
         final Modality modality = (Modality) svInst
@@ -78,19 +88,19 @@ public class LoopInvariantCondition implements VariableCondition {
 
             final Optional<Term> maybeInvInst = Optional
                     .ofNullable(loopSpec.getInvariant(heap, selfTerm,
-                            loopSpec.getInternalAtPres(), services));
+                        loopSpec.getInternalAtPres(), services));
 
             invInst = maybeInvInst.map(inv -> tb.and(currentInvInst, inv))
                     .orElse(invInst);
         }
 
         return matchCond.setInstantiations( //
-                svInst.add(invSV, invInst, services));
+            svInst.add(invSV, invInst, services));
     }
 
     @Override
     public String toString() {
         return "\\getInvariant(" + loopStmtSV + ", " + modalitySV + ", " + invSV
-                + ")";
+            + ")";
     }
 }

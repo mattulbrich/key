@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -24,7 +34,7 @@ import de.uka.ilkd.key.rule.RuleApp;
  * focus is <code>badSymbol</code>. Optionally, one can also specify that
  * zero should only be returned if the symbol immediately above the
  * focus is <code>badSymbol</code> and the focus has a certain subterm index.
- * 
+ *
  * TODO: eliminate this class and use term features instead
  */
 public abstract class DirectlyBelowFeature extends BinaryFeature {
@@ -36,14 +46,17 @@ public abstract class DirectlyBelowFeature extends BinaryFeature {
         this.badSymbol = badSymbol;
         this.index = index;
     }
-    
+
     protected boolean filter(RuleApp app, PosInOccurrence pos, Goal goal) {
-        if ( pos == null ) return false;
-        if ( pos.isTopLevel () ) return false;
-        if ( !isBadSymbol( pos.up ().subTerm ().op () ) ) return false;
-        return index == -1 || index == pos.getIndex ();
-    }  
-    
+        if (pos == null)
+            return false;
+        if (pos.isTopLevel())
+            return false;
+        if (!isBadSymbol(pos.up().subTerm().op()))
+            return false;
+        return index == -1 || index == pos.getIndex();
+    }
+
     protected abstract boolean isBadSymbol(Operator op);
-    
+
 }

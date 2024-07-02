@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -23,9 +33,11 @@ public class TestMemberReference extends ResolveGenericClass {
     protected void setUp() throws Exception {
         registerCU("package java.lang; public class String {}");
         registerCU("package java.lang; public interface Comparator<X extends Comparator<X>> { }");
-        registerCU("package java.lang; public class Object { public String toString() {}; protected final Object clone(); }");
-        registerCU("class G<E> { E[][] array; E field; " + "E m() { return null; } " + "E[][] n() { return null; } } "
-                + "class B { void bb(); }");
+        registerCU(
+            "package java.lang; public class Object { public String toString() {}; protected final Object clone(); }");
+        registerCU("class G<E> { E[][] array; E field; " + "E m() { return null; } "
+            + "E[][] n() { return null; } } "
+            + "class B { void bb(); }");
     }
 
     @Test
@@ -51,7 +63,8 @@ public class TestMemberReference extends ResolveGenericClass {
 
     @Test
     public void testExtends() throws Exception {
-        String before = "class T { public void m() { G<? extends B> g = new G<B>(); B b = g.m(); } }";
+        String before =
+            "class T { public void m() { G<? extends B> g = new G<B>(); B b = g.m(); } }";
         String after = "class T { public void m() { G g = new G(); B b = ((B) g.m()); } }";
         equalCU(before, after);
     }
@@ -96,8 +109,10 @@ public class TestMemberReference extends ResolveGenericClass {
 
     @Test
     public void testExpressionStatementStructures() throws Exception {
-        String before = "class T { void m() { G<B> g = new G<B>(); while(true) g.m(); if(true) g.m(); else g.m(); } }";
-        String after = "class T { void m() { G g = new G(); while(true) g.m(); if(true) g.m(); else g.m(); } }";
+        String before =
+            "class T { void m() { G<B> g = new G<B>(); while(true) g.m(); if(true) g.m(); else g.m(); } }";
+        String after =
+            "class T { void m() { G g = new G(); while(true) g.m(); if(true) g.m(); else g.m(); } }";
         equalCU(before, after);
     }
 
@@ -143,7 +158,7 @@ public class TestMemberReference extends ResolveGenericClass {
         equalCU(before, after);
     }
 
-    // Obj data[] not Obj[] data  !!!!
+    // Obj data[] not Obj[] data !!!!
     @Test
     public void testArrayAssign() throws Exception {
         String before = "class T { G<B> g; void m() { Object data[][] = g.array; } }";
@@ -160,9 +175,11 @@ public class TestMemberReference extends ResolveGenericClass {
 
     @Test
     public void testStortArray() throws Exception {
-        String before = "class Arrays { public static <T> void sort(T[] a, Comparator<? super T> c) {" +
+        String before =
+            "class Arrays { public static <T> void sort(T[] a, Comparator<? super T> c) {" +
                 "T[] aux = (T[])a.clone(); } }";
-        String after = "class Arrays { public static void sort(java.lang.Object[] a, Comparator c) {" +
+        String after =
+            "class Arrays { public static void sort(java.lang.Object[] a, Comparator c) {" +
                 "java.lang.Object[] aux = (java.lang.Object[])a.clone(); } }";
         equalCU(before, after);
     }

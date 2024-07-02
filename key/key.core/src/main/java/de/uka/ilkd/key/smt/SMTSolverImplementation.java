@@ -1,17 +1,33 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
 //
 
 package de.uka.ilkd.key.smt;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.Nonnull;
 
 import de.uka.ilkd.key.java.Services;
 import de.uka.ilkd.key.java.abstraction.KeYJavaType;
@@ -26,20 +42,14 @@ import de.uka.ilkd.key.smt.st.SolverType;
 import de.uka.ilkd.key.smt.st.SolverTypes;
 import de.uka.ilkd.key.taclettranslation.assumptions.TacletSetTranslation;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Represents a concrete instance of a running solver process on the KeY side. Amongst others
  * performs the following steps:
  * <ol>
- *     <li>Translates the given problem to SMT format.</li>
- *      <li>Starts the external solver process.</li>
- *      <li>Sends the problem to the process.</li>
- *      <li>Communicates with the solver via the solver socket.</li>
+ * <li>Translates the given problem to SMT format.</li>
+ * <li>Starts the external solver process.</li>
+ * <li>Sends the problem to the process.</li>
+ * <li>Communicates with the solver via the solver socket.</li>
  * </ol>
  *
  * @author ?
@@ -61,8 +71,7 @@ public final class SMTSolverImplementation implements SMTSolver, Runnable {
      * the socket that handles solver results and interactively communicates with the running
      * external solver process
      */
-    private final @Nonnull
-    AbstractSolverSocket socket;
+    private final @Nonnull AbstractSolverSocket socket;
 
     /**
      * the ModelExtractor used to generate counterexamples (only used for CE solver type)
@@ -156,13 +165,13 @@ public final class SMTSolverImplementation implements SMTSolver, Runnable {
     /**
      * Creates a new instance an SMT solver.
      *
-     * @param problem  the problem to send to the external solver process
+     * @param problem the problem to send to the external solver process
      * @param listener the listener that has to be informed when the solver state changes
      * @param services the services needed to translate the problem to SMT format
-     * @param myType   the type of the solver to run (e.g., Z3, CVC3, Z3_CE)
+     * @param myType the type of the solver to run (e.g., Z3, CVC3, Z3_CE)
      */
     public SMTSolverImplementation(SMTProblem problem, SolverListener listener,
-                                   Services services, SolverType myType) {
+            Services services, SolverType myType) {
         this.problem = problem;
         this.listener = listener;
         this.services = services;
@@ -176,7 +185,7 @@ public final class SMTSolverImplementation implements SMTSolver, Runnable {
      * instance of <code>SolverLauncher</code>. If you want to start a
      * solver please have a look at <code>SolverLauncher</code>.
      *
-     * @param timeout  the timeout to use for the solver
+     * @param timeout the timeout to use for the solver
      * @param settings the SMTSettings to use for this solver
      */
     @Override
@@ -276,7 +285,7 @@ public final class SMTSolverImplementation implements SMTSolver, Runnable {
         try {
             processLauncher.launch(commands);
             processLauncher.getPipe().sendMessage(type.modifyProblem(problemString));
-            //processLauncher.getPipe().sendEOF();
+            // processLauncher.getPipe().sendEOF();
 
             String msg = processLauncher.getPipe().readMessage();
             while (msg != null) {
@@ -299,17 +308,17 @@ public final class SMTSolverImplementation implements SMTSolver, Runnable {
         ReasonOfInterruption reason = getReasonOfInterruption();
         setReasonOfInterruption(ReasonOfInterruption.Exception, e);
         switch (reason) {
-            case Exception:
-            case NoInterruption:
-                setReasonOfInterruption(ReasonOfInterruption.Exception, e);
-                listener.processInterrupted(this, problem, e);
-                break;
-            case Timeout:
-                listener.processTimeout(this, problem);
-                break;
-            case User:
-                listener.processUser(this, problem);
-                break;
+        case Exception:
+        case NoInterruption:
+            setReasonOfInterruption(ReasonOfInterruption.Exception, e);
+            listener.processInterrupted(this, problem, e);
+            break;
+        case Timeout:
+            listener.processTimeout(this, problem);
+            break;
+        case User:
+            listener.processUser(this, problem);
+            break;
         }
     }
 
@@ -343,10 +352,10 @@ public final class SMTSolverImplementation implements SMTSolver, Runnable {
             }
 
             KeYJavaType typeOfClassUnderTest =
-                    specrep.getProofOblInput(originalProof).getContainerType();
+                specrep.getProofOblInput(originalProof).getContainerType();
 
             SMTObjTranslator objTrans =
-                    new SMTObjTranslator(smtSettings, services, typeOfClassUnderTest);
+                new SMTObjTranslator(smtSettings, services, typeOfClassUnderTest);
             problemString = objTrans.translateProblem(sequent, services, smtSettings).toString();
             ModelExtractor transQuery = objTrans.getQuery();
             getSocket().setQuery(transQuery);
@@ -360,7 +369,7 @@ public final class SMTSolverImplementation implements SMTSolver, Runnable {
                 // Since taclet translation in the old form is no longer used,
                 // this will likely disappear.
                 exceptionsForTacletTranslation.addAll(
-                        ((AbstractSMTTranslator) trans).getExceptionsOfTacletTranslation());
+                    ((AbstractSMTTranslator) trans).getExceptionsOfTacletTranslation());
             }
         }
 

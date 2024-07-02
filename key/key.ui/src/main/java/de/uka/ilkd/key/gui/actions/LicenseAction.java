@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -13,16 +23,16 @@
 
 package de.uka.ilkd.key.gui.actions;
 
-import de.uka.ilkd.key.gui.MainWindow;
-import de.uka.ilkd.key.util.KeYConstants;
-import de.uka.ilkd.key.util.KeYResourceManager;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import javax.swing.*;
+
+import de.uka.ilkd.key.gui.MainWindow;
+import de.uka.ilkd.key.util.KeYConstants;
+import de.uka.ilkd.key.util.KeYResourceManager;
 
 /**
  * Shows the license dialog.
@@ -33,7 +43,7 @@ import java.net.URL;
  */
 public class LicenseAction extends MainWindowAction {
     public static final String KEY_FALLBACK = (KeYConstants.COPYRIGHT + "\nKeY is protected by the "
-            + "GNU General Public License v2");
+        + "GNU General Public License v2");
 
     private static final long serialVersionUID = 5606343347731759150L;
 
@@ -73,10 +83,10 @@ public class LicenseAction extends MainWindowAction {
 
     public void showLicense() {
         URL lic = KeYResourceManager.getManager().getResourceFile(MainWindow.class,
-                "LICENSE.TXT");
+            "LICENSE.TXT");
 
         URL thirdPartyLic = KeYResourceManager.getManager().getResourceFile(MainWindow.class,
-                "THIRD_PARTY_LICENSES.txt");
+            "THIRD_PARTY_LICENSES.txt");
 
         JDialog fr = new JDialog(mainWindow, "KeY License");
         fr.getContentPane().setLayout(new BorderLayout());

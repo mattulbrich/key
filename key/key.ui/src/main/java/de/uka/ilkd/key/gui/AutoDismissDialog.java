@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -17,7 +27,6 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,11 +52,11 @@ public class AutoDismissDialog {
 
 
     public AutoDismissDialog(Frame parent,
-                             String message,
-                             final int delay,
-                             final int rate,
-                             final int delayStartToDispose,
-                             final int delayDisposeToEnd) {
+            String message,
+            final int delay,
+            final int rate,
+            final int delayStartToDispose,
+            final int delayDisposeToEnd) {
         dialog = new JDialog(parent, "Message", false);
         messagePanel = new JPanel();
         messagePanel.add(new JLabel(message));
@@ -64,9 +73,9 @@ public class AutoDismissDialog {
 
 
     public AutoDismissDialog(Frame parent,
-                             String message) {
+            String message) {
         this(parent, message, DEFAULT_DELAY, DEFAULT_RATE,
-             DEFAULT_DELAY_START_TO_DISPOSE, DEFAULT_DELAY_DISPOSE_TO_END);
+            DEFAULT_DELAY_START_TO_DISPOSE, DEFAULT_DELAY_DISPOSE_TO_END);
     }
 
 
@@ -98,22 +107,22 @@ public class AutoDismissDialog {
         }, delayStartToDispose, rate);
         dialog.setVisible(true);
     }
-//    private void setPosition() {
-//        if (dialog.getParent() != null
-//                    && dialog.getParent().getBounds() != null) {
-//                Container parent = dialog.getParent();
-//                // dimension of scroll pane minus frame dimension
-//                int x = parent.getBounds().width - INIT_SIZE.width;
-//                int y = parent.getBounds().height - INIT_SIZE.height;
-//                // plus parent positions
-//                parent = parent.getParent();
-//                while (parent != null) {
-//                    x += parent.getBounds().x;
-//                    y += parent.getBounds().y;
-//                    parent = parent.getParent();
-//                }
-//                setLocation(x, y);
-//                pack();
-//            }
-//    }
+    // private void setPosition() {
+    // if (dialog.getParent() != null
+    // && dialog.getParent().getBounds() != null) {
+    // Container parent = dialog.getParent();
+    // // dimension of scroll pane minus frame dimension
+    // int x = parent.getBounds().width - INIT_SIZE.width;
+    // int y = parent.getBounds().height - INIT_SIZE.height;
+    // // plus parent positions
+    // parent = parent.getParent();
+    // while (parent != null) {
+    // x += parent.getBounds().x;
+    // y += parent.getBounds().y;
+    // parent = parent.getParent();
+    // }
+    // setLocation(x, y);
+    // pack();
+    // }
+    // }
 }

@@ -1,9 +1,15 @@
+/* This file was part of the RECODER library and protected by the LGPL.
+ * This file is part of KeY since 2021 - https://key-project.org
+ * KeY is licensed under the GNU General Public License Version 2
+ * SPDX-License-Identifier: GPL-2.0-only */
 // This file is part of the RECODER library and protected by the LGPL.
 
 package recoder.service;
 
-import recoder.abstraction.Package;
+import java.util.List;
+
 import recoder.abstraction.*;
+import recoder.abstraction.Package;
 import recoder.java.Expression;
 import recoder.java.ProgramElement;
 import recoder.java.Reference;
@@ -12,8 +18,6 @@ import recoder.java.declaration.*;
 import recoder.java.reference.*;
 import recoder.java.statement.EmptyStatement;
 import recoder.util.ProgressListener;
-
-import java.util.List;
 
 /**
  * Implements queries for program model elements with concrete syntactical
@@ -36,7 +40,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param context a program element.
      * @return the type to which the given program element belongs (may be
-     * <CODE>null</CODE>).
+     *         <CODE>null</CODE>).
      */
     ClassType getContainingClassType(ProgramElement context);
 
@@ -74,7 +78,8 @@ public interface SourceInfo extends ProgramModelInfo {
 
     /**
      * Returns the type for the variable specification.
-     * Implementors should ensure that, if <code>vs</code> is an <code>EnumConstantSpecification</code>,
+     * Implementors should ensure that, if <code>vs</code> is an
+     * <code>EnumConstantSpecification</code>,
      * the call is delegated to <code>getType(VariableDefinition)</code>.
      *
      * @param vs a variable specification.
@@ -87,8 +92,8 @@ public interface SourceInfo extends ProgramModelInfo {
      * as context. Useful to check for name clashes when introducing a new
      * identifier. Neither name nor context may be <CODE>null</CODE>.
      *
-     * @param name    the name for the type to be looked up; may or may not be
-     *                qualified.
+     * @param name the name for the type to be looked up; may or may not be
+     *        qualified.
      * @param context a program element defining the lookup context (scope).
      * @return the corresponding type (may be <CODE>null</CODE>).
      */
@@ -99,7 +104,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param expr an expression.
      * @return the type of the expression, or <CODE>null</CODE> if the type
-     * could not be computed.
+     *         could not be computed.
      */
     Type getType(Expression expr);
 
@@ -110,11 +115,11 @@ public interface SourceInfo extends ProgramModelInfo {
      * in the Java language specification.
      *
      * @param expr the expression that might be a compile-time constant fitting
-     *             into the given type.
-     * @param to   the type that the expression might fit into.
+     *        into the given type.
+     * @param to the type that the expression might fit into.
      * @return <CODE>true</CODE> if the expression value is "constant" and
-     * would fit into a variable of the given type without loss of
-     * information, <CODE>false</CODE> in any other case.
+     *         would fit into a variable of the given type without loss of
+     *         information, <CODE>false</CODE> in any other case.
      */
     boolean isNarrowingTo(Expression expr, PrimitiveType to);
 
@@ -124,7 +129,7 @@ public interface SourceInfo extends ProgramModelInfo {
      * a field. Useful to check for name clashes when introducing a new
      * identifier.
      *
-     * @param name    the name of the variable to be looked up.
+     * @param name the name of the variable to be looked up.
      * @param context a program element defining the lookup context.
      * @return the corresponding variable (may be <CODE>null</CODE>).
      */
@@ -204,7 +209,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param mr the method reference to collate.
      * @return the referred method.
-     * @throws AmbiguousReferenceException  if there are no single most specific applicable method.
+     * @throws AmbiguousReferenceException if there are no single most specific applicable method.
      * @throws UnresolvedReferenceException if there are no applicable method.
      * @see #getMethods(MethodReference)
      */
@@ -248,7 +253,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param cr the constructor reference to collate.
      * @return the constructor referred.
-     * @throws AmbiguousReferenceException  if there are is no most specific applicable constructor.
+     * @throws AmbiguousReferenceException if there are is no most specific applicable constructor.
      * @throws UnresolvedReferenceException if there are no applicable constructor.
      * @see #getConstructors(ConstructorReference)
      */
@@ -283,7 +288,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param urq an uncollated reference.
      * @return a resolved reference, or <CODE>null</CODE> if the reference
-     * could not be resolved.
+     *         could not be resolved.
      */
     Reference resolveURQ(UncollatedReferenceQualifier urq);
 
@@ -292,7 +297,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param pe the root of a syntax tree that shall be analyzed.
      * @deprecated this method will not be public in future - use
-     * ChangeHistory.attach instead
+     *             ChangeHistory.attach instead
      */
     void register(ProgramElement pe);
 
@@ -302,7 +307,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param ct a class type.
      * @return the corresponding type declaration, or <CODE>null</CODE>, if
-     * the given type has no syntactical representation.
+     *         the given type has no syntactical representation.
      */
     TypeDeclaration getTypeDeclaration(ClassType ct);
 
@@ -312,7 +317,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param m a method.
      * @return the corresponding method declaration, or <CODE>null</CODE>, if
-     * the given method has no syntactical representation.
+     *         the given method has no syntactical representation.
      */
     MethodDeclaration getMethodDeclaration(Method m);
 
@@ -322,7 +327,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param m a method.
      * @return the corresponding method declaration, or <CODE>null</CODE>, if
-     * the given method has no syntactical representation.
+     *         the given method has no syntactical representation.
      */
     ConstructorDeclaration getConstructorDeclaration(Constructor c);
 
@@ -332,7 +337,7 @@ public interface SourceInfo extends ProgramModelInfo {
      *
      * @param m a variable.
      * @return the corresponding variable specification, or <CODE>null</CODE>,
-     * if the given variable has no syntactical representation.
+     *         if the given variable has no syntactical representation.
      */
     VariableSpecification getVariableSpecification(Variable v);
 
@@ -375,4 +380,3 @@ public interface SourceInfo extends ProgramModelInfo {
     Type getAnnotationType(AnnotationUseSpecification au);
 
 }
-

@@ -1,10 +1,20 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package org.key_project.exploration;
 
-import de.uka.ilkd.key.proof.Node;
-
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
+
+import de.uka.ilkd.key.proof.Node;
 
 /**
  * Information on exploration that is attached to nodes.
@@ -15,9 +25,9 @@ public class ExplorationNodeData {
 
     private String explorationAction;
 
-    public static @Nonnull
-    ExplorationNodeData get(@Nonnull Node node) {
-        @Nullable ExplorationNodeData data = node.lookup(ExplorationNodeData.class);
+    public static @Nonnull ExplorationNodeData get(@Nonnull Node node) {
+        @Nullable
+        ExplorationNodeData data = node.lookup(ExplorationNodeData.class);
         if (data == null) {
             data = new ExplorationNodeData();
             node.register(data, ExplorationNodeData.class);
@@ -42,9 +52,12 @@ public class ExplorationNodeData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        if (o.getClass() != getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (o.getClass() != getClass())
+            return false;
         ExplorationNodeData that = (ExplorationNodeData) o;
         return Objects.equals(getExplorationAction(), that.getExplorationAction());
     }

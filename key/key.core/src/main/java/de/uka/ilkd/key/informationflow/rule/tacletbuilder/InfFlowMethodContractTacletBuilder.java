@@ -1,18 +1,23 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 // Copyright (C) 2001-2011 Universitaet Karlsruhe, Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 //
-// The KeY system is protected by the GNU General Public License. 
+// The KeY system is protected by the GNU General Public License.
 // See LICENSE.TXT for details.
 //
 //
 package de.uka.ilkd.key.informationflow.rule.tacletbuilder;
-
-import org.key_project.util.collection.DefaultImmutableSet;
-import org.key_project.util.collection.ImmutableList;
-import org.key_project.util.collection.ImmutableSLList;
-import org.key_project.util.collection.ImmutableSet;
 
 import de.uka.ilkd.key.informationflow.po.snippet.BasicPOSnippetFactory;
 import de.uka.ilkd.key.informationflow.po.snippet.InfFlowPOSnippetFactory;
@@ -26,6 +31,11 @@ import de.uka.ilkd.key.speclang.Contract;
 import de.uka.ilkd.key.speclang.FunctionalOperationContract;
 import de.uka.ilkd.key.speclang.InformationFlowContract;
 import de.uka.ilkd.key.util.MiscTools;
+
+import org.key_project.util.collection.DefaultImmutableSet;
+import org.key_project.util.collection.ImmutableList;
+import org.key_project.util.collection.ImmutableSLList;
+import org.key_project.util.collection.ImmutableSet;
 
 
 /**
@@ -55,18 +65,18 @@ public final class InfFlowMethodContractTacletBuilder
 
     @Override
     Term generateSchemaAssumes(ProofObligationVars schemaDataAssumes,
-                               Services services) {
+            Services services) {
         BasicPOSnippetFactory fAssumes =
-                POSnippetFactory.getBasicFactory(methodContract, schemaDataAssumes, services);
+            POSnippetFactory.getBasicFactory(methodContract, schemaDataAssumes, services);
         return fAssumes.create(BasicPOSnippetFactory.Snippet.METHOD_CALL_RELATION);
     }
 
 
     @Override
     Term generateSchemaFind(ProofObligationVars schemaDataFind,
-                            Services services) {
+            Services services) {
         BasicPOSnippetFactory fFind =
-                POSnippetFactory.getBasicFactory(methodContract, schemaDataFind, services);
+            POSnippetFactory.getBasicFactory(methodContract, schemaDataFind, services);
         return fFind.create(BasicPOSnippetFactory.Snippet.METHOD_CALL_RELATION);
     }
 
@@ -74,26 +84,26 @@ public final class InfFlowMethodContractTacletBuilder
     @Override
     Term getContractApplPred(ProofObligationVars appData) {
         BasicPOSnippetFactory f =
-                POSnippetFactory.getBasicFactory(methodContract, appData,
-                                                 services);
+            POSnippetFactory.getBasicFactory(methodContract, appData,
+                services);
         return f.create(BasicPOSnippetFactory.Snippet.METHOD_CALL_RELATION);
     }
 
 
     @Override
     Term buildContractApplications(ProofObligationVars contAppData,
-                                   ProofObligationVars contAppData2,
-                                   Services services) {
+            ProofObligationVars contAppData2,
+            Services services) {
         ImmutableSet<InformationFlowContract> ifContracts =
-                getInformFlowContracts(methodContract.getTarget(), services);
+            getInformFlowContracts(methodContract.getTarget(), services);
         ImmutableList<Term> contractsApplications =
-                ImmutableSLList.<Term>nil();
+            ImmutableSLList.<Term>nil();
         for (InformationFlowContract cont : ifContracts) {
             InfFlowPOSnippetFactory f =
-                    POSnippetFactory.getInfFlowFactory(cont, contAppData,
-                                                       contAppData2, services);
+                POSnippetFactory.getInfFlowFactory(cont, contAppData,
+                    contAppData2, services);
             contractsApplications =
-                    contractsApplications.append(
+                contractsApplications.append(
                     f.create(InfFlowPOSnippetFactory.Snippet.INF_FLOW_CONTRACT_APPL));
         }
 
@@ -102,11 +112,11 @@ public final class InfFlowMethodContractTacletBuilder
 
 
     private ImmutableSet<InformationFlowContract> getInformFlowContracts(IProgramMethod pm,
-                                                                         Services services) {
+            Services services) {
         ImmutableSet<Contract> contracts =
-                services.getSpecificationRepository().getContracts(pm.getContainerType(), pm);
+            services.getSpecificationRepository().getContracts(pm.getContainerType(), pm);
         ImmutableSet<InformationFlowContract> ifContracts =
-                DefaultImmutableSet.<InformationFlowContract>nil();
+            DefaultImmutableSet.<InformationFlowContract>nil();
         for (Contract c : contracts) {
             if (c instanceof InformationFlowContract) {
                 ifContracts = ifContracts.add((InformationFlowContract) c);

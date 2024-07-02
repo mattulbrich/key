@@ -1,15 +1,25 @@
-// This file is part of KeY - Integrated Deductive Software Design 
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
+// This file is part of KeY - Integrated Deductive Software Design
 //
-// Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany 
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
-// Copyright (C) 2011-2013 Karlsruhe Institute of Technology, Germany 
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
+// Copyright (C) 2011-2013 Karlsruhe Institute of Technology, Germany
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
-// The KeY system is protected by the GNU General 
+// The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
-// 
+//
 package de.uka.ilkd.key.strategy.termfeature;
 
 import de.uka.ilkd.key.java.Services;
@@ -23,7 +33,7 @@ import de.uka.ilkd.key.logic.label.ParameterlessTermLabel;
 public final class IsPostConditionTermFeature extends BinaryTermFeature {
 
     public static final IsPostConditionTermFeature INSTANCE =
-            new IsPostConditionTermFeature();
+        new IsPostConditionTermFeature();
 
 
     private IsPostConditionTermFeature() {
@@ -33,6 +43,6 @@ public final class IsPostConditionTermFeature extends BinaryTermFeature {
     @Override
     protected boolean filter(Term t, Services services) {
         return t.hasLabels() &&
-               t.containsLabel(ParameterlessTermLabel.POST_CONDITION_LABEL);
+                t.containsLabel(ParameterlessTermLabel.POST_CONDITION_LABEL);
     }
 }

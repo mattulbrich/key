@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -15,13 +25,13 @@ package de.uka.ilkd.key.strategy.definition;
 
 import java.util.ArrayList;
 
-import org.key_project.util.collection.ImmutableArray;
-
 import de.uka.ilkd.key.settings.StrategySettings;
 import de.uka.ilkd.key.strategy.Strategy;
 import de.uka.ilkd.key.strategy.StrategyFactory;
 import de.uka.ilkd.key.strategy.StrategyProperties;
 import de.uka.ilkd.key.util.Triple;
+
+import org.key_project.util.collection.ImmutableArray;
 
 /**
  * <p>
@@ -49,8 +59,7 @@ import de.uka.ilkd.key.util.Triple;
  */
 public class StrategySettingsDefinition {
 
-    private static final ArrayList<Triple<String, Integer,
-                                          IDefaultStrategyPropertiesFactory>> STD_FURTHER_DEFAULTS;
+    private static final ArrayList<Triple<String, Integer, IDefaultStrategyPropertiesFactory>> STD_FURTHER_DEFAULTS;
 
     /**
      * Defines if a user interface control is shown to edit
@@ -90,170 +99,169 @@ public class StrategySettingsDefinition {
      * Further default settings, for example suitable for simplification.
      * Consists of triples (DEFAULT_NAME, MAX_RULE_APPS, PROPERTIES).
      */
-    private final ArrayList<Triple<String, Integer,
-                                   IDefaultStrategyPropertiesFactory>> furtherDefaults;
+    private final ArrayList<Triple<String, Integer, IDefaultStrategyPropertiesFactory>> furtherDefaults;
 
     static {
         STD_FURTHER_DEFAULTS =
-                new ArrayList<Triple<String, Integer, IDefaultStrategyPropertiesFactory>>();
+            new ArrayList<Triple<String, Integer, IDefaultStrategyPropertiesFactory>>();
 
         // Java verification standard preset (tested in TimSort case study)
         STD_FURTHER_DEFAULTS
                 .add(new Triple<String, Integer, IDefaultStrategyPropertiesFactory>(
-                        "Java verif. std.", 7000,
-                        new IDefaultStrategyPropertiesFactory() {
-                            @Override
-                            public StrategyProperties createDefaultStrategyProperties() {
-                                final StrategyProperties newProps =
-                                        IDefaultStrategyPropertiesFactory.DEFAULT_FACTORY
-                                                .createDefaultStrategyProperties();
+                    "Java verif. std.", 7000,
+                    new IDefaultStrategyPropertiesFactory() {
+                        @Override
+                        public StrategyProperties createDefaultStrategyProperties() {
+                            final StrategyProperties newProps =
+                                IDefaultStrategyPropertiesFactory.DEFAULT_FACTORY
+                                        .createDefaultStrategyProperties();
 
-                                newProps.setProperty(
-                                        StrategyProperties.SPLITTING_OPTIONS_KEY,
-                                        StrategyProperties.SPLITTING_DELAYED);
+                            newProps.setProperty(
+                                StrategyProperties.SPLITTING_OPTIONS_KEY,
+                                StrategyProperties.SPLITTING_DELAYED);
 
-                                newProps.setProperty(
-                                        StrategyProperties.LOOP_OPTIONS_KEY,
-                                        StrategyProperties.LOOP_SCOPE_INV_TACLET);
+                            newProps.setProperty(
+                                StrategyProperties.LOOP_OPTIONS_KEY,
+                                StrategyProperties.LOOP_SCOPE_INV_TACLET);
 
-                                newProps.setProperty(
-                                        StrategyProperties.BLOCK_OPTIONS_KEY,
-                                        StrategyProperties.BLOCK_CONTRACT_INTERNAL);
+                            newProps.setProperty(
+                                StrategyProperties.BLOCK_OPTIONS_KEY,
+                                StrategyProperties.BLOCK_CONTRACT_INTERNAL);
 
-                                newProps.setProperty(
-                                        StrategyProperties.METHOD_OPTIONS_KEY,
-                                        StrategyProperties.METHOD_CONTRACT);
+                            newProps.setProperty(
+                                StrategyProperties.METHOD_OPTIONS_KEY,
+                                StrategyProperties.METHOD_CONTRACT);
 
-                                newProps.setProperty(
-                                        StrategyProperties.MPS_OPTIONS_KEY,
-                                        StrategyProperties.MPS_MERGE);
+                            newProps.setProperty(
+                                StrategyProperties.MPS_OPTIONS_KEY,
+                                StrategyProperties.MPS_MERGE);
 
-                                newProps.setProperty(
-                                        StrategyProperties.DEP_OPTIONS_KEY,
-                                        StrategyProperties.DEP_ON);
+                            newProps.setProperty(
+                                StrategyProperties.DEP_OPTIONS_KEY,
+                                StrategyProperties.DEP_ON);
 
-                                newProps.setProperty(
-                                        StrategyProperties.QUERY_OPTIONS_KEY,
-                                        StrategyProperties.QUERY_ON);
+                            newProps.setProperty(
+                                StrategyProperties.QUERY_OPTIONS_KEY,
+                                StrategyProperties.QUERY_ON);
 
-                                newProps.setProperty(
-                                        StrategyProperties.NON_LIN_ARITH_OPTIONS_KEY,
-                                        StrategyProperties.NON_LIN_ARITH_DEF_OPS);
+                            newProps.setProperty(
+                                StrategyProperties.NON_LIN_ARITH_OPTIONS_KEY,
+                                StrategyProperties.NON_LIN_ARITH_DEF_OPS);
 
-                                newProps.setProperty(
-                                        StrategyProperties.OSS_OPTIONS_KEY,
-                                        StrategyProperties.OSS_ON);
+                            newProps.setProperty(
+                                StrategyProperties.OSS_OPTIONS_KEY,
+                                StrategyProperties.OSS_ON);
 
-                                newProps.setProperty(
-                                        StrategyProperties.QUANTIFIERS_OPTIONS_KEY,
-                                        StrategyProperties.QUANTIFIERS_NON_SPLITTING_WITH_PROGS);
+                            newProps.setProperty(
+                                StrategyProperties.QUANTIFIERS_OPTIONS_KEY,
+                                StrategyProperties.QUANTIFIERS_NON_SPLITTING_WITH_PROGS);
 
-                                newProps.setProperty(
-                                        StrategyProperties.CLASS_AXIOM_OPTIONS_KEY,
-                                        StrategyProperties.CLASS_AXIOM_DELAYED);
+                            newProps.setProperty(
+                                StrategyProperties.CLASS_AXIOM_OPTIONS_KEY,
+                                StrategyProperties.CLASS_AXIOM_DELAYED);
 
-                                return newProps;
-                            }
-                        }));
+                            return newProps;
+                        }
+                    }));
 
         // Simplification preset
         STD_FURTHER_DEFAULTS
                 .add(new Triple<String, Integer, IDefaultStrategyPropertiesFactory>(
-                        "Simplification", 5000,
-                        new IDefaultStrategyPropertiesFactory() {
-                            @Override
-                            public StrategyProperties createDefaultStrategyProperties() {
-                                final StrategyProperties newProps =
-                                        IDefaultStrategyPropertiesFactory.DEFAULT_FACTORY
-                                                .createDefaultStrategyProperties();
+                    "Simplification", 5000,
+                    new IDefaultStrategyPropertiesFactory() {
+                        @Override
+                        public StrategyProperties createDefaultStrategyProperties() {
+                            final StrategyProperties newProps =
+                                IDefaultStrategyPropertiesFactory.DEFAULT_FACTORY
+                                        .createDefaultStrategyProperties();
 
-                                newProps.setProperty(
-                                        StrategyProperties.SPLITTING_OPTIONS_KEY,
-                                        StrategyProperties.SPLITTING_OFF);
+                            newProps.setProperty(
+                                StrategyProperties.SPLITTING_OPTIONS_KEY,
+                                StrategyProperties.SPLITTING_OFF);
 
-                                newProps.setProperty(
-                                        StrategyProperties.LOOP_OPTIONS_KEY,
-                                        StrategyProperties.LOOP_NONE);
+                            newProps.setProperty(
+                                StrategyProperties.LOOP_OPTIONS_KEY,
+                                StrategyProperties.LOOP_NONE);
 
-                                newProps.setProperty(
-                                        StrategyProperties.BLOCK_OPTIONS_KEY,
-                                        StrategyProperties.BLOCK_NONE);
+                            newProps.setProperty(
+                                StrategyProperties.BLOCK_OPTIONS_KEY,
+                                StrategyProperties.BLOCK_NONE);
 
-                                newProps.setProperty(
-                                        StrategyProperties.METHOD_OPTIONS_KEY,
-                                        StrategyProperties.METHOD_NONE);
+                            newProps.setProperty(
+                                StrategyProperties.METHOD_OPTIONS_KEY,
+                                StrategyProperties.METHOD_NONE);
 
-                                newProps.setProperty(
-                                        StrategyProperties.MPS_MERGE,
-                                        StrategyProperties.MPS_NONE);
+                            newProps.setProperty(
+                                StrategyProperties.MPS_MERGE,
+                                StrategyProperties.MPS_NONE);
 
-                                newProps.setProperty(
-                                        StrategyProperties.DEP_OPTIONS_KEY,
-                                        StrategyProperties.DEP_OFF);
+                            newProps.setProperty(
+                                StrategyProperties.DEP_OPTIONS_KEY,
+                                StrategyProperties.DEP_OFF);
 
-                                newProps.setProperty(
-                                        StrategyProperties.QUERY_OPTIONS_KEY,
-                                        StrategyProperties.QUERY_OFF);
+                            newProps.setProperty(
+                                StrategyProperties.QUERY_OPTIONS_KEY,
+                                StrategyProperties.QUERY_OFF);
 
-                                newProps.setProperty(
-                                        StrategyProperties.QUERYAXIOM_OPTIONS_KEY,
-                                        StrategyProperties.QUERYAXIOM_OFF);
+                            newProps.setProperty(
+                                StrategyProperties.QUERYAXIOM_OPTIONS_KEY,
+                                StrategyProperties.QUERYAXIOM_OFF);
 
-                                newProps.setProperty(
-                                        StrategyProperties.NON_LIN_ARITH_OPTIONS_KEY,
-                                        StrategyProperties.NON_LIN_ARITH_NONE);
+                            newProps.setProperty(
+                                StrategyProperties.NON_LIN_ARITH_OPTIONS_KEY,
+                                StrategyProperties.NON_LIN_ARITH_NONE);
 
-                                newProps.setProperty(
-                                        StrategyProperties.QUANTIFIERS_OPTIONS_KEY,
-                                        StrategyProperties.QUANTIFIERS_NONE);
+                            newProps.setProperty(
+                                StrategyProperties.QUANTIFIERS_OPTIONS_KEY,
+                                StrategyProperties.QUANTIFIERS_NONE);
 
-                                newProps.setProperty(
-                                        StrategyProperties.CLASS_AXIOM_OPTIONS_KEY,
-                                        StrategyProperties.CLASS_AXIOM_OFF);
+                            newProps.setProperty(
+                                StrategyProperties.CLASS_AXIOM_OPTIONS_KEY,
+                                StrategyProperties.CLASS_AXIOM_OFF);
 
-                                return newProps;
-                            }
-                        }));
+                            return newProps;
+                        }
+                    }));
     }
 
     /**
      * Constructor.
      *
      * @param propertiesTitle
-     *            The label shown in front of the controls to edit
-     *            {@link StrategyProperties}.
+     *        The label shown in front of the controls to edit
+     *        {@link StrategyProperties}.
      * @param properties
-     *            Defines the controls to edit {@link StrategyProperties}.
+     *        Defines the controls to edit {@link StrategyProperties}.
      */
     public StrategySettingsDefinition(String propertiesTitle,
             AbstractStrategyPropertyDefinition... properties) {
         this(true, "Max. Rule Applications", 10000, propertiesTitle,
-                IDefaultStrategyPropertiesFactory.DEFAULT_FACTORY,
-                STD_FURTHER_DEFAULTS, properties);
+            IDefaultStrategyPropertiesFactory.DEFAULT_FACTORY,
+            STD_FURTHER_DEFAULTS, properties);
     }
 
     /**
      * Constructor.
      *
      * @param showMaxRuleApplications
-     *            Defines if a user interface control is shown to edit
-     *            {@link StrategySettings#getMaxSteps()}.
+     *        Defines if a user interface control is shown to edit
+     *        {@link StrategySettings#getMaxSteps()}.
      * @param maxRuleApplicationsLabel
-     *            The label shown in front of the control to edit
-     *            {@link StrategySettings#getMaxSteps()}.
+     *        The label shown in front of the control to edit
+     *        {@link StrategySettings#getMaxSteps()}.
      * @param defaultMaxRuleApplications
-     *            The default maximal rule applications.
+     *        The default maximal rule applications.
      * @param propertiesTitle
-     *            The label shown in front of the controls to edit
-     *            {@link StrategyProperties}.
+     *        The label shown in front of the controls to edit
+     *        {@link StrategyProperties}.
      * @param defaultPropertiesFactory
-     *            The {@link IDefaultStrategyPropertiesFactory} used to create
-     *            default {@link StrategyProperties}.
+     *        The {@link IDefaultStrategyPropertiesFactory} used to create
+     *        default {@link StrategyProperties}.
      * @param furtherDefaults
-     *            further defaults used to create
-     *            default {@link StrategyProperties}.
+     *        further defaults used to create
+     *        default {@link StrategyProperties}.
      * @param properties
-     *            Defines the controls to edit {@link StrategyProperties}.
+     *        Defines the controls to edit {@link StrategyProperties}.
      */
     public StrategySettingsDefinition(
             boolean showMaxRuleApplications,
@@ -271,8 +279,8 @@ public class StrategySettingsDefinition {
         this.defaultPropertiesFactory = defaultPropertiesFactory;
         this.furtherDefaults = furtherDefaults;
         this.properties =
-                new ImmutableArray<AbstractStrategyPropertyDefinition>(
-                        properties);
+            new ImmutableArray<AbstractStrategyPropertyDefinition>(
+                properties);
     }
 
     /**
@@ -342,8 +350,7 @@ public class StrategySettingsDefinition {
     /**
      * @return Further default settings, e.g. for simplification.
      */
-    public ArrayList<Triple<String, Integer, IDefaultStrategyPropertiesFactory>>
-            getFurtherDefaults() {
+    public ArrayList<Triple<String, Integer, IDefaultStrategyPropertiesFactory>> getFurtherDefaults() {
         return furtherDefaults;
     }
 

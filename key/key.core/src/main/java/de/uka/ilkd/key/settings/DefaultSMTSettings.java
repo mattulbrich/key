@@ -1,11 +1,21 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 // This file is part of KeY - Integrated Deductive Software Design
 //
 // Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
-//                         Universitaet Koblenz-Landau, Germany
-//                         Chalmers University of Technology, Sweden
+// Universitaet Koblenz-Landau, Germany
+// Chalmers University of Technology, Sweden
 // Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
-//                         Technical University Darmstadt, Germany
-//                         Chalmers University of Technology, Sweden
+// Technical University Darmstadt, Germany
+// Chalmers University of Technology, Sweden
 //
 // The KeY system is protected by the GNU General
 // Public License. See LICENSE.TXT for details.
@@ -14,15 +24,15 @@
 package de.uka.ilkd.key.settings;
 
 
+import java.io.File;
+import java.util.Collection;
+import java.util.LinkedList;
+
 import de.uka.ilkd.key.proof.Proof;
 import de.uka.ilkd.key.rule.Taclet;
 import de.uka.ilkd.key.smt.SMTSettings;
 import de.uka.ilkd.key.smt.st.SolverType;
 import de.uka.ilkd.key.taclettranslation.assumptions.SupportedTaclets;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.LinkedList;
 
 /**
  * The default implementation of {@link SMTSettings}.
@@ -36,9 +46,9 @@ public class DefaultSMTSettings implements SMTSettings {
 
 
     public DefaultSMTSettings(ProofDependentSMTSettings pdSettings,
-                              ProofIndependentSMTSettings piSettings,
-                              NewSMTTranslationSettings newTransSettings,
-                              Proof proof) {
+            ProofIndependentSMTSettings piSettings,
+            NewSMTTranslationSettings newTransSettings,
+            Proof proof) {
         super();
         this.pdSettings = pdSettings;
         this.piSettings = piSettings;
@@ -82,7 +92,7 @@ public class DefaultSMTSettings implements SMTSettings {
     @Override
     public String getSMTTemporaryFolder() {
         return PathConfig.getKeyConfigDir()
-                + File.separator + "smt_formula";
+            + File.separator + "smt_formula";
     }
 
     @Override

@@ -1,3 +1,13 @@
+This file is part of KeY - https://key-project.org
+The KeY system is protected by the GNU General Public License Version 2
+
+Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
+                        Universitaet Koblenz-Landau, Germany
+                        Chalmers University of Technology, Sweden
+Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
+                        Technical University Darmstadt, Germany
+                        Chalmers University of Technology, Sweden
+
 package de.uka.ilkd.key.gui;
 
 import java.awt.BorderLayout;
@@ -18,7 +28,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -36,6 +45,7 @@ import de.uka.ilkd.key.parser.Location;
 import de.uka.ilkd.key.proof.Goal;
 import de.uka.ilkd.key.proof.io.consistency.DiskFileRepo;
 import de.uka.ilkd.key.util.Debug;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +82,7 @@ public class ProofScriptWorker extends SwingWorker<Object, Object> implements In
      * @param location the location
      */
     public ProofScriptWorker(KeYMediator mediator, String script,
-                             Location location) {
+            Location location) {
         this(mediator, script, location, null);
     }
 
@@ -85,7 +95,7 @@ public class ProofScriptWorker extends SwingWorker<Object, Object> implements In
      * @param initiallySelectedGoal the initially selected goal
      */
     public ProofScriptWorker(KeYMediator mediator, String script,
-                             Location location, Goal initiallySelectedGoal) {
+            Location location, Goal initiallySelectedGoal) {
         this.mediator = mediator;
         this.script = script;
         this.initialLocation = location;
@@ -96,7 +106,7 @@ public class ProofScriptWorker extends SwingWorker<Object, Object> implements In
     protected Object doInBackground() throws Exception {
         try {
             engine = new ProofScriptEngine(
-                    script, initialLocation, initiallySelectedGoal);
+                script, initialLocation, initiallySelectedGoal);
             engine.setCommandMonitor(observer);
             engine.execute(mediator.getUI(), mediator.getSelectedProof());
         } catch (InterruptedException ex) {
@@ -114,7 +124,7 @@ public class ProofScriptWorker extends SwingWorker<Object, Object> implements In
         }
 
         JDialog dlg = new JDialog(MainWindow.getInstance(),
-                "Running Script ...", ModalityType.MODELESS);
+            "Running Script ...", ModalityType.MODELESS);
         Container cp = dlg.getContentPane();
         logArea = new JTextArea();
         logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -145,7 +155,7 @@ public class ProofScriptWorker extends SwingWorker<Object, Object> implements In
                     doc.insertString(doc.getLength(), "\n---\n" + chunk, null);
                 } else if (!((String) chunk).startsWith("'echo ")) {
                     doc.insertString(doc.getLength(),
-                            "\n---\nExecuting: " + chunk, null);
+                        "\n---\nExecuting: " + chunk, null);
                 }
             } catch (BadLocationException e) {
                 e.printStackTrace();
@@ -192,7 +202,7 @@ public class ProofScriptWorker extends SwingWorker<Object, Object> implements In
         try {
             if (!mediator.getSelectedProof().closed()) {
                 mediator.getSelectionModel().setSelectedGoal(
-                        engine.getStateMap().getFirstOpenAutomaticGoal());
+                    engine.getStateMap().getFirstOpenAutomaticGoal());
             }
         } catch (ScriptException e) {
             LOGGER.warn("", e);
