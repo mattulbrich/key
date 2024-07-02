@@ -89,5 +89,7 @@ public class ValueInjectorTest {
         int i;
         @Option(value = "s", required = false)
         String s;
+        @Varargs(as = String.class, prefix = "var_")
+        Map<String, String> varargs;
     }
 }

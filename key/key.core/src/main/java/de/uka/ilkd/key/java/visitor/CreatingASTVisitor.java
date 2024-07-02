@@ -1481,6 +1481,8 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
             @Override
             ProgramElement createNewElement(ExtList changeList) {
                 return new SeqConcat(changeList);
+                changeList.add(x.getAssertionProof());
+                changeList.add(x.getOptLabel());
             }
         };
         def.doAction(x);

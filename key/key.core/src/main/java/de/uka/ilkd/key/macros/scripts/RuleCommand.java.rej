@@ -1,0 +1,19 @@
+diff a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/RuleCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/RuleCommand.java	(rejected hunks)
+@@ -309,7 +331,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+      * @param sf The {@link SequentFormula} to check.
+      * @return true if <code>sf</code> matches.
+      */
+-    private boolean isFormulaSearchedFor(Parameters p, SequentFormula sf, Services services)
++    private boolean isSequentFormulaSearchedFor(Parameters p, SequentFormula sf, Services services)
+             throws ScriptException {
+         final boolean satisfiesFormulaParameter =
+             p.formula != null && sf.formula().equalsModRenaming(p.formula);
+@@ -337,7 +359,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+     /*
+      * Filter those apps from a list that are according to the parameters.
+      */
+-    private List<TacletApp> filterList(Parameters p, ImmutableList<TacletApp> list) {
++    private List<TacletApp> filterList(Services services, Parameters p, ImmutableList<TacletApp> list) {
+         List<TacletApp> matchingApps = new ArrayList<>();
+         for (TacletApp tacletApp : list) {
+             if (tacletApp instanceof PosTacletApp) {

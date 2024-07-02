@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import de.uka.ilkd.key.macros.scripts.ProofScriptCommand;
 
@@ -119,7 +120,7 @@ public class ValueInjector {
      */
     public <T> T inject(ProofScriptCommand<?> command, T obj, Map<String, String> arguments)
             throws ConversionException, InjectionReflectionException, NoSpecifiedConverterException,
-            ArgumentRequiredException {
+            ArgumentRequiredException, UnknownArgumentException {
         List<ProofScriptArgument> meta = ArgumentsLifter
                 .inferScriptArguments(obj.getClass(), command);
         List<ProofScriptArgument> varArgs = new ArrayList<>(meta.size());
@@ -146,6 +147,14 @@ public class ValueInjector {
                     usedKeys.add(k);
                 }
             }
+        }
+
+        Optional<String> unused = arguments.keySet().stream()
+                .filter(it -> !usedKeys.contains(it) && !"#literal".equals(it))
+                .findAny();
+        if (unused.isPresent()) {
+//            throw new UnknownArgumentException("Unknown argument '" + unused.get() +
+//                    "' for command of class " + command.getClass().getSimpleName());
         }
 
         return obj;

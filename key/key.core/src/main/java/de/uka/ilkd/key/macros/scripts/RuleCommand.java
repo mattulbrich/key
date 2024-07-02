@@ -59,6 +59,26 @@ import org.key_project.util.collection.ImmutableSLList;
  * <li>occ = occurrence number</li>
  * <li>inst_= instantiation</li>
  * </ol>
+ *
+ * [scriptDoc "rule"]
+ * This command can be used to apply a single calculus rule to the currently active
+ * open goal.
+ *
+ * ### Parameters:
+ *
+ * [parameter "<1st>" "String"] The name of the rule to be applied
+ * [parameter "on" "Term [optional]"] The term to be used as the "find" term in
+ * a taclet with "find".
+ * [parameter "occ" "int [optional]"] The number of the occurrence of *on* in case there
+ * are several applicable rule apps
+ * [parameter "formula" "Term [optional]"] The toplevel formula in which the
+ * find clause is to be searched.
+ * [parameter "matches" "String [optional]"] Instead of giving the toplevl formula
+ * completely, a regular expression can be specified to match the toplevel formula.
+ * [parameter "inst_SCHEMA" "Term [optional]"] If there are further schema variables
+ * to be instantiated parameters prefixed with "inst_" can be added, e.g.
+ * <tt>inst_b="true"</tt> if schema variable b is to be set to the formula true.
+ * [/scriptDoc]
  */
 public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
 
@@ -155,9 +175,11 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
                 .findIfFormulaInstantiations(
                     state.getFirstOpenAutomaticGoal().sequent(), services);
 
-        assumesCandidates = ImmutableList.fromList(filterList(p, assumesCandidates));
+        assumesCandidates = ImmutableList.fromList(filterList(services, p, assumesCandidates));
 
-        if (assumesCandidates.size() != 1) {
+        if (assumesCandidates.size() == 0) {
+            throw new ScriptException("No \\assumes instantiation");
+        } else if (assumesCandidates.size() != 1) {
             throw new ScriptException("Not a unique \\assumes instantiation");
         }
 
@@ -250,7 +272,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
             return matchingApps.get(0);
         } else {
             if (p.occ >= matchingApps.size()) {
-                throw new ScriptException("Occurence " + p.occ
+                throw new ScriptException("Occurrence " + p.occ
                     + " has been specified, but there are only "
                     + matchingApps.size() + " hits.");
             }
@@ -263,7 +285,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
             throws ScriptException {
 
         ImmutableList<TacletApp> allApps = findAllTacletApps(p, state);
-        List<TacletApp> matchingApps = filterList(p, allApps);
+        List<TacletApp> matchingApps = filterList(state.getProof().getServices(), p, allApps);
 
         if (matchingApps.isEmpty()) {
             throw new ScriptException("No matching applications.");
@@ -296,7 +318,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
 
         ImmutableList<IBuiltInRuleApp> allApps = ImmutableSLList.nil();
         for (SequentFormula sf : g.node().sequent().antecedent()) {
-            if (!isFormulaSearchedFor(p, sf, services)) {
+            if (!isSequentFormulaSearchedFor(p, sf, services)) {
                 continue;
             }
 
@@ -305,7 +327,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
         }
 
         for (SequentFormula sf : g.node().sequent().succedent()) {
-            if (!isFormulaSearchedFor(p, sf, services)) {
+            if (!isSequentFormulaSearchedFor(p, sf, services)) {
                 continue;
             }
 
@@ -327,7 +349,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
 
         ImmutableList<TacletApp> allApps = ImmutableSLList.nil();
         for (SequentFormula sf : g.node().sequent().antecedent()) {
-            if (!isFormulaSearchedFor(p, sf, services)) {
+            if (!isSequentFormulaSearchedFor(p, sf, services)) {
                 continue;
             }
 
@@ -337,7 +359,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
         }
 
         for (SequentFormula sf : g.node().sequent().succedent()) {
-            if (!isFormulaSearchedFor(p, sf, services)) {
+            if (!isSequentFormulaSearchedFor(p, sf, services)) {
                 continue;
             }
 

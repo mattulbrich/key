@@ -1,0 +1,35 @@
+diff a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/EngineState.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/EngineState.java	(rejected hunks)
+@@ -3,14 +3,20 @@ package de.uka.ilkd.key.macros.scripts;
+ import java.io.File;
+ import java.io.StringReader;
+ import java.util.Deque;
++import java.util.HashMap;
+ import java.util.LinkedList;
+ import java.util.Optional;
+ import java.util.function.Consumer;
+ import javax.annotation.Nonnull;
+ 
+ import de.uka.ilkd.key.java.Services;
++import de.uka.ilkd.key.logic.Name;
++import de.uka.ilkd.key.logic.NamespaceSet;
+ import de.uka.ilkd.key.logic.Sequent;
+ import de.uka.ilkd.key.logic.Term;
++import de.uka.ilkd.key.logic.op.Function;
++import de.uka.ilkd.key.logic.op.SortDependingFunction;
++import de.uka.ilkd.key.logic.sort.GenericSort;
+ import de.uka.ilkd.key.logic.sort.Sort;
+ import de.uka.ilkd.key.macros.scripts.meta.ValueInjector;
+ import de.uka.ilkd.key.parser.DefaultTermParser;
+@@ -193,8 +208,10 @@ public class EngineState {
+     public Term toTerm(String string, Sort sort) throws ParserException, ScriptException {
+         StringReader reader = new StringReader(string);
+         Services services = proof.getServices();
+-        return PARSER.parse(reader, sort, services,
+-            getFirstOpenAutomaticGoal().getLocalNamespaces(), abbrevMap);
++        NamespaceSet nss = getFirstOpenAutomaticGoal().getLocalNamespaces();
++        nss.functions().addSafely(ELLIPSIS);
++        nss.functions().addSafely(ELLIPSIS_FORMULA);
++        return PARSER.parse(reader, sort, services, nss, abbrevMap);
+     }
+ 
+     public Sort toSort(String sortName) throws ParserException, ScriptException {

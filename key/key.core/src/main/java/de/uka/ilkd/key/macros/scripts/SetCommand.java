@@ -12,6 +12,7 @@ package de.uka.ilkd.key.macros.scripts;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Stack;
 
 import de.uka.ilkd.key.macros.scripts.meta.Option;
 import de.uka.ilkd.key.proof.Proof;
@@ -55,10 +56,35 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
         } else if (args.proofSteps != null) {
             state.setMaxAutomaticSteps(args.proofSteps);
         } else if (args.key != null) {
+            if (!newProps.containsKey(args.key)) {
+                throw new ScriptException("Unknown setting key: " + args.key);
+            }
             newProps.setProperty(args.key, args.value);
-            updateStrategySettings(newProps);
+            updateStrategySettings(state, newProps);
+        } else if (args.stackAction != null) {
+            Stack<StrategyProperties> stack =
+                (Stack<StrategyProperties>) state.getUserData("settingsStack");
+            if (stack == null) {
+                stack = new Stack<>();
+                state.putUserData("settingsStack", stack);
+            }
+            switch (args.stackAction) {
+            case "push":
+                stack.push(newProps.clone());
+                break;
+            case "pop":
+                // TODO sensible error if empty
+                newProps = stack.pop();
+                updateStrategySettings(state, newProps);
+                break;
+            default:
+                throw new IllegalArgumentException("stack must be either push or pop.");
+            }
+        } else if(args.userKey != null) {
+            state.putUserData("user." + args.userKey, args.value);
         } else {
-            throw new IllegalArgumentException("You have to set oss, steps, or key and value.");
+            throw new IllegalArgumentException(
+                "You have to set oss, steps, stack, or key and value.");
         }
     }
 
@@ -70,9 +96,9 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
      * implementation, which is inspired by StrategySelectionView.
      */
 
-    private void updateStrategySettings(StrategyProperties p) {
+    protected static void updateStrategySettings(EngineState state, StrategyProperties p) {
         final Proof proof = state.getProof();
-        final Strategy strategy = getStrategy(p);
+        final Strategy strategy = getStrategy(state, p);
 
         ProofSettings.DEFAULT_SETTINGS.getStrategySettings().setStrategy(strategy.name());
         ProofSettings.DEFAULT_SETTINGS.getStrategySettings().setActiveStrategyProperties(p);
@@ -83,8 +109,9 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
         proof.setActiveStrategy(strategy);
     }
 
-    private Strategy getStrategy(StrategyProperties properties) {
+    private static Strategy getStrategy(EngineState state, StrategyProperties properties) {
         final Profile profile = state.getProof().getServices().getProfile();
+        final Proof proof = state.getProof();
 
         final Iterator<StrategyFactory> supportedStrategies = //
             profile.supportedStrategies().iterator();
@@ -119,8 +146,15 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
         @Option(value = "key", required = false)
         public String key;
 
+        /** User settings -- key */
+        @Option(value = "userKey", required = false)
+        public String userKey;
+
         /** Normal key-value setting -- value */
         @Option(value = "value", required = false)
         public String value;
+
+        @Option(value = "stack", required = false)
+        public String stackAction;
     }
 }

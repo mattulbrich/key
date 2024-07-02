@@ -372,6 +372,10 @@ public class Semisequent implements Iterable<SequentFormula> {
     }
 
 
+    public SequentFormula getLast() {
+        return seqList.take(seqList.size() - 1).head();
+    }
+
     /**
      * removes an element
      *

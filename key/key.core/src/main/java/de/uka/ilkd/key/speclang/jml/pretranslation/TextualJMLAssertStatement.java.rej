@@ -1,0 +1,23 @@
+diff a/key/key.core/src/main/java/de/uka/ilkd/key/speclang/jml/pretranslation/TextualJMLAssertStatement.java b/key/key.core/src/main/java/de/uka/ilkd/key/speclang/jml/pretranslation/TextualJMLAssertStatement.java	(rejected hunks)
+@@ -12,12 +13,21 @@ import org.antlr.v4.runtime.RuleContext;
+ public class TextualJMLAssertStatement extends TextualJMLConstruct {
+ 
+     private final LabeledParserRuleContext context;
++    private final AssertionProofContext assertionProof;
++    private final String optLabel;
+     private final Kind kind;
+ 
+     public TextualJMLAssertStatement(Kind kind, LabeledParserRuleContext clause) {
++        this(kind, clause, null, null);
++    }
++
++    public TextualJMLAssertStatement(Kind kind, LabeledParserRuleContext clause,
++            AssertionProofContext assertionProof, String optLabel) {
+         super(ImmutableSLList.nil(), kind.toString() + " " + clause);
+         this.kind = kind;
+         this.context = clause;
++        this.assertionProof = assertionProof;
++        this.optLabel = optLabel;
+     }
+ 
+     public LabeledParserRuleContext getContext() {

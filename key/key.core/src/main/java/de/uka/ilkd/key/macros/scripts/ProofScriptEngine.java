@@ -142,13 +142,13 @@ public class ProofScriptEngine {
             try {
                 String name = argMap.get(ScriptLineParser.COMMAND_KEY);
                 if (name == null) {
-                    throw new ScriptException("No command");
+                    throw new ScriptException("No command", start);
                 }
 
                 ProofScriptCommand<Object> command =
                     (ProofScriptCommand<Object>) COMMANDS.get(name);
                 if (command == null) {
-                    throw new ScriptException("Unknown command " + name);
+                    throw new ScriptException("Unknown command " + name, start);
                 }
 
                 if (!name.startsWith(SYSTEM_COMMAND_PREFIX) && stateMap.isEchoOn()) {
@@ -159,6 +159,7 @@ public class ProofScriptEngine {
                 final Node firstNode = stateMap.getFirstOpenAutomaticGoal().node();
                 command.execute(uiControl, o, stateMap);
                 firstNode.getNodeInfo().setScriptRuleApplication(true);
+                LOGGER.info("done with command {}", cmd);
             } catch (InterruptedException ie) {
                 throw ie;
             } catch (ProofAlreadyClosedException e) {

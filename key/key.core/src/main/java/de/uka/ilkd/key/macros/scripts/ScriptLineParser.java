@@ -270,7 +270,6 @@ class ScriptLineParser {
             readChars++;
         }
     }
-
     private boolean isIDChar(int c) {
         return Character.isLetterOrDigit(c) || ADMISSIBLE_CHARS.indexOf((char) c) > -1;
     }

@@ -1,0 +1,19 @@
+diff a/key/key.core/src/main/java/de/uka/ilkd/key/proof/mgt/ComplexRuleJustificationBySpec.java b/key/key.core/src/main/java/de/uka/ilkd/key/proof/mgt/ComplexRuleJustificationBySpec.java	(rejected hunks)
+@@ -18,9 +25,15 @@ public class ComplexRuleJustificationBySpec implements ComplexRuleJustification
+     }
+ 
+ 
+-    public RuleJustification getSpecificJustification(RuleApp app, TermServices services) {
++    public @Nonnull RuleJustification getSpecificJustification(RuleApp app, TermServices services) {
+         RuleJustification result = app2Just.get(app);
+-        return result == null ? this : result;
++        if (result == null) {
++            LOGGER.error("Rule app without stored justification: " + app +
++                    " (" + app.rule().name() + ")");
++            // even if we miss the map, continue with "this" as justification
++            return this;
++        }
++        return result;
+     }
+ 
+ 

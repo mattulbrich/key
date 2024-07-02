@@ -1,0 +1,22 @@
+diff a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptException.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptException.java	(rejected hunks)
+@@ -16,16 +16,15 @@ public class ScriptException extends Exception implements HasLocation {
+         this.location = null;
+     }
+ 
+-    public ScriptException(String message, Location location, Throwable cause) {
+-        super(message, cause);
+-        this.location = location;
+-    }
+-
+     public ScriptException(String message, Location location) {
+         super(message);
+         this.location = location;
+     }
+ 
++    public ScriptException(String message, Location location, Throwable cause) {
++        super(message, cause);
++        this.location = location;
++    }
+ 
+     public ScriptException(String message) {
+         super(message);

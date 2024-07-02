@@ -1,0 +1,19 @@
+diff a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/SetCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/SetCommand.java	(rejected hunks)
+@@ -25,14 +26,14 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
+ 
+     @Override
+     public void execute(Parameters args) throws ScriptException, InterruptedException {
+-        if (args.key == null ^ args.value == null) {
++        if ((args.key == null && args.userKey == null) ^ args.value == null) {
+             throw new IllegalArgumentException(
+-                "When using key or value in a set command, you have to use both.");
++                "When using key/userKey or value in a set command, you have to use both.");
+         }
+ 
+         final Proof proof = state.getProof();
+ 
+-        final StrategyProperties newProps =
++        StrategyProperties newProps =
+             proof.getSettings().getStrategySettings().getActiveStrategyProperties();
+ 
+         if (args.oneStepSimplification != null) {

@@ -90,7 +90,6 @@ public final class Immutables {
      *
      * @param list
      *        any list, must not be <code>null</code>
-     *
      * @return a duplicate-free version of the argument, never <code>null</code>
      */
     public static <T> ImmutableList<T> removeDuplicates(ImmutableList<T> list) {

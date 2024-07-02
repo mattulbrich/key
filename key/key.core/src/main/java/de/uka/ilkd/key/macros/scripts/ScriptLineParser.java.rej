@@ -1,0 +1,13 @@
+diff a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptLineParser.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptLineParser.java	(rejected hunks)
+@@ -263,7 +263,10 @@ class ScriptLineParser {
+     }
+ 
+     private Location getLocation() {
+-        return new Location(fileURI, Position.newOneBased(line, col));
++        Position pos = line >= 1 ?
++                Position.newOneBased(line, col) :
++                Position.UNDEFINED;
++        return new Location(fileURI, pos);
+     }
+ 
+     public int getOffset() {

@@ -1,0 +1,2514 @@
+diff --git a/key/key.core/src/main/antlr4/JmlLexer.g4 b/key/key.core/src/main/antlr4/JmlLexer.g4
+index b2b5a5b94c..4e1cb79aa0 100644
+--- a/key/key.core/src/main/antlr4/JmlLexer.g4
++++ b/key/key.core/src/main/antlr4/JmlLexer.g4
+@@ -11,6 +11,10 @@ import java.util.stream.Collectors;
+    // needed for double literals and ".."
+    private int _lex_pos;
+ 
++   // by is used by assertions and for information flow.
++   // Only in the latter case it triggers a mode change...
++   private boolean assertionEncountered;
++
+    private int parenthesisLevel = 0;
+    private void incrParen() { parenthesisLevel++;}
+    private void decrParen() { parenthesisLevel--;}
+@@ -76,7 +80,7 @@ fragment Pred: '_redundantly'?; //suffix
+ fragment Pfree: '_free'?;       //suffix
+ 
+ ACCESSIBLE: 'accessible' Pred -> pushMode(expr);
+-ASSERT: 'assert' Pred  -> pushMode(expr);
++ASSERT: 'assert' Pred { assertionEncountered = true; } -> pushMode(expr);
+ ASSUME: 'assume' Pred -> pushMode(expr);
+ ASSIGNABLE: 'assignable' Pfree -> pushMode(expr);
+ ASSIGNS: 'assigns' Pred -> pushMode(expr);
+@@ -161,9 +165,13 @@ mode expr;
+ /* Java keywords */
+ BOOLEAN: 'boolean';
+ BYTE: 'byte';
++CASE: 'case';
++DEFAULT: 'default';
++ELSE: 'else';
+ FALSE: 'false';
+ INSTANCEOF: 'instanceof';
+ INT: 'int';
++IF: 'if';
+ LONG: 'long';
+ NEW: 'new';
+ NULL: 'null';
+@@ -207,7 +215,7 @@ BACKUP: '\\backup';  //KeY extension, not official JML
+ BEFORE: '\\before';  //KeY extension, not official JML
+ BIGINT: '\\bigint';
+ BSUM: '\\bsum';  //KeY extension, not official JML
+-BY: '\\by';  //KeY extension, not official JML
++BY: '\\by' { if(assertionEncountered) { popMode(); pushMode(script); } assertionEncountered = false; };  //KeY extension, not official JML
+ DECLASSIFIES: '\\declassifies';  //KeY extension, not official JML
+ DISJOINT: '\\disjoint';  //KeY extension, not official JML
+ DOMAIN_IMPLIES_CREATED: '\\domain_implies_created';  //KeY extension, not official JML
+@@ -488,3 +496,20 @@ mode string;
+ S_ESC: '\\"' -> more;
+ S_END: '"' -> type(STRING_LITERAL), popMode;
+ S_ANY: . -> more;
++
++mode script;
++
++SC_LBRACE: '{' { incrBrace(); };
++SC_RBRACE: '}' { decrBrace(); if(bracesLevel == 0) popMode(); };
++SC_SEMI: ';' { if(bracesLevel == 0) popMode(); };
++SC_BY: '\\by';
++SC_ASSERT: 'assert';
++SC_STRING: '"' -> pushMode(string), more;
++SC_CASE: 'case';
++SC_DEFAULT: 'default';
++SC_COLON: ':';
++SC_EQUAL_SINGLE: '=';
++SC_IDENT: LETTER (LETTERORDIGIT)*;
++SC_DECLITERAL: DECDIGIT+;
++SC_LINE_COMMENT: '//' ~('\n'|'\r')* -> channel(HIDDEN);
++SC_WS: [ \t\n\r\u000c@]+ -> channel(HIDDEN);
+\ No newline at end of file
+diff --git a/key/key.core/src/main/antlr4/JmlParser.g4 b/key/key.core/src/main/antlr4/JmlParser.g4
+index a66965df0f..b33815546f 100644
+--- a/key/key.core/src/main/antlr4/JmlParser.g4
++++ b/key/key.core/src/main/antlr4/JmlParser.g4
+@@ -187,11 +187,26 @@ block_specification: method_specification;
+ block_loop_specification:
+   loop_contract_keyword spec_case ((also_keyword)+ loop_contract_keyword spec_case)*;
+ loop_contract_keyword: LOOP_CONTRACT;
+-assert_statement: (ASSERT expression | UNREACHABLE) SEMI_TOPLEVEL;
++assert_statement: (ASSERT (label=IDENT COLON)? expression | UNREACHABLE) (assertionProof SEMI? | SEMI_TOPLEVEL);
+ //breaks_clause: BREAKS expression;
+ //continues_clause: CONTINUES expression;
+ //returns_clause: RETURNS expression;
+ 
++// --- proofs in JML -- could be file on its own.
++
++assertionProof: BY ((SC_LBRACE ( proofCmd )+ SC_RBRACE SEMI_TOPLEVEL?) | proofCmd);
++proofCmd:
++    cmd=SC_IDENT ( proofArg )* SC_SEMI
++  | SC_ASSERT assertion=STRING_LITERAL (SC_SEMI | SC_BY (proofCmd | SC_LBRACE ( proofCmd )+ SC_RBRACE) )?
++  | SC_LBRACE proofCmdCase+ SC_RBRACE
++  ;
++proofCmdCase:
++    SC_CASE ( STRING_LITERAL )? SC_COLON ( proofCmd )*
++  | SC_DEFAULT SC_COLON ( proofCmd )*
++  ;
++proofArg: (argLabel=SC_IDENT SC_EQUAL_SINGLE)? token=( SC_DECLITERAL | /*NATIVE?*/ STRING_LITERAL | SC_IDENT);
++
++// ---
+ 
+ mergeparamsspec:
+     MERGE_PARAMS
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/java/Recoder2KeYConverter.java b/key/key.core/src/main/java/de/uka/ilkd/key/java/Recoder2KeYConverter.java
+index 233d7eab94..f910bf7186 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/java/Recoder2KeYConverter.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/java/Recoder2KeYConverter.java
+@@ -938,7 +938,8 @@ public class Recoder2KeYConverter {
+      * @return the converted statement
+      */
+     public JmlAssert convert(de.uka.ilkd.key.java.recoderext.JmlAssert ja) {
+-        return new JmlAssert(ja.getKind(), ja.getCondition(), positionInfo(ja), services);
++        return new JmlAssert(ja.getKind(), ja.getOptLabel(), ja.getCondition(), ja.getAssertionProof(),
++            positionInfo(ja), services);
+     }
+ 
+     // ------------------- declaration ---------------------
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/java/recoderext/JMLTransformer.java b/key/key.core/src/main/java/de/uka/ilkd/key/java/recoderext/JMLTransformer.java
+index 07c8d455d8..8bfb639d67 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/java/recoderext/JMLTransformer.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/java/recoderext/JMLTransformer.java
+@@ -410,7 +410,7 @@ public final class JMLTransformer extends RecoderModelTransformer {
+ 
+         de.uka.ilkd.key.java.Position pos = de.uka.ilkd.key.java.Position.fromToken(ctx.start);
+         final Kind kind = stat.getKind();
+-        JmlAssert jmlAssert = new JmlAssert(kind, stat.getContext());
++        JmlAssert jmlAssert = new JmlAssert(kind, stat.getContext(), stat.getAssertionProof(), stat.getOptLabel());
+         try {
+             updatePositionInformation(jmlAssert, pos);
+             doAttach(jmlAssert, astParent, childIndex);
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/java/recoderext/JmlAssert.java b/key/key.core/src/main/java/de/uka/ilkd/key/java/recoderext/JmlAssert.java
+index 794930bd00..20d00dc230 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/java/recoderext/JmlAssert.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/java/recoderext/JmlAssert.java
+@@ -1,6 +1,8 @@
+ package de.uka.ilkd.key.java.recoderext;
+ 
+ import de.uka.ilkd.key.speclang.jml.pretranslation.TextualJMLAssertStatement;
++import de.uka.ilkd.key.speclang.jml.pretranslation.TextualJMLAssertStatement.Kind;
++import de.uka.ilkd.key.speclang.njml.JmlParser.AssertionProofContext;
+ import de.uka.ilkd.key.speclang.njml.LabeledParserRuleContext;
+ 
+ import recoder.java.ProgramElement;
+@@ -19,6 +21,7 @@ public class JmlAssert extends JavaStatement {
+      * The kind of this statment either ASSERT or ASSUME
+      */
+     private final TextualJMLAssertStatement.Kind kind;
++    private final AssertionProofContext assertionProof;
+ 
+     /*
+      * condition should be an Expression, but as KeY doesn't support some jml Expressions as
+@@ -30,15 +33,23 @@ public class JmlAssert extends JavaStatement {
+      */
+     // this isn't serializable, but that shouldn't be a problem for KeY
+     private final LabeledParserRuleContext condition;
++    private final String optLabel;
+ 
+     /**
+-     *
+-     * @param kind the kind of this statment
++     * @param kind      the kind of this statment
+      * @param condition the condition for this statement
++     * @param optLabel
+      */
+-    public JmlAssert(TextualJMLAssertStatement.Kind kind, LabeledParserRuleContext condition) {
++    public JmlAssert(Kind kind, LabeledParserRuleContext condition, String optLabel) {
++        this(kind, condition, null, optLabel);
++    }
++
++    public JmlAssert(Kind kind, LabeledParserRuleContext condition,
++                     AssertionProofContext assertionProof, String optLabel) {
+         this.kind = kind;
++        this.assertionProof = assertionProof;
+         this.condition = condition;
++        this.optLabel = optLabel;
+     }
+ 
+     /**
+@@ -50,6 +61,8 @@ public class JmlAssert extends JavaStatement {
+         super(proto);
+         this.kind = proto.kind;
+         this.condition = proto.condition;
++        this.assertionProof = proto.assertionProof;
++        this.optLabel = proto.optLabel;
+     }
+ 
+     public TextualJMLAssertStatement.Kind getKind() {
+@@ -60,6 +73,10 @@ public class JmlAssert extends JavaStatement {
+         return condition;
+     }
+ 
++    public AssertionProofContext getAssertionProof() {
++        return assertionProof;
++    }
++
+     @Override
+     public int getChildCount() {
+         return 0;
+@@ -89,4 +106,8 @@ public class JmlAssert extends JavaStatement {
+     public Statement deepClone() {
+         return new JmlAssert(this);
+     }
++
++    public String getOptLabel() {
++        return optLabel;
++    }
+ }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/java/statement/JmlAssert.java b/key/key.core/src/main/java/de/uka/ilkd/key/java/statement/JmlAssert.java
+index e3fa6bee6c..a6c2ed9fdf 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/java/statement/JmlAssert.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/java/statement/JmlAssert.java
+@@ -14,8 +14,10 @@ import de.uka.ilkd.key.pp.LogicPrinter;
+ import de.uka.ilkd.key.proof.OpReplacer;
+ import de.uka.ilkd.key.speclang.TermReplacementMap;
+ import de.uka.ilkd.key.speclang.jml.pretranslation.TextualJMLAssertStatement;
++import de.uka.ilkd.key.speclang.jml.pretranslation.TextualJMLAssertStatement.Kind;
+ import de.uka.ilkd.key.speclang.jml.translation.ProgramVariableCollection;
+ import de.uka.ilkd.key.speclang.njml.JmlIO;
++import de.uka.ilkd.key.speclang.njml.JmlParser.AssertionProofContext;
+ import de.uka.ilkd.key.speclang.njml.LabeledParserRuleContext;
+ 
+ import org.key_project.util.ExtList;
+@@ -31,6 +33,12 @@ public class JmlAssert extends JavaStatement {
+      * the kind of the statement, assert or assume
+      */
+     private final TextualJMLAssertStatement.Kind kind;
++
++    /*
++     * Temporary until jml labels are there ...
++     */
++    private final String optLabel;
++
+     /**
+      * the condition in parse tree form
+      */
+@@ -43,23 +51,26 @@ public class JmlAssert extends JavaStatement {
+      * the program variables used to create the Term form of the condition
+      */
+     private ProgramVariableCollection vars;
++    private final AssertionProofContext assertionProof;
+     /**
+      * services (needed for pretty printing)
+      */
+     private final Services services;
+ 
+     /**
+-     *
+      * @param kind assert or assume
+      * @param condition the condition of this statement
++     * @param assertionProof the optional proof attached to the assertion
+      * @param positionInfo the position information for this statement
+      * @param services needed for pretty printing (not pretty when null)
+      */
+-    public JmlAssert(TextualJMLAssertStatement.Kind kind, LabeledParserRuleContext condition,
+-            PositionInfo positionInfo, Services services) {
++    public JmlAssert(Kind kind, String label, LabeledParserRuleContext condition,
++            AssertionProofContext assertionProof, PositionInfo positionInfo, Services services) {
+         super(positionInfo);
+         this.kind = kind;
++        this.optLabel = label;
+         this.condition = condition;
++        this.assertionProof = assertionProof;
+         this.services = services;
+     }
+ 
+@@ -71,7 +82,9 @@ public class JmlAssert extends JavaStatement {
+     public JmlAssert(ExtList children, Services services) {
+         super(children);
+         this.kind = children.get(TextualJMLAssertStatement.Kind.class);
++        this.optLabel = children.get(String.class);
+         this.condition = children.get(LabeledParserRuleContext.class);
++        this.assertionProof = children.get(AssertionProofContext.class);
+         this.cond = children.get(Term.class);
+         this.vars = children.get(ProgramVariableCollection.class);
+         this.services = services;
+@@ -172,6 +185,10 @@ public class JmlAssert extends JavaStatement {
+         return Objects.hash(super.computeHashCode(), kind, condition, cond);
+     }
+ 
++    public AssertionProofContext getAssertionProof() {
++        return assertionProof;
++    }
++
+     @Override
+     public int getChildCount() {
+         return 0;
+@@ -207,4 +224,8 @@ public class JmlAssert extends JavaStatement {
+         vars.atPres = atPres;
+ 
+     }
++
++    public String getOptLabel() {
++        return optLabel;
++    }
+ }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/java/visitor/CreatingASTVisitor.java b/key/key.core/src/main/java/de/uka/ilkd/key/java/visitor/CreatingASTVisitor.java
+index 502e24bfe6..f978f141b8 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/java/visitor/CreatingASTVisitor.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/java/visitor/CreatingASTVisitor.java
+@@ -1487,6 +1487,8 @@ public abstract class CreatingASTVisitor extends JavaASTVisitor {
+             ProgramElement createNewElement(ExtList changeList) {
+                 changeList.add(x.getKind());
+                 changeList.add(x.getVars());
++                changeList.add(x.getAssertionProof());
++                changeList.add(x.getOptLabel());
+                 return new JmlAssert(changeList, services);
+             }
+         };
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/logic/Semisequent.java b/key/key.core/src/main/java/de/uka/ilkd/key/logic/Semisequent.java
+index 98aea2ca8b..c5d7846294 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/logic/Semisequent.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/logic/Semisequent.java
+@@ -385,6 +385,10 @@ public class Semisequent implements Iterable<SequentFormula> {
+         return seqList.head();
+     }
+ 
++    public SequentFormula getLast() {
++        return seqList.take(seqList.size() - 1).head();
++    }
++
+     /**
+      * checks if the {@link SequentFormula} occurs in this Semisequent (identity check)
+      *
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/ApplyScriptsMacro.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/ApplyScriptsMacro.java
+new file mode 100644
+index 0000000000..77cfa08802
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/ApplyScriptsMacro.java
+@@ -0,0 +1,237 @@
++package de.uka.ilkd.key.macros;
++
++import java.nio.file.Files;
++import java.nio.file.Path;
++import java.util.ArrayList;
++
++import de.uka.ilkd.key.control.AbstractUserInterfaceControl;
++import de.uka.ilkd.key.control.UserInterfaceControl;
++import de.uka.ilkd.key.java.JavaTools;
++import de.uka.ilkd.key.java.Position;
++import de.uka.ilkd.key.java.Services;
++import de.uka.ilkd.key.java.SourceElement;
++import de.uka.ilkd.key.java.statement.JmlAssert;
++import de.uka.ilkd.key.logic.PosInOccurrence;
++import de.uka.ilkd.key.logic.Term;
++import de.uka.ilkd.key.logic.op.UpdateApplication;
++import de.uka.ilkd.key.macros.scripts.ProofScriptEngine;
++import de.uka.ilkd.key.macros.scripts.ScriptException;
++import de.uka.ilkd.key.parser.Location;
++import de.uka.ilkd.key.pp.LogicPrinter;
++import de.uka.ilkd.key.pp.NotationInfo;
++import de.uka.ilkd.key.pp.PosTableLayouter;
++import de.uka.ilkd.key.proof.Goal;
++import de.uka.ilkd.key.proof.Node;
++import de.uka.ilkd.key.proof.Proof;
++import de.uka.ilkd.key.prover.ProverTaskListener;
++import de.uka.ilkd.key.prover.TaskStartedInfo;
++import de.uka.ilkd.key.prover.impl.DefaultTaskStartedInfo;
++import de.uka.ilkd.key.rule.JmlAssertBuiltInRuleApp;
++import de.uka.ilkd.key.rule.RuleApp;
++import de.uka.ilkd.key.speclang.njml.JmlParser.AssertionProofContext;
++import de.uka.ilkd.key.speclang.njml.JmlParser.ProofArgContext;
++import de.uka.ilkd.key.speclang.njml.JmlParser.ProofCmdCaseContext;
++import de.uka.ilkd.key.speclang.njml.JmlParser.ProofCmdContext;
++
++import org.key_project.util.collection.ImmutableList;
++
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++import javax.annotation.Nullable;
++
++public class ApplyScriptsMacro extends AbstractProofMacro {
++    public static final Logger LOGGER = LoggerFactory.getLogger(ApplyScriptsMacro.class);
++
++    private final @Nullable ProofMacro fallBackMacro;
++
++    public ApplyScriptsMacro(ProofMacro fallBackMacro) {
++        this.fallBackMacro = fallBackMacro;
++    }
++
++    @Override
++    public String getName() {
++        return "Apply scripts macro";
++    }
++
++    @Override
++    public String getCategory() {
++        return null;
++    }
++
++    @Override
++    public String getDescription() {
++        return "Apply scripts";
++    }
++
++    @Override
++    public boolean canApplyTo(Proof proof, ImmutableList<Goal> goals, PosInOccurrence posInOcc) {
++        return fallBackMacro != null && fallBackMacro.canApplyTo(proof, goals, posInOcc)
++                || goals.exists(g -> getJmlAssert(g.node()) != null);
++    }
++
++    private static JmlAssert getJmlAssert(Node node) {
++        RuleApp ruleApp = node.parent().getAppliedRuleApp();
++        if (ruleApp instanceof JmlAssertBuiltInRuleApp) {
++            Term target = ruleApp.posInOccurrence().subTerm();
++            if (target.op() instanceof UpdateApplication) {
++                target = UpdateApplication.getTarget(target);
++            }
++            final SourceElement activeStatement = JavaTools.getActiveStatement(target.javaBlock());
++            if (activeStatement instanceof JmlAssert) {
++                JmlAssert ass = (JmlAssert) activeStatement;
++                if (ass.getAssertionProof() != null) {
++                    return (JmlAssert) activeStatement;
++                }
++            }
++        }
++        return null;
++    }
++
++    @Override
++    public ProofMacroFinishedInfo applyTo(UserInterfaceControl uic, Proof proof,
++            ImmutableList<Goal> goals, PosInOccurrence posInOcc, ProverTaskListener listener)
++            throws Exception {
++        ArrayList<Goal> laterGoals = new ArrayList<>(goals.size());
++        for (Goal goal : goals) {
++            if (Thread.interrupted()) {
++                throw new InterruptedException();
++            }
++            JmlAssert ass = getJmlAssert(goal.node());
++            if (ass == null) {
++                laterGoals.add(goal);
++                continue;
++            }
++            listener.taskStarted(new DefaultTaskStartedInfo(TaskStartedInfo.TaskKind.Other,
++                "Running attached script from goal " + goal.node().serialNr(), 0));
++
++            AssertionProofContext proofCtx = ass.getAssertionProof();
++            String renderedProof = renderProof(proofCtx,
++                goal.sequent().succedent().getLast().formula(), proof.getServices());
++
++            Path script = Files.createTempFile("key.script", "key");
++            Files.writeString(script, renderedProof);
++            script.toFile().deleteOnExit();
++            Location loc = new Location(script.toUri(), Position.UNDEFINED);
++            ProofScriptEngine pse = new ProofScriptEngine(renderedProof, loc, goal);
++            LOGGER.info("Running script");
++            LOGGER.info(renderedProof);
++            try {
++                pse.execute((AbstractUserInterfaceControl) uic, proof);
++            } catch (ScriptException e) {
++                Position sourcePos = getSourcePos(pse);
++                if(sourcePos != null) {
++                    Location sloc = new Location(ass.getPositionInfo().getURI().get(), sourcePos);
++                    throw new ScriptException(e.getMessage(), sloc, e);
++                } else {
++                    throw e;
++                }
++            }
++        }
++        listener.taskStarted(new DefaultTaskStartedInfo(TaskStartedInfo.TaskKind.Other,
++            "Running fallback macro on the remaining goals", 0));
++        for (Goal goal : laterGoals) {
++            if (Thread.interrupted()) {
++                throw new InterruptedException();
++            }
++            if(fallBackMacro != null) {
++                fallBackMacro.applyTo(uic, proof, ImmutableList.of(goal), posInOcc, listener);
++            }
++
++        }
++
++        return new ProofMacroFinishedInfo(this, proof);
++    }
++
++    private Position getSourcePos(ProofScriptEngine pse) {
++        Object entry = pse.getStateMap().getUserData("user.sourcePos");
++        if(entry == null) {
++            return null;
++        }
++        String[] parts = entry.toString().split(" *, *");
++        try {
++            return Position.newOneBased(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
++        } catch (RuntimeException ex) {
++            LOGGER.info("Cannot read sourcePos information", ex);
++            return null;
++        }
++    }
++
++    private static String renderProof(AssertionProofContext ctx, Term assertion,
++            Services services) {
++        StringBuilder sb = new StringBuilder();
++        sb.append("@failonclosed off;\n");
++        sb.append("set stack='push';\n");
++        sb.append("let @assert='").append(printTerm(assertion, services)).append("';\n");
++        for (ProofCmdContext proofCmdContext : ctx.proofCmd()) {
++            renderProofCmd(proofCmdContext, sb);
++        }
++        sb.append("set stack=\"pop\";\n");
++        return sb.toString();
++    }
++
++    private static void renderProofCmd(ProofCmdContext ctx, StringBuilder sb) {
++        sb.append("set userKey=\"sourcePos\" value=\"" + ctx.start.getLine() + "," +
++                ctx.start.getCharPositionInLine() + "\";\n");
++        if (ctx.cmd != null) {
++            sb.append(ctx.cmd.getText()).append(" ");
++            for (ProofArgContext arg : ctx.proofArg()) {
++                if (arg.argLabel != null) {
++                    sb.append(arg.argLabel.getText()).append("=");
++                }
++                sb.append(arg.token.getText()).append(" ");
++            }
++            sb.append(";\n");
++
++        } else if (ctx.assertion != null) {
++            sb.append("cut ").append(ctx.assertion.getText()).append(";\n");
++            sb.append("branches \"push\";\n");
++            sb.append("branches \"select\" child=1;\n");
++            if (ctx.proofCmd().isEmpty()) {
++                sb.append("auto;\n");
++            } else {
++                for (ProofCmdContext proofCmdContext : ctx.proofCmd()) {
++                    renderProofCmd(proofCmdContext, sb);
++                }
++            }
++            sb.append("branches \"select\" child=0;\n");
++            sb.append("branches \"pop\";\n");
++
++        } else if (!ctx.proofCmdCase().isEmpty()) {
++            sb.append("branches \"push\";\n");
++            int no = 0;
++            for (ProofCmdCaseContext caseContext : ctx.proofCmdCase()) {
++                if (caseContext.STRING_LITERAL() != null) {
++                    sb.append("branches \"select\" branch=")
++                            .append(caseContext.STRING_LITERAL().getText()).append(";\n");
++                } else {
++                    sb.append("branches \"select\" child=").append(no++).append(";\n");
++                }
++                for (ProofCmdContext proofCmdContext : caseContext.proofCmd()) {
++                    renderProofCmd(proofCmdContext, sb);
++                }
++            }
++            sb.append("branches \"pop\";\n");
++        }
++
++    }
++
++
++    public static CharSequence printTerm(Term t, Services serv) {
++        String result;
++
++        final NotationInfo ni = new NotationInfo();
++        ni.refresh(serv, false, false);
++
++        final LogicPrinter logicPrinter =
++            new LogicPrinter(ni, null, new PosTableLayouter(100, 4, true));
++        logicPrinter.printTerm(t);
++        result = logicPrinter.result();
++        if (result.charAt(result.length() - 1) == '\n') {
++            result = result.substring(0, result.length() - 1);
++        }
++        return result;
++    }
++
++
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwareAutoMacro.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwareAutoMacro.java
+new file mode 100644
+index 0000000000..532d2ca7a2
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwareAutoMacro.java
+@@ -0,0 +1,109 @@
++//// This file is part of KeY - Integrated Deductive Software Design
++////
++//// Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
++//// Universitaet Koblenz-Landau, Germany
++//// Chalmers University of Technology, Sweden
++//// Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
++//// Technical University Darmstadt, Germany
++//// Chalmers University of Technology, Sweden
++////
++//// The KeY system is protected by the GNU General
++//// Public License. See LICENSE.TXT for details.
++////
++//
++// package de.uka.ilkd.key.macros;
++//
++// import de.uka.ilkd.key.java.ProofCommandStatement;
++// import de.uka.ilkd.key.logic.Name;
++// import de.uka.ilkd.key.logic.PosInOccurrence;
++// import de.uka.ilkd.key.proof.Goal;
++// import de.uka.ilkd.key.proof.Proof;
++// import de.uka.ilkd.key.rule.ProofCommandStatementRule;
++// import de.uka.ilkd.key.rule.RuleApp;
++// import de.uka.ilkd.key.speclang.njml.JmlParser.ProofCmdContext;
++// import de.uka.ilkd.key.strategy.RuleAppCost;
++// import de.uka.ilkd.key.strategy.RuleAppCostCollector;
++// import de.uka.ilkd.key.strategy.Strategy;
++//
++// import java.util.IdentityHashMap;
++// import java.util.Map;
++//
++// public class ScriptAwareAutoMacro extends StrategyProofMacro {
++//
++// public ScriptAwareAutoMacro() { super(); }
++//
++// private Map<Goal, ProofCmdContext> detectedProofs = new IdentityHashMap<>();
++//
++// @Override
++// public String getName() {
++// return "Script-aware auto mode";
++// }
++//
++// @Override
++// public String getCategory() {
++// return "Auto Pilot";
++// }
++//
++// @Override
++// public String getDescription() {
++// return "<html>TODO</ol>";
++// }
++//
++// public Map<Goal, ProofCmdContext> getDetectedProofs() {
++// return detectedProofs;
++// }
++//
++// @Override
++// public String getScriptCommandName() {
++// return "script-auto";
++// }
++//
++// private static final Name NAME = new Name("Script-aware filter strategy");
++//
++// private class ScriptAwareStrategy implements Strategy {
++//
++// private final Strategy delegate;
++//
++// public ScriptAwareStrategy(Proof proof, PosInOccurrence posInOcc) {
++// this.delegate = proof.getActiveStrategy();
++// }
++//
++// @Override
++// public Name name() {
++// return NAME;
++// }
++//
++// @Override
++// public boolean isApprovedApp(RuleApp app, PosInOccurrence pio, Goal goal) {
++// if (detectedProofs.containsKey(goal)) {
++// // we had found a command earlier.
++// return false;
++// }
++// if (app.rule() instanceof ProofCommandStatementRule) {
++// detectedProofs.put(goal, ProofCommandStatementRule.getCommand(pio));
++// }
++// return delegate.isApprovedApp(app, pio, goal);
++// }
++//
++// @Override
++// public void instantiateApp(RuleApp app, PosInOccurrence pio, Goal goal,
++// RuleAppCostCollector collector) {
++// delegate.instantiateApp(app, pio, goal, collector);
++// }
++//
++// @Override
++// public boolean isStopAtFirstNonCloseableGoal() {
++// return false;
++// }
++//
++// @Override
++// public RuleAppCost computeCost(RuleApp app, PosInOccurrence pos, Goal goal) {
++// return delegate.computeCost(app, pos, goal);
++// }
++// }
++//
++// @Override
++// protected Strategy createStrategy(Proof proof, PosInOccurrence posInOcc) {
++// return new ScriptAwareStrategy(proof, posInOcc);
++// }
++// }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwareMacro.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwareMacro.java
+new file mode 100644
+index 0000000000..263b9ae69c
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwareMacro.java
+@@ -0,0 +1,61 @@
++// This file is part of KeY - Integrated Deductive Software Design
++//
++// Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
++// Universitaet Koblenz-Landau, Germany
++// Chalmers University of Technology, Sweden
++// Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
++// Technical University Darmstadt, Germany
++// Chalmers University of Technology, Sweden
++//
++// The KeY system is protected by the GNU General
++// Public License. See LICENSE.TXT for details.
++//
++
++package de.uka.ilkd.key.macros;
++
++/**
++ * This class captures a proof macro which is meant to fully automise KeY proof
++ * workflow if scripts are present in the JML code.
++ *
++ * It is experimental.
++ *
++ * It performs the following steps:
++ * <ol>
++ * <li>Finish symbolic execution
++ * <li>Apply macros
++ * <li>Try to close provable goals
++ * </ol>
++ *
++ * @author mattias ulbrich
++ * @see ScriptAwarePrepMacro
++ */
++public class ScriptAwareMacro extends SequentialProofMacro {
++
++    private final ProofMacro autoMacro = new FinishSymbolicExecutionMacro();
++    private final ApplyScriptsMacro applyMacro = new ApplyScriptsMacro(new TryCloseMacro());
++
++    @Override
++    public String getScriptCommandName() {
++        return "script-auto";
++    }
++
++    @Override
++    public String getName() {
++        return "Script-aware Auto";
++    }
++
++    @Override
++    public String getCategory() {
++        return "Auto Pilot";
++    }
++
++    @Override
++    public String getDescription() {
++        return "TODO";
++    }
++
++    @Override
++    protected ProofMacro[] createProofMacroArray() {
++        return new ProofMacro[] { autoMacro, applyMacro };
++    }
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwarePrepMacro.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwarePrepMacro.java
+new file mode 100644
+index 0000000000..f9d5c8dcea
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/ScriptAwarePrepMacro.java
+@@ -0,0 +1,61 @@
++// This file is part of KeY - Integrated Deductive Software Design
++//
++// Copyright (C) 2001-2011 Universitaet Karlsruhe (TH), Germany
++// Universitaet Koblenz-Landau, Germany
++// Chalmers University of Technology, Sweden
++// Copyright (C) 2011-2014 Karlsruhe Institute of Technology, Germany
++// Technical University Darmstadt, Germany
++// Chalmers University of Technology, Sweden
++//
++// The KeY system is protected by the GNU General
++// Public License. See LICENSE.TXT for details.
++//
++
++package de.uka.ilkd.key.macros;
++
++/**
++ * This class captures a proof macro which is meant to automise KeY proof
++ * workflow if scripts are present in the JML code.
++ *
++ * It is experimental.
++ *
++ * It performs the following steps:
++ * <ol>
++ * <li>Finish symbolic execution
++ * <li>Apply macros
++ * <li>It does not try to close provable goals
++ * </ol>
++ *
++ * @author mattias ulbrich
++ * @see ScriptAwareMacro
++ */
++public class ScriptAwarePrepMacro extends SequentialProofMacro {
++
++    private final ProofMacro autoMacro = new FinishSymbolicExecutionMacro();
++    private final ApplyScriptsMacro applyMacro = new ApplyScriptsMacro(null);
++
++    @Override
++    public String getScriptCommandName() {
++        return "script-prep-auto";
++    }
++
++    @Override
++    public String getName() {
++        return "Script-aware Prep Auto";
++    }
++
++    @Override
++    public String getCategory() {
++        return "Auto Pilot";
++    }
++
++    @Override
++    public String getDescription() {
++        return "TODO";
++    }
++
++    @Override
++    protected ProofMacro[] createProofMacroArray() {
++        return new ProofMacro[] { autoMacro, applyMacro };
++    }
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/AssertCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/AssertCommand.java
+index dd13e3b8ce..16d9aaa23c 100755
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/AssertCommand.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/AssertCommand.java
+@@ -8,6 +8,10 @@ import de.uka.ilkd.key.macros.scripts.meta.Option;
+  * Halts the script if some condition is not met.
+  *
+  * @author lanzinger
++ *
++ * @deprecated  The name of this command is like to change since "assert" should
++ * be used for a more general purpose. You may find that this is called
++ * "assertOpenGoals".
+  */
+ public class AssertCommand extends AbstractCommand<AssertCommand.Parameters> {
+ 
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/AutoCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/AutoCommand.java
+index 909657ebe9..2af28ada9f 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/AutoCommand.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/AutoCommand.java
+@@ -1,6 +1,9 @@
+ package de.uka.ilkd.key.macros.scripts;
+ 
++import java.util.HashMap;
++import java.util.List;
+ import java.util.Map;
++import java.util.Map.Entry;
+ import java.util.Optional;
+ 
+ import de.uka.ilkd.key.control.AbstractProofControl;
+@@ -13,8 +16,10 @@ import de.uka.ilkd.key.proof.Goal;
+ import de.uka.ilkd.key.proof.init.Profile;
+ import de.uka.ilkd.key.prover.ProverCore;
+ import de.uka.ilkd.key.prover.impl.ApplyStrategy;
++import de.uka.ilkd.key.settings.ProofSettings;
+ import de.uka.ilkd.key.strategy.AutomatedRuleApplicationManager;
+ import de.uka.ilkd.key.strategy.FocussedBreakpointRuleApplicationManager;
++import de.uka.ilkd.key.strategy.StrategyProperties;
+ 
+ import org.key_project.util.collection.ImmutableList;
+ import org.key_project.util.collection.ImmutableSLList;
+@@ -41,6 +46,7 @@ public class AutoCommand extends AbstractCommand<AutoCommand.Parameters> {
+             throws Exception {
+         Parameters args = new Parameters();
+         ValueInjector.getInstance().inject(this, args, arguments);
++        args.originalArgs = arguments;
+         return args;
+     }
+ 
+@@ -56,7 +62,7 @@ public class AutoCommand extends AbstractCommand<AutoCommand.Parameters> {
+ 
+         // find the targets
+         final ImmutableList<Goal> goals;
+-        if (arguments.isOnAllOpenGoals()) {
++        if (arguments.onAllOpenGoals) {
+             goals = state.getProof().openGoals();
+         } else {
+             final Goal goal = state.getFirstOpenAutomaticGoal();
+@@ -76,6 +82,22 @@ public class AutoCommand extends AbstractCommand<AutoCommand.Parameters> {
+             state.setMaxAutomaticSteps(arguments.getSteps());
+         }
+ 
++        // set model search if given
++        StrategyProperties activeStrategyProperties =
++            state.getProof().getSettings().getStrategySettings().getActiveStrategyProperties();
++
++        Map<String, OriginalValue> orgValues = prepareOriginalValues();
++        for (Entry<String, String> entry : arguments.originalArgs.entrySet()) {
++            OriginalValue ov = orgValues.get(entry.getKey());
++            if(ov != null) {
++                ov.oldValue = activeStrategyProperties.getProperty(ov.settingName);
++                activeStrategyProperties.setProperty(ov.settingName,
++                        "true".equals(entry.getValue()) ? ov.trueValue : ov.falseValue);
++            }
++        }
++
++        SetCommand.updateStrategySettings(state, activeStrategyProperties);
++
+         // Give some feedback
+         applyStrategy.addProverTaskObserver(uiControl);
+ 
+@@ -92,9 +114,24 @@ public class AutoCommand extends AbstractCommand<AutoCommand.Parameters> {
+             }
+         } finally {
+             state.setMaxAutomaticSteps(oldNumberOfSteps);
++            for (OriginalValue ov : orgValues.values()) {
++                if (ov.oldValue != null) {
++                    activeStrategyProperties.setProperty(ov.settingName, ov.oldValue);
++                }
++            }
++            SetCommand.updateStrategySettings(state, activeStrategyProperties);
+         }
+     }
+ 
++    private Map<String, OriginalValue> prepareOriginalValues() {
++        var res = new HashMap<String, OriginalValue>();
++        res.put("modelSearch", new OriginalValue(StrategyProperties.NON_LIN_ARITH_OPTIONS_KEY, StrategyProperties.NON_LIN_ARITH_COMPLETION, StrategyProperties.NON_LIN_ARITH_DEF_OPS));
++        res.put("expandQueries", new OriginalValue(StrategyProperties.QUERYAXIOM_OPTIONS_KEY, StrategyProperties.QUERYAXIOM_ON, StrategyProperties.QUERYAXIOM_OFF));
++        res.put("classAxioms", new OriginalValue(StrategyProperties.CLASS_AXIOM_OPTIONS_KEY, StrategyProperties.CLASS_AXIOM_FREE, StrategyProperties.CLASS_AXIOM_OFF));
++        res.put("dependencies", new OriginalValue(StrategyProperties.DEP_OPTIONS_KEY, StrategyProperties.DEP_ON, StrategyProperties.DEP_OFF));
++        return res;
++    }
++
+     /**
+      * Sets up a focused automatic strategy. Focus is on the sequent formula matching the
+      * matchesRegEx (may not be null).
+@@ -142,17 +179,46 @@ public class AutoCommand extends AbstractCommand<AutoCommand.Parameters> {
+         @Option(value = "breakpoint", required = false)
+         public String breakpoint = null;
+ 
+-        public boolean isOnAllOpenGoals() {
+-            return onAllOpenGoals;
+-        }
++        @Option(value = "modelsearch", required = false)
++        public Boolean modelSearch;
+ 
+-        public void setOnAllOpenGoals(boolean onAllOpenGoals) {
+-            this.onAllOpenGoals = onAllOpenGoals;
+-        }
++        @Option(value = "expandQueries", required = false)
++        public Boolean expandQueries;
++
++        @Option(value = "classAxioms", required = false)
++        public Boolean classAxioms;
++
++        @Option(value = "dependencies", required = false)
++        public Boolean dependencies;
+ 
+         public int getSteps() {
+             return maxSteps;
+         }
+ 
++        public Map<String, String> originalArgs;
++
++    }
++
++    private static final class OriginalValue {
++        private final String settingName;
++        private final String trueValue;
++        private final String falseValue;
++        private String oldValue;
++
++        private OriginalValue( String settingName, String trueValue, String falseValue) {
++            this.settingName = settingName;
++            this.trueValue = trueValue;
++            this.falseValue = falseValue;
++        }
++
++        @Override
++        public String toString() {
++            return "OriginalValue{" +
++                    "settingName='" + settingName + '\'' +
++                    ", trueValue='" + trueValue + '\'' +
++                    ", falseValue='" + falseValue + '\'' +
++                    ", oldValue='" + oldValue + '\'' +
++                    '}';
++        }
+     }
+ }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/BranchesCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/BranchesCommand.java
+new file mode 100644
+index 0000000000..5805cc6cef
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/BranchesCommand.java
+@@ -0,0 +1,116 @@
++package de.uka.ilkd.key.macros.scripts;
++
++import java.util.ArrayList;
++import java.util.Deque;
++import java.util.Iterator;
++import java.util.LinkedList;
++import java.util.List;
++import java.util.Map;
++import java.util.Optional;
++import java.util.Stack;
++
++import de.uka.ilkd.key.macros.scripts.meta.Option;
++import de.uka.ilkd.key.proof.Goal;
++import de.uka.ilkd.key.proof.Node;
++import de.uka.ilkd.key.proof.Proof;
++
++public class BranchesCommand extends AbstractCommand<BranchesCommand.Parameters> {
++    public BranchesCommand() {
++        super(Parameters.class);
++    }
++
++    @Override
++    public Parameters evaluateArguments(EngineState state, Map<String, String> arguments)
++            throws Exception {
++        return state.getValueInjector().inject(this, new Parameters(), arguments);
++    }
++
++    @Override
++    public void execute(Parameters args) throws ScriptException, InterruptedException {
++        Stack<Integer> stack = (Stack<Integer>) state.getUserData("_branchStack");
++        if (stack == null) {
++            stack = new Stack<>();
++            state.putUserData("_branchStack", stack);
++        }
++
++        switch (args.mode) {
++        case "push":
++            Node node = state.getFirstOpenAutomaticGoal().node();
++            // this is the first goal. The parent is the decision point
++            node = node.parent();
++            stack.push(node.serialNr());
++            break;
++        case "pop":
++            stack.pop();
++            break;
++        case "select":
++            Node root = findNodeByNumber(proof, stack.peek());
++            Goal goal;
++            if (args.branch == null) {
++                goal = findGoalByNode(state.getProof(), root.child(args.child));
++            } else {
++                goal = findGoalByName(root, args.branch);
++            }
++            state.setGoal(goal);
++            break;
++        default:
++            throw new ScriptException();
++        }
++    }
++
++    private Goal findGoalByName(Node root, String branch) throws ScriptException {
++        Iterator<Node> it = root.childrenIterator();
++        List<String> knownBranchLabels = new ArrayList<>();
++        while (it.hasNext()) {
++            Node node = it.next();
++            String label = node.getNodeInfo().getBranchLabel();
++            knownBranchLabels.add(label);
++            if (branch.equals(label)) {
++                return findGoalByNode(root.proof(), node);
++            }
++        }
++        throw new ScriptException(
++            "Unknown branch " + branch + ". Known branches are " + knownBranchLabels);
++    }
++
++    private static Goal findGoalByNode(Proof proof, Node node) throws ScriptException {
++        Optional<Goal> result =
++            proof.openEnabledGoals().stream().filter(g -> g.node() == node).findAny();
++        if (result.isEmpty()) {
++            throw new ScriptException();
++        }
++        return result.get();
++    }
++
++    private Node findNodeByNumber(Proof proof, int serial) throws ScriptException {
++        Deque<Node> todo = new LinkedList<>();
++        todo.add(proof.root());
++        while (!todo.isEmpty()) {
++            Node n = todo.remove();
++            if (n.serialNr() == serial) {
++                return n;
++            }
++            Iterator<Node> it = n.childrenIterator();
++            while (it.hasNext()) {
++                todo.add(it.next());
++            }
++        }
++        throw new ScriptException();
++    }
++
++    @Override
++    public String getName() {
++        return "branches";
++    }
++
++    public static class Parameters {
++        /** A formula defining the goal to select */
++        @Option(value = "#2", required = true)
++        public String mode;
++        @Option(value = "branch", required = false)
++        public String branch;
++        @Option(value = "child", required = false)
++        public int child;
++    }
++
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/CheatCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/CheatCommand.java
+new file mode 100644
+index 0000000000..19dd3547d8
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/CheatCommand.java
+@@ -0,0 +1,46 @@
++package de.uka.ilkd.key.macros.scripts;
++
++import de.uka.ilkd.key.control.AbstractUserInterfaceControl;
++import de.uka.ilkd.key.logic.ChoiceExpr;
++import de.uka.ilkd.key.logic.Name;
++import de.uka.ilkd.key.logic.Semisequent;
++import de.uka.ilkd.key.logic.Sequent;
++import de.uka.ilkd.key.logic.Term;
++import de.uka.ilkd.key.logic.op.SchemaVariable;
++import de.uka.ilkd.key.macros.scripts.meta.Option;
++import de.uka.ilkd.key.rule.NoFindTaclet;
++import de.uka.ilkd.key.rule.NoPosTacletApp;
++import de.uka.ilkd.key.rule.Taclet;
++import de.uka.ilkd.key.rule.TacletApp;
++import de.uka.ilkd.key.rule.TacletApplPart;
++import de.uka.ilkd.key.rule.TacletAttributes;
++import de.uka.ilkd.key.rule.tacletbuilder.TacletGoalTemplate;
++import org.key_project.util.collection.DefaultImmutableMap;
++import org.key_project.util.collection.ImmutableList;
++import org.key_project.util.collection.ImmutableMap;
++import org.key_project.util.collection.ImmutableSet;
++
++import java.util.Map;
++
++public class CheatCommand extends NoArgumentCommand {
++    private static final Taclet CHEAT_TACLET;
++
++    static {
++        TacletApplPart applPart = new TacletApplPart(Sequent.EMPTY_SEQUENT, ImmutableList.of(), ImmutableList.of(), ImmutableList.of(), ImmutableList.of());
++        CHEAT_TACLET = new NoFindTaclet(new Name("CHEAT"), applPart, ImmutableList.of(), ImmutableList.of(), new TacletAttributes(),
++            DefaultImmutableMap.nilMap(), ChoiceExpr.TRUE, ImmutableSet.empty());
++    }
++
++    @Override
++    public String getName() {
++        return "cheat";
++    }
++
++    @Override
++    public void execute(AbstractUserInterfaceControl uiControl, Void args, EngineState state)
++            throws ScriptException, InterruptedException {
++        Taclet cheat = CHEAT_TACLET;
++        TacletApp app = NoPosTacletApp.createNoPosTacletApp(cheat);
++        state.getFirstOpenAutomaticGoal().apply(app);
++    }
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/CutCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/CutCommand.java
+index a9744321f0..48a28c6486 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/CutCommand.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/CutCommand.java
+@@ -7,10 +7,14 @@ import de.uka.ilkd.key.logic.Name;
+ import de.uka.ilkd.key.logic.Term;
+ import de.uka.ilkd.key.logic.op.SchemaVariable;
+ import de.uka.ilkd.key.macros.scripts.meta.Option;
++import de.uka.ilkd.key.proof.Goal;
++import de.uka.ilkd.key.proof.Node;
+ import de.uka.ilkd.key.rule.NoPosTacletApp;
+ import de.uka.ilkd.key.rule.Taclet;
+ import de.uka.ilkd.key.rule.TacletApp;
+ 
++import static de.uka.ilkd.key.macros.scripts.EngineState.getGoal;
++
+ /**
+  * The command object CutCommand has as scriptcommand name "cut" As parameters: a formula with the
+  * id "#2"
+@@ -50,7 +54,13 @@ public class CutCommand extends AbstractCommand<CutCommand.Parameters> {
+         SchemaVariable sv = app.uninstantiatedVars().iterator().next();
+ 
+         app = app.addCheckedInstantiation(sv, args.formula, state.getProof().getServices(), true);
+-        state.getFirstOpenAutomaticGoal().apply(app);
++        Goal goal = state.getFirstOpenAutomaticGoal();
++        Node node = goal.node();
++        goal.apply(app);
++
++        // TODO HACK! Renaming the goals to "show" and "use" to allow for references from scripts
++        getGoal(goal.proof().openGoals(), node.child(0)).setBranchLabel("use");
++        getGoal(goal.proof().openGoals(), node.child(1)).setBranchLabel("show");
+     }
+ 
+     public static class Parameters {
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/DependencyContractCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/DependencyContractCommand.java
+new file mode 100644
+index 0000000000..63607e19a8
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/DependencyContractCommand.java
+@@ -0,0 +1,115 @@
++package de.uka.ilkd.key.macros.scripts;
++
++import de.uka.ilkd.key.control.AbstractUserInterfaceControl;
++import de.uka.ilkd.key.java.Expression;
++import de.uka.ilkd.key.java.Services;
++import de.uka.ilkd.key.logic.PosInOccurrence;
++import de.uka.ilkd.key.logic.PosInTerm;
++import de.uka.ilkd.key.logic.Sequent;
++import de.uka.ilkd.key.logic.SequentFormula;
++import de.uka.ilkd.key.logic.Term;
++import de.uka.ilkd.key.macros.scripts.meta.Option;
++import de.uka.ilkd.key.proof.Goal;
++import de.uka.ilkd.key.rule.IBuiltInRuleApp;
++import de.uka.ilkd.key.rule.UseDependencyContractApp;
++import org.key_project.util.collection.ImmutableArray;
++import org.key_project.util.collection.ImmutableList;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.Map;
++
++public class DependencyContractCommand extends AbstractCommand<DependencyContractCommand.Parameters> {
++
++    public DependencyContractCommand() {
++        super(Parameters.class);
++    }
++
++    @Override
++    public String getName() {
++        return "dependency";
++    }
++
++    @Override
++    public Parameters evaluateArguments(EngineState state, Map<String, String> arguments)
++            throws Exception {
++        Parameters args = new Parameters();
++        state.getValueInjector().inject(this, args, arguments);
++        return args;
++    }
++
++    @Override
++    public void execute(AbstractUserInterfaceControl uiControl, Parameters arguments,
++            EngineState state) throws ScriptException, InterruptedException {
++
++        final Goal goal = state.getFirstOpenAutomaticGoal();
++
++        if (arguments.heap == null) {
++            Services services = goal.proof().getServices();
++            arguments.heap = services.getTermFactory().createTerm(services.getTypeConverter().getHeapLDT().getHeap());
++        }
++
++        List<PosInOccurrence> pios = find(arguments.on, goal.sequent());
++
++        if(pios.isEmpty()) {
++            throw new ScriptException("dependency contract not applicable.");
++        } else if (pios.size() > 1) {
++            throw new ScriptException("no unique application");
++        }
++
++        PosInOccurrence pio = pios.get(0);
++        ImmutableList<IBuiltInRuleApp> builtins = goal.ruleAppIndex().getBuiltInRules(goal, pio);
++        for (IBuiltInRuleApp builtin : builtins) {
++            if (builtin instanceof UseDependencyContractApp) {
++                apply(goal, (UseDependencyContractApp) builtin, arguments);
++            }
++        }
++
++    }
++
++    private List<PosInOccurrence> find(Term term, Sequent sequent) {
++        List<PosInOccurrence> pios = new ArrayList<>();
++        for (SequentFormula sf : sequent.antecedent()) {
++            PosInOccurrence pio = new PosInOccurrence(sf, PosInTerm.getTopLevel(), true);
++            find(pios, term, pio);
++        }
++
++        for (SequentFormula sf : sequent.succedent()) {
++            PosInOccurrence pio = new PosInOccurrence(sf, PosInTerm.getTopLevel(), false);
++            find(pios, term, pio);
++        }
++        return pios;
++    }
++
++    private void find(List<PosInOccurrence> pios, Term term, PosInOccurrence pio) {
++        Term subTerm = pio.subTerm();
++        if (term.equals(subTerm)) {
++            pios.add(pio);
++        } else {
++            ImmutableArray<Term> subs = subTerm.subs();
++            for (int i = 0; i < subs.size(); i++) {
++                find(pios, term, pio.down(i));
++            }
++        }
++    }
++
++    private void apply(Goal goal, UseDependencyContractApp ruleApp, Parameters arguments) {
++        Term on = arguments.on;
++        Term[] subs = on.subs().toArray(new Term[0]);
++        subs[0] = arguments.heap;
++        Services services = goal.proof().getServices();
++        Term replaced = services.getTermFactory().createTerm(on.op(), subs, on.boundVars(), on.javaBlock(), on.getLabels());
++        List<PosInOccurrence> pios = find(replaced, goal.sequent());
++        ruleApp = ruleApp.setStep(pios.get(0));
++        ruleApp = ruleApp.tryToInstantiateContract(services);
++        goal.apply(ruleApp);
++    }
++
++    public static class Parameters {
++        @Option(value = "on", required = true)
++        public Term on;
++
++        @Option(value = "heap", required = false)
++        public Term heap;
++    }
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/EngineState.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/EngineState.java
+index e24eeb4028..921d54cb86 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/EngineState.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/EngineState.java
+@@ -3,14 +3,20 @@ package de.uka.ilkd.key.macros.scripts;
+ import java.io.File;
+ import java.io.StringReader;
+ import java.util.Deque;
++import java.util.HashMap;
+ import java.util.LinkedList;
+ import java.util.Optional;
+ import java.util.function.Consumer;
+ import javax.annotation.Nonnull;
+ 
+ import de.uka.ilkd.key.java.Services;
++import de.uka.ilkd.key.logic.Name;
++import de.uka.ilkd.key.logic.NamespaceSet;
+ import de.uka.ilkd.key.logic.Sequent;
+ import de.uka.ilkd.key.logic.Term;
++import de.uka.ilkd.key.logic.op.Function;
++import de.uka.ilkd.key.logic.op.SortDependingFunction;
++import de.uka.ilkd.key.logic.sort.GenericSort;
+ import de.uka.ilkd.key.logic.sort.Sort;
+ import de.uka.ilkd.key.macros.scripts.meta.ValueInjector;
+ import de.uka.ilkd.key.parser.DefaultTermParser;
+@@ -29,6 +35,13 @@ import org.key_project.util.collection.ImmutableList;
+  */
+ public class EngineState {
+     private final static DefaultTermParser PARSER = new DefaultTermParser();
++    private static final Function ELLIPSIS_FORMULA = new Function(new Name("__"), Sort.FORMULA) ;
++    private static final SortDependingFunction ELLIPSIS;
++    static {
++        GenericSort genericSort = new GenericSort(new Name("G"));
++        ELLIPSIS = SortDependingFunction.createFirstInstance(genericSort, new Name("_"), genericSort, new Sort[0], false);
++    }
++
+     // private final Map<String, Object> arbitraryVariables = new HashMap<>();
+     private final Proof proof;
+     private final AbbrevMap abbrevMap = new AbbrevMap();
+@@ -41,6 +54,8 @@ public class EngineState {
+     private Goal goal;
+     private Node lastSetGoalNode;
+ 
++    private final HashMap<String, Object> userData = new HashMap<>();
++
+     /**
+      * If set to true, outputs all commands to observers and console. Otherwise, only shows explicit
+      * echo messages.
+@@ -193,8 +208,10 @@ public class EngineState {
+     public Term toTerm(String string, Sort sort) throws ParserException, ScriptException {
+         StringReader reader = new StringReader(string);
+         Services services = proof.getServices();
+-        return PARSER.parse(reader, sort, services,
+-            getFirstOpenAutomaticGoal().getLocalNamespaces(), abbrevMap);
++        NamespaceSet nss = getFirstOpenAutomaticGoal().getLocalNamespaces();
++        nss.functions().addSafely(ELLIPSIS);
++        nss.functions().addSafely(ELLIPSIS_FORMULA);
++        return PARSER.parse(reader, sort, services, nss, abbrevMap);
+     }
+ 
+     public Sort toSort(String sortName) throws ParserException, ScriptException {
+@@ -268,4 +285,12 @@ public class EngineState {
+     public void setFailOnClosedOn(boolean failOnClosedOn) {
+         this.failOnClosedOn = failOnClosedOn;
+     }
++
++    public void putUserData(String key, Object val) {
++        userData.put(key, val);
++    }
++
++    public Object getUserData(String key) {
++        return userData.get(key);
++    }
+ }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ExpandDefCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ExpandDefCommand.java
+new file mode 100644
+index 0000000000..0fd1364c51
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ExpandDefCommand.java
+@@ -0,0 +1,124 @@
++package de.uka.ilkd.key.macros.scripts;
++
++import java.util.Map;
++
++import de.uka.ilkd.key.control.AbstractUserInterfaceControl;
++import de.uka.ilkd.key.logic.PosInOccurrence;
++import de.uka.ilkd.key.logic.PosInTerm;
++import de.uka.ilkd.key.logic.SequentFormula;
++import de.uka.ilkd.key.logic.Term;
++import de.uka.ilkd.key.macros.scripts.meta.Option;
++import de.uka.ilkd.key.proof.Goal;
++import de.uka.ilkd.key.proof.Proof;
++import de.uka.ilkd.key.proof.rulefilter.TacletFilter;
++import de.uka.ilkd.key.rule.PosTacletApp;
++import de.uka.ilkd.key.rule.Taclet;
++import de.uka.ilkd.key.rule.TacletApp;
++
++import org.key_project.util.collection.ImmutableList;
++
++public class ExpandDefCommand extends AbstractCommand<ExpandDefCommand.Parameters> {
++
++    private static final ExpansionFilter FILTER = new ExpansionFilter();
++
++    public ExpandDefCommand() {
++        super(Parameters.class);
++    }
++
++    @Override
++    public String getName() {
++        return "expand";
++    }
++
++    @Override
++    public Parameters evaluateArguments(EngineState state, Map<String, String> arguments)
++            throws Exception {
++        return state.getValueInjector().inject(this, new Parameters(), arguments);
++    }
++
++    @Override
++    public void execute(AbstractUserInterfaceControl uiControl, Parameters args, EngineState state)
++            throws ScriptException, InterruptedException {
++        Goal g = state.getFirstOpenAutomaticGoal();
++        TacletApp theApp = makeRuleApp(args, state);
++
++        ImmutableList<TacletApp> completions =
++            theApp.findIfFormulaInstantiations(g.sequent(), g.proof().getServices());
++        if (completions == null || completions.isEmpty()) {
++            throw new ScriptException("Cannot complete the rule app");
++        }
++        TacletApp app = completions.head();
++        app = app.tryToInstantiate(g.proof().getServices().getOverlay(g.getLocalNamespaces()));
++        if (app == null || !app.complete()) {
++            throw new ScriptException("Cannot complete the rule app");
++        }
++
++        g.apply(app);
++    }
++
++    private TacletApp makeRuleApp(Parameters p, EngineState state) throws ScriptException {
++
++        Goal g = state.getFirstOpenAutomaticGoal();
++        Proof proof = state.getProof();
++
++        ImmutableList<TacletApp> apps = ImmutableList.of();
++        for (SequentFormula anteForm : g.sequent().antecedent()) {
++            apps = apps.prepend(g.ruleAppIndex().getTacletAppAtAndBelow(FILTER,
++                new PosInOccurrence(anteForm, PosInTerm.getTopLevel(), true), proof.getServices()));
++        }
++
++        for (SequentFormula succForm : g.sequent().succedent()) {
++            apps = apps.prepend(g.ruleAppIndex().getTacletAppAtAndBelow(FILTER,
++                new PosInOccurrence(succForm, PosInTerm.getTopLevel(), false),
++                proof.getServices()));
++        }
++
++        if (p.on != null) {
++            apps = apps.filter(
++                    it -> it instanceof PosTacletApp &&
++                          it.posInOccurrence().subTerm().equalsModTermLabels(p.on));
++        } else if (p.formula != null) {
++            apps = apps.filter(
++                    it -> it instanceof PosTacletApp &&
++                          it.posInOccurrence().sequentFormula().formula().equalsModTermLabels(p.formula));
++        } else {
++            throw new ScriptException("Either 'formula' or 'on' must be specified");
++        }
++
++        if (apps.size() == 0) {
++            throw new ScriptException("There is no matching expansion rule");
++        } else if (p.occ >= 0) {
++            if (p.occ >= apps.size()) {
++                throw new ScriptException(
++                    "The 'occ' parameter is beyond the number of occurrences.");
++            }
++            return apps.get(p.occ);
++        } else {
++            if (apps.size() != 1) {
++                throw new ScriptException("The application is not uniquely identified");
++            }
++            return apps.head();
++        }
++
++    }
++
++    public static class Parameters {
++        @Option(value = "on", required = false)
++        public Term on;
++        @Option(value = "occ", required = false)
++        public int occ = -1;
++        @Option(value = "formula", required = false)
++        public Term formula;
++    }
++
++    private static class ExpansionFilter extends TacletFilter {
++
++        @Override
++        protected boolean filter(Taclet taclet) {
++            String name = taclet.name().toString();
++            return name.startsWith("Class_invariant_axiom_for") ||
++                    name.startsWith("Definition_axiom_for");
++        }
++    }
++
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/InstantiateCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/InstantiateCommand.java
+index af5702a9b3..aa215044a0 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/InstantiateCommand.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/InstantiateCommand.java
+@@ -224,7 +224,7 @@ public class InstantiateCommand extends AbstractCommand<InstantiateCommand.Param
+         @Option(value = "#2", required = false)
+         public String hide = "";
+ 
+-        @Option(value = "with", required = false)
++        @Option(value = "with")
+         public Term with;
+     }
+ 
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/LetCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/LetCommand.java
+index 8237fc7978..298fca9127 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/LetCommand.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/LetCommand.java
+@@ -5,6 +5,11 @@ import java.util.Map;
+ import de.uka.ilkd.key.control.AbstractUserInterfaceControl;
+ import de.uka.ilkd.key.pp.AbbrevMap;
+ 
++/**
++ * <scriptDoc command="let">
++ * This command allows you to assign a term to an abbreviation variable.
++ * </scriptDoc>
++ */
+ public class LetCommand extends AbstractCommand<Map<String, String>> {
+ 
+     public LetCommand() {
+@@ -29,12 +34,11 @@ public class LetCommand extends AbstractCommand<Map<String, String>> {
+             if ("#literal".equals(key)) {
+                 continue;
+             }
+-            if (!key.startsWith("@")) {
+-                throw new ScriptException("Unexpected parameter to let, only @var allowed: " + key);
++            if (key.startsWith("@")) {
++                // get rid of @
++                key = key.substring(1);
+             }
+ 
+-            // get rid of @
+-            key = key.substring(1);
+ 
+             if (abbrMap.containsAbbreviation(key)) {
+                 // XXX desired or not?
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/OneStepSimplifierCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/OneStepSimplifierCommand.java
+new file mode 100644
+index 0000000000..9478732b26
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/OneStepSimplifierCommand.java
+@@ -0,0 +1,80 @@
++package de.uka.ilkd.key.macros.scripts;
++
++import de.uka.ilkd.key.control.AbstractProofControl;
++import de.uka.ilkd.key.control.AbstractUserInterfaceControl;
++import de.uka.ilkd.key.java.Services;
++import de.uka.ilkd.key.logic.PosInOccurrence;
++import de.uka.ilkd.key.logic.PosInTerm;
++import de.uka.ilkd.key.logic.SequentFormula;
++import de.uka.ilkd.key.macros.scripts.meta.Option;
++import de.uka.ilkd.key.macros.scripts.meta.ValueInjector;
++import de.uka.ilkd.key.proof.Goal;
++import de.uka.ilkd.key.proof.init.Profile;
++import de.uka.ilkd.key.prover.ProverCore;
++import de.uka.ilkd.key.prover.impl.ApplyStrategy;
++import de.uka.ilkd.key.rule.IBuiltInRuleApp;
++import de.uka.ilkd.key.rule.OneStepSimplifierRuleApp;
++import de.uka.ilkd.key.strategy.AutomatedRuleApplicationManager;
++import de.uka.ilkd.key.strategy.FocussedBreakpointRuleApplicationManager;
++import de.uka.ilkd.key.strategy.StrategyProperties;
++import org.key_project.util.collection.ImmutableList;
++import org.key_project.util.collection.ImmutableSLList;
++
++import java.util.Map;
++import java.util.Optional;
++
++public class OneStepSimplifierCommand extends AbstractCommand<OneStepSimplifierCommand.Parameters> {
++
++    public OneStepSimplifierCommand() {
++        super(Parameters.class);
++    }
++
++    @Override
++    public String getName() {
++        return "oss";
++    }
++
++    @Override
++    public Parameters evaluateArguments(EngineState state, Map<String, String> arguments)
++            throws Exception {
++        Parameters args = new Parameters();
++        ValueInjector.getInstance().inject(this, args, arguments);
++        return args;
++    }
++
++    @Override
++    public void execute(AbstractUserInterfaceControl uiControl, Parameters arguments,
++            EngineState state) throws ScriptException, InterruptedException {
++
++        final Goal goal = state.getFirstOpenAutomaticGoal();
++        if(arguments.antecedent) {
++            for (SequentFormula sf : goal.sequent().antecedent()) {
++                ImmutableList<IBuiltInRuleApp> builtins = goal.ruleAppIndex().getBuiltInRules(goal, new PosInOccurrence(sf, PosInTerm.getTopLevel(), true));
++                for (IBuiltInRuleApp builtin : builtins) {
++                    if (builtin instanceof OneStepSimplifierRuleApp) {
++                        goal.apply(builtin);
++                    }
++                }
++            }
++        }
++
++        if(arguments.succedent) {
++            for (SequentFormula sf : goal.sequent().succedent()) {
++                ImmutableList<IBuiltInRuleApp> builtins = goal.ruleAppIndex().getBuiltInRules(goal, new PosInOccurrence(sf, PosInTerm.getTopLevel(), false));
++                for (IBuiltInRuleApp builtin : builtins) {
++                    if (builtin instanceof OneStepSimplifierRuleApp) {
++                        goal.apply(builtin);
++                    }
++                }
++            }
++        }
++    }
++
++    public static class Parameters {
++        @Option(value = "antecedent", required = false)
++        public boolean antecedent = true;
++
++        @Option(value = "succedent", required = false)
++        public boolean succedent = true;
++    }
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ProofScriptEngine.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ProofScriptEngine.java
+index 7f7922a6ac..1d6b95b0a6 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ProofScriptEngine.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ProofScriptEngine.java
+@@ -128,13 +128,13 @@ public class ProofScriptEngine {
+             try {
+                 String name = argMap.get(ScriptLineParser.COMMAND_KEY);
+                 if (name == null) {
+-                    throw new ScriptException("No command");
++                    throw new ScriptException("No command", start);
+                 }
+ 
+                 ProofScriptCommand<Object> command =
+                     (ProofScriptCommand<Object>) COMMANDS.get(name);
+                 if (command == null) {
+-                    throw new ScriptException("Unknown command " + name);
++                    throw new ScriptException("Unknown command " + name, start);
+                 }
+ 
+                 Object o = command.evaluateArguments(stateMap, argMap);
+@@ -144,6 +144,7 @@ public class ProofScriptEngine {
+                 }
+                 command.execute(uiControl, o, stateMap);
+                 firstNode.getNodeInfo().setScriptRuleApplication(true);
++                LOGGER.info("done with command {}", cmd);
+             } catch (InterruptedException ie) {
+                 throw ie;
+             } catch (ProofAlreadyClosedException e) {
+@@ -166,7 +167,7 @@ public class ProofScriptEngine {
+                 proof.getSubtreeGoals(stateMap.getProof().root())
+                         .forEach(g -> LOGGER.debug("{}", g.sequent()));
+                 throw new ScriptException(
+-                    String.format("Error while executing script: %s\n\nCommand: %s", e.getMessage(),
++                    String.format("Error while executing script: %s\nCommand: %s", e.getMessage(),
+                         argMap.get(ScriptLineParser.LITERAL_KEY)),
+                     start, e);
+             }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/RuleCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/RuleCommand.java
+index 5b2ba88efe..460e880bbc 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/RuleCommand.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/RuleCommand.java
+@@ -31,6 +31,26 @@ import org.key_project.util.collection.ImmutableSLList;
+  * <li>occ = occurrence number</li>
+  * <li>inst_= instantiation</li>
+  * </ol>
++ *
++ * [scriptDoc "rule"]
++ * This command can be used to apply a single calculus rule to the currently active
++ * open goal.
++ *
++ * ### Parameters:
++ *
++ * [parameter "<1st>" "String"] The name of the rule to be applied
++ * [parameter "on" "Term [optional]"] The term to be used as the "find" term in
++ * a taclet with "find".
++ * [parameter "occ" "int [optional]"] The number of the occurrence of *on* in case there
++ * are several applicable rule apps
++ * [parameter "formula" "Term [optional]"] The toplevel formula in which the
++ * find clause is to be searched.
++ * [parameter "matches" "String [optional]"] Instead of giving the toplevl formula
++ * completely, a regular expression can be specified to match the toplevel formula.
++ * [parameter "inst_SCHEMA" "Term [optional]"] If there are further schema variables
++ * to be instantiated parameters prefixed with "inst_" can be added, e.g.
++ * <tt>inst_b="true"</tt> if schema variable b is to be set to the formula true.
++ * [/scriptDoc]
+  */
+ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+ 
+@@ -118,9 +138,11 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+         ImmutableList<TacletApp> assumesCandidates = theApp
+                 .findIfFormulaInstantiations(state.getFirstOpenAutomaticGoal().sequent(), services);
+ 
+-        assumesCandidates = ImmutableList.fromList(filterList(p, assumesCandidates));
++        assumesCandidates = ImmutableList.fromList(filterList(services, p, assumesCandidates));
+ 
+-        if (assumesCandidates.size() != 1) {
++        if (assumesCandidates.size() == 0) {
++            throw new ScriptException("No \\assumes instantiation");
++        } else if (assumesCandidates.size() != 1) {
+             throw new ScriptException("Not a unique \\assumes instantiation");
+         }
+ 
+@@ -208,7 +230,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+             return matchingApps.get(0);
+         } else {
+             if (p.occ >= matchingApps.size()) {
+-                throw new ScriptException("Occurence " + p.occ
++                throw new ScriptException("Occurrence " + p.occ
+                     + " has been specified, but there are only " + matchingApps.size() + " hits.");
+             }
+ 
+@@ -219,7 +241,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+     private TacletApp findTacletApp(Parameters p, EngineState state) throws ScriptException {
+ 
+         ImmutableList<TacletApp> allApps = findAllTacletApps(p, state);
+-        List<TacletApp> matchingApps = filterList(p, allApps);
++        List<TacletApp> matchingApps = filterList(state.getProof().getServices(), p, allApps);
+ 
+         if (matchingApps.isEmpty()) {
+             throw new ScriptException("No matching applications.");
+@@ -249,7 +271,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+ 
+         ImmutableList<IBuiltInRuleApp> allApps = ImmutableSLList.nil();
+         for (SequentFormula sf : g.node().sequent().antecedent()) {
+-            if (!isFormulaSearchedFor(p, sf, services)) {
++            if (!isSequentFormulaSearchedFor(p, sf, services)) {
+                 continue;
+             }
+ 
+@@ -258,7 +280,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+         }
+ 
+         for (SequentFormula sf : g.node().sequent().succedent()) {
+-            if (!isFormulaSearchedFor(p, sf, services)) {
++            if (!isSequentFormulaSearchedFor(p, sf, services)) {
+                 continue;
+             }
+ 
+@@ -280,7 +302,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+ 
+         ImmutableList<TacletApp> allApps = ImmutableSLList.nil();
+         for (SequentFormula sf : g.node().sequent().antecedent()) {
+-            if (!isFormulaSearchedFor(p, sf, services)) {
++            if (!isSequentFormulaSearchedFor(p, sf, services)) {
+                 continue;
+             }
+ 
+@@ -289,7 +311,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+         }
+ 
+         for (SequentFormula sf : g.node().sequent().succedent()) {
+-            if (!isFormulaSearchedFor(p, sf, services)) {
++            if (!isSequentFormulaSearchedFor(p, sf, services)) {
+                 continue;
+             }
+ 
+@@ -309,7 +331,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+      * @param sf The {@link SequentFormula} to check.
+      * @return true if <code>sf</code> matches.
+      */
+-    private boolean isFormulaSearchedFor(Parameters p, SequentFormula sf, Services services)
++    private boolean isSequentFormulaSearchedFor(Parameters p, SequentFormula sf, Services services)
+             throws ScriptException {
+         final boolean satisfiesFormulaParameter =
+             p.formula != null && sf.formula().equalsModRenaming(p.formula);
+@@ -337,7 +359,7 @@ public class RuleCommand extends AbstractCommand<RuleCommand.Parameters> {
+     /*
+      * Filter those apps from a list that are according to the parameters.
+      */
+-    private List<TacletApp> filterList(Parameters p, ImmutableList<TacletApp> list) {
++    private List<TacletApp> filterList(Services services, Parameters p, ImmutableList<TacletApp> list) {
+         List<TacletApp> matchingApps = new ArrayList<>();
+         for (TacletApp tacletApp : list) {
+             if (tacletApp instanceof PosTacletApp) {
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptException.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptException.java
+index 05b76f7e3c..dcd6673b1e 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptException.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptException.java
+@@ -16,16 +16,15 @@ public class ScriptException extends Exception implements HasLocation {
+         this.location = null;
+     }
+ 
+-    public ScriptException(String message, Location location, Throwable cause) {
+-        super(message, cause);
+-        this.location = location;
+-    }
+-
+     public ScriptException(String message, Location location) {
+         super(message);
+         this.location = location;
+     }
+ 
++    public ScriptException(String message, Location location, Throwable cause) {
++        super(message, cause);
++        this.location = location;
++    }
+ 
+     public ScriptException(String message) {
+         super(message);
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptLineParser.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptLineParser.java
+index 2129fb636c..c9f2228756 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptLineParser.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/ScriptLineParser.java
+@@ -263,7 +263,10 @@ class ScriptLineParser {
+     }
+ 
+     private Location getLocation() {
+-        return new Location(fileURI, Position.newOneBased(line, col));
++        Position pos = line >= 1 ?
++                Position.newOneBased(line, col) :
++                Position.UNDEFINED;
++        return new Location(fileURI, pos);
+     }
+ 
+     public int getOffset() {
+@@ -273,7 +276,6 @@ class ScriptLineParser {
+     public static final class ParsedCommand {
+         public final Map<String, String> args;
+         public final Location start, end;
+-
+         public ParsedCommand(Map<String, String> args, Location start, Location end) {
+             this.args = args;
+             this.start = start;
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/SetCommand.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/SetCommand.java
+index 3299f8d863..3105d3dbfd 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/SetCommand.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/SetCommand.java
+@@ -1,6 +1,7 @@
+ package de.uka.ilkd.key.macros.scripts;
+ 
+ import java.util.Map;
++import java.util.Stack;
+ 
+ import de.uka.ilkd.key.macros.scripts.meta.Option;
+ import de.uka.ilkd.key.proof.Proof;
+@@ -25,14 +26,14 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
+ 
+     @Override
+     public void execute(Parameters args) throws ScriptException, InterruptedException {
+-        if (args.key == null ^ args.value == null) {
++        if ((args.key == null && args.userKey == null) ^ args.value == null) {
+             throw new IllegalArgumentException(
+-                "When using key or value in a set command, you have to use both.");
++                "When using key/userKey or value in a set command, you have to use both.");
+         }
+ 
+         final Proof proof = state.getProof();
+ 
+-        final StrategyProperties newProps =
++        StrategyProperties newProps =
+             proof.getSettings().getStrategySettings().getActiveStrategyProperties();
+ 
+         if (args.oneStepSimplification != null) {
+@@ -44,10 +45,35 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
+         } else if (args.proofSteps != null) {
+             state.setMaxAutomaticSteps(args.proofSteps);
+         } else if (args.key != null) {
++            if (!newProps.containsKey(args.key)) {
++                throw new ScriptException("Unknown setting key: " + args.key);
++            }
+             newProps.setProperty(args.key, args.value);
+-            updateStrategySettings(newProps);
++            updateStrategySettings(state, newProps);
++        } else if (args.stackAction != null) {
++            Stack<StrategyProperties> stack =
++                (Stack<StrategyProperties>) state.getUserData("settingsStack");
++            if (stack == null) {
++                stack = new Stack<>();
++                state.putUserData("settingsStack", stack);
++            }
++            switch (args.stackAction) {
++            case "push":
++                stack.push(newProps.clone());
++                break;
++            case "pop":
++                // TODO sensible error if empty
++                newProps = stack.pop();
++                updateStrategySettings(state, newProps);
++                break;
++            default:
++                throw new IllegalArgumentException("stack must be either push or pop.");
++            }
++        } else if(args.userKey != null) {
++            state.putUserData("user." + args.userKey, args.value);
+         } else {
+-            throw new IllegalArgumentException("You have to set oss, steps, or key and value.");
++            throw new IllegalArgumentException(
++                "You have to set oss, steps, stack, or key and value.");
+         }
+     }
+ 
+@@ -58,9 +84,9 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
+      * quite complicated implementation, which is inspired by StrategySelectionView.
+      */
+ 
+-    private void updateStrategySettings(StrategyProperties p) {
++    protected static void updateStrategySettings(EngineState state, StrategyProperties p) {
+         final Proof proof = state.getProof();
+-        final Strategy strategy = getStrategy(p);
++        final Strategy strategy = getStrategy(state, p);
+ 
+         ProofSettings.DEFAULT_SETTINGS.getStrategySettings().setStrategy(strategy.name());
+         ProofSettings.DEFAULT_SETTINGS.getStrategySettings().setActiveStrategyProperties(p);
+@@ -71,8 +97,9 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
+         proof.setActiveStrategy(strategy);
+     }
+ 
+-    private Strategy getStrategy(StrategyProperties properties) {
++    private static Strategy getStrategy(EngineState state, StrategyProperties properties) {
+         final Profile profile = state.getProof().getServices().getProfile();
++        final Proof proof = state.getProof();
+ 
+         //
+         for (StrategyFactory s : profile.supportedStrategies()) {
+@@ -105,8 +132,15 @@ public class SetCommand extends AbstractCommand<SetCommand.Parameters> {
+         @Option(value = "key", required = false)
+         public String key;
+ 
++        /** User settings -- key */
++        @Option(value = "userKey", required = false)
++        public String userKey;
++
+         /** Normal key-value setting -- value */
+         @Option(value = "value", required = false)
+         public String value;
++
++        @Option(value = "stack", required = false)
++        public String stackAction;
+     }
+ }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/meta/UnknownArgumentException.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/meta/UnknownArgumentException.java
+new file mode 100644
+index 0000000000..039435a147
+--- /dev/null
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/meta/UnknownArgumentException.java
+@@ -0,0 +1,19 @@
++package de.uka.ilkd.key.macros.scripts.meta;
++
++/**
++ * Signals if an argument is given that is not part of the defined arguments
++ * class.
++ *
++ * @author Mattias Ulbrich
++ */
++public class UnknownArgumentException extends InjectionException {
++
++    /**
++     * An argument required exception with no cause (to display).
++     *
++     * @param message the respective String message to be passed.
++     */
++    public UnknownArgumentException(String message) {
++        super(message, null);
++    }
++}
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/meta/ValueInjector.java b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/meta/ValueInjector.java
+index f6b9a495c8..def161ee36 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/meta/ValueInjector.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/macros/scripts/meta/ValueInjector.java
+@@ -4,6 +4,7 @@ import java.util.ArrayList;
+ import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Optional;
+ 
+ import de.uka.ilkd.key.macros.scripts.ProofScriptCommand;
+ 
+@@ -46,7 +47,7 @@ public class ValueInjector {
+      */
+     public static <T> T injection(ProofScriptCommand<T> command, T obj,
+             Map<String, String> arguments) throws ArgumentRequiredException,
+-            InjectionReflectionException, NoSpecifiedConverterException, ConversionException {
++            InjectionReflectionException, NoSpecifiedConverterException, ConversionException, UnknownArgumentException {
+         return getInstance().inject(command, obj, arguments);
+     }
+ 
+@@ -104,7 +105,7 @@ public class ValueInjector {
+      */
+     public <T> T inject(ProofScriptCommand<T> command, T obj, Map<String, String> arguments)
+             throws ConversionException, InjectionReflectionException, NoSpecifiedConverterException,
+-            ArgumentRequiredException {
++            ArgumentRequiredException, UnknownArgumentException {
+         List<ProofScriptArgument<T>> meta =
+             ArgumentsLifter.inferScriptArguments(obj.getClass(), command);
+         List<ProofScriptArgument<T>> varArgs = new ArrayList<>(meta.size());
+@@ -133,6 +134,14 @@ public class ValueInjector {
+             }
+         }
+ 
++        Optional<String> unused = arguments.keySet().stream()
++                .filter(it -> !usedKeys.contains(it) && !"#literal".equals(it))
++                .findAny();
++        if (unused.isPresent()) {
++//            throw new UnknownArgumentException("Unknown argument '" + unused.get() +
++//                    "' for command of class " + command.getClass().getSimpleName());
++        }
++
+         return obj;
+     }
+ 
+@@ -159,8 +168,9 @@ public class ValueInjector {
+         if (val == null) {
+             if (meta.isRequired()) {
+                 throw new ArgumentRequiredException(String.format(
+-                    "Argument %s:%s is required, but %s was given. " + "For comamnd class: '%s'",
+-                    meta.getName(), meta.getField().getType(), val, meta.getCommand().getClass()),
++                    "Argument %s:%s is required, but %s was given. " + "For command class: '%s'",
++                    meta.getName(), meta.getField().getType().getSimpleName(), val,
++                    meta.getCommand().getClass()),
+                     meta);
+             }
+         } else {
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/parser/Location.java b/key/key.core/src/main/java/de/uka/ilkd/key/parser/Location.java
+index 1c83691c5b..2050c6968f 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/parser/Location.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/parser/Location.java
+@@ -9,6 +9,7 @@ import java.util.Optional;
+ import javax.annotation.Nonnull;
+ 
+ import de.uka.ilkd.key.java.Position;
++import de.uka.ilkd.key.java.PositionInfo;
+ import de.uka.ilkd.key.util.MiscTools;
+ 
+ import org.antlr.v4.runtime.IntStream;
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/proof/io/OutputStreamProofSaver.java b/key/key.core/src/main/java/de/uka/ilkd/key/proof/io/OutputStreamProofSaver.java
+index 1d4a9a9640..b8b6bc10df 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/proof/io/OutputStreamProofSaver.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/proof/io/OutputStreamProofSaver.java
+@@ -508,12 +508,18 @@ public class OutputStreamProofSaver {
+         final RuleJustification ruleJusti = proof.getInitConfig().getJustifInfo()
+                 .getJustification(appliedRuleApp, proof.getServices());
+ 
+-        assert ruleJusti instanceof RuleJustificationBySpec
+-                : "Please consult bug #1111 if this fails.";
++        String name;
++        if(ruleJusti instanceof RuleJustificationBySpec) {
++            final RuleJustificationBySpec ruleJustiBySpec = (RuleJustificationBySpec) ruleJusti;
++            name = ruleJustiBySpec.getSpec().getName();
++        } else {
++            LOGGER.error("Unexpexted rule justification type " + ruleJusti.getClass() +
++                    ". Please consult bug MT-1111 #806 if this fails.");
++            name = ">> this proof cannot be loaded. see issue #806 <<";
++        }
+ 
+-        final RuleJustificationBySpec ruleJustiBySpec = (RuleJustificationBySpec) ruleJusti;
+         output.append(" (contract \"");
+-        output.append(ruleJustiBySpec.getSpec().getName());
++        output.append(name);
+         output.append("\")");
+     }
+ 
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/proof/mgt/ComplexRuleJustificationBySpec.java b/key/key.core/src/main/java/de/uka/ilkd/key/proof/mgt/ComplexRuleJustificationBySpec.java
+index 55d74abbb8..5f93020356 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/proof/mgt/ComplexRuleJustificationBySpec.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/proof/mgt/ComplexRuleJustificationBySpec.java
+@@ -5,10 +5,17 @@ import java.util.Map;
+ 
+ import de.uka.ilkd.key.logic.TermServices;
+ import de.uka.ilkd.key.rule.RuleApp;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++import javax.annotation.Nonnull;
+ 
+ 
+ public class ComplexRuleJustificationBySpec implements ComplexRuleJustification {
+ 
++    private static final Logger LOGGER =
++            LoggerFactory.getLogger(ComplexRuleJustificationBySpec.class);
++
+     private final Map<RuleApp, RuleJustificationBySpec> app2Just =
+         new LinkedHashMap<>();
+ 
+@@ -18,9 +25,15 @@ public class ComplexRuleJustificationBySpec implements ComplexRuleJustification
+     }
+ 
+ 
+-    public RuleJustification getSpecificJustification(RuleApp app, TermServices services) {
++    public @Nonnull RuleJustification getSpecificJustification(RuleApp app, TermServices services) {
+         RuleJustification result = app2Just.get(app);
+-        return result == null ? this : result;
++        if (result == null) {
++            LOGGER.error("Rule app without stored justification: " + app +
++                    " (" + app.rule().name() + ")");
++            // even if we miss the map, continue with "this" as justification
++            return this;
++        }
++        return result;
+     }
+ 
+ 
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/prover/impl/DepthFirstGoalChooser.java b/key/key.core/src/main/java/de/uka/ilkd/key/prover/impl/DepthFirstGoalChooser.java
+index 3bd80807c3..af80c21baf 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/prover/impl/DepthFirstGoalChooser.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/prover/impl/DepthFirstGoalChooser.java
+@@ -70,6 +70,8 @@ public class DepthFirstGoalChooser extends DefaultGoalChooser {
+ 
+         nextGoals = ImmutableSLList.nil();
+ 
++        newGoals = newGoals.filter(Goal::isAutomatic);
++
+         // Remove "node" and goals contained within "newGoals"
+         while (!selectedList.isEmpty()) {
+             final Goal goal = selectedList.head();
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/rule/JmlAssertRule.java b/key/key.core/src/main/java/de/uka/ilkd/key/rule/JmlAssertRule.java
+index 0ca181d3c6..288a914d18 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/rule/JmlAssertRule.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/rule/JmlAssertRule.java
+@@ -8,17 +8,15 @@ import de.uka.ilkd.key.java.Services;
+ import de.uka.ilkd.key.java.SourceElement;
+ import de.uka.ilkd.key.java.statement.JmlAssert;
+ import de.uka.ilkd.key.java.statement.MethodFrame;
+-import de.uka.ilkd.key.logic.JavaBlock;
+-import de.uka.ilkd.key.logic.Name;
+-import de.uka.ilkd.key.logic.PosInOccurrence;
+-import de.uka.ilkd.key.logic.SequentFormula;
+-import de.uka.ilkd.key.logic.Term;
+-import de.uka.ilkd.key.logic.TermBuilder;
+-import de.uka.ilkd.key.logic.TermServices;
++import de.uka.ilkd.key.logic.*;
+ import de.uka.ilkd.key.logic.op.Modality;
+ import de.uka.ilkd.key.logic.op.Transformer;
+ import de.uka.ilkd.key.logic.op.UpdateApplication;
+ import de.uka.ilkd.key.proof.Goal;
++import de.uka.ilkd.key.rule.inst.SVInstantiations;
++import de.uka.ilkd.key.rule.tacletbuilder.AntecSuccTacletGoalTemplate;
++import de.uka.ilkd.key.rule.tacletbuilder.NoFindTacletBuilder;
++import de.uka.ilkd.key.rule.tacletbuilder.TacletGoalTemplate;
+ import de.uka.ilkd.key.speclang.jml.pretranslation.TextualJMLAssertStatement.Kind;
+ import de.uka.ilkd.key.util.MiscTools;
+ 
+@@ -129,6 +127,7 @@ public final class JmlAssertRule implements BuiltInRule {
+         final Term self = MiscTools.getSelfTerm(frame, services);
+ 
+         final Term condition = jmlAssert.getCond(self, services);
++        final String label = jmlAssert.getOptLabel();
+ 
+         final ImmutableList<Goal> result;
+         if (kind == Kind.ASSERT) {
+@@ -140,7 +139,7 @@ public final class JmlAssertRule implements BuiltInRule {
+             throw new RuleAbortException(
+                 String.format("Unknown assertion type %s", jmlAssert.getKind()));
+         }
+-        setUpUsageGoal(result.head(), occurrence, update, target, condition, tb, services);
++        setUpUsageGoal(result.head(), label, occurrence, update, target, condition, tb, services);
+ 
+         return result;
+     }
+@@ -151,14 +150,21 @@ public final class JmlAssertRule implements BuiltInRule {
+         goal.changeFormula(new SequentFormula(tb.apply(update, condition)), occurrence);
+     }
+ 
+-    private void setUpUsageGoal(Goal goal, PosInOccurrence occurrence, Term update, Term target,
+-            Term condition, TermBuilder tb, Services services) {
++    private void setUpUsageGoal(Goal goal, String label, PosInOccurrence occurrence, Term update, Term target,
++                                Term condition, TermBuilder tb, Services services) {
+         goal.setBranchLabel("Usage");
+         final JavaBlock javaBlock = JavaTools.removeActiveStatement(target.javaBlock(), services);
+         final Term newTerm = tb.apply(update,
+             tb.imp(condition, tb.prog((Modality) target.op(), javaBlock, target.sub(0), null)));
+ 
+         goal.changeFormula(new SequentFormula(newTerm), occurrence);
++        if (label != null) {
++            NoFindTacletBuilder bld = new NoFindTacletBuilder();
++            Semisequent ante = new Semisequent(new SequentFormula(tb.apply(update, condition)));
++            bld.addTacletGoalTemplate(new AntecSuccTacletGoalTemplate(Sequent.createAnteSequent(ante), ImmutableList.of(), Sequent.EMPTY_SEQUENT));
++            bld.setName(new Name("recall_" + label));
++            goal.addTaclet(bld.getNoFindTaclet(), SVInstantiations.EMPTY_SVINSTANTIATIONS, false);
++        }
+     }
+ 
+     @Override
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/speclang/jml/pretranslation/TextualJMLAssertStatement.java b/key/key.core/src/main/java/de/uka/ilkd/key/speclang/jml/pretranslation/TextualJMLAssertStatement.java
+index 4d662a8f4f..6558b33ac4 100755
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/speclang/jml/pretranslation/TextualJMLAssertStatement.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/speclang/jml/pretranslation/TextualJMLAssertStatement.java
+@@ -1,5 +1,6 @@
+ package de.uka.ilkd.key.speclang.jml.pretranslation;
+ 
++import de.uka.ilkd.key.speclang.njml.JmlParser.AssertionProofContext;
+ import de.uka.ilkd.key.speclang.njml.LabeledParserRuleContext;
+ 
+ import org.key_project.util.collection.ImmutableSLList;
+@@ -12,12 +13,21 @@ import org.antlr.v4.runtime.RuleContext;
+ public class TextualJMLAssertStatement extends TextualJMLConstruct {
+ 
+     private final LabeledParserRuleContext context;
++    private final AssertionProofContext assertionProof;
++    private final String optLabel;
+     private final Kind kind;
+ 
+     public TextualJMLAssertStatement(Kind kind, LabeledParserRuleContext clause) {
++        this(kind, clause, null, null);
++    }
++
++    public TextualJMLAssertStatement(Kind kind, LabeledParserRuleContext clause,
++            AssertionProofContext assertionProof, String optLabel) {
+         super(ImmutableSLList.nil(), kind.toString() + " " + clause);
+         this.kind = kind;
+         this.context = clause;
++        this.assertionProof = assertionProof;
++        this.optLabel = optLabel;
+     }
+ 
+     public LabeledParserRuleContext getContext() {
+@@ -58,6 +68,10 @@ public class TextualJMLAssertStatement extends TextualJMLConstruct {
+         return kind;
+     }
+ 
++    public String getOptLabel() {
++        return optLabel;
++    }
++
+     public enum Kind {
+         ASSERT("assert"), ASSUME("assume");
+ 
+@@ -71,5 +85,9 @@ public class TextualJMLAssertStatement extends TextualJMLConstruct {
+         public String toString() {
+             return name;
+         }
++    };
++
++    public AssertionProofContext getAssertionProof() {
++        return assertionProof;
+     }
+ }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/speclang/njml/TextualTranslator.java b/key/key.core/src/main/java/de/uka/ilkd/key/speclang/njml/TextualTranslator.java
+index e003ec6fe7..cef8c264be 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/speclang/njml/TextualTranslator.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/speclang/njml/TextualTranslator.java
+@@ -510,7 +510,8 @@ class TextualTranslator extends JmlParserBaseVisitor<Object> {
+     public Object visitAssert_statement(JmlParser.Assert_statementContext ctx) {
+         TextualJMLAssertStatement b =
+             new TextualJMLAssertStatement(TextualJMLAssertStatement.Kind.ASSERT,
+-                new LabeledParserRuleContext(ctx, OriginTermLabel.SpecType.ASSERT));
++                new LabeledParserRuleContext(ctx, OriginTermLabel.SpecType.ASSERT),
++                ctx.assertionProof(), ctx.label == null ? null : ctx.label.getText());
+         constructs = constructs.append(b);
+         return null;
+     }
+diff --git a/key/key.core/src/main/java/de/uka/ilkd/key/strategy/StrategyProperties.java b/key/key.core/src/main/java/de/uka/ilkd/key/strategy/StrategyProperties.java
+index a4b66af643..cf80810ecd 100644
+--- a/key/key.core/src/main/java/de/uka/ilkd/key/strategy/StrategyProperties.java
++++ b/key/key.core/src/main/java/de/uka/ilkd/key/strategy/StrategyProperties.java
+@@ -409,7 +409,7 @@ public final class StrategyProperties extends Properties {
+     }
+ 
+ 
+-    public synchronized Object clone() {
++    public synchronized StrategyProperties clone() {
+         final Properties p = (Properties) super.clone();
+         final StrategyProperties sp = new StrategyProperties();
+         sp.putAll(p);
+diff --git a/key/key.core/src/main/resources/META-INF/services/de.uka.ilkd.key.macros.ProofMacro b/key/key.core/src/main/resources/META-INF/services/de.uka.ilkd.key.macros.ProofMacro
+index d8125e5c21..313dd07613 100644
+--- a/key/key.core/src/main/resources/META-INF/services/de.uka.ilkd.key.macros.ProofMacro
++++ b/key/key.core/src/main/resources/META-INF/services/de.uka.ilkd.key.macros.ProofMacro
+@@ -30,3 +30,5 @@ de.uka.ilkd.key.macros.OneStepProofMacro
+ de.uka.ilkd.key.macros.WellDefinednessMacro
+ de.uka.ilkd.key.macros.UpdateSimplificationMacro
+ de.uka.ilkd.key.macros.TranscendentalFloatSMTMacro
++de.uka.ilkd.key.macros.ScriptAwareMacro
++de.uka.ilkd.key.macros.ScriptAwarePrepMacro
+diff --git a/key/key.core/src/main/resources/META-INF/services/de.uka.ilkd.key.macros.scripts.ProofScriptCommand b/key/key.core/src/main/resources/META-INF/services/de.uka.ilkd.key.macros.scripts.ProofScriptCommand
+index 3cac23e7e2..aabba3686a 100644
+--- a/key/key.core/src/main/resources/META-INF/services/de.uka.ilkd.key.macros.scripts.ProofScriptCommand
++++ b/key/key.core/src/main/resources/META-INF/services/de.uka.ilkd.key.macros.scripts.ProofScriptCommand
+@@ -25,11 +25,16 @@ de.uka.ilkd.key.macros.scripts.SaveNewNameCommand
+ de.uka.ilkd.key.macros.scripts.SchemaVarCommand
+ de.uka.ilkd.key.macros.scripts.JavascriptCommand
+ de.uka.ilkd.key.macros.scripts.SkipCommand
++de.uka.ilkd.key.macros.scripts.OneStepSimplifierCommand
++de.uka.ilkd.key.macros.scripts.DependencyContractCommand
+ de.uka.ilkd.key.macros.scripts.AxiomCommand
+ de.uka.ilkd.key.macros.scripts.AssumeCommand
+ # does not exist? # de.uka.ilkd.key.macros.scripts.SettingsCommand
++de.uka.ilkd.key.macros.scripts.ExpandDefCommand
+ de.uka.ilkd.key.macros.scripts.AssertCommand
+ de.uka.ilkd.key.macros.scripts.RewriteCommand
+ de.uka.ilkd.key.macros.scripts.AllCommand
+ de.uka.ilkd.key.macros.scripts.HideCommand
+ de.uka.ilkd.key.macros.scripts.UnhideCommand
++de.uka.ilkd.key.macros.scripts.BranchesCommand
++de.uka.ilkd.key.macros.scripts.CheatCommand
+\ No newline at end of file
+diff --git a/key/key.core/src/test/java/de/uka/ilkd/key/macros/scripts/meta/ValueInjectorTest.java b/key/key.core/src/test/java/de/uka/ilkd/key/macros/scripts/meta/ValueInjectorTest.java
+index 3de1cec5ba..81ffe57e53 100644
+--- a/key/key.core/src/test/java/de/uka/ilkd/key/macros/scripts/meta/ValueInjectorTest.java
++++ b/key/key.core/src/test/java/de/uka/ilkd/key/macros/scripts/meta/ValueInjectorTest.java
+@@ -44,10 +44,36 @@ public class ValueInjectorTest {
+             () -> ValueInjector.injection(new PPCommand(), pp, args));
+     }
+ 
++    @Test
++    public void testUnknownArguments() {
++        PP pp = new PP();
++        Map<String, String> args = new HashMap<>();
++        args.put("i", "42");
++        args.put("b", "true");
++        args.put("unknownParameter", "unknownValue");
++        assertThrows(UnknownArgumentException.class,
++                () -> ValueInjector.injection(new PPCommand(), pp, args));
++    }
++
++    @Test
++    public void testVarargs() throws Exception {
++        PP pp = new PP();
++        Map<String, String> args = new HashMap<>();
++        args.put("#literal", "here goes the entire string...");
++        args.put("i", "42");
++        args.put("b", "true");
++        args.put("var_21", "21");
++        args.put("var_other", "otherString");
++        ValueInjector.injection(new PPCommand(), pp, args);
++        assertEquals("21", pp.varargs.get("21"));
++        assertEquals("otherString", pp.varargs.get("other"));
++        assertEquals(2, pp.varargs.size());
++    }
++
+     @Test
+     public void testInferScriptArguments() throws NoSuchFieldException {
+         List<ProofScriptArgument<PP>> meta = ArgumentsLifter.inferScriptArguments(PP.class, null);
+-        assertEquals(3, meta.size());
++        assertEquals(4, meta.size());
+ 
+         {
+             ProofScriptArgument<PP> b = meta.get(0);
+@@ -82,6 +108,8 @@ public class ValueInjectorTest {
+         int i;
+         @Option(value = "s", required = false)
+         String s;
++        @Varargs(as = String.class, prefix = "var_")
++        Map<String, String> varargs;
+     }
+ 
+     private static class PPCommand extends AbstractCommand<PP> {
+diff --git a/key/key.ui/build.gradle b/key/key.ui/build.gradle
+index 753293fd01..15bf09b2b7 100644
+--- a/key/key.ui/build.gradle
++++ b/key/key.ui/build.gradle
+@@ -30,6 +30,18 @@ dependencies {
+     runtimeOnly project(":keyext.exploration")
+     runtimeOnly project(":keyext.slicing")
+     runtimeOnly project(":keyext.proofmanagement")
++
++
++    runtimeOnly "io.github.wadoon:key-interactionlog:0.9-SNAPSHOT"
++}
++
++repositories {
++    maven {
++        mavenContent {
++            snapshotsOnly()
++        }
++        url("https://s01.oss.sonatype.org/content/repositories/snapshots/")
++    }
+ }
+ 
+ task createExamplesZip(type: Zip) {
+@@ -61,7 +73,7 @@ run {
+     systemProperties["key.examples.dir"] = "$projectDir/examples"
+     //systemProperties["slf4j.detectLoggerNameMismatch"] = true
+     //systemProperties["KeyDebugFlag"] = "on"
+-    //args "--experimental"
++    args "--experimental"
+ 
+     // this can be used to solve a problem where the OS hangs during debugging of popup menus
+     // (see https://docs.oracle.com/javase/10/troubleshoot/awt.htm#JSTGD425)
+diff --git a/key/key.ui/src/main/java/de/uka/ilkd/key/gui/MainWindow.java b/key/key.ui/src/main/java/de/uka/ilkd/key/gui/MainWindow.java
+index 6291589397..33e739215e 100644
+--- a/key/key.ui/src/main/java/de/uka/ilkd/key/gui/MainWindow.java
++++ b/key/key.ui/src/main/java/de/uka/ilkd/key/gui/MainWindow.java
+@@ -38,7 +38,13 @@ import de.uka.ilkd.key.gui.extension.impl.KeYGuiExtensionFacade;
+ import de.uka.ilkd.key.gui.fonticons.IconFactory;
+ import de.uka.ilkd.key.gui.help.HelpFacade;
+ import de.uka.ilkd.key.gui.help.HelpInfo;
+-import de.uka.ilkd.key.gui.nodeviews.*;
++import de.uka.ilkd.key.gui.nodeviews.CurrentGoalView;
++import de.uka.ilkd.key.gui.nodeviews.EmptySequent;
++import de.uka.ilkd.key.gui.nodeviews.HTMLSyntaxHighlighter;
++import de.uka.ilkd.key.gui.nodeviews.InnerNodeView;
++import de.uka.ilkd.key.gui.nodeviews.MainFrame;
++import de.uka.ilkd.key.gui.nodeviews.SequentView;
++import de.uka.ilkd.key.gui.nodeviews.SequentViewSearchBar;
+ import de.uka.ilkd.key.gui.notification.NotificationManager;
+ import de.uka.ilkd.key.gui.notification.events.ExitKeYEvent;
+ import de.uka.ilkd.key.gui.notification.events.NotificationEvent;
+diff --git a/key/key.ui/src/main/resources/META-INF/services/de.uka.ilkd.key.gui.extension.api.KeYGuiExtension b/key/key.ui/src/main/resources/META-INF/services/de.uka.ilkd.key.gui.extension.api.KeYGuiExtension
+index d0be8ba788..e982116b8c 100644
+--- a/key/key.ui/src/main/resources/META-INF/services/de.uka.ilkd.key.gui.extension.api.KeYGuiExtension
++++ b/key/key.ui/src/main/resources/META-INF/services/de.uka.ilkd.key.gui.extension.api.KeYGuiExtension
+@@ -6,4 +6,4 @@ de.uka.ilkd.key.gui.KeyboardTacletExtension
+ de.uka.ilkd.key.gui.nodeviews.ShowHashcodesExtension
+ de.uka.ilkd.key.gui.LogView
+ de.uka.ilkd.key.gui.plugins.javac.JavacExtension
+-de.uka.ilkd.key.gui.plugins.caching.CachingExtension
+\ No newline at end of file
++de.uka.ilkd.key.gui.plugins.caching.CachingExtension
+diff --git a/key/key.util/src/main/java/org/key_project/util/collection/ImmutableList.java b/key/key.util/src/main/java/org/key_project/util/collection/ImmutableList.java
+index a24b771cb5..47e87dd5c8 100644
+--- a/key/key.util/src/main/java/org/key_project/util/collection/ImmutableList.java
++++ b/key/key.util/src/main/java/org/key_project/util/collection/ImmutableList.java
+@@ -299,6 +299,22 @@ public interface ImmutableList<T> extends Iterable<T>, java.io.Serializable {
+         return Immutables.map(this, function);
+     }
+ 
++    /**
++     * Returns the element at the specified position in this list.
++     *
++     * @param index 0-based index of the element to return
++     * @return the element at the specified position in this list
++     * @throws IndexOutOfBoundsException if the index is out of range
++     *         ({@code index < 0 || index >= size()})
++     */
++    default T get(int index) {
++        if (index < 0 || index >= size()) {
++            throw new IndexOutOfBoundsException();
++        } else {
++            return take(index).head();
++        }
++    }
++
+     /**
+      * @param other prefix to check for
+      * @return whether this list starts with the elements of the provided prefix
+@@ -351,16 +367,4 @@ public interface ImmutableList<T> extends Iterable<T>, java.io.Serializable {
+         return remainder.head();
+     }
+ 
+-    /**
+-     * Get the n-th element of this list.
+-     *
+-     * @param idx the 0-based index of the element
+-     * @return the element at index idx.
+-     * @throws IndexOutOfBoundsException if idx is less than 0 or at
+-     *         least {@link #size()}.
+-     */
+-    default T get(int idx) {
+-        return take(idx).head();
+-    }
+-
+ }
+diff --git a/key/key.util/src/main/java/org/key_project/util/collection/Immutables.java b/key/key.util/src/main/java/org/key_project/util/collection/Immutables.java
+index 7401b27e68..e6630e325d 100644
+--- a/key/key.util/src/main/java/org/key_project/util/collection/Immutables.java
++++ b/key/key.util/src/main/java/org/key_project/util/collection/Immutables.java
+@@ -157,7 +157,6 @@ public final class Immutables {
+      * the given predicate.
+      *
+      * @param ts non-null immutable list.
+-     *
+      * @param predicate a non-interfering, stateless
+      *        predicate to apply to each element to determine if it
+      *        should be included
+diff --git a/key/key.util/src/main/java/org/key_project/util/java/IOUtil.java b/key/key.util/src/main/java/org/key_project/util/java/IOUtil.java
+index 91a1e6a6c9..2d9ef1cd19 100644
+--- a/key/key.util/src/main/java/org/key_project/util/java/IOUtil.java
++++ b/key/key.util/src/main/java/org/key_project/util/java/IOUtil.java
+@@ -765,6 +765,40 @@ public final class IOUtil {
+         }
+     }
+ 
++    public static URL makeMemoryURL(String data) {
++        try {
++            return new URL("memory", "", 0, String.format("/%x", System.identityHashCode(data)),
++                new MemoryDataHandler(data));
++        } catch (MalformedURLException e) {
++            throw new RuntimeException(e);
++        }
++    }
++
++    private static final class MemoryDataHandler extends URLStreamHandler {
++        private final String data;
++
++        public MemoryDataHandler(String data) {
++            this.data = data;
++        }
++
++        @Override
++        protected URLConnection openConnection(URL u) throws IOException {
++            // perhaps check the hash code too?
++            if (!u.getProtocol().equals("memory")) {
++                throw new IOException("Unsupported protocol");
++            }
++            return new URLConnection(u) {
++                @Override
++                public void connect() {}
++
++                @Override
++                public InputStream getInputStream() throws IOException {
++                    return new ByteArrayInputStream(data.getBytes());
++                }
++            };
++        }
++    }
++
+     /**
+      * Returns the current directory.
+      *

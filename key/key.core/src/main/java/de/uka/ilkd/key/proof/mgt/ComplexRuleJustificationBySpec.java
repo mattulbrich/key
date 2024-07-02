@@ -28,9 +28,16 @@ import java.util.Map;
 
 import de.uka.ilkd.key.logic.TermServices;
 import de.uka.ilkd.key.rule.RuleApp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
 
 
 public class ComplexRuleJustificationBySpec implements ComplexRuleJustification {
+
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(ComplexRuleJustificationBySpec.class);
 
     private Map<RuleApp, RuleJustificationBySpec> app2Just =
         new LinkedHashMap<RuleApp, RuleJustificationBySpec>();

@@ -10,6 +10,7 @@ Copyright (C) 2011-2019 Karlsruhe Institute of Technology, Germany
 
 package de.uka.ilkd.key.speclang.jml.pretranslation;
 
+import de.uka.ilkd.key.speclang.njml.JmlParser.AssertionProofContext;
 import de.uka.ilkd.key.speclang.njml.LabeledParserRuleContext;
 
 import org.key_project.util.collection.ImmutableSLList;
@@ -57,10 +58,18 @@ public class TextualJMLAssertStatement extends TextualJMLConstruct {
                 builder.append(child.getText());
             }
         }
+    };
+
+    public AssertionProofContext getAssertionProof() {
+        return assertionProof;
     }
 
     public String getClauseText() {
         var builder = new StringBuilder();
+    public String getOptLabel() {
+        return optLabel;
+    }
+
         ruleContextToText(builder, context.first);
         return builder.substring(kind.toString().length());
     }
